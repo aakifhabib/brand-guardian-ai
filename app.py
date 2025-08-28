@@ -126,7 +126,7 @@ st.markdown("""
         text-align: center;
         font-size: 3.5em;
         font-family: 'Playfair Display', serif;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         animation: shimmer 3s infinite;
     }
     
@@ -137,45 +137,51 @@ st.markdown("""
     
     .metric-card {
         background: rgba(42, 42, 42, 0.9);
-        padding: 25px;
-        border-radius: 20px;
+        padding: 20px;
+        border-radius: 15px;
         border: 2px solid #FFD700;
-        margin: 15px 0;
-        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+        margin: 10px 0;
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
         transition: all 0.3s ease;
         backdrop-filter: blur(10px);
     }
     
     .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(255, 215, 0, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.25);
     }
     
     .feature-card {
         background: rgba(42, 42, 42, 0.8);
-        padding: 20px;
-        border-radius: 15px;
+        padding: 15px;
+        border-radius: 12px;
         border: 1px solid #FFD700;
-        margin: 10px;
+        margin: 8px;
         text-align: center;
         transition: all 0.3s ease;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     
     .feature-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.15);
     }
     
     .glowing-border {
         border: 2px solid #FFD700;
-        border-radius: 15px;
+        border-radius: 12px;
         animation: glow 2s infinite alternate;
         box-shadow: 0 0 5px #FFD700;
+        padding: 15px;
+        margin: 10px 0;
     }
     
     @keyframes glow {
         from { box-shadow: 0 0 5px #FFD700; }
-        to { box-shadow: 0 0 20px #FFD700, 0 0 30px #FFB700; }
+        to { box-shadow: 0 0 15px #FFD700, 0 0 25px #FFB700; }
     }
     
     .floating { 
@@ -184,59 +190,59 @@ st.markdown("""
     
     @keyframes float {
         0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
+        50% { transform: translateY(-5px); }
         100% { transform: translateY(0px); }
     }
     
     .slideshow-container {
         position: relative;
         max-width: 100%;
-        margin: 40px 0;
-        border-radius: 20px;
+        margin: 30px 0;
+        border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.25);
     }
     
     .slide {
         display: none;
-        padding: 40px;
+        padding: 30px;
         text-align: center;
         background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(42, 42, 42, 0.9) 100%);
         border: 2px solid #FFD700;
-        border-radius: 20px;
+        border-radius: 15px;
     }
     
     .slide-active {
         display: block;
-        animation: fadeIn 1.5s ease-in-out;
+        animation: fadeIn 1.2s ease-in-out;
     }
     
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(30px); }
+        from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
     
     .slide-number {
         color: #FFD700;
-        font-size: 1.2em;
+        font-size: 1.1em;
         font-weight: bold;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
     
     .slide-title {
-        font-size: 2.2em;
+        font-size: 1.8em;
         font-family: 'Playfair Display', serif;
         background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
     
     .slide-content {
-        font-size: 1.2em;
-        line-height: 1.6;
+        font-size: 1.1em;
+        line-height: 1.5;
         color: #FFFFFF;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
     }
     
     .section-header {
@@ -244,37 +250,37 @@ st.markdown("""
         background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 2.5em;
+        font-size: 2em;
         text-align: center;
-        margin: 50px 0 30px 0;
-        animation: shimmer 3s infinite;
+        margin: 30px 0 20px 0;
     }
     
     .professional-subheader {
-        font-size: 1.4em;
+        font-size: 1.2em;
         color: #FFD700;
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         font-weight: 300;
     }
     
     .nav-button {
         background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
         color: #000000 !important;
-        padding: 15px 30px;
-        border-radius: 10px;
+        padding: 12px 25px;
+        border-radius: 8px;
         text-decoration: none;
         font-weight: bold;
         display: inline-block;
-        margin: 10px;
+        margin: 8px;
         transition: all 0.3s ease;
         border: none;
         cursor: pointer;
+        font-size: 14px;
     }
     
     .nav-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
     }
     
     .center-container {
@@ -282,7 +288,60 @@ st.markdown("""
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        min-height: 60vh;
+        margin: 20px 0;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .premium-header {
+            font-size: 2.8em;
+        }
+        .slide-title {
+            font-size: 1.6em;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .premium-header {
+            font-size: 2.2em;
+            margin-bottom: 15px;
+        }
+        .professional-subheader {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        .slide {
+            padding: 20px;
+        }
+        .slide-title {
+            font-size: 1.4em;
+        }
+        .slide-content {
+            font-size: 1em;
+        }
+        .section-header {
+            font-size: 1.6em;
+        }
+        .metric-card {
+            padding: 15px;
+            margin: 8px 0;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .premium-header {
+            font-size: 1.8em;
+        }
+        .professional-subheader {
+            font-size: 1em;
+        }
+        .slide-title {
+            font-size: 1.2em;
+        }
+        .nav-button {
+            padding: 10px 20px;
+            font-size: 12px;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -452,7 +511,7 @@ def intro_page():
     # Footer
     st.markdown("---")
     st.markdown("""
-    <div style="text-align: center; padding: 30px;" class="gold-text">
+    <div style="text-align: center; padding: 20px;" class="gold-text">
         <h4>BrandGuardian AI Enterprise Solutions</h4>
         <p>Protecting brand integrity through advanced artificial intelligence</p>
         <p>© 2024 BrandGuardian AI. All rights reserved.</p>
@@ -466,7 +525,7 @@ def main_page():
     
     # Navigation Button
     st.markdown("""
-    <div style="text-align: center; margin-bottom: 30px;">
+    <div style="text-align: center; margin-bottom: 20px;">
         <button class="nav-button" onclick="window.location.href='./'">
             📋 Return to Overview
         </button>
@@ -478,19 +537,19 @@ def main_page():
     
     with col1:
         st.markdown("### Configuration Panel")
-        st.markdown('<div class="glowing-border" style="padding: 20px; margin-bottom: 20px;">', unsafe_allow_html=True)
+        st.markdown('<div class="glowing-border">', unsafe_allow_html=True)
         brand_name = st.text_input("**Brand Identifier**", "Nike", help="Enter the brand you want to monitor")
         st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown("### Threat Simulation Interface")
-        st.markdown('<div class="glowing-border" style="padding: 20px;">', unsafe_allow_html=True)
+        st.markdown('<div class="glowing-border">', unsafe_allow_html=True)
         test_text = st.text_area("**Content Analysis Input**", 
                                "I absolutely hate this company! Their service is terrible and I will sue them!",
-                               height=150)
+                               height=120)
         
         if st.button("**Initiate Sentiment Analysis**", use_container_width=True):
             with st.spinner("🛡️ Conducting comprehensive threat assessment..."):
-                time.sleep(1.5)
+                time.sleep(1.2)
                 analyzer = SentimentAnalyzer()
                 strategist = MitigationStrategist()
                 
@@ -541,7 +600,7 @@ def main_page():
     # Footer
     st.markdown("---")
     st.markdown("""
-    <div style="text-align: center; padding: 30px;" class="gold-text">
+    <div style="text-align: center; padding: 20px;" class="gold-text">
         <h4>BrandGuardian AI Threat Analysis System</h4>
         <p>Advanced AI-powered brand protection and crisis management</p>
         <p>© 2024 BrandGuardian AI. All rights reserved.</p>
@@ -549,8 +608,8 @@ def main_page():
     """, unsafe_allow_html=True)
 
 def main():
-    # Check which page to show
-    query_params = st.experimental_get_query_params()
+    # Check which page to show - FIXED: Using st.query_params instead of experimental_get_query_params
+    query_params = st.query_params
     page = query_params.get("page", ["intro"])[0]
     
     if page == "main":
