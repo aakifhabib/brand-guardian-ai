@@ -500,9 +500,9 @@ def intro_page():
     </div>
     """, unsafe_allow_html=True)
     
-    # FIXED Navigation Button - Using Streamlit's native button with JS
+    # Navigation Button - Using session state instead of query params
     if st.button("🚀 Launch Threat Analysis Dashboard", use_container_width=True, key="launch_dashboard"):
-        st.query_params["page"] = "main"
+        st.session_state.current_page = "main"
         st.rerun()
     
     # Footer
@@ -522,7 +522,7 @@ def main_page():
     
     # Navigation Button
     if st.button("📋 Return to Overview", use_container_width=True, key="return_overview"):
-        st.query_params["page"] = "intro"
+        st.session_state.current_page = "intro"
         st.rerun()
     
     # Main Content Columns
@@ -601,11 +601,12 @@ def main_page():
     """, unsafe_allow_html=True)
 
 def main():
-    # Check which page to show
-    query_params = st.query_params
-    page = query_params.get("page", ["intro"])[0]
+    # Initialize session state for page navigation
+    if "current_page" not in st.session_state:
+        st.session_state.current_page = "intro"
     
-    if page == "main":
+    # Check which page to show based on session state
+    if st.session_state.current_page == "main":
         main_page()
     else:
         intro_page()
