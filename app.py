@@ -242,6 +242,15 @@ st.markdown("""
         color: #FFD700;
     }
     
+    .intro-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin: 2rem auto;
+        max-width: 800px;
+        text-align: center;
+        color: #CCCCCC;
+    }
+    
     .intro-feature {
         margin: 1.5rem 0;
         padding: 1.5rem;
@@ -254,6 +263,21 @@ st.markdown("""
         margin-top: 2rem;
         padding: 1rem 2rem;
         font-size: 1.2rem;
+    }
+    
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem 0;
+    }
+    
+    .logo {
+        font-size: 5rem;
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 50%, #FFD700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
     }
 </style>
 """, unsafe_allow_html=True)
@@ -307,41 +331,61 @@ class MitigationStrategist:
 def show_intro_page():
     st.markdown("""
     <div class="intro-container">
-        <h1 class="intro-heading floating">🛡️ BrandGuardian AI</h1>
-        <p class="intro-subheading">Enterprise-Grade Brand Protection Suite</p>
+        <div class="logo-container">
+            <div class="logo">🛡️</div>
+        </div>
+        <h1 class="intro-heading floating">BrandGuardian AI</h1>
+        <p class="intro-subheading">Enterprise-Grade Digital Risk Protection Platform</p>
+        
+        <div class="intro-description">
+            BrandGuardian AI is a comprehensive brand protection solution that leverages advanced artificial intelligence 
+            to monitor, detect, and mitigate digital threats to your brand reputation in real-time. Our platform combines 
+            sophisticated sentiment analysis with crisis management expertise to safeguard your brand across all digital channels.
+        </div>
         
         <div class="intro-feature floating" style="animation-delay: 0.2s;">
-            <h3>🔍 Real-time Monitoring</h3>
-            <p>24/7 surveillance of social media and online platforms</p>
+            <h3>🔍 Real-time Digital Monitoring</h3>
+            <p>24/7 surveillance across social media, review sites, forums, and news outlets</p>
         </div>
         
         <div class="intro-feature floating" style="animation-delay: 0.4s;">
-            <h3>⚠️ AI-Powered Risk Detection</h3>
-            <p>Advanced sentiment analysis to identify potential threats</p>
+            <h3>⚠️ AI-Powered Threat Detection</h3>
+            <p>Advanced natural language processing to identify emerging brand risks before they escalate</p>
         </div>
         
         <div class="intro-feature floating" style="animation-delay: 0.6s;">
-            <h3>🛡️ Crisis Mitigation</h3>
-            <p>Immediate actionable strategies to protect your brand</p>
+            <h3>🛡️ Proactive Crisis Mitigation</h3>
+            <p>Immediate, actionable strategies developed by AI trained on PR crisis management protocols</p>
         </div>
         
         <div class="intro-feature floating" style="animation-delay: 0.8s;">
-            <h3>📊 Comprehensive Reporting</h3>
-            <p>Detailed analytics and insights for executive decision-making</p>
+            <h3>📊 Executive Intelligence Dashboard</h3>
+            <p>Comprehensive analytics and insights for data-driven brand protection decisions</p>
+        </div>
+        
+        <div class="intro-description">
+            Trusted by Fortune 500 companies and emerging brands alike, BrandGuardian AI provides enterprise-level 
+            protection with an intuitive interface that requires no technical expertise. Our system learns your brand's 
+            specific risk profile to deliver personalized protection strategies.
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("🚀 Get Started", use_container_width=True, key="start_btn"):
+        if st.button("🚀 Launch BrandGuardian Console", use_container_width=True, key="start_btn"):
             st.session_state.page = "main"
             st.rerun()
 
 def main_app():
     # Premium Header with Animation
-    st.markdown('<div class="premium-header floating">🛡️ BrandGuardian AI</div>', unsafe_allow_html=True)
-    st.markdown('<div style="text-align: center; margin-bottom: 40px;" class="gold-text">Enterprise-Grade Brand Protection Suite</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="logo-container">
+        <div class="logo">🛡️</div>
+    </div>
+    <h1 class="premium-header floating">BrandGuardian AI</h1>
+    <div style="text-align: center; margin-bottom: 40px;" class="gold-text">Enterprise Digital Risk Protection Platform</div>
+    """, unsafe_allow_html=True)
     
     # Main Content Columns
     col1, col2 = st.columns([1, 2])
@@ -404,14 +448,14 @@ def main_app():
 
     # Features Section with Animated Cards
     st.markdown("---")
-    st.markdown("### ✨ Premium Features")
+    st.markdown("### ✨ Platform Capabilities")
     
     features_col1, features_col2, features_col3, features_col4 = st.columns(4)
     
     with features_col1:
         st.markdown('<div class="feature-card floating">', unsafe_allow_html=True)
         st.markdown("**🔍 Real-time Monitoring**")
-        st.markdown("24/7 brand surveillance")
+        st.markdown("24/7 digital surveillance")
         st.markdown('</div>', unsafe_allow_html=True)
     
     with features_col2:
@@ -435,11 +479,11 @@ def main_app():
     # Footer
     st.markdown("---")
     st.markdown('<div style="text-align: center; padding: 20px;" class="gold-text">', unsafe_allow_html=True)
-    st.markdown("**🛡️ Protecting Brands Since 2024**")
+    st.markdown("**🛡️ Protecting Brands in the Digital Age**")
     st.markdown("</div>", unsafe_allow_html=True)
     
     # Add a button to go back to intro
-    if st.button("🏠 Back to Introduction", use_container_width=True, key="back_btn"):
+    if st.button("📖 Platform Overview", use_container_width=True, key="back_btn"):
         st.session_state.page = "intro"
         st.rerun()
 
