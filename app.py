@@ -257,6 +257,33 @@ st.markdown("""
         margin-bottom: 40px;
         font-weight: 300;
     }
+    
+    .nav-button {
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
+        color: #000000 !important;
+        padding: 15px 30px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-block;
+        margin: 10px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .nav-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+    }
+    
+    .center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 60vh;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -305,30 +332,6 @@ class MitigationStrategist:
             1. Acknowledge the concern publicly within 1 hour
             2. Offer direct message resolution
             3. Prepare official statement addressing: {risky_text[:100]}..."""
-
-# Slideshow content
-slides = [
-    {
-        "title": "Enterprise Brand Protection",
-        "content": "Advanced AI-powered monitoring system designed to safeguard your brand's reputation across digital platforms. Proactively identify and mitigate potential PR crises before they escalate.",
-        "number": "01"
-    },
-    {
-        "title": "Real-Time Threat Detection",
-        "content": "Our sophisticated algorithms analyze sentiment, context, and emerging patterns to detect brand risks in real-time, providing instant alerts for immediate action.",
-        "number": "02"
-    },
-    {
-        "title": "Intelligent Crisis Management",
-        "content": "Receive AI-generated mitigation strategies crafted by simulated PR experts. Transform potential disasters into opportunities for demonstrating exceptional customer care.",
-        "number": "03"
-    },
-    {
-        "title": "Comprehensive Risk Analytics",
-        "content": "Gain deep insights into brand sentiment trends, threat patterns, and reputation metrics with our comprehensive dashboard and reporting system.",
-        "number": "04"
-    }
-]
 
 def create_slideshow():
     slideshow_html = """
@@ -388,7 +391,7 @@ def create_slideshow():
     """
     return slideshow_html
 
-def main():
+def intro_page():
     # Premium Header with Animation
     st.markdown('<div class="premium-header floating">🛡️ BrandGuardian AI</div>', unsafe_allow_html=True)
     st.markdown('<div class="professional-subheader">Enterprise-Grade Digital Reputation Management Platform</div>', unsafe_allow_html=True)
@@ -408,9 +411,69 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # Main Content Columns
-    st.markdown('<div class="section-header">Threat Analysis Dashboard</div>', unsafe_allow_html=True)
+    # Features Section
+    st.markdown('<div class="section-header">Platform Capabilities</div>', unsafe_allow_html=True)
     
+    features_col1, features_col2, features_col3, features_col4 = st.columns(4)
+    
+    with features_col1:
+        st.markdown('<div class="feature-card floating">', unsafe_allow_html=True)
+        st.markdown("**Real-time Monitoring**")
+        st.markdown("Continuous digital surveillance")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with features_col2:
+        st.markdown('<div class="feature-card floating" style="animation-delay: 0.5s;">', unsafe_allow_html=True)
+        st.markdown("**AI Risk Assessment**")
+        st.markdown("Advanced sentiment analysis")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with features_col3:
+        st.markdown('<div class="feature-card floating" style="animation-delay: 1s;">', unsafe_allow_html=True)
+        st.markdown("**Crisis Management**")
+        st.markdown("Strategic mitigation protocols")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with features_col4:
+        st.markdown('<div class="feature-card floating" style="animation-delay: 1.5s;">', unsafe_allow_html=True)
+        st.markdown("**Analytics Dashboard**")
+        st.markdown("Comprehensive insights")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Navigation Button
+    st.markdown("""
+    <div class="center-container">
+        <button class="nav-button" onclick="window.location.href='./?page=main'">
+            🚀 Launch Threat Analysis Dashboard
+        </button>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Footer
+    st.markdown("---")
+    st.markdown("""
+    <div style="text-align: center; padding: 30px;" class="gold-text">
+        <h4>BrandGuardian AI Enterprise Solutions</h4>
+        <p>Protecting brand integrity through advanced artificial intelligence</p>
+        <p>© 2024 BrandGuardian AI. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+def main_page():
+    # Premium Header with Animation
+    st.markdown('<div class="premium-header floating">🛡️ Threat Analysis Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="professional-subheader">Real-Time Brand Protection Monitoring System</div>', unsafe_allow_html=True)
+    
+    # Navigation Button
+    st.markdown("""
+    <div style="text-align: center; margin-bottom: 30px;">
+        <button class="nav-button" onclick="window.location.href='./'">
+            📋 Return to Overview
+        </button>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Main Content Columns
     col1, col2 = st.columns([1, 2])
     
     with col1:
@@ -464,45 +527,36 @@ def main():
                     st.button("**Team Notification**", use_container_width=True)
                 with action_col3:
                     st.button("**Generate Report**", use_container_width=True)
-
-    # Features Section
-    st.markdown('<div class="section-header">Platform Capabilities</div>', unsafe_allow_html=True)
-    
-    features_col1, features_col2, features_col3, features_col4 = st.columns(4)
-    
-    with features_col1:
-        st.markdown('<div class="feature-card floating">', unsafe_allow_html=True)
-        st.markdown("**Real-time Monitoring**")
-        st.markdown("Continuous digital surveillance")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with features_col2:
-        st.markdown('<div class="feature-card floating" style="animation-delay: 0.5s;">', unsafe_allow_html=True)
-        st.markdown("**AI Risk Assessment**")
-        st.markdown("Advanced sentiment analysis")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with features_col3:
-        st.markdown('<div class="feature-card floating" style="animation-delay: 1s;">', unsafe_allow_html=True)
-        st.markdown("**Crisis Management**")
-        st.markdown("Strategic mitigation protocols")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with features_col4:
-        st.markdown('<div class="feature-card floating" style="animation-delay: 1.5s;">', unsafe_allow_html=True)
-        st.markdown("**Analytics Dashboard**")
-        st.markdown("Comprehensive insights")
-        st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="metric-card">
+                <h4 style='color: #FFD700; text-align: center;'>Ready for Analysis</h4>
+                <p style='text-align: center;'>
+                Configure your brand and input text to begin threat assessment. 
+                The system will provide real-time sentiment analysis and crisis mitigation strategies.
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
 
     # Footer
     st.markdown("---")
     st.markdown("""
     <div style="text-align: center; padding: 30px;" class="gold-text">
-        <h4>BrandGuardian AI Enterprise Solutions</h4>
-        <p>Protecting brand integrity through advanced artificial intelligence</p>
+        <h4>BrandGuardian AI Threat Analysis System</h4>
+        <p>Advanced AI-powered brand protection and crisis management</p>
         <p>© 2024 BrandGuardian AI. All rights reserved.</p>
     </div>
     """, unsafe_allow_html=True)
+
+def main():
+    # Check which page to show
+    query_params = st.experimental_get_query_params()
+    page = query_params.get("page", ["intro"])[0]
+    
+    if page == "main":
+        main_page()
+    else:
+        intro_page()
 
 if __name__ == "__main__":
     main()
