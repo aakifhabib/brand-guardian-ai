@@ -4,6 +4,7 @@ import requests
 import streamlit as st
 from typing import List, Dict
 import time
+import random
 from streamlit.components.v1 import html
 
 # Install required libraries and setup
@@ -187,21 +188,74 @@ st.markdown("""
         100% { transform: translateY(0px); }
     }
     
-    .typewriter {
+    .slideshow-container {
+        position: relative;
+        max-width: 100%;
+        margin: 40px 0;
+        border-radius: 20px;
         overflow: hidden;
-        border-right: .15em solid #FFD700;
-        white-space: nowrap;
-        animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
     }
     
-    @keyframes typing {
-        from { width: 0 }
-        to { width: 100% }
+    .slide {
+        display: none;
+        padding: 40px;
+        text-align: center;
+        background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(42, 42, 42, 0.9) 100%);
+        border: 2px solid #FFD700;
+        border-radius: 20px;
     }
     
-    @keyframes blink-caret {
-        from, to { border-color: transparent }
-        50% { border-color: #FFD700; }
+    .slide-active {
+        display: block;
+        animation: fadeIn 1.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .slide-number {
+        color: #FFD700;
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    
+    .slide-title {
+        font-size: 2.2em;
+        font-family: 'Playfair Display', serif;
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+    }
+    
+    .slide-content {
+        font-size: 1.2em;
+        line-height: 1.6;
+        color: #FFFFFF;
+        margin-bottom: 30px;
+    }
+    
+    .section-header {
+        font-family: 'Playfair Display', serif;
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2.5em;
+        text-align: center;
+        margin: 50px 0 30px 0;
+        animation: shimmer 3s infinite;
+    }
+    
+    .professional-subheader {
+        font-size: 1.4em;
+        color: #FFD700;
+        text-align: center;
+        margin-bottom: 40px;
+        font-weight: 300;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -252,29 +306,128 @@ class MitigationStrategist:
             2. Offer direct message resolution
             3. Prepare official statement addressing: {risky_text[:100]}..."""
 
+# Slideshow content
+slides = [
+    {
+        "title": "Enterprise Brand Protection",
+        "content": "Advanced AI-powered monitoring system designed to safeguard your brand's reputation across digital platforms. Proactively identify and mitigate potential PR crises before they escalate.",
+        "number": "01"
+    },
+    {
+        "title": "Real-Time Threat Detection",
+        "content": "Our sophisticated algorithms analyze sentiment, context, and emerging patterns to detect brand risks in real-time, providing instant alerts for immediate action.",
+        "number": "02"
+    },
+    {
+        "title": "Intelligent Crisis Management",
+        "content": "Receive AI-generated mitigation strategies crafted by simulated PR experts. Transform potential disasters into opportunities for demonstrating exceptional customer care.",
+        "number": "03"
+    },
+    {
+        "title": "Comprehensive Risk Analytics",
+        "content": "Gain deep insights into brand sentiment trends, threat patterns, and reputation metrics with our comprehensive dashboard and reporting system.",
+        "number": "04"
+    }
+]
+
+def create_slideshow():
+    slideshow_html = """
+    <div class="slideshow-container">
+        <div class="slide slide-active">
+            <div class="slide-number">01/04</div>
+            <div class="slide-title">Enterprise Brand Protection</div>
+            <div class="slide-content">Advanced AI-powered monitoring system designed to safeguard your brand's reputation across digital platforms. Proactively identify and mitigate potential PR crises before they escalate.</div>
+        </div>
+    </div>
+    <script>
+        const slides = [
+            {
+                number: "01/04",
+                title: "Enterprise Brand Protection",
+                content: "Advanced AI-powered monitoring system designed to safeguard your brand's reputation across digital platforms. Proactively identify and mitigate potential PR crises before they escalate."
+            },
+            {
+                number: "02/04",
+                title: "Real-Time Threat Detection",
+                content: "Our sophisticated algorithms analyze sentiment, context, and emerging patterns to detect brand risks in real-time, providing instant alerts for immediate action."
+            },
+            {
+                number: "03/04",
+                title: "Intelligent Crisis Management",
+                content: "Receive AI-generated mitigation strategies crafted by simulated PR experts. Transform potential disasters into opportunities for demonstrating exceptional customer care."
+            },
+            {
+                number: "04/04",
+                title: "Comprehensive Risk Analytics",
+                content: "Gain deep insights into brand sentiment trends, threat patterns, and reputation metrics with our comprehensive dashboard and reporting system."
+            }
+        ];
+        
+        let currentSlide = 0;
+        
+        function showSlide(n) {
+            const slide = document.querySelector('.slide');
+            slide.innerHTML = `
+                <div class="slide-number">${slides[n].number}</div>
+                <div class="slide-title">${slides[n].title}</div>
+                <div class="slide-content">${slides[n].content}</div>
+            `;
+            slide.classList.remove('slide-active');
+            void slide.offsetWidth;
+            slide.classList.add('slide-active');
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+        
+        // Change slide every 5 seconds
+        setInterval(nextSlide, 5000);
+    </script>
+    """
+    return slideshow_html
+
 def main():
     # Premium Header with Animation
     st.markdown('<div class="premium-header floating">🛡️ BrandGuardian AI</div>', unsafe_allow_html=True)
-    st.markdown('<div style="text-align: center; margin-bottom: 40px;" class="gold-text">Enterprise-Grade Brand Protection Suite</div>', unsafe_allow_html=True)
+    st.markdown('<div class="professional-subheader">Enterprise-Grade Digital Reputation Management Platform</div>', unsafe_allow_html=True)
+    
+    # Interactive Slideshow
+    st.markdown(create_slideshow(), unsafe_allow_html=True)
+    
+    # Introduction
+    st.markdown("""
+    <div class="metric-card">
+        <h3 style='color: #FFD700; text-align: center;'>Welcome to BrandGuardian AI</h3>
+        <p style='text-align: center; font-size: 1.1em;'>
+        Our cutting-edge artificial intelligence platform provides comprehensive brand protection through 
+        advanced sentiment analysis, real-time threat detection, and intelligent crisis management solutions. 
+        Trusted by leading enterprises to safeguard their most valuable asset - their reputation.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Main Content Columns
+    st.markdown('<div class="section-header">Threat Analysis Dashboard</div>', unsafe_allow_html=True)
+    
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.markdown("### ⚙️ Configuration Panel")
+        st.markdown("### Configuration Panel")
         st.markdown('<div class="glowing-border" style="padding: 20px; margin-bottom: 20px;">', unsafe_allow_html=True)
-        brand_name = st.text_input("**🏷️ Brand Name**", "Nike", help="Enter the brand you want to monitor")
+        brand_name = st.text_input("**Brand Identifier**", "Nike", help="Enter the brand you want to monitor")
         st.markdown('</div>', unsafe_allow_html=True)
         
-        st.markdown("### 🧪 Threat Simulator")
+        st.markdown("### Threat Simulation Interface")
         st.markdown('<div class="glowing-border" style="padding: 20px;">', unsafe_allow_html=True)
-        test_text = st.text_area("**🔍 Enter text to analyze:**", 
+        test_text = st.text_area("**Content Analysis Input**", 
                                "I absolutely hate this company! Their service is terrible and I will sue them!",
                                height=150)
         
-        if st.button("🚀 Analyze Sentiment", use_container_width=True):
-            with st.spinner("🛡️ Scanning for threats..."):
-                time.sleep(1.5)  # Dramatic pause for effect
+        if st.button("**Initiate Sentiment Analysis**", use_container_width=True):
+            with st.spinner("🛡️ Conducting comprehensive threat assessment..."):
+                time.sleep(1.5)
                 analyzer = SentimentAnalyzer()
                 strategist = MitigationStrategist()
                 
@@ -287,67 +440,69 @@ def main():
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
-        st.markdown("### 📊 Live Threat Analysis")
+        st.markdown("### Live Analysis Results")
         
         if 'sentiment' in st.session_state:
-            # Animated Results Card
             st.markdown('<div class="metric-card floating">', unsafe_allow_html=True)
-            st.markdown(f"**🎯 Sentiment Score:** `{st.session_state.sentiment:.2f}`")
+            st.markdown(f"**Sentiment Score:** `{st.session_state.sentiment:.2f}`")
             
             risk_html = f'<span class="risk-yes">🚨 CRITICAL THREAT DETECTED</span>' if st.session_state.is_risk else f'<span class="risk-no">✅ SYSTEM SECURE</span>'
-            st.markdown(f"**📈 Risk Level:** {risk_html}", unsafe_allow_html=True)
+            st.markdown(f"**Risk Assessment:** {risk_html}", unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
             
             if st.session_state.is_risk and st.session_state.strategy:
-                st.markdown("### 🛡️ Crisis Mitigation Protocol")
+                st.markdown("### Crisis Mitigation Protocol")
                 st.markdown('<div class="metric-card">', unsafe_allow_html=True)
                 st.markdown(st.session_state.strategy)
                 st.markdown('</div>', unsafe_allow_html=True)
                 
-                st.markdown("### ⚡ Immediate Actions")
+                st.markdown("### Immediate Action Required")
                 action_col1, action_col2, action_col3 = st.columns(3)
                 with action_col1:
-                    st.button("📧 Send Alert", use_container_width=True)
+                    st.button("**Issue Alert**", use_container_width=True)
                 with action_col2:
-                    st.button("📱 Notify Team", use_container_width=True)
+                    st.button("**Team Notification**", use_container_width=True)
                 with action_col3:
-                    st.button("📊 Generate Report", use_container_width=True)
+                    st.button("**Generate Report**", use_container_width=True)
 
-    # Features Section with Animated Cards
-    st.markdown("---")
-    st.markdown("### ✨ Premium Features")
+    # Features Section
+    st.markdown('<div class="section-header">Platform Capabilities</div>', unsafe_allow_html=True)
     
     features_col1, features_col2, features_col3, features_col4 = st.columns(4)
     
     with features_col1:
         st.markdown('<div class="feature-card floating">', unsafe_allow_html=True)
-        st.markdown("**🔍 Real-time Monitoring**")
-        st.markdown("24/7 brand surveillance")
+        st.markdown("**Real-time Monitoring**")
+        st.markdown("Continuous digital surveillance")
         st.markdown('</div>', unsafe_allow_html=True)
     
     with features_col2:
         st.markdown('<div class="feature-card floating" style="animation-delay: 0.5s;">', unsafe_allow_html=True)
-        st.markdown("**⚠️ AI Risk Detection**")
+        st.markdown("**AI Risk Assessment**")
         st.markdown("Advanced sentiment analysis")
         st.markdown('</div>', unsafe_allow_html=True)
     
     with features_col3:
         st.markdown('<div class="feature-card floating" style="animation-delay: 1s;">', unsafe_allow_html=True)
-        st.markdown("**🛡️ Crisis Prevention**")
-        st.markdown("Instant mitigation strategies")
+        st.markdown("**Crisis Management**")
+        st.markdown("Strategic mitigation protocols")
         st.markdown('</div>', unsafe_allow_html=True)
     
     with features_col4:
         st.markdown('<div class="feature-card floating" style="animation-delay: 1.5s;">', unsafe_allow_html=True)
-        st.markdown("**📊 Executive Reports**")
-        st.markdown("Professional insights")
+        st.markdown("**Analytics Dashboard**")
+        st.markdown("Comprehensive insights")
         st.markdown('</div>', unsafe_allow_html=True)
 
     # Footer
     st.markdown("---")
-    st.markdown('<div style="text-align: center; padding: 20px;" class="gold-text">', unsafe_allow_html=True)
-    st.markdown("**🛡️ Protecting Brands Since 2024**")
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align: center; padding: 30px;" class="gold-text">
+        <h4>BrandGuardian AI Enterprise Solutions</h4>
+        <p>Protecting brand integrity through advanced artificial intelligence</p>
+        <p>© 2024 BrandGuardian AI. All rights reserved.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
