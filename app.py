@@ -293,6 +293,214 @@ st.markdown("""
         margin: 15px 0;
     }
     
+    /* NEW: Professional Configuration Panel Styles */
+    .config-panel {
+        background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%);
+        border-radius: 16px;
+        border: 2px solid #FFD700;
+        padding: 25px;
+        margin: 15px 0;
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        transition: all 0.5s ease;
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .config-panel::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        z-index: -1;
+        background: linear-gradient(45deg, #FFD700, #FFB700, #FF9800, #FFD700);
+        background-size: 400% 400%;
+        animation: gradientFlow 3s ease infinite;
+        border-radius: 18px;
+    }
+    
+    @keyframes gradientFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .config-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    
+    .config-icon {
+        font-size: 24px;
+        margin-right: 12px;
+        color: #FFD700;
+    }
+    
+    .config-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5em;
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+    
+    .config-description {
+        color: #CCCCCC;
+        font-size: 0.95em;
+        margin: 10px 0 20px 0;
+        line-height: 1.5;
+    }
+    
+    .input-group {
+        margin-bottom: 20px;
+    }
+    
+    .input-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #FFD700;
+        font-size: 1.05em;
+    }
+    
+    .input-hint {
+        font-size: 0.85em;
+        color: #999999;
+        margin-top: 5px;
+        font-style: italic;
+    }
+    
+    /* NEW: Threat Simulation Interface Styles */
+    .simulation-panel {
+        background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%);
+        border-radius: 16px;
+        border: 2px solid #FFD700;
+        padding: 25px;
+        margin: 15px 0;
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        transition: all 0.5s ease;
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .simulation-panel::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        z-index: -1;
+        background: linear-gradient(45deg, #FFD700, #FFB700, #FF9800, #FFD700);
+        background-size: 400% 400%;
+        animation: gradientFlow 3s ease infinite;
+        border-radius: 18px;
+    }
+    
+    .simulation-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    
+    .simulation-icon {
+        font-size: 24px;
+        margin-right: 12px;
+        color: #FFD700;
+    }
+    
+    .simulation-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5em;
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+    
+    .simulation-description {
+        color: #CCCCCC;
+        font-size: 0.95em;
+        margin: 10px 0 20px 0;
+        line-height: 1.5;
+    }
+    
+    /* NEW: Page Transition Animations */
+    .page-transition-enter {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .page-transition-enter-active {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .page-transition-exit {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .page-transition-exit-active {
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    /* NEW: Analyze Button Animation */
+    .analyze-btn {
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
+        color: #000000;
+        font-weight: bold;
+        border: none;
+        border-radius: 12px;
+        padding: 16px 32px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        width: 100%;
+        margin-top: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .analyze-btn:hover {
+        background: linear-gradient(135deg, #FFB700 0%, #FF9800 100%);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+    }
+    
+    .analyze-btn:active {
+        transform: scale(0.98);
+    }
+    
+    .analyze-btn::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transform: rotate(45deg);
+        animation: shine 2s infinite;
+    }
+    
+    @keyframes shine {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 1200px) {
         .premium-header {
@@ -331,6 +539,9 @@ st.markdown("""
         .compact-grid {
             grid-template-columns: 1fr;
         }
+        .config-panel, .simulation-panel {
+            padding: 20px;
+        }
     }
     
     @media (max-width: 480px) {
@@ -346,6 +557,9 @@ st.markdown("""
         .nav-button {
             padding: 10px 20px;
             font-size: 12px;
+        }
+        .config-title, .simulation-title {
+            font-size: 1.3em;
         }
     }
 </style>
@@ -503,7 +717,15 @@ def intro_page():
     # Navigation Button - Using session state instead of query params
     if st.button("🚀 Launch Threat Analysis Dashboard", use_container_width=True, key="launch_dashboard"):
         st.session_state.current_page = "main"
-        st.rerun()
+        # Add page transition effect
+        st.markdown("""
+        <script>
+            document.querySelector('.stApp').classList.add('page-transition-exit-active');
+            setTimeout(function() {
+                window.location.reload();
+            }, 500);
+        </script>
+        """, unsafe_allow_html=True)
     
     # Footer
     st.markdown("---")
@@ -523,24 +745,80 @@ def main_page():
     # Navigation Button
     if st.button("📋 Return to Overview", use_container_width=True, key="return_overview"):
         st.session_state.current_page = "intro"
-        st.rerun()
+        # Add page transition effect
+        st.markdown("""
+        <script>
+            document.querySelector('.stApp').classList.add('page-transition-exit-active');
+            setTimeout(function() {
+                window.location.reload();
+            }, 500);
+        </script>
+        """, unsafe_allow_html=True)
     
     # Main Content Columns
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.markdown("### Configuration Panel")
-        st.markdown('<div class="glowing-border">', unsafe_allow_html=True)
-        brand_name = st.text_input("**Brand Identifier**", "Nike", help="Enter the brand you want to monitor")
-        st.markdown('</div>', unsafe_allow_html=True)
+        # Configuration Panel - NEW DESIGN
+        st.markdown("""
+        <div class="config-panel">
+            <div class="config-header">
+                <div class="config-icon">⚙️</div>
+                <div class="config-title">Configuration Panel</div>
+            </div>
+            <div class="config-description">
+                Configure your brand monitoring settings and customize the threat detection parameters.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown("### Threat Simulation Interface")
-        st.markdown('<div class="glowing-border">', unsafe_allow_html=True)
+        brand_name = st.text_input("**Brand Identifier**", "Nike", 
+                                  help="Enter the brand you want to monitor", 
+                                  key="brand_input")
+        
+        st.markdown("""
+        <div class="input-group">
+            <div class="input-label">Monitoring Channels</div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                    <input type="checkbox" checked> Twitter
+                </div>
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                    <input type="checkbox" checked> Facebook
+                </div>
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                    <input type="checkbox" checked> Instagram
+                </div>
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                    <input type="checkbox"> News Sites
+                </div>
+            </div>
+            <div class="input-hint">Select the platforms to monitor for brand mentions</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        sensitivity = st.slider("**Detection Sensitivity**", 1, 10, 7, 
+                               help="Adjust how sensitive the system is to potential threats")
+        
+        # Threat Simulation Interface - NEW DESIGN
+        st.markdown("""
+        <div class="simulation-panel">
+            <div class="simulation-header">
+                <div class="simulation-icon">🧪</div>
+                <div class="simulation-title">Threat Simulation Interface</div>
+            </div>
+            <div class="simulation-description">
+                Test the AI's threat detection capabilities by entering sample content for analysis.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
         test_text = st.text_area("**Content Analysis Input**", 
                                "I absolutely hate this company! Their service is terrible and I will sue them!",
-                               height=120)
+                               height=120,
+                               key="threat_input")
         
-        if st.button("**Initiate Sentiment Analysis**", use_container_width=True):
+        if st.button("**Initiate Sentiment Analysis**", use_container_width=True, key="analyze_btn"):
             with st.spinner("🛡️ Conducting comprehensive threat assessment..."):
                 time.sleep(1.2)
                 analyzer = SentimentAnalyzer()
@@ -552,7 +830,17 @@ def main_page():
                 st.session_state.sentiment = sentiment
                 st.session_state.is_risk = is_risk
                 st.session_state.strategy = strategist.generate_response_strategy(test_text, brand_name) if is_risk else None
-        st.markdown('</div>', unsafe_allow_html=True)
+                
+                # Add success animation
+                st.markdown("""
+                <script>
+                    // Add success animation
+                    document.querySelector('.stSpinner').innerHTML += '<div style="position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; border-radius:12px;"><div style="color:#FFD700; font-size:24px;">✅ Analysis Complete!</div></div>';
+                    setTimeout(function() {
+                        document.querySelector('.stSpinner').style.display = 'none';
+                    }, 1000);
+                </script>
+                """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("### Live Analysis Results")
@@ -561,6 +849,21 @@ def main_page():
             st.markdown('<div class="metric-card floating">', unsafe_allow_html=True)
             st.markdown(f"**Sentiment Score:** `{st.session_state.sentiment:.2f}`")
             
+            # Visual sentiment indicator
+            sentiment_width = max(10, min(100, (st.session_state.sentiment + 1) * 50))
+            sentiment_color = "#FF4444" if st.session_state.sentiment < -0.3 else "#10B981" if st.session_state.sentiment > 0.3 else "#FFD700"
+            
+            st.markdown(f"""
+            <div style="background: rgba(255, 255, 255, 0.1); height: 20px; border-radius: 10px; margin: 10px 0; overflow: hidden;">
+                <div style="background: {sentiment_color}; width: {sentiment_width}%; height: 100%; border-radius: 10px; transition: all 0.5s ease;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #999;">
+                <span>Negative</span>
+                <span>Neutral</span>
+                <span>Positive</span>
+            </div>
+            """, unsafe_allow_html=True)
+            
             risk_html = f'<span class="risk-yes">🚨 CRITICAL THREAT DETECTED</span>' if st.session_state.is_risk else f'<span class="risk-no">✅ SYSTEM SECURE</span>'
             st.markdown(f"**Risk Assessment:** {risk_html}", unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
@@ -568,17 +871,26 @@ def main_page():
             if st.session_state.is_risk and st.session_state.strategy:
                 st.markdown("### Crisis Mitigation Protocol")
                 st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                
+                # Add animated header for crisis protocol
+                st.markdown("""
+                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <div style="font-size: 24px; margin-right: 10px;">🛡️</div>
+                    <div style="font-family: 'Playfair Display', serif; background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.3em;">Recommended Response Strategy</div>
+                </div>
+                """, unsafe_allow_html=True)
+                
                 st.markdown(st.session_state.strategy)
                 st.markdown('</div>', unsafe_allow_html=True)
                 
                 st.markdown("### Immediate Action Required")
                 action_col1, action_col2, action_col3 = st.columns(3)
                 with action_col1:
-                    st.button("**Issue Alert**", use_container_width=True)
+                    st.button("**Issue Alert**", use_container_width=True, key="alert_btn")
                 with action_col2:
-                    st.button("**Team Notification**", use_container_width=True)
+                    st.button("**Team Notification**", use_container_width=True, key="notify_btn")
                 with action_col3:
-                    st.button("**Generate Report**", use_container_width=True)
+                    st.button("**Generate Report**", use_container_width=True, key="report_btn")
         else:
             st.markdown("""
             <div class="metric-card">
@@ -587,6 +899,7 @@ def main_page():
                 Configure your brand and input text to begin threat assessment. 
                 The system will provide real-time sentiment analysis and crisis mitigation strategies.
                 </p>
+                <div style="text-align: center; font-size: 48px; margin: 20px 0;">🔍</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -604,6 +917,16 @@ def main():
     # Initialize session state for page navigation
     if "current_page" not in st.session_state:
         st.session_state.current_page = "intro"
+    
+    # Add page transition effect
+    st.markdown("""
+    <script>
+        document.querySelector('.stApp').classList.add('page-transition-enter');
+        setTimeout(function() {
+            document.querySelector('.stApp').classList.add('page-transition-enter-active');
+        }, 10);
+    </script>
+    """, unsafe_allow_html=True)
     
     # Check which page to show based on session state
     if st.session_state.current_page == "main":
