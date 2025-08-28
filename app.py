@@ -45,12 +45,6 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
-    .sidebar .sidebar-content {
-        background: linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 100%);
-        border-right: 2px solid #FFD700;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-    }
-    
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
         background-color: rgba(42, 42, 42, 0.8);
         color: #FFD700;
@@ -153,16 +147,17 @@ st.markdown("""
     
     .feature-card {
         background: rgba(42, 42, 42, 0.8);
-        padding: 15px;
-        border-radius: 12px;
+        padding: 12px;
+        border-radius: 10px;
         border: 1px solid #FFD700;
-        margin: 8px;
+        margin: 6px;
         text-align: center;
         transition: all 0.3s ease;
-        min-height: 120px;
+        min-height: 80px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        font-size: 0.9em;
     }
     
     .feature-card:hover {
@@ -250,9 +245,9 @@ st.markdown("""
         background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 2em;
+        font-size: 1.8em;
         text-align: center;
-        margin: 30px 0 20px 0;
+        margin: 25px 0 15px 0;
     }
     
     .professional-subheader {
@@ -291,6 +286,13 @@ st.markdown("""
         margin: 20px 0;
     }
     
+    .compact-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin: 15px 0;
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 1200px) {
         .premium-header {
@@ -325,6 +327,9 @@ st.markdown("""
         .metric-card {
             padding: 15px;
             margin: 8px 0;
+        }
+        .compact-grid {
+            grid-template-columns: 1fr;
         }
     }
     
@@ -470,43 +475,35 @@ def intro_page():
     </div>
     """, unsafe_allow_html=True)
     
-    # Features Section
+    # Features Section - COMPACT DESIGN
     st.markdown('<div class="section-header">Platform Capabilities</div>', unsafe_allow_html=True)
     
-    features_col1, features_col2, features_col3, features_col4 = st.columns(4)
-    
-    with features_col1:
-        st.markdown('<div class="feature-card floating">', unsafe_allow_html=True)
-        st.markdown("**Real-time Monitoring**")
-        st.markdown("Continuous digital surveillance")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with features_col2:
-        st.markdown('<div class="feature-card floating" style="animation-delay: 0.5s;">', unsafe_allow_html=True)
-        st.markdown("**AI Risk Assessment**")
-        st.markdown("Advanced sentiment analysis")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with features_col3:
-        st.markdown('<div class="feature-card floating" style="animation-delay: 1s;">', unsafe_allow_html=True)
-        st.markdown("**Crisis Management**")
-        st.markdown("Strategic mitigation protocols")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    with features_col4:
-        st.markdown('<div class="feature-card floating" style="animation-delay: 1.5s;">', unsafe_allow_html=True)
-        st.markdown("**Analytics Dashboard**")
-        st.markdown("Comprehensive insights")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Navigation Button
+    # Compact grid layout
     st.markdown("""
-    <div class="center-container">
-        <button class="nav-button" onclick="window.location.href='./?page=main'">
-            🚀 Launch Threat Analysis Dashboard
-        </button>
+    <div class="compact-grid">
+        <div class="feature-card floating">
+            <strong>🔍 Real-time Monitoring</strong><br>
+            <small>Continuous surveillance</small>
+        </div>
+        <div class="feature-card floating" style="animation-delay: 0.3s;">
+            <strong>⚠️ AI Risk Assessment</strong><br>
+            <small>Advanced analysis</small>
+        </div>
+        <div class="feature-card floating" style="animation-delay: 0.6s;">
+            <strong>🛡️ Crisis Management</strong><br>
+            <small>Strategic protocols</small>
+        </div>
+        <div class="feature-card floating" style="animation-delay: 0.9s;">
+            <strong>📊 Analytics Dashboard</strong><br>
+            <small>Comprehensive insights</small>
+        </div>
     </div>
     """, unsafe_allow_html=True)
+    
+    # FIXED Navigation Button - Using Streamlit's native button with JS
+    if st.button("🚀 Launch Threat Analysis Dashboard", use_container_width=True, key="launch_dashboard"):
+        st.query_params["page"] = "main"
+        st.rerun()
     
     # Footer
     st.markdown("---")
@@ -524,13 +521,9 @@ def main_page():
     st.markdown('<div class="professional-subheader">Real-Time Brand Protection Monitoring System</div>', unsafe_allow_html=True)
     
     # Navigation Button
-    st.markdown("""
-    <div style="text-align: center; margin-bottom: 20px;">
-        <button class="nav-button" onclick="window.location.href='./'">
-            📋 Return to Overview
-        </button>
-    </div>
-    """, unsafe_allow_html=True)
+    if st.button("📋 Return to Overview", use_container_width=True, key="return_overview"):
+        st.query_params["page"] = "intro"
+        st.rerun()
     
     # Main Content Columns
     col1, col2 = st.columns([1, 2])
@@ -608,7 +601,7 @@ def main_page():
     """, unsafe_allow_html=True)
 
 def main():
-    # Check which page to show - FIXED: Using st.query_params instead of experimental_get_query_params
+    # Check which page to show
     query_params = st.query_params
     page = query_params.get("page", ["intro"])[0]
     
