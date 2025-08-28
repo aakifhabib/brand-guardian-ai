@@ -1,42 +1,15 @@
-import subprocess
-import sys
 import streamlit as st
-from typing import List, Dict
 import time
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
 
-# Install required libraries and setup
-def install_and_setup():
-    try:
-        # Install all required packages
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "textblob", "openai", "requests", "plotly", "pandas", "numpy"])
-        
-        # Set up NLTK data
-        import nltk
-        nltk.download('punkt')
-        nltk.download('brown')
-        
-        # Import plotly after installation
-        global px, go, make_subplots
-        import plotly.express as px
-        import plotly.graph_objects as go
-        from plotly.subplots import make_subplots
-        
-        return True
-    except Exception as e:
-        st.error(f"Setup error: {e}")
-        return False
-
-# Check if setup was successful
-if install_and_setup():
-    from textblob import TextBlob
-    from openai import OpenAI
-else:
-    st.error("Failed to set up required dependencies. Please check your environment.")
-    st.stop()
+# Set page config first
+st.set_page_config(
+    page_title="BrandGuardian AI",
+    page_icon="🛡️",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Modern Tech CSS with Glassmorphism and Neumorphism
 st.markdown("""
@@ -301,43 +274,58 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize OpenAI client
-try:
-    client = OpenAI(api_key=st.secrets.get("OPENAI_API_KEY", "sk-dummy-key-for-testing"))
-except:
-    client = None
-    st.warning("OpenAI API key not found. Some features may be limited.")
+# Simple sentiment analysis without external dependencies
+class SentimentAnalyzer:
+    def analyze_sentiment(self, text: str) -> float:
+        try:
+            # Simple sentiment analysis based on keywords
+            positive_words = ['love', 'great', 'awesome', 'amazing', 'excellent', 'good', 'best', 'fantastic', 'wonderful', 'perfect']
+            negative_words = ['hate', 'terrible', 'awful', 'bad', 'worst', 'horrible', 'disappointing', 'poor', 'suck', 'waste']
+            
+            text_lower = text.lower()
+            positive_count = sum(1 for word in positive_words if word in text_lower)
+            negative_count = sum(1 for word in negative_words if word in text_lower)
+            total_words = len(text.split())
+            
+            if total_words == 0:
+                return 0.0
+                
+            # Simple sentiment score calculation
+            sentiment = (positive_count - negative_count) / total_words
+            return max(-1.0, min(1.0, sentiment * 5))  # Scale and clamp between -1 and 1
+            
+        except:
+            return 0.0
 
-# Generate sample data for executive dashboard
-def generate_sample_data():
-    # Generate dates for the last 30 days
-    dates = [datetime.now() - timedelta(days=i) for i in range(30, 0, -1)]
-    
-    # Generate sample sentiment data
-    sentiment_scores = np.random.uniform(-0.8, 0.9, 30)
-    
-    # Generate sample threat counts
-    threat_counts = np.random.poisson(3, 30)
-    
-    # Generate platform distribution
-    platforms = ['Twitter', 'Facebook', 'Instagram', 'Reddit', 'News Sites', 'Review Sites']
-    platform_distribution = {platform: np.random.randint(5, 30) for platform in platforms}
-    
-    # Generate topic distribution
-    topics = ['Customer Service', 'Product Quality', 'Shipping', 'Pricing', 'Company Ethics', 'Website Experience']
-    topic_distribution = {topic: np.random.randint(5, 25) for topic in topics}
-    
-    # Generate response time data
-    response_times = np.random.uniform(1.5, 18.0, 30)
-    
-    return {
-        'dates': dates,
-        'sentiment_scores': sentiment_scores,
-        'threat_counts': threat_counts,
-        'platform_distribution': platform_distribution,
-        'topic_distribution': topic_distribution,
-        'response_times': response_times
-    }
+    def is_high_risk(self, text: str, sentiment_score: float) -> bool:
+        if sentiment_score > -0.3:
+            return False
+        if len(text) < 10:
+            return False
+        negative_keywords = ['hate', 'terrible', 'awful', 'sue', 'legal', 'boycott', 'scam', 'fraud', 'worst', 'never again', 'refund']
+        text_lower = text.lower()
+        return any(keyword in text_lower for keyword in negative_keywords) or sentiment_score < -0.6
+
+# Simple mitigation strategist without OpenAI API
+class MitigationStrategist:
+    def generate_response_strategy(self, risky_text: str, brand_name: str) -> str:
+        strategies = [
+            f"1. Immediately acknowledge the concern about {brand_name} on all social channels",
+            "2. Direct message the user to address their concerns privately",
+            "3. Prepare an official statement addressing the specific issues raised",
+            "4. Review internal processes to prevent similar issues in the future",
+            "5. Follow up with the customer to ensure resolution and rebuild trust"
+        ]
+        
+        # Customize strategy based on content
+        text_lower = risky_text.lower()
+        if any(word in text_lower for word in ['sue', 'legal', 'lawyer']):
+            strategies.append("6. Consult with legal team before making any public statements")
+            
+        if any(word in text_lower for word in ['refund', 'money', 'price']):
+            strategies.append("7. Review refund policy and consider offering compensation")
+            
+        return "\n\n".join(strategies)
 
 # Multi-Platform Monitoring Integration
 class SocialMediaMonitor:
@@ -423,10 +411,10 @@ class CompetitiveAnalyzer:
 class InfluencerAnalyzer:
     def __init__(self):
         self.influencer_db = {
-            'influencer1': {'followers': 500000, 'engagement_rate': 4.5, 'category': 'Fitness'},
-            'influencer2': {'followers': 1200000, 'engagement_rate': 3.2, 'category': 'Lifestyle'},
-            'influencer3': {'followers': 800000, 'engagement_rate': 5.1, 'category': 'Sports'},
-            'influencer4': {'followers': 300000, 'engagement_rate': 7.8, 'category': 'Fashion'}
+            'Fitness Expert': {'followers': 500000, 'engagement_rate': 4.5, 'category': 'Fitness'},
+            'Lifestyle Guru': {'followers': 1200000, 'engagement_rate': 3.2, 'category': 'Lifestyle'},
+            'Sports Analyst': {'followers': 800000, 'engagement_rate': 5.1, 'category': 'Sports'},
+            'Fashion Icon': {'followers': 300000, 'engagement_rate': 7.8, 'category': 'Fashion'}
         }
     
     def analyze_influencer_impact(self, brand_name):
@@ -528,52 +516,6 @@ class BrandHealthMonitor:
             'breakdown': brand_data
         }
 
-class SentimentAnalyzer:
-    def analyze_sentiment(self, text: str) -> float:
-        try:
-            analysis = TextBlob(text)
-            return analysis.sentiment.polarity
-        except:
-            return 0.0
-
-    def is_high_risk(self, text: str, sentiment_score: float) -> bool:
-        if sentiment_score > -0.3:
-            return False
-        if len(text) < 10:
-            return False
-        negative_keywords = ['hate', 'terrible', 'awful', 'sue', 'legal', 'boycott', 'scam', 'fraud', 'worst', 'never again', 'refund']
-        return any(keyword in text.lower() for keyword in negative_keywords) or sentiment_score < -0.6
-
-class MitigationStrategist:
-    def generate_response_strategy(self, risky_text: str, brand_name: str) -> str:
-        try:
-            if not client:
-                return "OpenAI API not configured. Please add your API key to access this feature."
-                
-            prompt = f"""
-            Brand: {brand_name}
-            Negative Post: "{risky_text}"
-            
-            As a PR crisis expert, provide 3-5 immediate, actionable steps to address this situation.
-            Focus on: public response, customer service, and reputation management.
-            Be specific and professional.
-            """
-            
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are an experienced PR crisis management specialist."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=300
-            )
-            return response.choices[0].message.content
-        except Exception as e:
-            return f"""⚠️ AI strategy generation failed. Immediate steps:
-            1. Acknowledge the concern publicly within 1 hour
-            2. Offer direct message resolution
-            3. Prepare official statement addressing: {risky_text[:100]}..."""
-
 # Initialize all analyzers
 social_monitor = SocialMediaMonitor()
 competitive_analyzer = CompetitiveAnalyzer()
@@ -586,16 +528,13 @@ mitigation_strategist = MitigationStrategist()
 def show_executive_dashboard(brand_name):
     st.markdown('<div class="dashboard-header">Executive Intelligence Dashboard</div>', unsafe_allow_html=True)
     
-    # Generate sample data
-    data = generate_sample_data()
-    
     # KPI Metrics
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        avg_sentiment = np.mean(data['sentiment_scores'])
-        sentiment_trend = "📈 Improving" if avg_sentiment > 0.1 else "📉 Declining" if avg_sentiment < -0.1 else "➡️ Stable"
-        sentiment_color = "positive-kpi" if avg_sentiment > 0.1 else "negative-kpi" if avg_sentiment < -0.1 else "neutral-kpi"
+        avg_sentiment = random.uniform(0.5, 0.8)
+        sentiment_trend = "📈 Improving" if avg_sentiment > 0.6 else "📉 Declining" if avg_sentiment < 0.4 else "➡️ Stable"
+        sentiment_color = "positive-kpi" if avg_sentiment > 0.6 else "negative-kpi" if avg_sentiment < 0.4 else "neutral-kpi"
         st.markdown(f'''
         <div class="kpi-card">
             <div class="kpi-label">Avg. Sentiment Score</div>
@@ -605,7 +544,7 @@ def show_executive_dashboard(brand_name):
         ''', unsafe_allow_html=True)
     
     with col2:
-        total_threats = np.sum(data['threat_counts'])
+        total_threats = random.randint(20, 100)
         st.markdown(f'''
         <div class="kpi-card">
             <div class="kpi-label">Threats Detected (30 days)</div>
@@ -615,7 +554,7 @@ def show_executive_dashboard(brand_name):
         ''', unsafe_allow_html=True)
     
     with col3:
-        avg_response_time = np.mean(data['response_times'])
+        avg_response_time = random.uniform(2.5, 12.0)
         st.markdown(f'''
         <div class="kpi-card">
             <div class="kpi-label">Avg. Response Time (hrs)</div>
@@ -625,7 +564,7 @@ def show_executive_dashboard(brand_name):
         ''', unsafe_allow_html=True)
     
     with col4:
-        risk_level = "High" if total_threats > 80 or avg_sentiment < -0.2 else "Medium" if total_threats > 50 or avg_sentiment < 0 else "Low"
+        risk_level = "High" if total_threats > 80 or avg_sentiment < 0.4 else "Medium" if total_threats > 50 or avg_sentiment < 0.6 else "Low"
         risk_color = "negative-kpi" if risk_level == "High" else "neutral-kpi" if risk_level == "Medium" else "positive-kpi"
         st.markdown(f'''
         <div class="kpi-card">
@@ -635,108 +574,21 @@ def show_executive_dashboard(brand_name):
         </div>
         ''', unsafe_allow_html=True)
     
-    # Sentiment Trend Chart
+    # Simple charts using Streamlit's native functions
     st.markdown("#### Sentiment Trend (30 Days)")
-    sentiment_df = pd.DataFrame({
-        'Date': data['dates'],
-        'Sentiment Score': data['sentiment_scores'],
-        '7-Day Avg': pd.Series(data['sentiment_scores']).rolling(window=7).mean()
-    })
+    sentiment_data = {
+        'Date': [(datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(30, 0, -1)],
+        'Sentiment Score': [random.uniform(0.3, 0.9) for _ in range(30)]
+    }
+    st.line_chart(sentiment_data, x='Date', y='Sentiment Score')
     
-    fig = make_subplots(specs=[[{"secondary_y": False}]])
-    fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Sentiment Score'], 
-                            name='Daily Sentiment', line=dict(color='#8B5CF6', width=2)))
-    fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['7-Day Avg'], 
-                            name='7-Day Average', line=dict(color='#10B981', width=3)))
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#D1D5DB',
-        height=400,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Platform and Topic Analysis
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("#### Threats by Platform")
-        platform_df = pd.DataFrame({
-            'Platform': list(data['platform_distribution'].keys()),
-            'Count': list(data['platform_distribution'].values())
-        })
-        
-        fig = px.pie(platform_df, values='Count', names='Platform', 
-                     color_discrete_sequence=px.colors.qualitative.Set3)
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#D1D5DB',
-            height=400,
-            showlegend=True
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        st.markdown("#### Threats by Topic")
-        topic_df = pd.DataFrame({
-            'Topic': list(data['topic_distribution'].keys()),
-            'Count': list(data['topic_distribution'].values())
-        })
-        
-        fig = px.bar(topic_df, x='Count', y='Topic', orientation='h',
-                     color='Count', color_continuous_scale='Viridis')
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#D1D5DB',
-            height=400,
-            showlegend=False
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    
-    # Threat Timeline
-    st.markdown("#### Daily Threat Count")
-    threat_df = pd.DataFrame({
-        'Date': data['dates'],
-        'Threats': data['threat_counts']
-    })
-    
-    fig = px.bar(threat_df, x='Date', y='Threats', 
-                 color='Threats', color_continuous_scale='reds')
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#D1D5DB',
-        height=400,
-        showlegend=False
-    )
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Response Time Analysis
-    st.markdown("#### Response Time Performance")
-    response_df = pd.DataFrame({
-        'Date': data['dates'],
-        'Response Time (hours)': data['response_times']
-    })
-    
-    fig = px.line(response_df, x='Date', y='Response Time (hours)',
-                  markers=True, line_shape='spline')
-    fig.add_hline(y=6, line_dash="dash", line_color="green", annotation_text="Target")
-    fig.add_hline(y=12, line_dash="dash", line_color="orange", annotation_text="Warning")
-    fig.add_hline(y=18, line_dash="dash", line_color="red", annotation_text="Critical")
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#D1D5DB',
-        height=400,
-        showlegend=False
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    # Platform distribution
+    st.markdown("#### Threats by Platform")
+    platform_data = {
+        'Platform': ['Twitter', 'Facebook', 'Instagram', 'Reddit', 'News Sites', 'Review Sites'],
+        'Count': [random.randint(5, 30) for _ in range(6)]
+    }
+    st.bar_chart(platform_data, x='Platform', y='Count')
 
 def show_competitive_intelligence(brand_name):
     st.header("Competitive Intelligence")
@@ -748,43 +600,38 @@ def show_competitive_intelligence(brand_name):
     
     with col1:
         st.subheader("Sentiment Comparison")
-        fig = px.bar(x=list(sentiment_comparison.keys()), y=list(sentiment_comparison.values()),
-                     labels={'x': 'Brand', 'y': 'Sentiment Score'})
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#D1D5DB'
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        comparison_data = {
+            'Brand': list(sentiment_comparison.keys()),
+            'Sentiment Score': list(sentiment_comparison.values())
+        }
+        st.bar_chart(comparison_data, x='Brand', y='Sentiment Score')
     
     with col2:
         st.subheader("Market Share of Voice")
         labels = [brand_name] + list(share_of_voice['competitors'].keys())
         values = [share_of_voice['brand_mentions']] + list(share_of_voice['competitors'].values())
-        fig = px.pie(values=values, names=labels)
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#D1D5DB'
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        
+        # Create a simple pie chart using columns
+        col1, col2, col3 = st.columns(3)
+        col1.metric(brand_name, f"{share_of_voice['market_share']:.1f}%")
+        for i, (competitor, mentions) in enumerate(share_of_voice['competitors'].items()):
+            if i == 0:
+                col2.metric(competitor, f"{(mentions/share_of_voice['total_mentions'])*100:.1f}%")
+            elif i == 1:
+                col3.metric(competitor, f"{(mentions/share_of_voice['total_mentions'])*100:.1f}%")
 
 def show_influencer_analysis(brand_name):
     st.header("Influencer Impact Analysis")
     
     influencer_data = influencer_analyzer.analyze_influencer_impact(brand_name)
-    df = pd.DataFrame(influencer_data)
     
-    st.dataframe(df)
-    
-    fig = px.scatter(df, x='followers', y='engagement_rate', size='impact_score',
-                     color='sentiment', hover_name='influencer')
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font_color='#D1D5DB'
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    for influencer in influencer_data:
+        with st.expander(f"{influencer['influencer']} - {influencer['followers']:,} followers"):
+            st.write(f"**Engagement Rate:** {influencer['engagement_rate']}%")
+            st.write(f"**Sentiment:** {influencer['sentiment']:.2f}")
+            st.write(f"**Potential Reach:** {influencer['potential_reach']:,}")
+            st.write(f"**Impact Score:** {influencer['impact_score']:.1f}")
+            st.write(f"**Recommendation:** {influencer['recommendation']}")
 
 def show_brand_health(brand_name):
     st.header("Brand Health Dashboard")
@@ -812,15 +659,10 @@ def show_brand_health(brand_name):
     
     with col2:
         st.subheader("Historical Trend")
-        dates = pd.date_range(end=datetime.now(), periods=30, freq='D')
+        dates = [(datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(30, 0, -1)]
         trend_data = [random.uniform(health_score['score'] - 15, health_score['score'] + 5) for _ in range(30)]
-        fig = px.line(x=dates, y=trend_data, labels={'x': 'Date', 'y': 'Health Score'})
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#D1D5DB'
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        trend_chart_data = {'Date': dates, 'Health Score': trend_data}
+        st.line_chart(trend_chart_data, x='Date', y='Health Score')
 
 def show_social_monitoring(brand_name):
     st.header("Social Media Monitoring")
