@@ -1,32 +1,42 @@
 import subprocess
 import sys
-import requests
 import streamlit as st
 from typing import List, Dict
 import time
-from streamlit.components.v1 import html
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import random
 
 # Install required libraries and setup
 def install_and_setup():
     try:
+        # Install all required packages
         subprocess.check_call([sys.executable, "-m", "pip", "install", "textblob", "openai", "requests", "plotly", "pandas", "numpy"])
+        
+        # Set up NLTK data
         import nltk
         nltk.download('punkt')
         nltk.download('brown')
+        
+        # Import plotly after installation
+        global px, go, make_subplots
+        import plotly.express as px
+        import plotly.graph_objects as go
+        from plotly.subplots import make_subplots
+        
+        return True
     except Exception as e:
         st.error(f"Setup error: {e}")
+        return False
 
-install_and_setup()
-
-from textblob import TextBlob
-from openai import OpenAI
+# Check if setup was successful
+if install_and_setup():
+    from textblob import TextBlob
+    from openai import OpenAI
+else:
+    st.error("Failed to set up required dependencies. Please check your environment.")
+    st.stop()
 
 # Modern Tech CSS with Glassmorphism and Neumorphism
 st.markdown("""
@@ -292,7 +302,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Initialize OpenAI client
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+try:
+    client = OpenAI(api_key=st.secrets.get("OPENAI_API_KEY", "sk-dummy-key-for-testing"))
+except:
+    client = None
+    st.warning("OpenAI API key not found. Some features may be limited.")
 
 # Generate sample data for executive dashboard
 def generate_sample_data():
@@ -533,6 +547,9 @@ class SentimentAnalyzer:
 class MitigationStrategist:
     def generate_response_strategy(self, risky_text: str, brand_name: str) -> str:
         try:
+            if not client:
+                return "OpenAI API not configured. Please add your API key to access this feature."
+                
             prompt = f"""
             Brand: {brand_name}
             Negative Post: "{risky_text}"
@@ -758,8 +775,7 @@ def show_influencer_analysis(brand_name):
     influencer_data = influencer_analyzer.analyze_influencer_impact(brand_name)
     df = pd.DataFrame(influencer_data)
     
-    st.dataframe(df.style.applymap(lambda x: 'background-color: lightgreen' if x == 'Partner' else '', 
-                                  subset=['recommendation']))
+    st.dataframe(df)
     
     fig = px.scatter(df, x='followers', y='engagement_rate', size='impact_score',
                      color='sentiment', hover_name='influencer')
@@ -864,12 +880,64 @@ def show_crisis_prediction(brand_name):
     st.subheader("Recommendation")
     st.info(prediction['recommendation'])
 
+def show_threat_analyzer(brand_name):
+    st.header("Threat Analyzer")
+    
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        st.markdown("### 🧪 Threat Simulator")
+        st.markdown('<div class="glowing-border cyber-border" style="padding: 20px;">', unsafe_allow_html=True)
+        test_text = st.text_area("**🔍 Enter text to analyze:**", 
+                               "I absolutely hate this company! Their service is terrible and I will sue them!",
+                               height=150)
+        
+        if st.button("🚀 Analyze Sentiment", use_container_width=True, key="analyze_btn"):
+            with st.spinner("🛡️ Scanning for threats..."):
+                time.sleep(1.5)  # Dramatic pause for effect
+                
+                sentiment = sentiment_analyzer.analyze_sentiment(test_text)
+                is_risk = sentiment_analyzer.is_high_risk(test_text, sentiment)
+                
+                st.session_state.sentiment = sentiment
+                st.session_state.is_risk = is_risk
+                st.session_state.strategy = mitigation_strategist.generate_response_strategy(test_text, brand_name) if is_risk else None
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("### 📊 Threat Analysis")
+        
+        if 'sentiment' in st.session_state:
+            # Animated Results Card
+            st.markdown('<div class="metric-card floating">', unsafe_allow_html=True)
+            st.markdown(f"**🎯 Sentiment Score:** `{st.session_state.sentiment:.2f}`")
+            
+            risk_html = f'<span class="risk-yes">🚨 CRITICAL THREAT DETECTED</span>' if st.session_state.is_risk else f'<span class="risk-no">✅ SYSTEM SECURE</span>'
+            st.markdown(f"**📈 Risk Level:** {risk_html}", unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            if st.session_state.is_risk and st.session_state.strategy:
+                st.markdown("### 🛡️ Crisis Mitigation Protocol")
+                st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+                st.markdown(st.session_state.strategy)
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                st.markdown("### ⚡ Immediate Actions")
+                action_col1, action_col2, action_col3 = st.columns(3)
+                with action_col1:
+                    if st.button("📧 Send Alert", use_container_width=True, key="alert_btn"):
+                        st.success("Alert sent to team!")
+                with action_col2:
+                    if st.button("📱 Notify Team", use_container_width=True, key="notify_btn"):
+                        st.success("Team notified!")
+                with action_col3:
+                    if st.button("📊 Generate Report", use_container_width=True, key="report_btn"):
+                        st.success("Report generated!")
+
 def main():
     # Initialize session state
     if "show_intro" not in st.session_state:
         st.session_state.show_intro = True
-    if "current_tab" not in st.session_state:
-        st.session_state.current_tab = "Dashboard"
     
     # Premium Header with Animation
     st.markdown("""
@@ -898,58 +966,7 @@ def main():
         show_executive_dashboard(brand_name)
     
     with tab2:
-        st.header("Threat Analyzer")
-        
-        col1, col2 = st.columns([1, 2])
-        
-        with col1:
-            st.markdown("### 🧪 Threat Simulator")
-            st.markdown('<div class="glowing-border cyber-border" style="padding: 20px;">', unsafe_allow_html=True)
-            test_text = st.text_area("**🔍 Enter text to analyze:**", 
-                                   "I absolutely hate this company! Their service is terrible and I will sue them!",
-                                   height=150)
-            
-            if st.button("🚀 Analyze Sentiment", use_container_width=True, key="analyze_btn"):
-                with st.spinner("🛡️ Scanning for threats..."):
-                    time.sleep(1.5)  # Dramatic pause for effect
-                    
-                    sentiment = sentiment_analyzer.analyze_sentiment(test_text)
-                    is_risk = sentiment_analyzer.is_high_risk(test_text, sentiment)
-                    
-                    st.session_state.sentiment = sentiment
-                    st.session_state.is_risk = is_risk
-                    st.session_state.strategy = mitigation_strategist.generate_response_strategy(test_text, brand_name) if is_risk else None
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with col2:
-            st.markdown("### 📊 Threat Analysis")
-            
-            if 'sentiment' in st.session_state:
-                # Animated Results Card
-                st.markdown('<div class="metric-card floating">', unsafe_allow_html=True)
-                st.markdown(f"**🎯 Sentiment Score:** `{st.session_state.sentiment:.2f}`")
-                
-                risk_html = f'<span class="risk-yes">🚨 CRITICAL THREAT DETECTED</span>' if st.session_state.is_risk else f'<span class="risk-no">✅ SYSTEM SECURE</span>'
-                st.markdown(f"**📈 Risk Level:** {risk_html}", unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-                if st.session_state.is_risk and st.session_state.strategy:
-                    st.markdown("### 🛡️ Crisis Mitigation Protocol")
-                    st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                    st.markdown(st.session_state.strategy)
-                    st.markdown('</div>', unsafe_allow_html=True)
-                    
-                    st.markdown("### ⚡ Immediate Actions")
-                    action_col1, action_col2, action_col3 = st.columns(3)
-                    with action_col1:
-                        if st.button("📧 Send Alert", use_container_width=True, key="alert_btn"):
-                            st.success("Alert sent to team!")
-                    with action_col2:
-                        if st.button("📱 Notify Team", use_container_width=True, key="notify_btn"):
-                            st.success("Team notified!")
-                    with action_col3:
-                        if st.button("📊 Generate Report", use_container_width=True, key="report_btn"):
-                            st.success("Report generated!")
+        show_threat_analyzer(brand_name)
     
     with tab3:
         show_social_monitoring(brand_name)
