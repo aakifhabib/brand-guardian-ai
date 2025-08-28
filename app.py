@@ -21,19 +21,19 @@ install_and_setup()
 from textblob import TextBlob
 from openai import OpenAI
 
-# Modern Tech CSS with Glassmorphism and Neumorphism
+# Custom CSS for Premium Black & Gold Theme with Animations
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap');
     
     .main {
-        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 50%, #0A0A0A 100%);
         color: #FFFFFF;
         font-family: 'Inter', sans-serif;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        background: linear-gradient(135deg, #000000 0%, #1A1A1A 100%);
         background-size: 400% 400%;
         animation: gradientBG 15s ease infinite;
     }
@@ -44,53 +44,51 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
+    .sidebar .sidebar-content {
+        background: linear-gradient(180deg, #1A1A1A 0%, #2D2D2D 100%);
+        border-right: 2px solid #FFD700;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+    
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(10px);
-        color: #000000; /* Changed from #FFFFFF to #000000 for better visibility */
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 14px;
+        background-color: rgba(42, 42, 42, 0.8);
+        color: #FFD700;
+        border: 2px solid #FFD700;
+        border-radius: 10px;
+        padding: 12px;
         font-size: 14px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
     .stTextInput>div>div>input:focus, .stTextArea>div>div>textarea:focus {
-        border-color: #6366F1;
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-        background: rgba(255, 255, 255, 0.12);
-        color: #000000; /* Added for focus state */
+        border-color: #FFB700;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        transform: scale(1.02);
     }
     
     .stButton>button {
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-        color: white;
-        font-weight: 600;
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
+        color: #000000;
+        font-weight: bold;
         border: none;
         border-radius: 12px;
-        padding: 14px 28px;
+        padding: 15px 30px;
         font-size: 16px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
     }
     
     .stButton>button:hover {
-        background: linear-gradient(135deg, #818CF8 0%, #A78BFA 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .stButton>button:active {
-        transform: scale(0.98);
+        background: linear-gradient(135deg, #FFB700 0%, #FF9800 100%);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
     }
     
     .risk-yes {
-        color: #EF4444;
+        color: #FF4444;
         font-size: 1.8em;
         font-weight: bold;
-        text-shadow: 0 0 15px rgba(239, 68, 68, 0.7);
+        text-shadow: 0 0 15px rgba(255, 68, 68, 0.7);
         animation: pulseRed 2s infinite;
     }
     
@@ -101,10 +99,10 @@ st.markdown("""
     }
     
     .risk-no {
-        color: #10B981;
+        color: #00FF00;
         font-size: 1.8em;
         font-weight: bold;
-        text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+        text-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         animation: pulseGreen 3s infinite;
     }
     
@@ -114,19 +112,20 @@ st.markdown("""
         100% { opacity: 1; }
     }
     
-    .accent-text {
-        color: #8B5CF6;
-        font-weight: 600;
+    .gold-text {
+        color: #FFD700;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
     }
     
     .premium-header {
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 50%, #FFD700 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
         font-size: 3.5em;
-        font-weight: 800;
-        margin-bottom: 20px;
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 30px;
         animation: shimmer 3s infinite;
     }
     
@@ -136,46 +135,46 @@ st.markdown("""
     }
     
     .metric-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
+        background: rgba(42, 42, 42, 0.9);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 2px solid #FFD700;
         margin: 15px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
         transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
     }
     
     .metric-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 40px rgba(255, 215, 0, 0.3);
     }
     
     .feature-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
+        background: rgba(42, 42, 42, 0.8);
         padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        border: 1px solid #FFD700;
         margin: 10px;
         text-align: center;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
     
     .feature-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
     }
     
     .glowing-border {
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
+        border: 2px solid #FFD700;
+        border-radius: 15px;
+        animation: glow 2s infinite alternate;
+        box-shadow: 0 0 5px #FFD700;
+    }
+    
+    @keyframes glow {
+        from { box-shadow: 0 0 5px #FFD700; }
+        to { box-shadow: 0 0 20px #FFD700, 0 0 30px #FFB700; }
     }
     
     .floating { 
@@ -188,35 +187,21 @@ st.markdown("""
         100% { transform: translateY(0px); }
     }
     
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 1rem 0;
+    .typewriter {
+        overflow: hidden;
+        border-right: .15em solid #FFD700;
+        white-space: nowrap;
+        animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
     }
     
-    .logo {
-        font-size: 4rem;
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
     }
     
-    .tech-pattern {
-        background-image: 
-            radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-        background-size: 50% 50%;
-        background-position: 0 0, 100% 100%;
-        background-repeat: no-repeat;
-    }
-    
-    .cyber-border {
-        position: relative;
-        border: 1px solid transparent;
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2)) padding-box,
-                    linear-gradient(135deg, #6366F1, #8B5CF6) border-box;
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: #FFD700; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -269,30 +254,25 @@ class MitigationStrategist:
 
 def main():
     # Premium Header with Animation
-    st.markdown("""
-    <div class="logo-container">
-        <div class="logo">🛡️</div>
-    </div>
-    <h1 class="premium-header floating">BrandGuardian AI</h1>
-    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Enterprise Digital Risk Protection Platform</div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="premium-header floating">🛡️ BrandGuardian AI</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; margin-bottom: 40px;" class="gold-text">Enterprise-Grade Brand Protection Suite</div>', unsafe_allow_html=True)
     
     # Main Content Columns
     col1, col2 = st.columns([1, 2])
     
     with col1:
         st.markdown("### ⚙️ Configuration Panel")
-        st.markdown('<div class="glowing-border cyber-border" style="padding: 20px; margin-bottom: 20px;">', unsafe_allow_html=True)
+        st.markdown('<div class="glowing-border" style="padding: 20px; margin-bottom: 20px;">', unsafe_allow_html=True)
         brand_name = st.text_input("**🏷️ Brand Name**", "Nike", help="Enter the brand you want to monitor")
         st.markdown('</div>', unsafe_allow_html=True)
         
         st.markdown("### 🧪 Threat Simulator")
-        st.markdown('<div class="glowing-border cyber-border" style="padding: 20px;">', unsafe_allow_html=True)
+        st.markdown('<div class="glowing-border" style="padding: 20px;">', unsafe_allow_html=True)
         test_text = st.text_area("**🔍 Enter text to analyze:**", 
                                "I absolutely hate this company! Their service is terrible and I will sue them!",
                                height=150)
         
-        if st.button("🚀 Analyze Sentiment", use_container_width=True, key="analyze_btn"):
+        if st.button("🚀 Analyze Sentiment", use_container_width=True):
             with st.spinner("🛡️ Scanning for threats..."):
                 time.sleep(1.5)  # Dramatic pause for effect
                 analyzer = SentimentAnalyzer()
@@ -327,25 +307,22 @@ def main():
                 st.markdown("### ⚡ Immediate Actions")
                 action_col1, action_col2, action_col3 = st.columns(3)
                 with action_col1:
-                    if st.button("📧 Send Alert", use_container_width=True, key="alert_btn"):
-                        st.success("Alert sent to team!")
+                    st.button("📧 Send Alert", use_container_width=True)
                 with action_col2:
-                    if st.button("📱 Notify Team", use_container_width=True, key="notify_btn"):
-                        st.success("Team notified!")
+                    st.button("📱 Notify Team", use_container_width=True)
                 with action_col3:
-                    if st.button("📊 Generate Report", use_container_width=True, key="report_btn"):
-                        st.success("Report generated!")
+                    st.button("📊 Generate Report", use_container_width=True)
 
     # Features Section with Animated Cards
     st.markdown("---")
-    st.markdown("### ✨ Platform Capabilities")
+    st.markdown("### ✨ Premium Features")
     
     features_col1, features_col2, features_col3, features_col4 = st.columns(4)
     
     with features_col1:
         st.markdown('<div class="feature-card floating">', unsafe_allow_html=True)
         st.markdown("**🔍 Real-time Monitoring**")
-        st.markdown("24/7 digital surveillance")
+        st.markdown("24/7 brand surveillance")
         st.markdown('</div>', unsafe_allow_html=True)
     
     with features_col2:
@@ -368,8 +345,8 @@ def main():
 
     # Footer
     st.markdown("---")
-    st.markdown('<div style="text-align: center; padding: 20px;" class="accent-text">', unsafe_allow_html=True)
-    st.markdown("**🛡️ Protecting Brands in the Digital Age**")
+    st.markdown('<div style="text-align: center; padding: 20px;" class="gold-text">', unsafe_allow_html=True)
+    st.markdown("**🛡️ Protecting Brands Since 2024**")
     st.markdown("</div>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
