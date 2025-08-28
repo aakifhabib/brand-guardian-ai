@@ -104,7 +104,7 @@ st.markdown("""
     @keyframes pulseGreen {
         0% { opacity: 1; }
         50% { opacity: 0.8; }
-        100% { opacity: 1; }
+       100% { opacity: 1; }
     }
     
     .gold-text {
@@ -580,7 +580,7 @@ st.markdown("""
     }
     
     .testimonial::before {
-        content: """;
+        content: '"';
         position: absolute;
         top: 10px;
         left: 15px;
@@ -922,7 +922,7 @@ def main_page():
                 <div style="background: rgba(255, 215, 0, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
                     <input type="checkbox" checked> Facebook
                 </div>
-                <div style="background: rgba(255, 215, 0, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
+                <div style="background: rgba(255, 215, 0, 0.1; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
                     <input type="checkbox" checked> Instagram
                 </div>
                 <div style="background: rgba(255, 215, 0, 0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 215, 0, 0.3);">
