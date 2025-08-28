@@ -47,7 +47,7 @@ st.markdown("""
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
         background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(10px);
-        color: #FFFFFF;
+        color: #000000; /* Changed from #FFFFFF to #000000 for better visibility */
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         padding: 14px;
@@ -60,6 +60,7 @@ st.markdown("""
         border-color: #6366F1;
         box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         background: rgba(255, 255, 255, 0.12);
+        color: #000000; /* Added for focus state */
     }
     
     .stButton>button {
@@ -187,26 +188,6 @@ st.markdown("""
         100% { transform: translateY(0px); }
     }
     
-    /* Intro panel styles */
-    .intro-panel {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        padding: 30px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 20px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-    
-    .intro-feature {
-        margin: 1.5rem 0;
-        padding: 1.5rem;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
     .logo-container {
         display: flex;
         justify-content: center;
@@ -236,21 +217,6 @@ st.markdown("""
         border: 1px solid transparent;
         background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2)) padding-box,
                     linear-gradient(135deg, #6366F1, #8B5CF6) border-box;
-    }
-    
-    /* Collapsible intro section */
-    .intro-toggle {
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 12px;
-        margin: 20px 0;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .intro-toggle:hover {
-        background: linear-gradient(135deg, #818CF8 0%, #A78BFA 100%);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -302,10 +268,6 @@ class MitigationStrategist:
             3. Prepare official statement addressing: {risky_text[:100]}..."""
 
 def main():
-    # Initialize session state for intro panel
-    if "show_intro" not in st.session_state:
-        st.session_state.show_intro = True
-    
     # Premium Header with Animation
     st.markdown("""
     <div class="logo-container">
@@ -314,57 +276,6 @@ def main():
     <h1 class="premium-header floating">BrandGuardian AI</h1>
     <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Enterprise Digital Risk Protection Platform</div>
     """, unsafe_allow_html=True)
-    
-    # Toggle for intro panel
-    if st.button("📋 About BrandGuardian AI", key="toggle_intro"):
-        st.session_state.show_intro = not st.session_state.show_intro
-        st.rerun()
-    
-    # Intro panel (collapsible)
-    if st.session_state.show_intro:
-        with st.container():
-            st.markdown("""
-            <div class="intro-panel tech-pattern">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h2 style="color: #E5E7EB;">Welcome to BrandGuardian AI</h2>
-                    <p style="color: #D1D5DB;">Your comprehensive solution for digital brand protection</p>
-                </div>
-                
-                <div style="color: #D1D5DB; line-height: 1.6; margin-bottom: 25px;">
-                    BrandGuardian AI is a comprehensive brand protection solution that leverages advanced artificial intelligence 
-                    to monitor, detect, and mitigate digital threats to your brand reputation in real-time. Our platform combines 
-                    sophisticated sentiment analysis with crisis management expertise to safeguard your brand across all digital channels.
-                </div>
-                
-                <div class="intro-feature">
-                    <h3 style="color: #E5E7EB;">🔍 Real-time Digital Monitoring</h3>
-                    <p style="color: #D1D5DB;">24/7 surveillance across social media, review sites, forums, and news outlets to identify potential threats as they emerge</p>
-                </div>
-                
-                <div class="intro-feature">
-                    <h3 style="color: #E5E7EB;">⚠️ AI-Powered Threat Detection</h3>
-                    <p style="color: #D1D5DB;">Advanced natural language processing to identify emerging brand risks before they escalate into full-blown crises</p>
-                </div>
-                
-                <div class="intro-feature">
-                    <h3 style="color: #E5E7EB;">🛡️ Proactive Crisis Mitigation</h3>
-                    <p style="color: #D1D5DB;">Immediate, actionable strategies developed by AI trained on PR crisis management protocols from industry experts</p>
-                </div>
-                
-                <div class="intro-feature">
-                    <h3 style="color: #E5E7EB;">📊 Executive Intelligence Dashboard</h3>
-                    <p style="color: #D1D5DB;">Comprehensive analytics and insights for data-driven brand protection decisions with detailed reporting capabilities</p>
-                </div>
-                
-                <div style="color: #D1D5DB; line-height: 1.6; margin-top: 25px;">
-                    <strong>Key Benefits:</strong><br>
-                    • Reduce response time to brand threats by up to 85%<br>
-                    • Prevent potential revenue loss from reputation damage<br>
-                    • Gain actionable insights from comprehensive sentiment analysis<br>
-                    • Maintain brand consistency and trust across all channels
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
     
     # Main Content Columns
     col1, col2 = st.columns([1, 2])
