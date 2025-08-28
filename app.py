@@ -435,26 +435,26 @@ st.markdown("""
     }
     
     /* NEW: Page Transition Animations */
-    .page-transition-enter {
+    .page-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .page {
+        position: absolute;
+        width: 100%;
+        transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+    
+    .page-hidden {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateX(-100%);
+        pointer-events: none;
     }
     
-    .page-transition-enter-active {
+    .page-visible {
         opacity: 1;
-        transform: translateY(0);
-        transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    
-    .page-transition-exit {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    
-    .page-transition-exit-active {
-        opacity: 0;
-        transform: translateY(-20px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
+        transform: translateX(0);
     }
     
     /* NEW: Analyze Button Animation */
@@ -501,6 +501,107 @@ st.markdown("""
         100% { transform: translateX(100%) rotate(45deg); }
     }
     
+    /* NEW: Stats Cards */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .stat-card {
+        background: rgba(42, 42, 42, 0.8);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        padding: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+    }
+    
+    .stat-value {
+        font-size: 2em;
+        font-weight: bold;
+        background: linear-gradient(135deg, #FFD700 0%, #FFB700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 5px 0;
+    }
+    
+    .stat-label {
+        color: #CCCCCC;
+        font-size: 0.9em;
+    }
+    
+    /* NEW: Client Logos */
+    .clients-section {
+        margin: 30px 0;
+        text-align: center;
+    }
+    
+    .client-logos {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 25px;
+        margin: 20px 0;
+    }
+    
+    .client-logo {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 215, 0, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8em;
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .client-logo:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+    
+    /* NEW: Testimonial */
+    .testimonial {
+        background: rgba(42, 42, 42, 0.8);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        padding: 25px;
+        margin: 25px 0;
+        position: relative;
+    }
+    
+    .testimonial::before {
+        content: """;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        font-size: 4em;
+        color: rgba(255, 215, 0, 0.2);
+        font-family: 'Playfair Display', serif;
+    }
+    
+    .testimonial-text {
+        font-style: italic;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        color: #FFFFFF;
+    }
+    
+    .testimonial-author {
+        font-weight: bold;
+        color: #FFD700;
+        text-align: right;
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 1200px) {
         .premium-header {
@@ -541,6 +642,9 @@ st.markdown("""
         }
         .config-panel, .simulation-panel {
             padding: 20px;
+        }
+        .stats-container {
+            grid-template-columns: 1fr;
         }
     }
     
@@ -677,6 +781,28 @@ def intro_page():
     # Interactive Slideshow
     st.markdown(create_slideshow(), unsafe_allow_html=True)
     
+    # Stats Section
+    st.markdown("""
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-value">99.7%</div>
+            <div class="stat-label">Threat Detection Accuracy</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Real-time Monitoring</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">85%</div>
+            <div class="stat-label">Faster Response Time</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">1000+</div>
+            <div class="stat-label">Brands Protected</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Introduction
     st.markdown("""
     <div class="metric-card">
@@ -714,18 +840,35 @@ def intro_page():
     </div>
     """, unsafe_allow_html=True)
     
+    # Client Logos Section
+    st.markdown("""
+    <div class="clients-section">
+        <h3 class="section-header">Trusted by Industry Leaders</h3>
+        <div class="client-logos">
+            <div class="client-logo">🏢</div>
+            <div class="client-logo">🛒</div>
+            <div class="client-logo">📱</div>
+            <div class="client-logo">💻</div>
+            <div class="client-logo">👔</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Testimonial
+    st.markdown("""
+    <div class="testimonial">
+        <div class="testimonial-text">
+            "BrandGuardian AI has transformed how we manage our brand reputation. The AI-driven insights and real-time alerts have helped us avert several potential crises before they could impact our business. An indispensable tool for any modern brand."
+        </div>
+        <div class="testimonial-author">- Sarah Johnson, CMO at TechGlobal Inc.</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Navigation Button - Using session state instead of query params
     if st.button("🚀 Launch Threat Analysis Dashboard", use_container_width=True, key="launch_dashboard"):
         st.session_state.current_page = "main"
-        # Add page transition effect
-        st.markdown("""
-        <script>
-            document.querySelector('.stApp').classList.add('page-transition-exit-active');
-            setTimeout(function() {
-                window.location.reload();
-            }, 500);
-        </script>
-        """, unsafe_allow_html=True)
+        # Force a rerun to immediately show the main page
+        st.rerun()
     
     # Footer
     st.markdown("---")
@@ -745,15 +888,8 @@ def main_page():
     # Navigation Button
     if st.button("📋 Return to Overview", use_container_width=True, key="return_overview"):
         st.session_state.current_page = "intro"
-        # Add page transition effect
-        st.markdown("""
-        <script>
-            document.querySelector('.stApp').classList.add('page-transition-exit-active');
-            setTimeout(function() {
-                window.location.reload();
-            }, 500);
-        </script>
-        """, unsafe_allow_html=True)
+        # Force a rerun to immediately show the intro page
+        st.rerun()
     
     # Main Content Columns
     col1, col2 = st.columns([1, 2])
@@ -921,10 +1057,19 @@ def main():
     # Add page transition effect
     st.markdown("""
     <script>
-        document.querySelector('.stApp').classList.add('page-transition-enter');
-        setTimeout(function() {
-            document.querySelector('.stApp').classList.add('page-transition-enter-active');
-        }, 10);
+        // Function to handle page transitions
+        function handlePageTransition() {
+            const appContainer = document.querySelector('.stApp');
+            appContainer.style.opacity = '0';
+            appContainer.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                appContainer.style.opacity = '1';
+            }, 50);
+        }
+        
+        // Initial page load
+        handlePageTransition();
     </script>
     """, unsafe_allow_html=True)
     
