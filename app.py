@@ -1,19 +1,33 @@
 import streamlit as st
 import time
 import random
+import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import re
+from collections import Counter
+import networkx as nx
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+from textblob import TextBlob
+import warnings
+warnings.filterwarnings('ignore')
 
 # Set page config first
 st.set_page_config(
-    page_title="BrandGuardian AI",
+    page_title="BrandGuardian AI Pro",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Modern Tech CSS with Glassmorphism and Neumorphism
+# Advanced CSS with enhanced UI components
 st.markdown("""
 <style>
+    /* Base styles remain the same with enhancements */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     .main {
@@ -28,808 +42,1507 @@ st.markdown("""
         animation: gradientBG 15s ease infinite;
     }
     
-    @keyframes gradientBG {
-        0% { background-position: 0% 50% }
-        50% { background-position: 100% 50% }
-        100% { background-position: 0% 50% }
-    }
-    
-    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(10px);
-        color: #FFFFFF;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 14px;
-        font-size: 14px;
+    /* Add more advanced styling components */
+    .advanced-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 20px;
+        margin: 10px 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
         transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
-    .stTextInput>div>div>input:focus, .stTextArea>div>div>textarea:focus {
-        border-color: #6366F1;
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-        background: rgba(255, 255, 255, 0.12);
-    }
-    
-    .stButton>button {
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-        color: white;
-        font-weight: 600;
-        border: none;
-        border-radius: 12px;
-        padding: 14px 28px;
-        font-size: 16px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-    }
-    
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #818CF8 0%, #A78BFA 100%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .stButton>button:active {
-        transform: scale(0.98);
-    }
-    
-    .risk-yes {
-        color: #EF4444;
-        font-size: 1.8em;
-        font-weight: bold;
-        text-shadow: 0 0 15px rgba(239, 68, 68, 0.7);
-        animation: pulseRed 2s infinite;
-    }
-    
-    @keyframes pulseRed {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
-    }
-    
-    .risk-no {
-        color: #10B981;
-        font-size: 1.8em;
-        font-weight: bold;
-        text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
-        animation: pulseGreen 3s infinite;
-    }
-    
-    @keyframes pulseGreen {
-        0% { opacity: 1; }
-        50% { opacity: 0.8; }
-        100% { opacity: 1; }
-    }
-    
-    .accent-text {
-        color: #8B5CF6;
-        font-weight: 600;
-    }
-    
-    .premium-header {
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-align: center;
-        font-size: 3.5em;
-        font-weight: 800;
-        margin-bottom: 20px;
-        animation: shimmer 3s infinite;
-    }
-    
-    @keyframes shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-    }
-    
-    .metric-card {
+    .advanced-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
         background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        padding: 25px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .prediction-high {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+        border-left: 4px solid #EF4444;
+    }
+    
+    .prediction-medium {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+        border-left: 4px solid #F59E0B;
+    }
+    
+    .prediction-low {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+        border-left: 4px solid #10B981;
+    }
+    
+    .business-model-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 20px;
         margin: 15px 0;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
     }
     
-    .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        background: rgba(255, 255, 255, 0.08);
-    }
-    
-    .feature-card {
+    .financial-metric {
         background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 10px;
-        text-align: center;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border-radius: 12px;
+        padding: 15px;
+        margin: 10px 0;
+        border-left: 4px solid #8B5CF6;
     }
     
-    .feature-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        background: rgba(255, 255, 255, 0.08);
-    }
-    
-    .glowing-border {
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+    /* Additional styles for advanced components */
+    .network-graph {
         background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
-    }
-    
-    .floating { 
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
-    }
-    
-    /* Intro panel styles */
-    .intro-panel {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        padding: 30px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 20px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-    
-    .intro-feature {
-        margin: 1.5rem 0;
-        padding: 1.5rem;
         border-radius: 16px;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 1rem 0;
-    }
-    
-    .logo {
-        font-size: 4rem;
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
-    }
-    
-    .tech-pattern {
-        background-image: 
-            radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-        background-size: 50% 50%;
-        background-position: 0 0, 100% 100%;
-        background-repeat: no-repeat;
-    }
-    
-    .cyber-border {
-        position: relative;
-        border: 1px solid transparent;
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2)) padding-box,
-                    linear-gradient(135deg, #6366F1, #8B5CF6) border-box;
-    }
-    
-    /* Dashboard specific styles */
-    .dashboard-header {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 700;
-    }
-    
-    .kpi-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
         padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
+        margin: 15px 0;
+    }
+    
+    .strategy-recommendation {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        border-radius: 12px;
+        padding: 15px;
         margin: 10px 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    }
-    
-    .kpi-value {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin: 10px 0;
-    }
-    
-    .kpi-label {
-        font-size: 0.9rem;
-        color: #D1D5DB;
-    }
-    
-    .positive-kpi {
-        color: #10B981;
-    }
-    
-    .negative-kpi {
-        color: #EF4444;
-    }
-    
-    .neutral-kpi {
-        color: #8B5CF6;
+        border-left: 4px solid #6366F1;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Simple sentiment analysis without external dependencies
-class SentimentAnalyzer:
-    def analyze_sentiment(self, text: str) -> float:
-        try:
-            # Simple sentiment analysis based on keywords
-            positive_words = ['love', 'great', 'awesome', 'amazing', 'excellent', 'good', 'best', 'fantastic', 'wonderful', 'perfect']
-            negative_words = ['hate', 'terrible', 'awful', 'bad', 'worst', 'horrible', 'disappointing', 'poor', 'suck', 'waste']
-            
-            text_lower = text.lower()
-            positive_count = sum(1 for word in positive_words if word in text_lower)
-            negative_count = sum(1 for word in negative_words if word in text_lower)
-            total_words = len(text.split())
-            
-            if total_words == 0:
-                return 0.0
-                
-            # Simple sentiment score calculation
-            sentiment = (positive_count - negative_count) / total_words
-            return max(-1.0, min(1.0, sentiment * 5))  # Scale and clamp between -1 and 1
-            
-        except:
-            return 0.0
-
-    def is_high_risk(self, text: str, sentiment_score: float) -> bool:
-        if sentiment_score > -0.3:
-            return False
-        if len(text) < 10:
-            return False
-        negative_keywords = ['hate', 'terrible', 'awful', 'sue', 'legal', 'boycott', 'scam', 'fraud', 'worst', 'never again', 'refund']
-        text_lower = text.lower()
-        return any(keyword in text_lower for keyword in negative_keywords) or sentiment_score < -0.6
-
-# Simple mitigation strategist without OpenAI API
-class MitigationStrategist:
-    def generate_response_strategy(self, risky_text: str, brand_name: str) -> str:
-        strategies = [
-            f"1. Immediately acknowledge the concern about {brand_name} on all social channels",
-            "2. Direct message the user to address their concerns privately",
-            "3. Prepare an official statement addressing the specific issues raised",
-            "4. Review internal processes to prevent similar issues in the future",
-            "5. Follow up with the customer to ensure resolution and rebuild trust"
-        ]
-        
-        # Customize strategy based on content
-        text_lower = risky_text.lower()
-        if any(word in text_lower for word in ['sue', 'legal', 'lawyer']):
-            strategies.append("6. Consult with legal team before making any public statements")
-            
-        if any(word in text_lower for word in ['refund', 'money', 'price']):
-            strategies.append("7. Review refund policy and consider offering compensation")
-            
-        return "\n\n".join(strategies)
-
-# Multi-Platform Monitoring Integration
-class SocialMediaMonitor:
+# Advanced Sentiment Analysis with Business Context
+class AdvancedSentimentAnalyzer:
     def __init__(self):
-        self.platforms = ['Twitter', 'Facebook', 'Instagram', 'LinkedIn', 'Reddit', 'YouTube', 'TikTok']
+        self.business_terms = {
+            'revenue': 0.8, 'profit': 0.9, 'growth': 0.7, 'loss': -0.9, 
+            'investment': 0.6, 'market share': 0.7, 'acquisition': 0.5,
+            'merger': 0.4, 'bankruptcy': -1.0, 'layoff': -0.9, 'expansion': 0.7,
+            'innovation': 0.8, 'disruption': 0.3, 'competition': -0.4,
+            'dividend': 0.6, 'stock': 0.5, 'IPO': 0.7, 'valuation': 0.6
+        }
         
-    def simulate_feed(self, brand_name):
-        # Simulate fetching posts from different platforms
+        self.sector_keywords = {
+            'technology': ['software', 'hardware', 'cloud', 'AI', 'machine learning', 'data'],
+            'finance': ['bank', 'loan', 'interest', 'investment', 'stock', 'market'],
+            'healthcare': ['medical', 'health', 'patient', 'hospital', 'pharmaceutical'],
+            'retail': ['store', 'shop', 'product', 'customer', 'sale', 'price']
+        }
+    
+    def analyze_sentiment_with_business_context(self, text: str, sector: str = None) -> dict:
+        """
+        Advanced sentiment analysis with business context awareness
+        """
+        try:
+            # Use TextBlob for baseline sentiment
+            blob = TextBlob(text)
+            polarity = blob.sentiment.polarity
+            subjectivity = blob.sentiment.subjectivity
+            
+            # Business context adjustment
+            business_impact = 0
+            business_terms_found = []
+            
+            for term, weight in self.business_terms.items():
+                if term in text.lower():
+                    business_impact += weight
+                    business_terms_found.append(term)
+            
+            # Normalize business impact
+            if business_terms_found:
+                business_impact = business_impact / len(business_terms_found)
+                # Adjust polarity based on business context
+                polarity = (polarity + business_impact) / 2
+            
+            # Sector-specific adjustment
+            sector_impact = 0
+            if sector and sector in self.sector_keywords:
+                sector_terms = self.sector_keywords[sector]
+                sector_matches = [term for term in sector_terms if term in text.lower()]
+                if sector_matches:
+                    # Slight adjustment for sector relevance
+                    sector_impact = 0.1
+                    polarity = polarity * (1 + sector_impact)
+            
+            # Determine sentiment category
+            if polarity > 0.3:
+                sentiment_category = "Positive"
+            elif polarity < -0.3:
+                sentiment_category = "Negative"
+            else:
+                sentiment_category = "Neutral"
+            
+            # Calculate confidence score
+            confidence = min(0.99, (abs(polarity) + (1 - subjectivity)) / 2)
+            
+            return {
+                'polarity': polarity,
+                'subjectivity': subjectivity,
+                'sentiment_category': sentiment_category,
+                'confidence': confidence,
+                'business_terms': business_terms_found,
+                'sector_impact': sector_impact
+            }
+            
+        except Exception as e:
+            return {
+                'polarity': 0,
+                'subjectivity': 0,
+                'sentiment_category': "Neutral",
+                'confidence': 0,
+                'business_terms': [],
+                'sector_impact': 0
+            }
+    
+    def is_business_critical(self, text: str, sentiment_result: dict) -> bool:
+        """
+        Determine if the text contains business-critical information
+        """
+        critical_business_terms = ['bankruptcy', 'layoff', 'merger', 'acquisition', 'IPO', 'stock', 'profit', 'loss']
+        text_lower = text.lower()
+        
+        # Check for critical business terms
+        has_critical_terms = any(term in text_lower for term in critical_business_terms)
+        
+        # Check for high negative sentiment with business context
+        is_negative_business = (sentiment_result['polarity'] < -0.5 and 
+                               len(sentiment_result['business_terms']) > 0)
+        
+        return has_critical_terms or is_negative_business
+
+# Advanced Business Impact Predictor
+class BusinessImpactPredictor:
+    def __init__(self):
+        self.impact_factors = {
+            'virality': 0.3,
+            'author_influence': 0.25,
+            'sentiment': 0.2,
+            'business_relevance': 0.15,
+            'timing': 0.1
+        }
+    
+    def predict_business_impact(self, text: str, sentiment_result: dict, 
+                              author_followers: int = 0, platform: str = "twitter") -> dict:
+        """
+        Predict the potential business impact of a social media post
+        """
+        try:
+            # Calculate virality score based on content characteristics
+            virality_score = self._calculate_virality_score(text)
+            
+            # Calculate author influence score
+            author_score = self._calculate_author_score(author_followers, platform)
+            
+            # Sentiment impact (negative sentiment has higher potential impact)
+            sentiment_impact = abs(sentiment_result['polarity']) * (-1 if sentiment_result['polarity'] < 0 else 0.5)
+            
+            # Business relevance score
+            business_relevance = len(sentiment_result['business_terms']) * 0.1
+            
+            # Timing factor (current time relevance)
+            timing_factor = random.uniform(0.7, 1.0)  # Simulated
+            
+            # Calculate overall impact score
+            impact_score = (
+                self.impact_factors['virality'] * virality_score +
+                self.impact_factors['author_influence'] * author_score +
+                self.impact_factors['sentiment'] * sentiment_impact +
+                self.impact_factors['business_relevance'] * business_relevance +
+                self.impact_factors['timing'] * timing_factor
+            )
+            
+            # Categorize impact level
+            if impact_score > 0.7:
+                impact_level = "High"
+                financial_risk = random.randint(100000, 5000000)  # Simulated financial impact
+            elif impact_score > 0.4:
+                impact_level = "Medium"
+                financial_risk = random.randint(10000, 100000)
+            else:
+                impact_level = "Low"
+                financial_risk = random.randint(0, 10000)
+            
+            # Generate impact explanation
+            explanation = self._generate_impact_explanation(
+                impact_level, virality_score, author_score, sentiment_impact, 
+                business_relevance, sentiment_result['business_terms']
+            )
+            
+            return {
+                'impact_score': impact_score,
+                'impact_level': impact_level,
+                'financial_risk': financial_risk,
+                'explanation': explanation,
+                'factors': {
+                    'virality': virality_score,
+                    'author_influence': author_score,
+                    'sentiment_impact': sentiment_impact,
+                    'business_relevance': business_relevance,
+                    'timing': timing_factor
+                }
+            }
+            
+        except Exception as e:
+            return {
+                'impact_score': 0,
+                'impact_level': "Low",
+                'financial_risk': 0,
+                'explanation': "Unable to calculate impact",
+                'factors': {}
+            }
+    
+    def _calculate_virality_score(self, text: str) -> float:
+        """Calculate virality potential of text"""
+        # Simple heuristic based on text characteristics
+        length = len(text)
+        has_questions = 1 if '?' in text else 0
+        has_exclamations = 1 if '!' in text else 0
+        has_emojis = 1 if any(c in text for c in ['😊', '😂', '😍', '😠', '😢']) else 0
+        
+        # Normalize to 0-1 range
+        score = min(1.0, (length * 0.001 + has_questions * 0.2 + has_exclamations * 0.2 + has_emojis * 0.1))
+        return score
+    
+    def _calculate_author_score(self, followers: int, platform: str) -> float:
+        """Calculate author influence score"""
+        # Base score from follower count (logarithmic scale)
+        if followers == 0:
+            return 0.1  # Default for unknown authors
+        
+        follower_score = min(1.0, np.log10(followers) / 7)  # Cap at 10M followers
+        
+        # Platform multiplier
+        platform_multiplier = {
+            'twitter': 1.0,
+            'facebook': 0.9,
+            'instagram': 0.8,
+            'linkedin': 1.2,  # Higher for business context
+            'tiktok': 0.7,
+            'youtube': 1.1,
+            'reddit': 0.8,
+            'news': 1.3
+        }.get(platform.lower(), 1.0)
+        
+        return follower_score * platform_multiplier
+    
+    def _generate_impact_explanation(self, impact_level, virality, author, sentiment, business, terms):
+        """Generate human-readable explanation of impact"""
+        explanations = {
+            "High": "This content has high potential for significant business impact due to ",
+            "Medium": "This content may have moderate business impact because of ",
+            "Low": "This content has limited business impact potential due to "
+        }
+        
+        factors = []
+        if virality > 0.6:
+            factors.append("high virality potential")
+        if author > 0.6:
+            factors.append("influential author")
+        if abs(sentiment) > 0.6:
+            factors.append("strong sentiment")
+        if business > 0.3:
+            factors.append("business relevance")
+        if terms:
+            factors.append(f"mention of key business terms: {', '.join(terms[:3])}")
+        
+        if not factors:
+            factors.append("limited engagement factors")
+        
+        return explanations[impact_level] + ", ".join(factors)
+
+# Advanced Business Model Analyzer
+class BusinessModelAnalyzer:
+    def __init__(self):
+        self.business_models = {
+            'b2b': {
+                'keywords': ['enterprise', 'business', 'solution', 'platform', 'saas', 'software'],
+                'risk_factors': ['customer churn', 'enterprise contract', 'competition', 'pricing']
+            },
+            'b2c': {
+                'keywords': ['consumer', 'customer', 'buy', 'price', 'product', 'service'],
+                'risk_factors': ['public sentiment', 'viral negative', 'brand reputation', 'social media']
+            },
+            'marketplace': {
+                'keywords': ['platform', 'buyer', 'seller', 'transaction', 'marketplace', 'fee'],
+                'risk_factors': ['trust', 'fraud', 'dispute', 'regulation']
+            },
+            'subscription': {
+                'keywords': ['monthly', 'annual', 'subscribe', 'membership', 'recurring'],
+                'risk_factors': ['churn rate', 'payment issue', 'value perception']
+            }
+        }
+    
+    def detect_business_model(self, text_corpus: list) -> dict:
+        """
+        Analyze text to detect probable business model
+        """
+        try:
+            # Flatten corpus and count occurrences of model keywords
+            flat_text = " ".join(text_corpus).lower()
+            model_scores = {}
+            
+            for model, data in self.business_models.items():
+                score = sum(1 for keyword in data['keywords'] if keyword in flat_text)
+                model_scores[model] = score
+            
+            # Normalize scores
+            total = sum(model_scores.values())
+            if total > 0:
+                for model in model_scores:
+                    model_scores[model] = model_scores[model] / total
+            
+            # Get top model
+            top_model = max(model_scores, key=model_scores.get) if model_scores else "unknown"
+            
+            return {
+                'probable_model': top_model,
+                'confidence': model_scores[top_model] if top_model != "unknown" else 0,
+                'all_scores': model_scores
+            }
+            
+        except Exception as e:
+            return {
+                'probable_model': "unknown",
+                'confidence': 0,
+                'all_scores': {}
+            }
+    
+    def model_specific_risks(self, business_model: str, sentiment_data: list) -> dict:
+        """
+        Identify risks specific to a business model
+        """
+        if business_model not in self.business_models:
+            return {"risks": [], "mitigation_strategies": []}
+        
+        risks = self.business_models[business_model]['risk_factors']
+        
+        # Analyze sentiment towards risk factors
+        risk_sentiments = {}
+        for risk in risks:
+            # Simple check for risk mentions with negative sentiment
+            negative_mentions = sum(1 for sent in sentiment_data 
+                                  if risk in sent.get('text', '').lower() 
+                                  and sent.get('sentiment', {}).get('polarity', 0) < 0)
+            risk_sentiments[risk] = negative_mentions
+        
+        # Generate mitigation strategies based on model
+        mitigation_strategies = {
+            'b2b': [
+                "Enhance customer success programs",
+                "Develop competitive differentiation",
+                "Strengthen contract renewal processes",
+                "Improve enterprise communication"
+            ],
+            'b2c': [
+                "Launch brand sentiment campaign",
+                "Improve customer service response",
+                "Monitor social channels closely",
+                "Develop crisis communication plan"
+            ],
+            'marketplace': [
+                "Enhance trust and safety measures",
+                "Improve dispute resolution process",
+                "Communicate platform security",
+                "Strengthen community guidelines"
+            ],
+            'subscription': [
+                "Analyze churn reasons",
+                "Improve subscription value",
+                "Develop retention programs",
+                "Communicate product updates"
+            ]
+        }.get(business_model, [])
+        
+        return {
+            "risks": risks,
+            "risk_sentiments": risk_sentiments,
+            "mitigation_strategies": mitigation_strategies
+        }
+
+# Advanced Financial Impact Estimator
+class FinancialImpactEstimator:
+    def __init__(self):
+        self.sector_multipliers = {
+            'technology': 1.5,
+            'finance': 1.2,
+            'healthcare': 1.0,
+            'retail': 0.8,
+            'manufacturing': 0.7
+        }
+    
+    def estimate_financial_impact(self, impact_data: dict, business_model: str, 
+                                sector: str, market_cap: float = None) -> dict:
+        """
+        Estimate potential financial impact of sentiment issues
+        """
+        try:
+            base_impact = impact_data.get('financial_risk', 0)
+            
+            # Apply business model multiplier
+            model_multiplier = {
+                'b2b': 1.2,
+                'b2c': 1.5,  # B2C more sensitive to public sentiment
+                'marketplace': 1.3,
+                'subscription': 1.4,
+                'unknown': 1.0
+            }.get(business_model, 1.0)
+            
+            # Apply sector multiplier
+            sector_multiplier = self.sector_multipliers.get(sector.lower(), 1.0)
+            
+            # Calculate adjusted impact
+            adjusted_impact = base_impact * model_multiplier * sector_multiplier
+            
+            # If market cap is provided, calculate as percentage
+            impact_percentage = None
+            if market_cap and market_cap > 0:
+                impact_percentage = (adjusted_impact / market_cap) * 100
+            
+            # Categorize impact severity
+            if adjusted_impact > 1000000:
+                severity = "High"
+            elif adjusted_impact > 100000:
+                severity = "Medium"
+            else:
+                severity = "Low"
+            
+            return {
+                'estimated_impact': adjusted_impact,
+                'impact_percentage': impact_percentage,
+                'severity': severity,
+                'model_multiplier': model_multiplier,
+                'sector_multiplier': sector_multiplier
+            }
+            
+        except Exception as e:
+            return {
+                'estimated_impact': 0,
+                'impact_percentage': 0,
+                'severity': "Low",
+                'model_multiplier': 1.0,
+                'sector_multiplier': 1.0
+            }
+
+# Network Analysis for Influencer Mapping
+class InfluenceNetworkAnalyzer:
+    def __init__(self):
+        self.graph = nx.Graph()
+    
+    def build_network(self, posts: list):
+        """Build influence network from social posts"""
+        try:
+            # Extract authors and mentions
+            authors = set()
+            mentions = set()
+            
+            for post in posts:
+                author = post.get('author', 'unknown')
+                authors.add(author)
+                
+                # Simple mention extraction (in real implementation, use proper NLP)
+                text = post.get('content', '')
+                potential_mentions = re.findall(r'@(\w+)', text)
+                for mention in potential_mentions:
+                    mentions.add(mention)
+                    self.graph.add_edge(author, mention, weight=1)
+            
+            # Calculate basic network metrics
+            if len(self.graph) > 0:
+                centrality = nx.degree_centrality(self.graph)
+                betweenness = nx.betweenness_centrality(self.graph)
+                pagerank = nx.pagerank(self.graph)
+                
+                return {
+                    'node_count': len(self.graph.nodes()),
+                    'edge_count': len(self.graph.edges()),
+                    'centrality': centrality,
+                    'betweenness': betweenness,
+                    'pagerank': pagerank
+                }
+            else:
+                return {
+                    'node_count': 0,
+                    'edge_count': 0,
+                    'centrality': {},
+                    'betweenness': {},
+                    'pagerank': {}
+                }
+                
+        except Exception as e:
+            return {
+                'node_count': 0,
+                'edge_count': 0,
+                'centrality': {},
+                'betweenness': {},
+                'pagerank': {}
+            }
+
+# Initialize advanced analyzers
+advanced_sentiment = AdvancedSentimentAnalyzer()
+business_impact = BusinessImpactPredictor()
+business_model_analyzer = BusinessModelAnalyzer()
+financial_impact = FinancialImpactEstimator()
+network_analyzer = InfluenceNetworkAnalyzer()
+
+# Enhanced Multi-Platform Monitoring with business context
+class AdvancedSocialMediaMonitor:
+    def __init__(self):
+        self.platforms = ['Twitter', 'Facebook', 'Instagram', 'LinkedIn', 'Reddit', 'YouTube', 'TikTok', 'News']
+        
+    def simulate_advanced_feed(self, brand_name, sector="technology"):
+        # Simulate more realistic posts with business context
         posts = []
-        for _ in range(random.randint(5, 15)):
+        for _ in range(random.randint(10, 25)):
             platform = random.choice(self.platforms)
-            sentiment = random.uniform(-0.8, 0.8)
+            content = self.generate_business_post(brand_name, sector)
+            
+            # Generate more realistic engagement metrics
+            engagement = self.generate_engagement(platform, content)
+            
+            # Generate author information
+            author_followers = random.randint(100, 1000000) if random.random() > 0.3 else 0
+            
             posts.append({
                 'platform': platform,
-                'content': self.generate_post(brand_name, sentiment),
-                'sentiment': sentiment,
-                'date': datetime.now() - timedelta(hours=random.randint(0, 72)),
-                'engagement': random.randint(0, 5000)
+                'content': content,
+                'author': f"user_{random.randint(1000, 9999)}",
+                'author_followers': author_followers,
+                'date': datetime.now() - timedelta(hours=random.randint(0, 168)),  # Up to 1 week
+                'engagement': engagement,
+                'sentiment': advanced_sentiment.analyze_sentiment_with_business_context(content, sector),
+                'business_impact': None  # To be calculated later
             })
         return posts
     
-    def generate_post(self, brand_name, sentiment):
-        templates_positive = [
-            f"Loving my new {brand_name} product! ❤️",
-            f"{brand_name} never disappoints! 👍",
-            f"Amazing customer service from {brand_name}!",
-            f"Just bought another {brand_name} product - worth every penny! 💰"
-        ]
+    def generate_business_post(self, brand_name, sector):
+        """Generate posts with business context"""
+        sector_templates = {
+            'technology': [
+                f"{brand_name}'s new AI feature is revolutionizing the industry",
+                f"Concerned about {brand_name}'s data privacy practices",
+                f"{brand_name} stock is soaring after positive earnings report",
+                f"Considering switching from {brand_name} to a competitor",
+                f"{brand_name} just announced a major acquisition"
+            ],
+            'finance': [
+                f"{brand_name} reports better than expected Q3 results",
+                f"Regulatory concerns mounting for {brand_name}",
+                f"{brand_name} announces dividend increase",
+                f"Customer complaints about {brand_name}'s fee structure",
+                f"{brand_name} expanding into new markets"
+            ],
+            'retail': [
+                f"Love the new {brand_name} product line!",
+                f"Disappointed with {brand_name}'s customer service",
+                f"{brand_name} holiday sales break records",
+                f"Product quality issues at {brand_name}",
+                f"{brand_name} announces store expansion plans"
+            ]
+        }
         
-        templates_negative = [
-            f"Extremely disappointed with {brand_name} service 😠",
-            f"Never buying from {brand_name} again!",
-            f"{brand_name} product broke after just one week!",
-            f"Worst experience with {brand_name} customer support 🤦"
-        ]
+        # Select from sector-specific templates or general ones
+        templates = sector_templates.get(sector, [
+            f"{brand_name} is doing great things!",
+            f"Not happy with {brand_name} recently",
+            f"What's everyone's experience with {brand_name}?",
+            f"{brand_name} needs to improve their service",
+            f"Big announcement coming from {brand_name}"
+        ])
         
-        templates_neutral = [
-            f"Just saw an ad from {brand_name}",
-            f"Thinking about trying {brand_name} products",
-            f"Does anyone have experience with {brand_name}?",
-            f"Comparing {brand_name} with competitors"
-        ]
-        
-        if sentiment > 0.3:
-            return random.choice(templates_positive)
-        elif sentiment < -0.3:
-            return random.choice(templates_negative)
-        else:
-            return random.choice(templates_neutral)
-
-# Competitive Intelligence Module
-class CompetitiveAnalyzer:
-    def __init__(self):
-        self.competitors = ['Adidas', 'Puma', 'Reebok', 'Under Armour']  # Example for Nike
-        
-    def compare_sentiment(self, brand_name, time_period='7d'):
-        # Simulate competitive analysis
-        results = {}
-        results[brand_name] = random.uniform(0.6, 0.8)  # Main brand sentiment
-        
-        for competitor in self.competitors:
-            results[competitor] = random.uniform(0.3, 0.7)
-            
-        return results
+        return random.choice(templates)
     
-    def share_of_voice(self, brand_name):
-        # Simulate share of voice analysis
-        total_mentions = random.randint(1000, 5000)
-        brand_mentions = random.randint(300, 2000)
-        competitors_mentions = {}
+    def generate_engagement(self, platform, content):
+        """Generate realistic engagement metrics based on platform and content"""
+        base_engagement = {
+            'Twitter': random.randint(10, 5000),
+            'Facebook': random.randint(50, 10000),
+            'Instagram': random.randint(100, 15000),
+            'LinkedIn': random.randint(5, 2000),
+            'Reddit': random.randint(20, 5000),
+            'YouTube': random.randint(100, 20000),
+            'TikTok': random.randint(500, 25000),
+            'News': random.randint(100, 5000)
+        }
         
-        for competitor in self.competitors:
-            competitors_mentions[competitor] = random.randint(100, 800)
+        engagement = base_engagement.get(platform, random.randint(10, 1000))
+        
+        # Adjust based on sentiment (negative content often gets more engagement)
+        blob = TextBlob(content)
+        if blob.sentiment.polarity < -0.3:
+            engagement = int(engagement * random.uniform(1.2, 2.0))
+        elif blob.sentiment.polarity > 0.3:
+            engagement = int(engagement * random.uniform(1.1, 1.5))
             
+        return engagement
+
+# Enhanced Competitive Intelligence with Market Analysis
+class AdvancedCompetitiveAnalyzer:
+    def __init__(self):
+        self.competitors = {
+            'technology': ['Apple', 'Google', 'Microsoft', 'Amazon', 'Meta', 'Tesla'],
+            'finance': ['JPMorgan', 'Bank of America', 'Wells Fargo', 'Goldman Sachs', 'Morgan Stanley'],
+            'retail': ['Walmart', 'Target', 'Amazon', 'Costco', 'Best Buy']
+        }
+        
+    def advanced_competitive_analysis(self, brand_name, sector="technology"):
+        # Get competitors for the sector
+        competitors = self.competitors.get(sector, [])
+        
+        # Simulate market analysis data
+        market_share = {}
+        growth_rates = {}
+        sentiment_scores = {}
+        
+        # Include the main brand
+        all_brands = [brand_name] + competitors
+        
+        for brand in all_brands:
+            market_share[brand] = random.uniform(5, 40)  # Percentage
+            growth_rates[brand] = random.uniform(-5, 25)  # Percentage growth
+            sentiment_scores[brand] = random.uniform(0.4, 0.8)  # Sentiment score
+        
+        # Normalize market share to sum to 100
+        total_share = sum(market_share.values())
+        for brand in market_share:
+            market_share[brand] = (market_share[brand] / total_share) * 100
+        
         return {
-            'total_mentions': total_mentions,
-            'brand_mentions': brand_mentions,
-            'market_share': (brand_mentions / total_mentions) * 100,
-            'competitors': competitors_mentions
-        }
-
-# Influencer Impact Analysis
-class InfluencerAnalyzer:
-    def __init__(self):
-        self.influencer_db = {
-            'Fitness Expert': {'followers': 500000, 'engagement_rate': 4.5, 'category': 'Fitness'},
-            'Lifestyle Guru': {'followers': 1200000, 'engagement_rate': 3.2, 'category': 'Lifestyle'},
-            'Sports Analyst': {'followers': 800000, 'engagement_rate': 5.1, 'category': 'Sports'},
-            'Fashion Icon': {'followers': 300000, 'engagement_rate': 7.8, 'category': 'Fashion'}
+            'market_share': market_share,
+            'growth_rates': growth_rates,
+            'sentiment_scores': sentiment_scores,
+            'competitive_set': competitors
         }
     
-    def analyze_influencer_impact(self, brand_name):
-        # Simulate influencer impact analysis
-        impact_data = []
-        for influencer, stats in self.influencer_db.items():
-            sentiment = random.uniform(0.4, 0.9)  # Influencers generally positive
-            potential_reach = stats['followers'] * stats['engagement_rate'] / 100
-            impact_score = potential_reach * sentiment / 1000
-            
-            impact_data.append({
-                'influencer': influencer,
-                'followers': stats['followers'],
-                'engagement_rate': stats['engagement_rate'],
-                'sentiment': sentiment,
-                'potential_reach': int(potential_reach),
-                'impact_score': impact_score,
-                'recommendation': 'Partner' if impact_score > 20 else 'Monitor'
-            })
+    def swot_analysis(self, brand_name, sector="technology"):
+        """Generate a simulated SWOT analysis"""
+        strengths = [
+            "Strong brand recognition",
+            "Innovative product portfolio",
+            "Loyal customer base",
+            "Robust financial performance",
+            "Skilled leadership team"
+        ]
         
-        return sorted(impact_data, key=lambda x: x['impact_score'], reverse=True)
+        weaknesses = [
+            "Dependence on key markets",
+            "Higher prices than competitors",
+            "Slower innovation cycle in some areas",
+            "Supply chain vulnerabilities",
+            "Limited presence in emerging markets"
+        ]
+        
+        opportunities = [
+            "Market expansion opportunities",
+            "Strategic partnerships",
+            "New technology adoption",
+            "Growing market demand",
+            "Competitive gaps in the market"
+        ]
+        
+        threats = [
+            "Intensifying competition",
+            "Regulatory changes",
+            "Economic downturn",
+            "Changing consumer preferences",
+            "Technology disruption"
+        ]
+        
+        return {
+            'strengths': random.sample(strengths, 3),
+            'weaknesses': random.sample(weaknesses, 3),
+            'opportunities': random.sample(opportunities, 3),
+            'threats': random.sample(threats, 3)
+        }
 
-# Crisis Prediction Algorithm
-class CrisisPredictor:
+# Enhanced Crisis Prediction with Business Impact
+class AdvancedCrisisPredictor:
     def __init__(self):
         self.warning_signs = [
-            'sudden sentiment drop',
-            'viral negative post',
-            'multiple complaints about same issue',
-            'influencer criticism',
-            'competitor capitalizing on issue'
+            'sudden sentiment drop >30%',
+            'viral negative post with >100K engagement',
+            'multiple executive departures',
+            'regulatory investigation announcement',
+            'major product recall',
+            'significant cybersecurity breach',
+            'negative earnings surprise',
+            'key competitor launching disruptive product'
         ]
+        
+        self.crisis_types = {
+            'financial': ['earnings miss', 'stock crash', 'accounting scandal', 'bankruptcy risk'],
+            'reputational': ['CEO scandal', 'product failure', 'customer data breach', 'discrimination lawsuit'],
+            'operational': ['supply chain disruption', 'cyber attack', 'factory shutdown', 'key system failure'],
+            'competitive': ['disruptive new competitor', 'key patent loss', 'major client loss', 'market share erosion']
+        }
     
-    def predict_crisis_risk(self, brand_name, historical_data):
-        # Analyze patterns to predict potential crises
-        risk_score = random.uniform(0.1, 0.9)
+    def predict_advanced_crisis_risk(self, brand_name, historical_data, sector="technology"):
+        """Predict crisis risk with business context"""
+        # Simulate risk calculation based on multiple factors
+        financial_risk = random.uniform(0.1, 0.9)
+        reputational_risk = random.uniform(0.1, 0.9)
+        operational_risk = random.uniform(0.1, 0.9)
+        competitive_risk = random.uniform(0.1, 0.9)
         
-        if risk_score < 0.3:
-            level = "Low"
-            recommendation = "Continue monitoring"
-        elif risk_score < 0.6:
-            level = "Medium"
-            recommendation = "Increase monitoring frequency"
+        # Calculate overall risk
+        overall_risk = (financial_risk + reputational_risk + operational_risk + competitive_risk) / 4
+        
+        # Determine risk level
+        if overall_risk > 0.7:
+            risk_level = "High"
+            crisis_type = random.choice(list(self.crisis_types.keys()))
+            potential_impact = random.randint(5000000, 50000000)
+        elif overall_risk > 0.4:
+            risk_level = "Medium"
+            crisis_type = random.choice(list(self.crisis_types.keys()))
+            potential_impact = random.randint(500000, 5000000)
         else:
-            level = "High"
-            recommendation = "Prepare crisis response plan"
+            risk_level = "Low"
+            crisis_type = None
+            potential_impact = random.randint(0, 500000)
         
-        # Identify potential warning signs
-        current_warnings = random.sample(self.warning_signs, random.randint(0, 2))
+        # Get warning signs
+        current_warnings = random.sample(self.warning_signs, random.randint(0, 3))
+        
+        # Generate sector-specific recommendations
+        recommendations = self.generate_recommendations(risk_level, crisis_type, sector)
         
         return {
-            'risk_score': risk_score,
-            'risk_level': level,
+            'risk_score': overall_risk,
+            'risk_level': risk_level,
+            'crisis_type': crisis_type,
+            'potential_impact': potential_impact,
             'warning_signs': current_warnings,
-            'recommendation': recommendation,
-            'predicted_impact': random.randint(1000, 50000)  # Simulated impact scale
-        }
-
-# Brand Health Scoring System
-class BrandHealthMonitor:
-    def __init__(self):
-        self.metrics = {
-            'sentiment': 0.3,
-            'engagement': 0.2,
-            'reach': 0.15,
-            'consistency': 0.15,
-            'response_time': 0.1,
-            'share_of_voice': 0.1
+            'recommendations': recommendations,
+            'category_risks': {
+                'financial': financial_risk,
+                'reputational': reputational_risk,
+                'operational': operational_risk,
+                'competitive': competitive_risk
+            }
         }
     
-    def calculate_brand_health(self, brand_data):
-        # Calculate overall brand health score
-        total_score = 0
+    def generate_recommendations(self, risk_level, crisis_type, sector):
+        """Generate crisis preparedness recommendations"""
+        base_recommendations = [
+            "Increase monitoring frequency of social channels",
+            "Prepare holding statements for potential issues",
+            "Conduct crisis simulation exercises",
+            "Review and update crisis communication plan",
+            "Identify and prepare spokespeople",
+            "Monitor competitor activities closely",
+            "Establish media monitoring system",
+            "Develop customer communication templates"
+        ]
         
-        for metric, weight in self.metrics.items():
-            if metric in brand_data:
-                total_score += brand_data[metric] * weight
-        
-        # Convert to 0-100 scale
-        health_score = total_score * 100
-        
-        if health_score >= 80:
-            status = "Excellent"
-            color = "green"
-        elif health_score >= 60:
-            status = "Good"
-            color = "blue"
-        elif health_score >= 40:
-            status = "Fair"
-            color = "orange"
+        if risk_level == "High":
+            additional = [
+                "Activate crisis management team",
+                "Conduct vulnerability assessment",
+                "Prepare for financial impact",
+                "Engage with legal counsel",
+                "Develop scenario response plans"
+            ]
+        elif risk_level == "Medium":
+            additional = [
+                "Review insurance coverage",
+                "Update stakeholder communication plans",
+                "Conduct media training for executives",
+                "Audit digital assets for vulnerabilities"
+            ]
         else:
-            status = "Poor"
-            color = "red"
+            additional = [
+                "Continue regular monitoring",
+                "Maintain crisis preparedness",
+                "Update contact lists",
+                "Review past crisis learnings"
+            ]
         
-        return {
-            'score': health_score,
-            'status': status,
-            'color': color,
-            'breakdown': brand_data
-        }
+        # Add sector-specific recommendations
+        sector_recommendations = {
+            'technology': [
+                "Monitor tech forums and communities",
+                "Prepare for product vulnerability disclosures",
+                "Review data security protocols",
+                "Monitor patent and intellectual property discussions"
+            ],
+            'finance': [
+                "Monitor financial regulatory news",
+                "Prepare for market volatility",
+                "Review compliance procedures",
+                "Monitor customer complaint channels"
+            ],
+            'retail': [
+                "Monitor supply chain disruptions",
+                "Prepare for product quality issues",
+                "Review customer feedback channels",
+                "Monitor competitor pricing strategies"
+            ]
+        }.get(sector, [])
+        
+        return random.sample(base_recommendations + additional + sector_recommendations, 
+                           min(6, len(base_recommendations + additional + sector_recommendations)))
 
-# Initialize all analyzers
-social_monitor = SocialMediaMonitor()
-competitive_analyzer = CompetitiveAnalyzer()
-influencer_analyzer = InfluencerAnalyzer()
-crisis_predictor = CrisisPredictor()
-brand_health_monitor = BrandHealthMonitor()
-sentiment_analyzer = SentimentAnalyzer()
-mitigation_strategist = MitigationStrategist()
+# Initialize advanced modules
+advanced_monitor = AdvancedSocialMediaMonitor()
+advanced_competitive = AdvancedCompetitiveAnalyzer()
+advanced_crisis = AdvancedCrisisPredictor()
 
-def show_executive_dashboard(brand_name):
-    st.markdown('<div class="dashboard-header">Executive Intelligence Dashboard</div>', unsafe_allow_html=True)
+# Enhanced visualization functions
+def create_sentiment_trend_chart(sentiment_data):
+    """Create an advanced sentiment trend chart"""
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=sentiment_data['date'],
+        y=sentiment_data['score'],
+        mode='lines+markers',
+        name='Sentiment Score',
+        line=dict(color='#6366F1', width=3),
+        marker=dict(size=6)
+    ))
+    
+    fig.update_layout(
+        title='Sentiment Trend Over Time',
+        xaxis_title='Date',
+        yaxis_title='Sentiment Score',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        hovermode='x unified'
+    )
+    
+    return fig
+
+def create_competitive_analysis_chart(analysis_data):
+    """Create competitive analysis visualization"""
+    brands = list(analysis_data['market_share'].keys())
+    shares = list(analysis_data['market_share'].values())
+    sentiments = [analysis_data['sentiment_scores'][b] for b in brands]
+    
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=('Market Share', 'Sentiment Comparison'),
+        specs=[[{"type": "pie"}, {"type": "bar"}]]
+    )
+    
+    # Market share pie chart
+    fig.add_trace(
+        go.Pie(
+            labels=brands, 
+            values=shares, 
+            name="Market Share",
+            hole=0.4,
+            marker_colors=px.colors.qualitative.Set3
+        ),
+        row=1, col=1
+    )
+    
+    # Sentiment bar chart
+    fig.add_trace(
+        go.Bar(
+            x=brands,
+            y=sentiments,
+            name="Sentiment Score",
+            marker_color=['#6366F1' if i == 0 else '#8B5CF6' for i in range(len(brands))]
+        ),
+        row=1, col=2
+    )
+    
+    fig.update_layout(
+        title_text='Competitive Landscape Analysis',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        showlegend=False
+    )
+    
+    return fig
+
+def create_risk_matrix(crisis_data):
+    """Create a risk matrix visualization"""
+    categories = list(crisis_data['category_risks'].keys())
+    risks = list(crisis_data['category_risks'].values())
+    
+    fig = go.Figure(data=go.Scatterpolar(
+        r=risks + [risks[0]],
+        theta=categories + [categories[0]],
+        fill='toself',
+        name='Risk Profile',
+        line=dict(color='#EF4444')
+    ))
+    
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 1]
+            )),
+        showlegend=False,
+        title='Crisis Risk Matrix',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white')
+    )
+    
+    return fig
+
+# Enhanced dashboard sections
+def show_advanced_executive_dashboard(brand_name, sector):
+    st.markdown('<div class="dashboard-header">Advanced Executive Intelligence Dashboard</div>', unsafe_allow_html=True)
+    
+    # Get advanced data
+    comp_analysis = advanced_competitive.advanced_competitive_analysis(brand_name, sector)
+    crisis_prediction = advanced_crisis.predict_advanced_crisis_risk(brand_name, {}, sector)
     
     # KPI Metrics
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        avg_sentiment = random.uniform(0.5, 0.8)
-        sentiment_trend = "📈 Improving" if avg_sentiment > 0.6 else "📉 Declining" if avg_sentiment < 0.4 else "➡️ Stable"
-        sentiment_color = "positive-kpi" if avg_sentiment > 0.6 else "negative-kpi" if avg_sentiment < 0.4 else "neutral-kpi"
+        market_share = comp_analysis['market_share'][brand_name]
         st.markdown(f'''
         <div class="kpi-card">
-            <div class="kpi-label">Avg. Sentiment Score</div>
-            <div class="kpi-value {sentiment_color}">{avg_sentiment:.2f}</div>
-            <div>{sentiment_trend}</div>
+            <div class="kpi-label">Market Share</div>
+            <div class="kpi-value">{market_share:.1f}%</div>
+            <div>{"📈 Leading" if market_share > 20 else "📉 Challenger" if market_share > 10 else "📊 Niche"}</div>
         </div>
         ''', unsafe_allow_html=True)
     
     with col2:
-        total_threats = random.randint(20, 100)
+        risk_score = crisis_prediction['risk_score']
+        risk_color = "negative-kpi" if risk_score > 0.7 else "neutral-kpi" if risk_score > 0.4 else "positive-kpi"
         st.markdown(f'''
         <div class="kpi-card">
-            <div class="kpi-label">Threats Detected (30 days)</div>
-            <div class="kpi-value">{total_threats}</div>
-            <div>{"🔴 High Alert" if total_threats > 80 else "🟡 Moderate" if total_threats > 50 else "🟢 Normal"}</div>
+            <div class="kpi-label">Crisis Risk Score</div>
+            <div class="kpi-value {risk_color}">{risk_score:.2%}</div>
+            <div>{"🚨 High Alert" if risk_score > 0.7 else "⚠️ Moderate" if risk_score > 0.4 else "🟢 Normal"}</div>
         </div>
         ''', unsafe_allow_html=True)
     
     with col3:
-        avg_response_time = random.uniform(2.5, 12.0)
+        financial_impact = crisis_prediction['potential_impact']
         st.markdown(f'''
         <div class="kpi-card">
-            <div class="kpi-label">Avg. Response Time (hrs)</div>
-            <div class="kpi-value">{avg_response_time:.1f}</div>
-            <div>{"🟢 On Target" if avg_response_time < 6 else "🟡 Needs Improvement" if avg_response_time < 12 else "🔴 Critical"}</div>
+            <div class="kpi-label">Potential Financial Impact</div>
+            <div class="kpi-value">${financial_impact:,.0f}</div>
+            <div>{"🔴 Significant" if financial_impact > 1000000 else "🟡 Moderate" if financial_impact > 100000 else "🟢 Minimal"}</div>
         </div>
         ''', unsafe_allow_html=True)
     
     with col4:
-        risk_level = "High" if total_threats > 80 or avg_sentiment < 0.4 else "Medium" if total_threats > 50 or avg_sentiment < 0.6 else "Low"
-        risk_color = "negative-kpi" if risk_level == "High" else "neutral-kpi" if risk_level == "Medium" else "positive-kpi"
+        growth_rate = comp_analysis['growth_rates'][brand_name]
+        growth_color = "positive-kpi" if growth_rate > 10 else "negative-kpi" if growth_rate < 0 else "neutral-kpi"
         st.markdown(f'''
         <div class="kpi-card">
-            <div class="kpi-label">Overall Risk Level</div>
-            <div class="kpi-value {risk_color}">{risk_level}</div>
-            <div>{"⚠️ Immediate Action" if risk_level == "High" else "📋 Review Needed" if risk_level == "Medium" else "✅ All Clear"}</div>
+            <div class="kpi-label">Growth Rate</div>
+            <div class="kpi-value {growth_color}">{growth_rate:.1f}%</div>
+            <div>{"📈 High Growth" if growth_rate > 15 else "📊 Stable" if growth_rate > 5 else "📉 Low Growth"}</div>
         </div>
         ''', unsafe_allow_html=True)
     
-    # Simple charts using Streamlit's native functions
-    st.markdown("#### Sentiment Trend (30 Days)")
-    sentiment_data = {
-        'Date': [(datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(30, 0, -1)],
-        'Sentiment Score': [random.uniform(0.3, 0.9) for _ in range(30)]
-    }
-    st.line_chart(sentiment_data, x='Date', y='Sentiment Score')
-    
-    # Platform distribution
-    st.markdown("#### Threats by Platform")
-    platform_data = {
-        'Platform': ['Twitter', 'Facebook', 'Instagram', 'Reddit', 'News Sites', 'Review Sites'],
-        'Count': [random.randint(5, 30) for _ in range(6)]
-    }
-    st.bar_chart(platform_data, x='Platform', y='Count')
-
-def show_competitive_intelligence(brand_name):
-    st.header("Competitive Intelligence")
-    
-    sentiment_comparison = competitive_analyzer.compare_sentiment(brand_name)
-    share_of_voice = competitive_analyzer.share_of_voice(brand_name)
-    
+    # Advanced charts
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("Sentiment Comparison")
-        comparison_data = {
-            'Brand': list(sentiment_comparison.keys()),
-            'Sentiment Score': list(sentiment_comparison.values())
-        }
-        st.bar_chart(comparison_data, x='Brand', y='Sentiment Score')
+        st.plotly_chart(create_competitive_analysis_chart(comp_analysis), use_container_width=True)
     
     with col2:
-        st.subheader("Market Share of Voice")
-        labels = [brand_name] + list(share_of_voice['competitors'].keys())
-        values = [share_of_voice['brand_mentions']] + list(share_of_voice['competitors'].values())
-        
-        # Create a simple pie chart using columns
-        col1, col2, col3 = st.columns(3)
-        col1.metric(brand_name, f"{share_of_voice['market_share']:.1f}%")
-        for i, (competitor, mentions) in enumerate(share_of_voice['competitors'].items()):
-            if i == 0:
-                col2.metric(competitor, f"{(mentions/share_of_voice['total_mentions'])*100:.1f}%")
-            elif i == 1:
-                col3.metric(competitor, f"{(mentions/share_of_voice['total_mentions'])*100:.1f}%")
-
-def show_influencer_analysis(brand_name):
-    st.header("Influencer Impact Analysis")
+        st.plotly_chart(create_risk_matrix(crisis_prediction), use_container_width=True)
     
-    influencer_data = influencer_analyzer.analyze_influencer_impact(brand_name)
+    # Business model insights
+    st.markdown("### Business Model Intelligence")
+    posts = advanced_monitor.simulate_advanced_feed(brand_name, sector)
+    post_texts = [post['content'] for post in posts]
+    model_analysis = business_model_analyzer.detect_business_model(post_texts)
     
-    for influencer in influencer_data:
-        with st.expander(f"{influencer['influencer']} - {influencer['followers']:,} followers"):
-            st.write(f"**Engagement Rate:** {influencer['engagement_rate']}%")
-            st.write(f"**Sentiment:** {influencer['sentiment']:.2f}")
-            st.write(f"**Potential Reach:** {influencer['potential_reach']:,}")
-            st.write(f"**Impact Score:** {influencer['impact_score']:.1f}")
-            st.write(f"**Recommendation:** {influencer['recommendation']}")
-
-def show_brand_health(brand_name):
-    st.header("Brand Health Dashboard")
-    
-    # Simulate brand data
-    brand_data = {
-        'sentiment': random.uniform(0.6, 0.9),
-        'engagement': random.uniform(0.4, 0.8),
-        'reach': random.uniform(0.5, 0.9),
-        'consistency': random.uniform(0.7, 0.95),
-        'response_time': random.uniform(0.6, 0.9),
-        'share_of_voice': random.uniform(0.3, 0.7)
-    }
-    
-    health_score = brand_health_monitor.calculate_brand_health(brand_data)
-    
-    st.metric("Overall Brand Health Score", f"{health_score['score']:.1f}", health_score['status'])
-    
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.subheader("Metric Breakdown")
-        for metric, value in brand_data.items():
-            st.progress(value, text=f"{metric.capitalize()}: {value:.2%}")
+        st.markdown(f'''
+        <div class="business-model-card">
+            <h4>Detected Business Model</h4>
+            <h2>{model_analysis['probable_model'].upper()}</h2>
+            <p>Confidence: {model_analysis['confidence']:.2%}</p>
+        </div>
+        ''', unsafe_allow_html=True)
     
     with col2:
-        st.subheader("Historical Trend")
-        dates = [(datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(30, 0, -1)]
-        trend_data = [random.uniform(health_score['score'] - 15, health_score['score'] + 5) for _ in range(30)]
-        trend_chart_data = {'Date': dates, 'Health Score': trend_data}
-        st.line_chart(trend_chart_data, x='Date', y='Health Score')
+        model_risks = business_model_analyzer.model_specific_risks(model_analysis['probable_model'], posts)
+        st.markdown(f'''
+        <div class="business-model-card">
+            <h4>Model-Specific Risks</h4>
+            <ul>
+                {"".join(f"<li>{risk}</li>" for risk in model_risks['risks'][:3])}
+            </ul>
+        </div>
+        ''', unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown(f'''
+        <div class="business-model-card">
+            <h4>Recommended Strategies</h4>
+            <ul>
+                {"".join(f"<li>{strategy}</li>" for strategy in model_risks['mitigation_strategies'][:3])}
+            </ul>
+        </div>
+        ''', unsafe_allow_html=True)
 
-def show_social_monitoring(brand_name):
-    st.header("Social Media Monitoring")
-    
-    posts = social_monitor.simulate_feed(brand_name)
-    
-    for post in posts:
-        sentiment_color = "#10B981" if post['sentiment'] > 0.3 else "#EF4444" if post['sentiment'] < -0.3 else "#8B5CF6"
-        
-        with st.container():
-            st.markdown(f"""
-            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid {sentiment_color}">
-                <div style="display: flex; justify-content: space-between;">
-                    <strong>{post['platform']}</strong>
-                    <span>Engagement: {post['engagement']}</span>
-                </div>
-                <p>{post['content']}</p>
-                <div style="display: flex; justify-content: space-between;">
-                    <span>Sentiment: {post['sentiment']:.2f}</span>
-                    <span>{post['date'].strftime('%Y-%m-%d %H:%M')}</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-def show_crisis_prediction(brand_name):
-    st.header("Crisis Prediction")
-    
-    # Simulate historical data
-    historical_data = {
-        'sentiment_trend': [random.uniform(0.5, 0.8) for _ in range(30)],
-        'threat_count': [random.randint(0, 5) for _ in range(30)]
-    }
-    
-    prediction = crisis_predictor.predict_crisis_risk(brand_name, historical_data)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.subheader("Risk Assessment")
-        st.metric("Crisis Risk Score", f"{prediction['risk_score']:.2%}", prediction['risk_level'])
-        
-        if prediction['risk_score'] > 0.7:
-            st.error("🚨 High crisis risk detected. Immediate action recommended.")
-        elif prediction['risk_score'] > 0.4:
-            st.warning("⚠️ Moderate crisis risk detected. Increased monitoring recommended.")
-        else:
-            st.success("✅ Low crisis risk. Normal monitoring continues.")
-    
-    with col2:
-        st.subheader("Warning Signs")
-        if prediction['warning_signs']:
-            for sign in prediction['warning_signs']:
-                st.markdown(f"• {sign}")
-        else:
-            st.info("No significant warning signs detected.")
-    
-    st.subheader("Recommendation")
-    st.info(prediction['recommendation'])
-
-def show_threat_analyzer(brand_name):
-    st.header("Threat Analyzer")
+def show_advanced_threat_analyzer(brand_name, sector):
+    st.header("Advanced Threat Analyzer with Business Context")
     
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.markdown("### 🧪 Threat Simulator")
+        st.markdown("### 🧪 Advanced Threat Simulation")
         st.markdown('<div class="glowing-border cyber-border" style="padding: 20px;">', unsafe_allow_html=True)
+        
+        # Sector selection
+        sector = st.selectbox("Business Sector", 
+                            ["technology", "finance", "retail", "healthcare", "manufacturing"],
+                            key="sector_select")
+        
+        # Business context options
+        business_context = st.text_input("Business Context (Optional)", 
+                                       "quarterly earnings, product launch, merger announcement")
+        
         test_text = st.text_area("**🔍 Enter text to analyze:**", 
-                               "I absolutely hate this company! Their service is terrible and I will sue them!",
+                               "I'm extremely concerned about the recent earnings report. Stock price dropped 15% and there are rumors of layoffs.",
                                height=150)
         
-        if st.button("🚀 Analyze Sentiment", use_container_width=True, key="analyze_btn"):
-            with st.spinner("🛡️ Scanning for threats..."):
-                time.sleep(1.5)  # Dramatic pause for effect
+        author_followers = st.slider("Author Followers (Reach)", 0, 1000000, 10000, 
+                                   help="Estimated follower count for impact assessment")
+        
+        platform = st.selectbox("Platform", 
+                              ["Twitter", "Facebook", "LinkedIn", "Instagram", "News", "Reddit", "YouTube"])
+        
+        if st.button("🚀 Advanced Analysis", use_container_width=True, key="advanced_analyze_btn"):
+            with st.spinner("🛡️ Conducting deep analysis with business context..."):
+                time.sleep(2)
                 
-                sentiment = sentiment_analyzer.analyze_sentiment(test_text)
-                is_risk = sentiment_analyzer.is_high_risk(test_text, sentiment)
+                # Advanced sentiment analysis
+                sentiment_result = advanced_sentiment.analyze_sentiment_with_business_context(test_text, sector)
                 
-                st.session_state.sentiment = sentiment
-                st.session_state.is_risk = is_risk
-                st.session_state.strategy = mitigation_strategist.generate_response_strategy(test_text, brand_name) if is_risk else None
+                # Business impact prediction
+                impact_result = business_impact.predict_business_impact(
+                    test_text, sentiment_result, author_followers, platform
+                )
+                
+                # Financial impact estimation
+                model_analysis = business_model_analyzer.detect_business_model([test_text])
+                financial_result = financial_impact.estimate_financial_impact(
+                    impact_result, model_analysis['probable_model'], sector
+                )
+                
+                # Store results in session state
+                st.session_state.advanced_sentiment = sentiment_result
+                st.session_state.business_impact = impact_result
+                st.session_state.financial_impact = financial_result
+                st.session_state.business_critical = advanced_sentiment.is_business_critical(test_text, sentiment_result)
+        
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
-        st.markdown("### 📊 Threat Analysis")
+        st.markdown("### 📊 Advanced Threat Analysis")
         
-        if 'sentiment' in st.session_state:
-            # Animated Results Card
-            st.markdown('<div class="metric-card floating">', unsafe_allow_html=True)
-            st.markdown(f"**🎯 Sentiment Score:** `{st.session_state.sentiment:.2f}`")
+        if 'advanced_sentiment' in st.session_state:
+            # Display results with advanced visualization
+            sentiment = st.session_state.advanced_sentiment
+            impact = st.session_state.business_impact
+            financial = st.session_state.financial_impact
             
-            risk_html = f'<span class="risk-yes">🚨 CRITICAL THREAT DETECTED</span>' if st.session_state.is_risk else f'<span class="risk-no">✅ SYSTEM SECURE</span>'
-            st.markdown(f"**📈 Risk Level:** {risk_html}", unsafe_allow_html=True)
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown('<div class="advanced-card">', unsafe_allow_html=True)
+                st.markdown("##### Sentiment Analysis")
+                st.metric("Polarity Score", f"{sentiment['polarity']:.2f}")
+                st.metric("Subjectivity", f"{sentiment['subjectivity']:.2f}")
+                st.metric("Category", sentiment['sentiment_category'])
+                if sentiment['business_terms']:
+                    st.write("**Business Terms:**", ", ".join(sentiment['business_terms']))
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            with col2:
+                risk_class = "prediction-high" if impact['impact_level'] == "High" else \
+                           "prediction-medium" if impact['impact_level'] == "Medium" else "prediction-low"
+                
+                st.markdown(f'<div class="advanced-card {risk_class}">', unsafe_allow_html=True)
+                st.markdown("##### Business Impact Prediction")
+                st.metric("Impact Score", f"{impact['impact_score']:.2f}")
+                st.metric("Impact Level", impact['impact_level'])
+                st.metric("Financial Risk", f"${impact['financial_risk']:,.0f}")
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Financial impact assessment
+            st.markdown('<div class="financial-metric">', unsafe_allow_html=True)
+            st.markdown("##### Financial Impact Assessment")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Estimated Impact", f"${financial['estimated_impact']:,.0f}")
+            with col2:
+                st.metric("Severity", financial['severity'])
+            with col3:
+                if financial['impact_percentage']:
+                    st.metric("Market Cap Impact", f"{financial['impact_percentage']:.4f}%")
             st.markdown('</div>', unsafe_allow_html=True)
             
-            if st.session_state.is_risk and st.session_state.strategy:
-                st.markdown("### 🛡️ Crisis Mitigation Protocol")
-                st.markdown('<div class="metric-card">', unsafe_allow_html=True)
-                st.markdown(st.session_state.strategy)
-                st.markdown('</div>', unsafe_allow_html=True)
+            # Impact explanation
+            st.markdown("##### Impact Explanation")
+            st.info(impact['explanation'])
+            
+            # Mitigation strategies
+            if impact['impact_level'] in ["High", "Medium"]:
+                st.markdown("##### 🛡️ Mitigation Strategies")
+                strategies = [
+                    "Immediate response protocol activation",
+                    "Executive communication plan development",
+                    "Stakeholder impact assessment",
+                    "Financial contingency planning",
+                    "Legal counsel consultation"
+                ]
                 
-                st.markdown("### ⚡ Immediate Actions")
-                action_col1, action_col2, action_col3 = st.columns(3)
-                with action_col1:
-                    if st.button("📧 Send Alert", use_container_width=True, key="alert_btn"):
-                        st.success("Alert sent to team!")
-                with action_col2:
-                    if st.button("📱 Notify Team", use_container_width=True, key="notify_btn"):
-                        st.success("Team notified!")
-                with action_col3:
-                    if st.button("📊 Generate Report", use_container_width=True, key="report_btn"):
-                        st.success("Report generated!")
+                for strategy in strategies:
+                    st.markdown(f'<div class="strategy-recommendation">▪️ {strategy}</div>', unsafe_allow_html=True)
+
+def show_advanced_competitive_intelligence(brand_name, sector):
+    st.header("Advanced Competitive Intelligence")
+    
+    # Perform advanced competitive analysis
+    comp_analysis = advanced_competitive.advanced_competitive_analysis(brand_name, sector)
+    swot_analysis = advanced_competitive.swot_analysis(brand_name, sector)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("Market Position Analysis")
+        st.plotly_chart(create_competitive_analysis_chart(comp_analysis), use_container_width=True)
+        
+        # Market share table
+        st.markdown("##### Detailed Market Share")
+        share_data = []
+        for brand, share in comp_analysis['market_share'].items():
+            share_data.append({
+                'Brand': brand,
+                'Market Share': f"{share:.1f}%",
+                'Growth Rate': f"{comp_analysis['growth_rates'][brand]:.1f}%",
+                'Sentiment': f"{comp_analysis['sentiment_scores'][brand]:.2f}"
+            })
+        
+        st.table(pd.DataFrame(share_data))
+    
+    with col2:
+        st.subheader("SWOT Analysis")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown('<div class="advanced-card" style="border-left: 4px solid #10B981;">', unsafe_allow_html=True)
+            st.markdown("##### Strengths")
+            for strength in swot_analysis['strengths']:
+                st.markdown(f"▪️ {strength}")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="advanced-card" style="border-left: 4px solid #EF4444;">', unsafe_allow_html=True)
+            st.markdown("##### Weaknesses")
+            for weakness in swot_analysis['weaknesses']:
+                st.markdown(f"▪️ {weakness}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown('<div class="advanced-card" style="border-left: 4px solid #3B82F6;">', unsafe_allow_html=True)
+            st.markdown("##### Opportunities")
+            for opportunity in swot_analysis['opportunities']:
+                st.markdown(f"▪️ {opportunity}")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            st.markdown('<div class="advanced-card" style="border-left: 4px solid #F59E0B;">', unsafe_allow_html=True)
+            st.markdown("##### Threats")
+            for threat in swot_analysis['threats']:
+                st.markdown(f"▪️ {threat}")
+            st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Competitive strategy recommendations
+    st.subheader("Strategic Recommendations")
+    
+    # Generate recommendations based on competitive position
+    market_share = comp_analysis['market_share'][brand_name]
+    growth_rate = comp_analysis['growth_rates'][brand_name]
+    sentiment = comp_analysis['sentiment_scores'][brand_name]
+    
+    recommendations = []
+    
+    if market_share < 10:
+        recommendations.append("Focus on niche market differentiation to increase market share")
+    elif market_share < 25:
+        recommendations.append("Leverage current position to challenge market leaders through innovation")
+    else:
+        recommendations.append("Defend market leadership through ecosystem development and partnerships")
+    
+    if growth_rate < 0:
+        recommendations.append("Implement aggressive turnaround strategy to reverse negative growth")
+    elif growth_rate < 5:
+        recommendations.append("Explore new growth avenues through market expansion or product diversification")
+    
+    if sentiment < 0.5:
+        recommendations.append("Launch brand sentiment improvement campaign to address negative perceptions")
+    
+    for rec in recommendations:
+        st.markdown(f'<div class="strategy-recommendation">🔹 {rec}</div>', unsafe_allow_html=True)
 
 def main():
-    # Initialize session state
-    if "show_intro" not in st.session_state:
-        st.session_state.show_intro = True
+    # Initialize session state for advanced features
+    if "sector" not in st.session_state:
+        st.session_state.sector = "technology"
     
     # Premium Header with Animation
     st.markdown("""
     <div class="logo-container">
         <div class="logo">🛡️</div>
     </div>
-    <h1 class="premium-header floating">BrandGuardian AI</h1>
-    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Enterprise Digital Risk Protection Platform</div>
+    <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
+    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
-    # Brand selection
-    brand_name = st.sidebar.text_input("Brand Name", "Nike")
+    # Sidebar with advanced options
+    with st.sidebar:
+        st.header("Business Configuration")
+        brand_name = st.text_input("Brand Name", "Nike")
+        sector = st.selectbox("Business Sector", 
+                            ["technology", "finance", "retail", "healthcare", "manufacturing"])
+        
+        st.session_state.sector = sector
+        
+        # Additional business context
+        st.subheader("Advanced Settings")
+        market_cap = st.number_input("Market Capitalization (Optional)", 
+                                   min_value=0.0, value=0.0, step=1000000.0,
+                                   help="For more accurate financial impact assessment")
+        
+        business_model = st.selectbox("Business Model (Optional)", 
+                                    ["", "B2B", "B2C", "Marketplace", "Subscription", "Hybrid"])
+        
+        # Real-time monitoring toggle
+        real_time = st.toggle("Real-time Monitoring", value=True)
+        monitoring_frequency = st.slider("Monitoring Frequency (minutes)", 
+                                       1, 60, 5, disabled=not real_time)
     
     # Navigation Tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         "📊 Executive Dashboard", 
-        "🔍 Threat Analyzer", 
+        "🔍 Advanced Threat Analysis", 
         "📱 Social Monitoring",
-        "🥊 Competitive Intel",
-        "🌟 Influencer Analysis",
+        "🥊 Competitive Intelligence",
+        "🌟 Influencer Network",
         "🛡️ Crisis Prediction",
         "❤️ Brand Health"
     ])
     
     with tab1:
-        show_executive_dashboard(brand_name)
+        show_advanced_executive_dashboard(brand_name, sector)
     
     with tab2:
-        show_threat_analyzer(brand_name)
+        show_advanced_threat_analyzer(brand_name, sector)
     
     with tab3:
-        show_social_monitoring(brand_name)
+        st.header("Advanced Social Monitoring")
+        posts = advanced_monitor.simulate_advanced_feed(brand_name, sector)
+        
+        # Calculate business impact for each post
+        for i, post in enumerate(posts):
+            if post['business_impact'] is None:
+                post['business_impact'] = business_impact.predict_business_impact(
+                    post['content'], post['sentiment'], 
+                    post['author_followers'], post['platform']
+                )
+            
+            # Display post with advanced formatting
+            impact = post['business_impact']
+            risk_class = "prediction-high" if impact['impact_level'] == "High" else \
+                       "prediction-medium" if impact['impact_level'] == "Medium" else "prediction-low"
+            
+            with st.expander(f"{post['platform']} - {post['date'].strftime('%Y-%m-%d %H:%M')}"):
+                col1, col2 = st.columns([3, 1])
+                
+                with col1:
+                    st.write(post['content'])
+                    st.caption(f"Author: {post['author']} | Followers: {post['author_followers']:,} | Engagement: {post['engagement']}")
+                
+                with col2:
+                    st.markdown(f'<div class="{risk_class}" style="padding: 10px; border-radius: 8px;">', unsafe_allow_html=True)
+                    st.metric("Impact", impact['impact_level'])
+                    st.metric("Risk", f"${impact['financial_risk']:,.0f}")
+                    st.markdown('</div>', unsafe_allow_html=True)
+                
+                # Show sentiment analysis
+                sentiment = post['sentiment']
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Sentiment", f"{sentiment['polarity']:.2f}")
+                with col2:
+                    st.metric("Category", sentiment['sentiment_category'])
+                with col3:
+                    st.metric("Confidence", f"{sentiment['confidence']:.2%}")
     
     with tab4:
-        show_competitive_intelligence(brand_name)
+        show_advanced_competitive_intelligence(brand_name, sector)
     
     with tab5:
-        show_influencer_analysis(brand_name)
+        st.header("Influence Network Analysis")
+        posts = advanced_monitor.simulate_advanced_feed(brand_name, sector)
+        
+        # Build network
+        network_data = network_analyzer.build_network(posts)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("##### Network Metrics")
+            st.metric("Nodes", network_data['node_count'])
+            st.metric("Connections", network_data['edge_count'])
+            
+            if network_data['node_count'] > 0:
+                # Identify key influencers
+                influencers = sorted(network_data['pagerank'].items(), key=lambda x: x[1], reverse=True)[:5]
+                st.markdown("##### Top Influencers")
+                for influencer, score in influencers:
+                    st.write(f"{influencer} (Score: {score:.4f})")
+        
+        with col2:
+            st.markdown("##### Influence Distribution")
+            if network_data['node_count'] > 0:
+                # Create simple bar chart of influence scores
+                influencers = dict(sorted(network_data['pagerank'].items(), key=lambda x: x[1], reverse=True)[:10])
+                fig = px.bar(
+                    x=list(influencers.keys()), 
+                    y=list(influencers.values()),
+                    title="Top Influencers by PageRank Score"
+                )
+                fig.update_layout(
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    font=dict(color='white')
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("Not enough data to build influence network")
     
     with tab6:
-        show_crisis_prediction(brand_name)
+        st.header("Advanced Crisis Prediction")
+        crisis_data = advanced_crisis.predict_advanced_crisis_risk(brand_name, {}, sector)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("##### Crisis Risk Assessment")
+            risk_class = "prediction-high" if crisis_data['risk_level'] == "High" else \
+                       "prediction-medium" if crisis_data['risk_level'] == "Medium" else "prediction-low"
+            
+            st.markdown(f'<div class="{risk_class}" style="padding: 20px; border-radius: 12px;">', unsafe_allow_html=True)
+            st.metric("Overall Risk Score", f"{crisis_data['risk_score']:.2%}")
+            st.metric("Risk Level", crisis_data['risk_level'])
+            if crisis_data['crisis_type']:
+                st.metric("Predicted Crisis Type", crisis_data['crisis_type'].title())
+            st.metric("Potential Impact", f"${crisis_data['potential_impact']:,.0f}")
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Warning signs
+            if crisis_data['warning_signs']:
+                st.markdown("##### 🚨 Warning Signs Detected")
+                for sign in crisis_data['warning_signs']:
+                    st.error(f"▪️ {sign}")
+        
+        with col2:
+            st.plotly_chart(create_risk_matrix(crisis_data), use_container_width=True)
+            
+            # Category risks
+            st.markdown("##### Risk by Category")
+            for category, risk in crisis_data['category_risks'].items():
+                st.write(f"{category.title()}: {risk:.2%}")
+                st.progress(risk)
+        
+        # Recommendations
+        st.markdown("##### Preparedness Recommendations")
+        for recommendation in crisis_data['recommendations']:
+            st.markdown(f'<div class="strategy-recommendation">🔸 {recommendation}</div>', unsafe_allow_html=True)
     
     with tab7:
-        show_brand_health(brand_name)
+        st.header("Advanced Brand Health Analytics")
+        
+        # Simulate brand health data
+        dates = pd.date_range(end=datetime.now(), periods=30, freq='D')
+        health_scores = np.random.normal(70, 10, 30).clip(0, 100)
+        
+        # Create brand health chart
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=dates, y=health_scores,
+            mode='lines+markers',
+            name='Brand Health Score',
+            line=dict(color='#10B981', width=3),
+            marker=dict(size=6)
+        ))
+        
+        fig.update_layout(
+            title='Brand Health Trend (30 Days)',
+            xaxis_title='Date',
+            yaxis_title='Health Score',
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='white')
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Health metrics
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
+            st.metric("Current Health Score", f"{health_scores[-1]:.1f}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
+            change = health_scores[-1] - health_scores[-2]
+            st.metric("30-Day Change", f"{change:+.1f}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
+            st.metric("Average Score", f"{np.mean(health_scores):.1f}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown('<div class="kpi-card">', unsafe_allow_html=True)
+            st.metric("Volatility", f"{np.std(health_scores):.1f}")
+            st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Health drivers
+        st.markdown("##### Brand Health Drivers")
+        drivers = [
+            {"name": "Brand Sentiment", "score": random.randint(60, 90), "impact": "High"},
+            {"name": "Customer Satisfaction", "score": random.randint(65, 95), "impact": "High"},
+            {"name": "Market Position", "score": random.randint(50, 85), "impact": "Medium"},
+            {"name": "Innovation Perception", "score": random.randint(55, 80), "impact": "Medium"},
+            {"name": "Social Presence", "score": random.randint(70, 95), "impact": "Low"},
+        ]
+        
+        for driver in drivers:
+            col1, col2, col3 = st.columns([2, 1, 1])
+            with col1:
+                st.write(driver['name'])
+            with col2:
+                st.progress(driver['score'] / 100)
+            with col3:
+                st.write(f"{driver['score']}% ({driver['impact']} Impact)")
 
     # Footer
     st.markdown("---")
-    st.markdown('<div style="text-align: center; padding: 20px;" class="accent-text">', unsafe_allow_html=True)
-    st.markdown("**🛡️ Protecting Brands in the Digital Age**")
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style="text-align: center; padding: 20px;">
+        <p class="accent-text"><strong>🛡️ Advanced Brand Protection with AI-Driven Business Intelligence</strong></p>
+        <p>Powered by Next-Generation Sentiment Analysis, Business Impact Forecasting, and Competitive Strategy Insights</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
