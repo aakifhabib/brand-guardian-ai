@@ -4,13 +4,8 @@ import random
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import re
 from collections import Counter
-import warnings
-warnings.filterwarnings('ignore')
 
 # Set page config first
 st.set_page_config(
@@ -23,7 +18,7 @@ st.set_page_config(
 # Advanced CSS with enhanced UI components
 st.markdown("""
 <style>
-    /* Base styles remain the same with enhancements */
+    /* Base styles */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     .main {
@@ -1094,107 +1089,50 @@ advanced_monitor = AdvancedSocialMediaMonitor()
 advanced_competitive = AdvancedCompetitiveAnalyzer()
 advanced_crisis = AdvancedCrisisPredictor()
 
-# Enhanced visualization functions
-def create_sentiment_trend_chart():
-    """Create an advanced sentiment trend chart"""
+# Simple chart functions using Streamlit's native capabilities
+def display_sentiment_trend():
+    """Display sentiment trend using Streamlit's native charting"""
     dates = pd.date_range(end=datetime.now(), periods=30, freq='D')
     scores = np.random.uniform(0.3, 0.9, 30)
     
-    fig = go.Figure()
+    chart_data = pd.DataFrame({
+        'Date': dates,
+        'Sentiment Score': scores
+    })
     
-    fig.add_trace(go.Scatter(
-        x=dates,
-        y=scores,
-        mode='lines+markers',
-        name='Sentiment Score',
-        line=dict(color='#6366F1', width=3),
-        marker=dict(size=6)
-    ))
-    
-    fig.update_layout(
-        title='Sentiment Trend Over Time',
-        xaxis_title='Date',
-        yaxis_title='Sentiment Score',
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        hovermode='x unified'
-    )
-    
-    return fig
+    st.line_chart(chart_data.set_index('Date'))
 
-def create_competitive_analysis_chart(analysis_data):
-    """Create competitive analysis visualization"""
-    brands = list(analysis_data['market_share'].keys())
-    shares = list(analysis_data['market_share'].values())
-    sentiments = [analysis_data['sentiment_scores'][b] for b in brands]
+def display_competitive_analysis(analysis_data):
+    """Display competitive analysis using Streamlit's native capabilities"""
+    col1, col2 = st.columns(2)
     
-    fig = make_subplots(
-        rows=1, cols=2,
-        subplot_titles=('Market Share', 'Sentiment Comparison'),
-        specs=[[{"type": "pie"}, {"type": "bar"}]]
-    )
+    with col1:
+        st.subheader("Market Share")
+        share_data = pd.DataFrame({
+            'Brand': list(analysis_data['market_share'].keys()),
+            'Share': list(analysis_data['market_share'].values())
+        })
+        st.bar_chart(share_data.set_index('Brand'))
     
-    # Market share pie chart
-    fig.add_trace(
-        go.Pie(
-            labels=brands, 
-            values=shares, 
-            name="Market Share",
-            hole=0.4,
-            marker_colors=px.colors.qualitative.Set3
-        ),
-        row=1, col=1
-    )
-    
-    # Sentiment bar chart
-    fig.add_trace(
-        go.Bar(
-            x=brands,
-            y=sentiments,
-            name="Sentiment Score",
-            marker_color=['#6366F1' if i == 0 else '#8B5CF6' for i in range(len(brands))]
-        ),
-        row=1, col=2
-    )
-    
-    fig.update_layout(
-        title_text='Competitive Landscape Analysis',
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        showlegend=False
-    )
-    
-    return fig
+    with col2:
+        st.subheader("Sentiment Comparison")
+        sentiment_data = pd.DataFrame({
+            'Brand': list(analysis_data['sentiment_scores'].keys()),
+            'Sentiment': list(analysis_data['sentiment_scores'].values())
+        })
+        st.bar_chart(sentiment_data.set_index('Brand'))
 
-def create_risk_matrix(crisis_data):
-    """Create a risk matrix visualization"""
+def display_risk_matrix(crisis_data):
+    """Display risk matrix using Streamlit's native capabilities"""
     categories = list(crisis_data['category_risks'].keys())
-    risks = list(crisis_data['category_risks'].values())
+    risks = [crisis_data['category_risks'][cat] for cat in categories]
     
-    fig = go.Figure(data=go.Scatterpolar(
-        r=risks + [risks[0]],
-        theta=categories + [categories[0]],
-        fill='toself',
-        name='Risk Profile',
-        line=dict(color='#EF4444')
-    ))
+    risk_data = pd.DataFrame({
+        'Category': categories,
+        'Risk Score': risks
+    })
     
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                visible=True,
-                range=[0, 1]
-            )),
-        showlegend=False,
-        title='Crisis Risk Matrix',
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white')
-    )
-    
-    return fig
+    st.bar_chart(risk_data.set_index('Category'))
 
 # Enhanced dashboard sections
 def show_advanced_executive_dashboard(brand_name, sector):
@@ -1250,13 +1188,17 @@ def show_advanced_executive_dashboard(brand_name, sector):
         ''', unsafe_allow_html=True)
     
     # Advanced charts
+    st.markdown("#### Sentiment Trend (30 Days)")
+    display_sentiment_trend()
+    
     col1, col2 = st.columns(2)
     
     with col1:
-        st.plotly_chart(create_competitive_analysis_chart(comp_analysis), use_container_width=True)
+        display_competitive_analysis(comp_analysis)
     
     with col2:
-        st.plotly_chart(create_risk_matrix(crisis_prediction), use_container_width=True)
+        st.markdown("#### Risk Matrix")
+        display_risk_matrix(crisis_prediction)
     
     # Business model insights
     st.markdown("### Business Model Intelligence")
@@ -1424,7 +1366,7 @@ def show_advanced_competitive_intelligence(brand_name, sector):
     
     with col1:
         st.subheader("Market Position Analysis")
-        st.plotly_chart(create_competitive_analysis_chart(comp_analysis), use_container_width=True)
+        display_competitive_analysis(comp_analysis)
         
         # Market share table
         st.markdown("##### Detailed Market Share")
@@ -1640,7 +1582,8 @@ def main():
                     st.error(f"▪️ {sign}")
         
         with col2:
-            st.plotly_chart(create_risk_matrix(crisis_data), use_container_width=True)
+            st.markdown("#### Risk Matrix")
+            display_risk_matrix(crisis_data)
             
             # Category risks
             st.markdown("##### Risk by Category")
@@ -1661,25 +1604,12 @@ def main():
         health_scores = np.random.normal(70, 10, 30).clip(0, 100)
         
         # Create brand health chart
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=dates, y=health_scores,
-            mode='lines+markers',
-            name='Brand Health Score',
-            line=dict(color='#10B981', width=3),
-            marker=dict(size=6)
-        ))
+        chart_data = pd.DataFrame({
+            'Date': dates,
+            'Health Score': health_scores
+        })
         
-        fig.update_layout(
-            title='Brand Health Trend (30 Days)',
-            xaxis_title='Date',
-            yaxis_title='Health Score',
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='white')
-        )
-        
-        st.plotly_chart(fig, use_container_width=True)
+        st.line_chart(chart_data.set_index('Date'))
         
         # Health metrics
         col1, col2, col3, col4 = st.columns(4)
