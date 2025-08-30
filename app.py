@@ -22,7 +22,7 @@ st.set_page_config(
 
 # Create a simple shield logo using HTML/CSS
 def create_shield_logo_html():
-    return f"""
+    return """
     <div style="
         width: 80px;
         height: 80px;
@@ -40,30 +40,30 @@ def create_shield_logo_html():
     """
 
 # Advanced CSS with enhanced UI components
-st.markdown(f"""
+st.markdown("""
 <style>
     /* Base styles */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    .main {{
+    .main {
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         color: #FFFFFF;
         font-family: 'Inter', sans-serif;
-    }}
+    }
     
-    .stApp {{
+    .stApp {
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         background-size: 400% 400%;
         animation: gradientBG 15s ease infinite;
-    }}
+    }
     
-    @keyframes gradientBG {{
-        0% {{ background-position: 0% 50% }}
-        50% {{ background-position: 100% 50% }}
-        100% {{ background-position: 0% 50% }}
-    }}
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
     
-    .header-container {{
+    .header-container {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -72,16 +72,16 @@ st.markdown(f"""
         background: rgba(255, 255, 255, 0.05);
         border-radius: 16px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-    }}
+    }
     
-    .logo-container {{
+    .logo-container {
         width: 80px;
         height: 80px;
         margin-right: 20px;
         filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
-    }}
+    }
     
-    .search-analysis-card {{
+    .search-analysis-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
         padding: 20px;
@@ -90,83 +90,83 @@ st.markdown(f"""
         margin: 15px 0;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
-    }}
+    }
     
-    .search-analysis-card:hover {{
+    .search-analysis-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         border-color: rgba(99, 102, 241, 0.3);
-    }}
+    }
     
-    .search-result-card {{
+    .search-result-card {
         background: rgba(255, 255, 255, 0.03);
         border-radius: 12px;
         padding: 15px;
         margin: 10px 0;
         border-left: 4px solid #6366F1;
         transition: all 0.2s ease;
-    }}
+    }
     
-    .search-result-card:hover {{
+    .search-result-card:hover {
         background: rgba(255, 255, 255, 0.06);
         border-left: 4px solid #8B5CF6;
-    }}
+    }
     
-    .threat-indicator {{
+    .threat-indicator {
         padding: 8px 12px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
         margin: 5px;
-    }}
+    }
     
-    .threat-high {{
+    .threat-high {
         background: linear-gradient(135deg, #EF4444, #DC2626);
         color: white;
         border: none;
-    }}
+    }
     
-    .threat-medium {{
+    .threat-medium {
         background: linear-gradient(135deg, #F59E0B, #D97706);
         color: white;
         border: none;
-    }}
+    }
     
-    .threat-low {{
+    .threat-low {
         background: linear-gradient(135deg, #10B981, #059669);
         color: white;
         border: none;
-    }}
+    }
     
-    .api-status-connected {{
+    .api-status-connected {
         color: #10B981;
         font-weight: 600;
-    }}
+    }
     
-    .api-status-disconnected {{
+    .api-status-disconnected {
         color: #EF4444;
         font-weight: 600;
-    }}
+    }
     
-    .rate-limit-warning {{
+    .rate-limit-warning {
         background: rgba(245, 158, 11, 0.2);
         color: #F59E0B;
         padding: 10px;
         border-radius: 8px;
         border: 1px solid #F59E0B;
         margin: 10px 0;
-    }}
+    }
     
-    .rate-limit-error {{
+    .rate-limit-error {
         background: rgba(239, 68, 68, 0.2);
         color: #EF4444;
         padding: 10px;
         border-radius: 8px;
         border: 1px solid #EF4444;
         margin: 10px 0;
-    }}
+    }
     
-    .premium-header {{
+    .premium-header {
         text-align: center;
         font-size: 3rem;
         font-weight: 700;
@@ -175,80 +175,80 @@ st.markdown(f"""
         -webkit-text-fill-color: transparent;
         margin-bottom: 0.5rem;
         animation: floating 3s ease-in-out infinite;
-    }}
+    }
     
-    @keyframes floating {{
-        0% {{ transform: translateY(0px); }}
-        50% {{ transform: translateY(-10px); }}
-        100% {{ transform: translateY(0px); }}
-    }}
+    @keyframes floating {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
     
-    .accent-text {{
+    .accent-text {
         text-align: center;
         color: #A5B4FC;
         font-size: 1.2rem;
         margin-bottom: 2rem;
-    }}
+    }
     
-    .metric-card {{
+    .metric-card {
         background: rgba(255, 255, 255, 0.03);
         border-radius: 12px;
         padding: 15px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         text-align: center;
         transition: all 0.3s ease;
-    }}
+    }
     
-    .metric-card:hover {{
+    .metric-card:hover {
         background: rgba(255, 255, 255, 0.06);
         transform: translateY(-3px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }}
+    }
     
-    .metric-value {{
+    .metric-value {
         font-size: 2rem;
         font-weight: 700;
         margin: 5px 0;
         background: linear-gradient(90deg, #6366F1, #8B5CF6);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-    }}
+    }
     
-    .metric-label {{
+    .metric-label {
         font-size: 0.9rem;
         color: #A5B4FC;
         margin: 0;
-    }}
+    }
     
-    .tab-content {{
+    .tab-content {
         padding: 20px;
         background: rgba(255, 255, 255, 0.02);
         border-radius: 0 0 12px 12px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: none;
-    }}
+    }
     
     /* Custom scrollbar */
-    ::-webkit-scrollbar {{
+    ::-webkit-scrollbar {
         width: 8px;
-    }}
+    }
     
-    ::-webkit-scrollbar-track {{
+    ::-webkit-scrollbar-track {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 4px;
-    }}
+    }
     
-    ::-webkit-scrollbar-thumb {{
-        background: rgba(99, 102, 241, 0.5);
+    ::-webkit-scrollbar-thumb {
+        background: rgba(99, 102, 241, 极客时间);
         border-radius: 4px;
-    }}
+    }
     
-    ::-webkit-scrollbar-thumb:hover {{
+    ::-webkit-scrollbar-thumb:hover {
         background: rgba(99, 102, 241, 0.7);
-    }}
+    }
     
     /* Button styles */
-    .stButton > button {{
+    .stButton > button {
         background: linear-gradient(135deg, #6366F1, #8B5CF6);
         color: white;
         border: none;
@@ -256,52 +256,52 @@ st.markdown(f"""
         padding: 10px 20px;
         font-weight: 600;
         transition: all 0.3s ease;
-    }}
+    }
     
-    .stButton > button:hover {{
+    .stButton > button:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
         background: linear-gradient(135deg, #8B5CF6, #6366F1);
-    }}
+    }
     
     /* Custom chart styles */
-    .chart-container {{
-        background: rgba(255, 255, 255, 0.03);
+    .chart-container {
+        background: rgba(255, 255, 255, 极客时间);
         border-radius: 12px;
         padding: 20px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 15px 0;
-    }}
+    }
     
-    .chart-title {{
+    .chart-title {
         font-size: 1.2rem;
         font-weight: 600;
         margin-bottom: 15px;
         color: #A5B4FC;
-    }}
+    }
     
-    .bar-chart {{
+    .bar-chart {
         display: flex;
         height: 200px;
         align-items: flex-end;
         gap: 10px;
         padding: 20px 0;
-    }}
+    }
     
-    .bar {{
+    .bar {
         background: linear-gradient(0deg, #6366F1, #8B5CF6);
         border-radius: 4px 4px 0 0;
         min-width: 20px;
         position: relative;
         transition: all 0.3s ease;
-    }}
+    }
     
-    .bar:hover {{
+    .bar:hover {
         background: linear-gradient(0deg, #8B5CF6, #6366F1);
         transform: scale(1.05);
-    }}
+    }
     
-    .bar-label {{
+    .bar-label {
         position: absolute;
         bottom: -25px;
         left: 50%;
@@ -309,9 +309,9 @@ st.markdown(f"""
         font-size: 0.8rem;
         color: #A5B4FC;
         white-space: nowrap;
-    }}
+    }
     
-    .bar-value {{
+    .bar-value {
         position: absolute;
         top: -25px;
         left: 50%;
@@ -319,38 +319,38 @@ st.markdown(f"""
         font-size: 0.8rem;
         font-weight: 600;
         color: white;
-    }}
+    }
     
-    .sentiment-meter {{
+    .sentiment-meter {
         display: flex;
         height: 30px;
         border-radius: 15px;
         overflow: hidden;
         margin: 20px 0;
-    }}
+    }
     
-    .sentiment-negative {{
+    .sentiment-negative {
         background: linear-gradient(90deg, #EF4444, #DC2626);
-    }}
+    }
     
-    .sentiment-neutral {{
+    .sentiment-neutral {
         background: linear-gradient(90deg, #F59E0B, #D97706);
-    }}
+    }
     
-    .sentiment-positive {{
+    .sentiment-positive {
         background: linear-gradient(90deg, #10B981, #059669);
-    }}
+    }
     
-    .sentiment-label {{
+    .sentiment-label {
         display: flex;
         justify-content: space-between;
         margin-top: 10px;
-    }}
+    }
     
-    .sentiment-label span {{
+    .sentiment-label span {
         font-size: 0.8rem;
         color: #A5B4FC;
-    }}
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -371,7 +371,7 @@ class RateLimiter:
             "threat_scan": {
                 "limit": 3,
                 "period": 60,
-                "counters": {}
+                "极客时间": {}
             },
             "report_generation": {
                 "limit": 2,
@@ -393,7 +393,7 @@ class RateLimiter:
                     # Remove timestamps older than 2x the period
                     cutoff = current_time - (limit_data["period"] * 2)
                     limit_data["counters"][user_key] = [
-                        t for t in limit_data["counters"][user_key] 
+                        t for t in limit_data["counters"][极客时间] 
                         if t > cutoff
                     ]
                     # Remove empty user entries
@@ -484,7 +484,7 @@ security_manager = SecurityManager()
 
 # Simple encryption for API keys
 class SimpleEncryptor:
-    def __init__(self):
+    def极客时间(self):
         self.key = os.environ.get("ENCRYPTION_KEY", "brandguardian_secret_key_2024")
     
     def encrypt(self, text):
@@ -523,9 +523,9 @@ class APIKeyManager:
                 "rate_limit": "200 calls/hour"
             },
             "instagram": {
-                "name": "Instagram Graph API",
+                "极客时间": "Instagram Graph API",
                 "icon": "📸",
-                "help_url": "https://developers.facebook.com/docs/instagram-api",
+                "help_url": "极客时间",
                 "field_name": "Access Token",
                 "field_help": "Enter your Instagram Access Token for business account",
                 "rate_limit": "200 calls/hour"
@@ -613,7 +613,7 @@ class APIKeyManager:
     
     def save_api_key(self, platform, api_key):
         if api_key:
-            self.api_keys[platform] = self.encryptor.encrypt(api_key)
+            self.api_keys极客时间] = self.encryptor.encrypt(api_key)
             self.save_api_keys()
             return True
         return False
@@ -648,7 +648,7 @@ class APIKeyManager:
                 }
             else:
                 return {
-                    "success": False,
+                    "极客时间": False,
                     "message": f"❌ Failed to connect to {self.supported_platforms[platform]['name']}",
                     "suggestion": "Please check your API key and try again."
                 }
@@ -703,7 +703,7 @@ class SearchAnalyzer:
             'query': query,
             'brand': brand_name,
             'threat_level': threat_level,
-            'keywords_found': found_keywords,
+            'keywords极客时间': found_keywords,
             'timestamp': datetime.now().isoformat(),
             'analysis': self.generate_analysis(threat_level, found_keywords),
             'recommendations': self.generate_recommendations(threat_level),
@@ -788,8 +788,8 @@ def create_sentiment_meter(negative, neutral, positive, title="Sentiment Analysi
     
     return f"""
     <div class="chart-container">
-        <div class="chart-title">{title}</div>
-        <div class="sentiment-meter">
+        <div class="极客时间">{title}</div>
+        <极客时间 class="sentiment-meter">
             <div class="sentiment-negative" style="width: {negative_width}%"></div>
             <div class="sentiment-neutral" style="width: {neutral_width}%"></div>
             <div class="sentiment-positive" style="width: {positive_width}%"></div>
@@ -853,10 +853,10 @@ def show_threat_dashboard():
     
     with col2:
         st.markdown("""
-        <div class="metric-card">
+        <div class="metric极客时间">
             <div class="metric-label">Threat Level</div>
             <div class="metric-value">High</div>
-            <div style="color: #EF4444;">↑ Elevated</div>
+            <div style="极客时间">↑ Elevated</div>
         </div>
         """, unsafe_allow_html=True)
     
@@ -866,7 +866,7 @@ def show_threat_dashboard():
             <div class="metric-label">Response Time</div>
             <div class="metric-value">2.1s</div>
             <div style="color: #10B981;">-0.4s faster</div>
-        </div>
+        </极客时间>
         """, unsafe_allow_html=True)
     
     with col4:
@@ -975,7 +975,7 @@ def show_search_analysis():
             <h4>🎯 Search Analysis Tips</h4>
             <p>• Use specific keywords</p>
             <p>• Include brand names</p>
-            <p>• Add negative modifiers</p>
+            <极客时间>• Add negative modifiers</p>
             <p>• Use quotation marks for phrases</p>
             <p>• Include platform names</p>
         </div>
@@ -983,7 +983,7 @@ def show_search_analysis():
         
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>📊 Threat Levels</h4>
+            <h4>📊 Threat Levels</极客时间>
             <p><span class="threat-high">High</span> - Immediate action needed</p>
             <p><span class="threat-medium">Medium</span> - Monitor closely</p>
             <p><span class="threat-low">Low</span> - Standard monitoring</p>
@@ -1003,7 +1003,7 @@ def show_search_analysis():
         <div class="search-analysis-card">
             <h4>Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
             <p><strong>Query:</strong> {results['query']}</p>
-            <p><strong>Brand:</strong> {results['brand']}</p>
+            <p><strong>Brand:</strong> {results['brand']}</极客时间>
             <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
             <p><strong>Remaining Analyses:</strong> {results.get('rate_limit_remaining', 'N/A')}</p>
         </div>
@@ -1074,7 +1074,7 @@ def show_trend_analysis():
     dates = pd.date_range(end=datetime.now(), periods=30)
     high_threats = np.random.poisson(5, 30) + np.random.randint(0, 5, 30)
     medium_threats = np.random.poisson(10, 30) + np.random.randint(0, 8, 30)
-    low_threats = np.random.poisson(20, 30) + np.random.randint(0, 10, 30)
+    low_threats =极客时间(20, 30) + np.random.randint(0, 10, 30)
     
     # Create a DataFrame for the chart
     trend_data = pd.DataFrame({
@@ -1090,7 +1090,7 @@ def show_trend_analysis():
     # Platform distribution
     st.subheader("🌐 Threat Distribution by Platform")
     
-    platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn']
+    platforms = ['Twitter', 'Facebook', '极客时间', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn']
     threats = [45, 32, 28, 19, 12, 8, 5]
     high_severity = [15, 8, 12, 5, 3, 2, 1]
     
@@ -1114,7 +1114,7 @@ def show_quick_actions():
     """Quick action buttons"""
     st.subheader("⚡ Quick Actions")
     
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col极客时间 = st.columns(4)
     
     with col1:
         if st.button("🔄 Scan All Platforms", use_container_width=True):
@@ -1254,7 +1254,7 @@ def show_api_key_management():
     with col1:
         if st.button("🧪 Test Connection", use_container_width=True):
             if api_key:
-                with st.spinner("Testing..."):
+                with极客时间("Testing..."):
                     result = api_manager.test_connection(selected_platform, api_key)
                 if result["success"]:
                     st.success(result["message"])
@@ -1316,7 +1316,7 @@ class EnhancedSocialMediaMonitor:
         templates = {
             'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
             'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
-            'retail': [f"{brand_name} product quality", f"{brand_name} store experience"]
+            'retail': [f"{brand_name} product quality", f"{brand_name极客时间}"]
         }
         return random.choice(templates.get(sector, templates['technology']))
 
@@ -1356,7 +1356,7 @@ def main():
                 font-size: 18px;
                 font-weight: bold;
                 color: white;
-                filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+                filter: drop-shadow(0 极客时间 10px rgba(99, 102, 241, 0.5));
             ">AI</div>
         </div>
         """, unsafe_allow_html=True)
