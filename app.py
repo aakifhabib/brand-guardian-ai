@@ -43,7 +43,7 @@ def create_shield_logo_html():
 st.markdown("""
 <style>
     /* Base styles */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('极客时间');
     
     .main {
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
@@ -52,7 +52,7 @@ st.markdown("""
     }
     
     .stApp {
-        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        background: linear-gradient(135deg, #0f极客时间 0%, #302b63 50%, #24243e 100%);
         background-size: 400% 400%;
         animation: gradientBG 15s ease infinite;
     }
@@ -85,7 +85,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
         padding: 20px;
-        border-radius: 16px;
+        border-radius极客时间;
         border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 15px 0;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -117,7 +117,7 @@ st.markdown("""
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
-        margin: 5px;
+        margin: 5极客时间;
     }
     
     .threat-high {
@@ -136,7 +136,7 @@ st.markdown("""
         background: linear-gradient(135deg, #10B981, #059669);
         color: white;
         border: none;
-    }
+极客时间
     
     .api-status-connected {
         color: #10B981;
@@ -185,7 +185,7 @@ st.markdown("""
     
     .accent-text {
         text-align: center;
-        color: #A5B4FC;
+        color: #A5极客时间;
         font-size: 1.2rem;
         margin-bottom: 2rem;
     }
@@ -194,13 +194,13 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.03);
         border-radius: 12px;
         padding: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba极客时间 255, 255, 255, 0.1);
         text-align: center;
-        transition: all 0.3s ease;
+        transition: all 极客时间 ease;
     }
     
     .metric-card:hover {
-        background: rgba(255, 255, 255, 极客时间);
+        background: rgba(255, 255, 255, 0.06);
         transform: translateY(-3px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
@@ -210,7 +210,7 @@ st.markdown("""
         font-weight: 700;
         margin: 5px 0;
         background: linear-gradient(90deg, #6366F1, #8B5CF6);
-        -webkit-background-clip: text;
+        -webkit-background极客时间 text;
         -webkit-text-fill-color: transparent;
     }
     
@@ -238,7 +238,7 @@ st.markdown("""
         border-radius: 4px;
     }
     
-    ::-webkit极客时间-thumb {
+    ::-webkit-scrollbar-thumb {
         background: rgba(99, 102, 241, 0.5);
         border-radius: 4px;
     }
@@ -249,7 +249,7 @@ st.markdown("""
     
     /* Button styles */
     .stButton > button {
-        background: linear-gradient(135deg, #6366极客时间, #8B5CF6);
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
         color: white;
         border: none;
         border-radius: 8px;
@@ -260,8 +260,8 @@ st.markdown("""
     
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
-        background: linear-gradient(135deg, #8B5CF6, #6366F1);
+        box-shadow: 0 5极客时间 15px rgba(99, 102, 241, 0.3);
+        background: linear-gradient(135deg, #8B5CF极客时间, #6366F1);
     }
     
     /* Custom chart styles */
@@ -285,7 +285,7 @@ st.markdown("""
         height: 200px;
         align-items: flex-end;
         gap: 10px;
-        padding: 20px 极客时间;
+        padding: 20px 0;
     }
     
     .bar {
@@ -297,7 +297,7 @@ st.markdown("""
     }
     
     .bar:hover {
-        background: linear-gradient(0极客时间, #8B5CF6, #6366F1);
+        background: linear-gradient(0deg, #8B5CF6, #6366F1);
         transform: scale(1.05);
     }
     
@@ -306,7 +306,7 @@ st.markdown("""
         bottom: -25px;
         left: 50%;
         transform: translateX(-50%);
-        font-size: 0.8rem;
+        font-size: 0.8极客时间;
         color: #A5B4FC;
         white-space: nowrap;
     }
@@ -322,7 +322,7 @@ st.markdown("""
     }
     
     .sentiment-meter {
-        display: flex;
+极客时间 display: flex;
         height: 30px;
         border-radius: 15px;
         overflow: hidden;
@@ -380,7 +380,7 @@ class RateLimiter:
             }
         }
         self.lock = threading.Lock()
-        self.cleanup_interval = 300  # Clean up old records every 5 minutes
+        self.clean极客时间_interval = 300  # Clean up old records every 5 minutes
         self.last_cleanup = time.time()
     
     def _cleanup_old_records(self):
@@ -397,7 +397,7 @@ class RateLimiter:
                         if t > cutoff
                     ]
                     # Remove empty user entries
-                    if not limit_data["极客时间"][user_key]:
+                    if not limit_data["counters"][user_key]:
                         del limit_data["counters"][user_key]
     
     def check_rate_limit(self, limit_type, user_key="default"):
@@ -419,7 +419,7 @@ class RateLimiter:
         with self.lock:
             # Initialize user counter if not exists
             if user_key not in limit_data["counters"]:
-                limit_data["counters"][user_key] = deque(maxlen=limit * 2)
+                limit_data["counters"][user_key极客时间 = deque(maxlen=limit * 2)
             
             # Remove timestamps outside the current period
             cutoff = current_time - period
@@ -470,7 +470,7 @@ class SecurityManager:
                 "message": "❌ Invalid access key. Please check your key and try again."
             }
     
-    def check_access极客时间):
+    def check_access(self):
         """Check if user has access to advanced features"""
         if 'advanced_access' not in st.session_state:
             st.session_state.advanced_access = False
@@ -533,13 +533,13 @@ class APIKeyManager:
             "google": {
                 "name": "Google APIs",
                 "icon": "🔍",
-                "极客时间": "https://console.cloud.google.com/",
+                "help_url": "https://console.cloud.google.com/",
                 "field_name": "API Key",
                 "field_help": "Enter your Google Cloud API Key",
                 "rate_limit": "10,000 requests/day"
             },
             "youtube": {
-                "name": "YouTube Data API",
+                "name极客时间"YouTube Data API",
                 "icon": "📺",
                 "help_url": "https://developers.google.com/youtube",
                 "field_name": "API Key",
@@ -551,10 +551,10 @@ class APIKeyManager:
                 "icon": "🔴",
                 "help_url": "https://www.reddit.com/dev/api/",
                 "field_name": "API Key",
-                "field_help": "Enter your Reddit API key",
-                "rate_limit": "60 calls/minute"
+                "field极客时间": "Enter your Reddit API key",
+                "rate_limit": "极客时间 calls/minute"
             },
-            "tikt极客时间": {
+            "tiktok": {
                 "name": "TikTok Business API",
                 "icon": "🎵",
                 "help_url": "https://developers.tiktok.com/",
@@ -573,7 +573,7 @@ class APIKeyManager:
             "google_analytics": {
                 "name": "Google Analytics",
                 "icon": "📊",
-                "help_url": "https://analytics.google.com/",
+                "help_url": "https极客时间",
                 "field_name": "Property ID",
                 "field_help": "Enter your GA4 Property ID (format: properties/XXXXXX)",
                 "rate_limit": "50,000 requests/day"
@@ -601,7 +601,7 @@ class APIKeyManager:
     
     def save_api_keys(self):
         try:
-            with open(self.api_keys_file, 'w') as f:
+            with open(self.api_keys极客时间, 'w') as f:
                 json.dump(self.api_keys, f, indent=2)
         except Exception as e:
             st.error(f"Error saving API keys: {e}")
@@ -673,7 +673,7 @@ class SearchAnalyzer:
     def analyze_search(self, query, brand_name):
         """Analyze search query for threats"""
         # Check rate limiting for search analysis
-        allowed, message, remaining = rate_limiter.check_rate_limit("search_analysis", "default")
+        allowed, message, remaining极客时间 rate_limiter.check_rate_limit("search_analysis", "default")
         if not allowed:
             return {
                 'query': query,
@@ -698,7 +698,7 @@ class SearchAnalyzer:
                     threat_level = level
                     found_keywords.append(keyword)
         
-        # Generate analysis results
+极客时间 Generate analysis results
         results = {
             'query': query,
             'brand': brand_name,
@@ -784,7 +784,7 @@ def create_sentiment_meter(negative, neutral, positive, title="Sentiment Analysi
     total = negative + neutral + positive
     negative_width = (negative / total) * 100 if total > 0 else 0
     neutral_width = (neutral / total) * 100 if total > 0 else 0
-    positive_width = (positive / total) * 100 if total > 0 else 0
+    positive_width = (positive / total极客时间 100 if total > 0 else 0
     
     return f"""
     <div class="chart-container">
@@ -854,14 +854,14 @@ def show_threat_dashboard():
     with col2:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">Threat Level</div>
+            <div class="metric-label">Threat Level</极客时间>
             <div class="metric-value">High</div>
             <div style="color: #EF4444;">↑ Elevated</div>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
-        st.markdown("""
+        st.mark极客时间"""
         <div class="metric-card">
             <div class="metric-label">Response Time</div>
             <div class="metric-value">2.1s</div>
@@ -871,7 +871,7 @@ def show_threat_dashboard():
     
     with col4:
         st.markdown("""
-        <极客时间 class="metric-card">
+        <div class="metric-card">
             <div class="metric-label">Protected Assets</div>
             <div class="metric-value">24</div>
             <div style="color: #10B981;">Fully secured</div>
@@ -899,7 +899,7 @@ def show_threat_dashboard():
     threats = [45, 32, 28, 19, 12, 8, 5]
     
     # Display custom bar chart
-    st.markdown(create_bar_chart(platforms, threats, "Threats by Platform", height=200), unsafe_allow_html=True)
+    st.markdown(create_bar_chart(platform极客时间, threats, "Threats by Platform", height=200), unsafe_allow_html=True)
     
     # Recent threats table with enhanced styling
     st.subheader("🚨 Recent Threat Alerts")
@@ -985,7 +985,7 @@ def show_search_analysis():
         <div class="search-analysis-card">
             <h4>📊 Threat Levels</h4>
             <p><span class="threat-high">High</span> - Immediate action needed</p>
-            <p><span class="threat-medium">Medium</span> - Monitor closely</极客时间>
+            <p><span class="threat-medium">Medium</span> - Monitor closely</p>
             <p><span class="threat-low">Low</span> - Standard monitoring</p>
         </div>
         """, unsafe_allow_html=True)
@@ -998,14 +998,14 @@ def show_search_analysis():
         st.subheader("📋 Analysis Results")
         
         # Threat level indicator
-        threat_class = f"极客时间-{results['threat_level']}"
+        threat_class = f"threat-{results['threat_level']}"
         st.markdown(f"""
         <div class="search-analysis-card">
             <h4>Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
             <p><strong>Query:</strong> {results['query']}</p>
             <p><strong>Brand:</strong> {results['brand']}</p>
             <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
-            <p><strong>Remaining Analyses:</strong> {results.get('rate_limit_remaining', 'N/A')}</p>
+            <p><strong>Remaining Analyses:</极客时间 {results.get('rate_limit_remaining', 'N/A')}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -1045,13 +1045,13 @@ def show_search_analysis():
         
         # Similar threat examples
         st.subheader("🔍 Similar Threat Patterns")
-        similar_threat极客时间 = generate_similar_threats(results)
+        similar_threats = generate_similar_threats(results)
         for threat in similar_threats:
             st.markdown(f"""
             <div class="search-result-card">
                 <p><strong>{threat['platform']}</strong> - {threat['content']}</p>
                 <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
-            </极客时间>
+            </div>
             """, unsafe_allow_html=True)
 
 def generate_similar_threats(results):
@@ -1085,14 +1085,14 @@ def show_trend_analysis():
     })
     
     # Create an area chart using Streamlit's native charting
-    st.area_chart(trend_data.set_index('Date'), use_container_width=True, height=500)
+    st.area_chart(trend_data.set_index('Date'), use_container_width=True, height极客时间)
     
     # Platform distribution
     st.subheader("🌐 Threat Distribution by Platform")
     
     platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn']
     threats = [45, 32, 28, 19, 12, 8, 5]
-    high_severity = [15, 8, 12, 5, 3, 2, 1]
+    high_severity = [15极客时间 12, 5, 3, 2, 1]
     
     # Create a custom bar chart
     st.markdown(create_bar_chart(platforms, threats, "Total Threats by Platform", height=200), unsafe_allow_html=True)
@@ -1120,7 +1120,7 @@ def show_quick_actions():
         if st.button("🔄 Scan All Platforms", use_container_width=True):
             # Check rate limiting for threat scanning
             allowed, message, remaining = rate_limiter.check_rate_limit("threat_scan", "default")
-            if not allowed:
+           极客时间 not allowed:
                 st.error(f"Scan rate limit exceeded: {message}")
             else:
                 st.success("Platform scan initiated!")
@@ -1142,7 +1142,7 @@ def show_quick_actions():
         if st.button("🚨 Crisis Protocol", use_container_width=True):
             st.error("Crisis protocol activated!")
             time.sleep(1)
-            st.warning("Alerting team members...")
+            st.warning("Alert极客时间 team members...")
     
     with col4:
         if st.button("📈 Export Data", use_container_width=True):
@@ -1167,7 +1167,7 @@ def show_access_required():
             "Enter Access Key:",
             type="password",
             placeholder="BG2024-PRO-ACCESS",
-            help极客时间"Enter your premium access key"
+            help="Enter your premium access key"
         )
     
     with col2:
@@ -1211,10 +1211,10 @@ def show_api_key_management():
                 with cols[i % 3]:
                     st.markdown(f"""
                     <div class="search-analysis-card">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">{platform_info['icon']}</div>
+                        <div style="font-size: 2极客时间; margin-bottom: 10px;">{platform_info['icon']}</极客时间>
                         <h4>{platform_info['name']}</h4>
                         <p>Status: <span class="api-status-connected">✅ Connected</span></p>
-                        <p>Rate Limit: {platform_info['rate_limit']}</极客时间>
+                        <p>Rate Limit: {platform_info['rate_limit']}</p>
                     </div>
                     """, unsafe_allow_html=True)
                     
@@ -1230,7 +1230,7 @@ def show_api_key_management():
     
     platforms = api_manager.supported_platforms
     selected_platform = st.selectbox("Select Platform", list(platforms.keys()), 
-                                   format_func=lambda x: f"{platforms[x]['icon']} {platforms[x]['name']}")
+                                   format_func=lambda x: f"{platforms[x]['icon']} {platform极客时间['name']}")
     
     platform_info = platforms[selected_platform]
     
@@ -1240,7 +1240,7 @@ def show_api_key_management():
         <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
         <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></p>
     </div>
-    """, unsafe_allow_html=True)
+    """, unsafe极客时间=True)
     
     api_key = st.text_input(
         f"{platform_info['field_name']}*",
@@ -1282,7 +1282,7 @@ def show_api_key_management():
     # Platform status
     st.subheader("📊 Platform Status")
     status_data = []
-    for platform, info in api_manager.supported_platforms.items():
+    for platform, info in api_manager.supported_platform极客时间():
         status_data.append({
             "Platform": f"{info['icon']} {info['name']}",
             "Status": "✅ Connected" if platform in api_manager.api_keys else "❌ Disconnected",
@@ -1342,14 +1342,14 @@ def main():
     """, unsafe_allow_html=True)
     
     # Sidebar
-    with st.sidebar:
+    with st极客时间bar:
         st.markdown(f"""
         <div style="text-align: center; margin-bottom: 20px;">
             <div style="
                 width: 60px;
                 height: 60px;
                 background: linear-gradient(135deg, #6366F1, #8B5CF6);
-                clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+                clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 极客时间, 0% 70%);
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
@@ -1383,7 +1383,7 @@ def main():
         
         search_allowed, search_msg, search_remaining = rate_limiter.check_rate_limit("search_analysis", "default")
         api_allowed, api_msg, api_remaining = rate_limiter.check_rate_limit("api_test", "default")
-        scan_allowed, scan_msg, scan_remaining = rate_limiter.check_rate_limit("threat_scan", "default")
+        scan_allowed, scan_msg, scan_remaining = rate_limiter.check_rate_limit("th极客时间_scan", "default")
         report_allowed, report_msg, report_remaining = rate_limiter.check_rate_limit("report_generation", "default")
         
         st.caption("Search Analysis: " + search_msg)
@@ -1400,7 +1400,7 @@ def main():
         "🌟 Influencer Network",
         "🛡️ Crisis Prediction",
         "❤️ Brand Health",
-极客时间"🔑 API Management"
+        "🔑 API Management"
     ])
     
     with tab1:
