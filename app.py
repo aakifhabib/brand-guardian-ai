@@ -742,6 +742,7 @@ class AdvancedVisualizations:
     def create_radar_chart(self, data, labels, title):
         """Create a radar chart using matplotlib and streamlit"""
         try:
+            # Try to import matplotlib
             import matplotlib.pyplot as plt
             import matplotlib.patches as patches
             
@@ -778,6 +779,10 @@ class AdvancedVisualizations:
             # Display in Streamlit
             st.pyplot(fig)
             
+        except ImportError:
+            # If matplotlib is not available, use a fallback
+            st.warning("Matplotlib not available. Using simplified visualization.")
+            self.create_bar_chart(data, labels, title)
         except Exception as e:
             st.error(f"Error creating radar chart: {e}")
             # Fallback to bar chart
@@ -804,13 +809,14 @@ class AdvancedVisualizations:
     def create_threat_distribution(self, data, title):
         """Create a donut chart for threat distribution"""
         try:
+            # Try to import matplotlib
             import matplotlib.pyplot as plt
             
             labels = list(data.keys())
             values = list(data.values())
             colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
             
-            fig, ax = plt.subforms(figsize=(8, 8))
+            fig, ax = plt.subplots(figsize=(8, 8))
             wedges, texts, autotexts = ax.pie(
                 values, labels=labels, autopct='%1.1f%%', 
                 colors=colors, startangle=90, wedgeprops=dict(width=0.3)
@@ -839,6 +845,10 @@ class AdvancedVisualizations:
             # Display in Streamlit
             st.pyplot(fig)
             
+        except ImportError:
+            # If matplotlib is not available, use a fallback
+            st.warning("Matplotlib not available. Using simplified visualization.")
+            self.create_bar_chart(np.array(list(data.values())), list(data.keys()), title)
         except Exception as e:
             st.error(f"Error creating donut chart: {e}")
             # Fallback to bar chart
@@ -1016,7 +1026,7 @@ def show_threat_dashboard():
     # Threat timeline with advanced visualization
     st.subheader("📈 Threat Timeline (7 Days)")
     
-    # Generate sample data
+    # Generate sample data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=7)
     threats = [8, 12, 5, 18, 10, 7, 14]
     
@@ -1182,7 +1192,7 @@ def show_trend_analysis():
     """Trend analysis functionality"""
     st.subheader("📈 Threat Trend Analysis")
     
-    # Generate trend data
+    # Generate trend data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=30)
     high_threats = np.random.poisson(5, 30)
     medium_threats = np.random.poisson(10, 30)
