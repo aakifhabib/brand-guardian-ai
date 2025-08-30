@@ -9,16 +9,32 @@ import requests
 import time
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
-from cryptography.fernet import Fernet
 
-# Plotly import with fallback
+# Handle all imports with fallbacks
+try:
+    from cryptography.fernet import Fernet
+    CRYPTOGRAPHY_AVAILABLE = True
+except ImportError:
+    st.error("Cryptography is not installed! Please add 'cryptography>=41.0.0' to requirements.txt")
+    CRYPTOGRAPHY_AVAILABLE = False
+    # Create a dummy Fernet class for fallback
+    class Fernet:
+        def __init__(self, *args, **kwargs):
+            pass
+        def encrypt(self, data):
+            return data
+        def decrypt(self, data):
+            return data
+        def generate_key(self):
+            return b'dummy_key_123456789012345678901234567890='
+
 try:
     import plotly.express as px
     import plotly.graph_objects as go
     from plotly.subplots import make_subplots
     PLOTLY_AVAILABLE = True
 except ImportError:
-    st.error("Plotly is not installed! Please add 'plotly>=5.18.0' to your requirements.txt")
+    st.error("Plotly is not installed! Please add 'plotly>=5.18.0' to requirements.txt")
     PLOTLY_AVAILABLE = False
     # Create dummy classes to avoid NameErrors
     class PlotlyFallback:
@@ -150,8 +166,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Encryption setup
+# Encryption setup with fallback
 def generate_encryption_key():
+    if not CRYPTOGRAPHY_AVAILABLE:
+        return b'dummy_key_123456789012345678901234567890='
+    
     if not os.path.exists('encryption.key'):
         key = Fernet.generate_key()
         with open('encryption.key', 'wb') as key_file:
@@ -222,7 +241,7 @@ SUBSCRIPTION_TIERS = {
     }
 }
 
-# Database Class with Encryption
+# Database Class with Encryption fallback
 class SecureBrandDB:
     def __init__(self):
         self.data_file = "brands_secure_data.json"
@@ -232,12 +251,16 @@ class SecureBrandDB:
         if os.path.exists(self.data_file):
             try:
                 with open(self.data_file, 'r') as f:
-                    encrypted_data = f.read()
-                    if encrypted_data:
-                        decrypted_data = cipher_suite.decrypt(encrypted_data.encode()).decode()
-                        self.brands = json.loads(decrypted_data)
+                    if CRYPTOGRAPHY_AVAILABLE:
+                        encrypted_data = f.read()
+                        if encrypted_data:
+                            decrypted_data = cipher_suite.decrypt(encrypted_data.encode()).decode()
+                            self.brands = json.loads(decrypted_data)
+                        else:
+                            self.brands = {}
                     else:
-                        self.brands = {}
+                        # Without cryptography, read plain JSON
+                        self.brands = json.load(f)
             except Exception as e:
                 st.error(f"Error loading data: {e}")
                 self.brands = {}
@@ -248,9 +271,14 @@ class SecureBrandDB:
     def save_data(self):
         try:
             data_str = json.dumps(self.brands, indent=2)
-            encrypted_data = cipher_suite.encrypt(data_str.encode()).decode()
-            with open(self.data_file, 'w') as f:
-                f.write(encrypted_data)
+            if CRYPTOGRAPHY_AVAILABLE:
+                encrypted_data = cipher_suite.encrypt(data_str.encode()).decode()
+                with open(self.data_file, 'w') as f:
+                    f.write(encrypted_data)
+            else:
+                # Without cryptography, save plain JSON
+                with open(self.data_file, 'w') as f:
+                    f.write(data_str)
         except Exception as e:
             st.error(f"Error saving data: {e}")
     
@@ -301,14 +329,18 @@ class SecureBrandDB:
             if "api_keys" not in brand:
                 brand["api_keys"] = {}
             
-            # Encrypt sensitive API data
-            encrypted_data = {}
-            for key, value in api_data.items():
-                if value:  # Only encrypt if value exists
-                    encrypted_data[key] = cipher_suite.encrypt(value.encode()).decode()
+            # Only encrypt if cryptography is available
+            if CRYPTOGRAPHY_AVAILABLE:
+                encrypted_data = {}
+                for key, value in api_data.items():
+                    if value:
+                        encrypted_data[key] = cipher_suite.encrypt(value.encode()).decode()
+                api_data_to_store = encrypted_data
+            else:
+                api_data_to_store = api_data  # Store plain text if no cryptography
             
             brand["api_keys"][platform] = {
-                "data": encrypted_data,
+                "data": api_data_to_store,
                 "added_date": datetime.now().isoformat(),
                 "last_used": None,
                 "status": "connected"
@@ -319,9 +351,12 @@ class SecureBrandDB:
     def get_api_key(self, brand_id, platform, key_name):
         brand = self.get_brand(brand_id)
         if brand and platform in brand.get("api_keys", {}):
-            encrypted_value = brand["api_keys"][platform]["data"].get(key_name)
-            if encrypted_value:
-                return cipher_suite.decrypt(encrypted_value.encode()).decode()
+            stored_value = brand["api_keys"][platform]["data"].get(key_name)
+            if stored_value:
+                if CRYPTOGRAPHY_AVAILABLE:
+                    return cipher_suite.decrypt(stored_value.encode()).decode()
+                else:
+                    return stored_value  # Return plain text if no cryptography
         return None
 
 # API Integration System
@@ -956,6 +991,12 @@ def professional_dashboard():
 # Main application
 def main():
     init_session_state()
+    
+    # Show warnings for missing packages
+    if not CRYPTOGRAPHY_AVAILABLE:
+        st.warning("⚠️ Cryptography package not installed. Data encryption disabled. Add 'cryptography' to requirements.txt for security.")
+    if not PLOTLY_AVAILABLE:
+        st.warning("⚠️ Plotly package not installed. Charts disabled. Add 'plotly' to requirements.txt for visualizations.")
     
     # Sidebar sections
     with st.sidebar:
