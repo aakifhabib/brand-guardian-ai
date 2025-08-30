@@ -11,6 +11,13 @@ import os
 import hashlib
 import base64
 import threading
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import matplotlib.pyplot as plt
+from PIL import Image
+import io
+import base64
 
 # Set page config first
 st.set_page_config(
@@ -20,31 +27,83 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Generate a professional shield logo programmatically
+def generate_shield_logo():
+    # Create a shield shape with matplotlib
+    fig, ax = plt.subplots(figsize=(3, 3))
+    fig.patch.set_facecolor('none')
+    ax.set_facecolor('none')
+    
+    # Draw shield shape
+    x = [0, 1, 2, 1.5, 1, 0.5, 0]
+    y = [0, 0.5, 0, 1, 1.5, 1.5, 1]
+    ax.fill(x, y, color='#6366F1', alpha=0.9)
+    
+    # Add AI text
+    ax.text(1, 0.75, "AI", fontsize=20, fontweight='bold', 
+            ha='center', va='center', color='white')
+    
+    # Remove axes
+    ax.axis('off')
+    ax.set_xlim(-0.5, 2.5)
+    ax.set_ylim(-0.5, 2)
+    
+    # Convert to image
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', transparent=True, dpi=100)
+    buf.seek(0)
+    img = Image.open(buf)
+    return img
+
+# Generate and encode logo
+shield_logo = generate_shield_logo()
+buffered = io.BytesIO()
+shield_logo.save(buffered, format="PNG")
+logo_base64 = base64.b64encode(buffered.getvalue()).decode()
+
 # Advanced CSS with enhanced UI components
-st.markdown("""
+st.markdown(f"""
 <style>
     /* Base styles */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    .main {
+    .main {{
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         color: #FFFFFF;
         font-family: 'Inter', sans-serif;
-    }
+    }}
     
-    .stApp {
+    .stApp {{
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         background-size: 400% 400%;
         animation: gradientBG 15s ease infinite;
-    }
+    }}
     
-    @keyframes gradientBG {
-        0% { background-position: 0% 50% }
-        50% { background-position: 100% 50% }
-        100% { background-position: 0% 50% }
-    }
+    @keyframes gradientBG {{
+        0% {{ background-position: 0% 50% }}
+        50% {{ background-position: 100% 50% }}
+        100% {{ background-position: 0% 50% }}
+    }}
     
-    .search-analysis-card {
+    .header-container {{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }}
+    
+    .logo {{
+        width: 80px;
+        height: 80px;
+        margin-right: 20px;
+        filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+    }}
+    
+    .search-analysis-card {{
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
         padding: 20px;
@@ -52,71 +111,84 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 15px 0;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
+        transition: all 0.3s ease;
+    }}
     
-    .search-result-card {
+    .search-analysis-card:hover {{
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        border-color: rgba(99, 102, 241, 0.3);
+    }}
+    
+    .search-result-card {{
         background: rgba(255, 255, 255, 0.03);
         border-radius: 12px;
         padding: 15px;
         margin: 10px 0;
         border-left: 4px solid #6366F1;
-    }
+        transition: all 0.2s ease;
+    }}
     
-    .threat-indicator {
+    .search-result-card:hover {{
+        background: rgba(255, 255, 255, 0.06);
+        border-left: 4px solid #8B5CF6;
+    }}
+    
+    .threat-indicator {{
         padding: 8px 12px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
         margin: 5px;
-    }
+    }}
     
-    .threat-high {
-        background: rgba(239, 68, 68, 0.2);
-        color: #EF4444;
-        border: 1px solid #EF4444;
-    }
+    .threat-high {{
+        background: linear-gradient(135deg, #EF4444, #DC2626);
+        color: white;
+        border: none;
+    }}
     
-    .threat-medium {
-        background: rgba(245, 158, 11, 0.2);
-        color: #F59E0B;
-        border: 1px solid #F59E0B;
-    }
+    .threat-medium {{
+        background: linear-gradient(135deg, #F59E0B, #D97706);
+        color: white;
+        border: none;
+    }}
     
-    .threat-low {
-        background: rgba(16, 185, 129, 0.2);
-        color: #10B981;
-        border: 1px solid #10B981;
-    }
+    .threat-low {{
+        background: linear-gradient(135deg, #10B981, #059669);
+        color: white;
+        border: none;
+    }}
     
-    .api-status-connected {
+    .api-status-connected {{
         color: #10B981;
         font-weight: 600;
-    }
+    }}
     
-    .api-status-disconnected {
+    .api-status-disconnected {{
         color: #EF4444;
         font-weight: 600;
-    }
+    }}
     
-    .rate-limit-warning {
+    .rate-limit-warning {{
         background: rgba(245, 158, 11, 0.2);
         color: #F59E0B;
         padding: 10px;
         border-radius: 8px;
         border: 1px solid #F59E0B;
         margin: 10px 0;
-    }
+    }}
     
-    .rate-limit-error {
+    .rate-limit-error {{
         background: rgba(239, 68, 68, 0.2);
         color: #EF4444;
         padding: 10px;
         border-radius: 8px;
         border: 1px solid #EF4444;
         margin: 10px 0;
-    }
+    }}
     
-    .premium-header {
+    .premium-header {{
         text-align: center;
         font-size: 3rem;
         font-weight: 700;
@@ -125,20 +197,94 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         margin-bottom: 0.5rem;
         animation: floating 3s ease-in-out infinite;
-    }
+    }}
     
-    @keyframes floating {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
-    }
+    @keyframes floating {{
+        0% {{ transform: translateY(0px); }}
+        50% {{ transform: translateY(-10px); }}
+        100% {{ transform: translateY(0px); }}
+    }}
     
-    .accent-text {
+    .accent-text {{
         text-align: center;
         color: #A5B4FC;
         font-size: 1.2rem;
         margin-bottom: 2rem;
-    }
+    }}
+    
+    .metric-card {{
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        padding: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+    }}
+    
+    .metric-card:hover {{
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }}
+    
+    .metric-value {{
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 5px 0;
+        background: linear-gradient(90deg, #6366F1, #8B5CF6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }}
+    
+    .metric-label {{
+        font-size: 0.9rem;
+        color: #A5B4FC;
+        margin: 0;
+    }}
+    
+    .tab-content {{
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 0 0 12px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: none;
+    }}
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {{
+        width: 8px;
+    }}
+    
+    ::-webkit-scrollbar-track {{
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }}
+    
+    ::-webkit-scrollbar-thumb {{
+        background: rgba(99, 102, 241, 0.5);
+        border-radius: 4px;
+    }}
+    
+    ::-webkit-scrollbar-thumb:hover {{
+        background: rgba(99, 102, 241, 0.7);
+    }}
+    
+    /* Button styles */
+    .stButton > button {{
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }}
+    
+    .stButton > button:hover {{
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        background: linear-gradient(135deg, #8B5CF6, #6366F1);
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -580,38 +726,185 @@ def show_threat_dashboard():
     """Threat monitoring dashboard"""
     st.subheader("🛡️ Real-time Threat Dashboard")
     
+    # Create metrics with custom styling
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric("Active Threats", "18", "+5")
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">Active Threats</div>
+            <div class="metric-value">18</div>
+            <div style="color: #EF4444;">+5 from yesterday</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
     with col2:
-        st.metric("Threat Level", "High", "↑")
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">Threat Level</div>
+            <div class="metric-value">High</div>
+            <div style="color: #EF4444;">↑ Elevated</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
     with col3:
-        st.metric("Response Time", "2.1s", "-0.4s")
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">Response Time</div>
+            <div class="metric-value">2.1s</div>
+            <div style="color: #10B981;">-0.4s faster</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
     with col4:
-        st.metric("Protected Assets", "24", "0")
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-label">Protected Assets</div>
+            <div class="metric-value">24</div>
+            <div style="color: #10B981;">Fully secured</div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Threat timeline
-    st.subheader("📈 Threat Timeline (7 Days)")
-    dates = pd.date_range(end=datetime.now(), periods=7)
-    threats = [8, 12, 5, 18, 10, 7, 14]
-    threat_data = pd.DataFrame({'Date': dates, 'Threats': threats})
-    st.line_chart(threat_data.set_index('Date'))
+    # Advanced threat timeline with Plotly
+    st.subheader("📈 Threat Timeline (30 Days)")
     
-    # Recent threats table
+    dates = pd.date_range(end=datetime.now(), periods=30)
+    high_threats = np.random.poisson(5, 30) + np.random.randint(0, 5, 30)
+    medium_threats = np.random.poisson(10, 30) + np.random.randint(0, 8, 30)
+    low_threats = np.random.poisson(20, 30) + np.random.randint(0, 10, 30)
+    
+    # Create Plotly figure
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=dates, y=high_threats,
+        mode='lines+markers',
+        name='High Threats',
+        line=dict(color='#EF4444', width=3),
+        marker=dict(size=6)
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=dates, y=medium_threats,
+        mode='lines+markers',
+        name='Medium Threats',
+        line=dict(color='#F59E0B', width=3),
+        marker=dict(size=6)
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=dates, y=low_threats,
+        mode='lines+markers',
+        name='Low Threats',
+        line=dict(color='#10B981', width=3),
+        marker=dict(size=6)
+    ))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0, 0, 0, 0)',
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        font=dict(color='white'),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+        hovermode="x unified",
+        height=400
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Threat distribution by platform with advanced chart
+    st.subheader("🌐 Threat Distribution by Platform")
+    
+    platform_data = pd.DataFrame({
+        'Platform': ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn'],
+        'Threats': [45, 32, 28, 19, 12, 8, 5],
+        'High Severity': [15, 8, 12, 5, 3, 2, 1],
+        'Response Time (ms)': [2100, 1800, 2500, 2200, 1900, 2300, 2100]
+    })
+    
+    # Create a subplot with a different chart type
+    fig = make_subplots(
+        rows=1, cols=2,
+        specs=[[{"type": "pie"}, {"type": "bar"}]],
+        subplot_titles=("Threats by Platform", "Response Time by Platform")
+    )
+    
+    # Add pie chart
+    fig.add_trace(
+        go.Pie(
+            labels=platform_data['Platform'],
+            values=platform_data['Threats'],
+            hole=0.4,
+            marker=dict(colors=px.colors.qualitative.Set3)
+        ),
+        row=1, col=1
+    )
+    
+    # Add bar chart
+    fig.add_trace(
+        go.Bar(
+            x=platform_data['Platform'],
+            y=platform_data['Response Time (ms)'],
+            marker_color=platform_data['High Severity'],
+            marker_colorscale='Viridis',
+            text=platform_data['Response Time (ms)'],
+            textposition='auto'
+        ),
+        row=1, col=2
+    )
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0, 0, 0, 0)',
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        font=dict(color='white'),
+        showlegend=True,
+        height=400
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Recent threats table with enhanced styling
     st.subheader("🚨 Recent Threat Alerts")
+    
     threat_alerts = []
-    for i in range(8):
+    status_colors = {
+        'Active': '#EF4444',
+        'Resolved': '#10B981',
+        'Monitoring': '#F59E0B'
+    }
+    
+    for i in range(10):
+        status = random.choice(['Active', 'Resolved', 'Monitoring'])
         threat_alerts.append({
             'Time': (datetime.now() - timedelta(hours=i)).strftime("%H:%M"),
-            'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram']),
-            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account', 'Copyright']),
+            'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube']),
+            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account', 'Copyright', 'Phishing']),
             'Severity': random.choice(['High', 'Medium', 'Low']),
-            'Status': random.choice(['Active', 'Resolved', 'Monitoring'])
+            'Status': status,
+            'StatusColor': status_colors[status]
         })
     
+    # Create a styled dataframe
     alert_df = pd.DataFrame(threat_alerts)
-    st.dataframe(alert_df, use_container_width=True, hide_index=True)
+    
+    # Display with custom HTML for better styling
+    for _, alert in alert_df.iterrows():
+        status_color = alert['StatusColor']
+        st.markdown(f"""
+        <div class="search-result-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{alert['Platform']}</strong> - {alert['Type']}
+                    <div style="font-size: 0.8rem; color: #A5B4FC;">{alert['Time']}</div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span class="threat-{alert['Severity'].lower()}">{alert['Severity']}</span>
+                    <span style="color: {status_color}; font-weight: 600;">{alert['Status']}</span>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 def show_search_analysis():
     """Search analysis functionality"""
@@ -701,6 +994,34 @@ def show_search_analysis():
             </div>
             """.format(''.join([f'<p>• {rec}</p>' for rec in results['recommendations']])), unsafe_allow_html=True)
         
+        # Create a sentiment analysis visualization
+        if results['threat_level'] != 'limit_exceeded':
+            st.subheader("📊 Sentiment Analysis")
+            
+            # Generate sentiment data
+            sentiment_data = pd.DataFrame({
+                'Sentiment': ['Negative', 'Neutral', 'Positive'],
+                'Percentage': [40, 35, 25] if results['threat_level'] == 'high' else 
+                             [25, 40, 35] if results['threat_level'] == 'medium' else 
+                             [10, 30, 60]
+            })
+            
+            # Create a donut chart
+            fig = px.pie(sentiment_data, values='Percentage', names='Sentiment', 
+                         hole=0.6, color='Sentiment',
+                         color_discrete_map={'Negative': '#EF4444', 'Neutral': '#F59E0B', 'Positive': '#10B981'})
+            
+            fig.update_layout(
+                plot_bgcolor='rgba(0, 0, 0, 0)',
+                paper_bgcolor='rgba(0, 0, 0, 0)',
+                font=dict(color='white'),
+                showlegend=True,
+                height=300,
+                annotations=[dict(text='Sentiment', x=0.5, y=0.5, font_size=14, showarrow=False)]
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        
         # Similar threat examples
         st.subheader("🔍 Similar Threat Patterns")
         similar_threats = generate_similar_threats(results)
@@ -730,34 +1051,113 @@ def show_trend_analysis():
     
     # Generate trend data
     dates = pd.date_range(end=datetime.now(), periods=30)
-    high_threats = np.random.poisson(5, 30)
-    medium_threats = np.random.poisson(10, 30)
-    low_threats = np.random.poisson(20, 30)
+    high_threats = np.random.poisson(5, 30) + np.random.randint(0, 5, 30)
+    medium_threats = np.random.poisson(10, 30) + np.random.randint(0, 8, 30)
+    low_threats = np.random.poisson(20, 30) + np.random.randint(0, 10, 30)
     
-    trend_data = pd.DataFrame({
-        'Date': dates,
-        'High Threats': high_threats,
-        'Medium Threats': medium_threats,
-        'Low Threats': low_threats
-    })
+    # Create an advanced time series chart with Plotly
+    fig = go.Figure()
     
-    st.line_chart(trend_data.set_index('Date'))
+    fig.add_trace(go.Scatter(
+        x=dates, y=high_threats,
+        mode='lines',
+        name='High Threats',
+        line=dict(color='#EF4444', width=3),
+        fill='tozeroy',
+        fillcolor='rgba(239, 68, 68, 0.1)'
+    ))
     
-    # Platform distribution
+    fig.add_trace(go.Scatter(
+        x=dates, y=medium_threats,
+        mode='lines',
+        name='Medium Threats',
+        line=dict(color='#F59E0B', width=3),
+        fill='tonexty',
+        fillcolor='rgba(245, 158, 11, 0.1)'
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=dates, y=low_threats,
+        mode='lines',
+        name='Low Threats',
+        line=dict(color='#10B981', width=3),
+        fill='tonexty',
+        fillcolor='rgba(16, 185, 129, 0.1)'
+    ))
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0, 0, 0, 0)',
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        font=dict(color='white'),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+        hovermode="x unified",
+        height=500
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Platform distribution with advanced chart
     st.subheader("🌐 Threat Distribution by Platform")
+    
     platform_data = pd.DataFrame({
-        'Platform': ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube'],
-        'Threats': [45, 32, 28, 19, 12],
-        'High Severity': [15, 8, 12, 5, 3]
+        'Platform': ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn'],
+        'Threats': [45, 32, 28, 19, 12, 8, 5],
+        'High Severity': [15, 8, 12, 5, 3, 2, 1],
+        'Response Time (ms)': [2100, 1800, 2500, 2200, 1900, 2300, 2100]
     })
     
-    st.bar_chart(platform_data.set_index('Platform'))
+    # Create a bubble chart
+    fig = px.scatter(platform_data, x="Platform", y="Threats", size="High Severity", color="Response Time (ms)",
+                     hover_name="Platform", size_max=40,
+                     color_continuous_scale=px.colors.sequential.Viridis)
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0, 0, 0, 0)',
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        font=dict(color='white'),
+        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+        height=400
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Geographic threat distribution
+    st.subheader("🗺️ Geographic Threat Distribution")
+    
+    # Generate mock geographic data
+    countries = ['USA', 'UK', 'Germany', 'France', 'Canada', 'Australia', 'Japan', 'Brazil', 'India', 'China']
+    threat_counts = np.random.randint(10, 100, len(countries))
+    
+    geo_data = pd.DataFrame({
+        'Country': countries,
+        'Threats': threat_counts,
+        'Region': ['North America', 'Europe', 'Europe', 'Europe', 'North America', 
+                  'Oceania', 'Asia', 'South America', 'Asia', 'Asia']
+    })
+    
+    # Create a choropleth map (simulated with bar chart for simplicity)
+    fig = px.bar(geo_data, x='Country', y='Threats', color='Region',
+                 color_discrete_sequence=px.colors.qualitative.Set3)
+    
+    fig.update_layout(
+        plot_bgcolor='rgba(0, 0, 0, 0)',
+        paper_bgcolor='rgba(0, 0, 0, 0)',
+        font=dict(color='white'),
+        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
+        height=400
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
 
 def show_quick_actions():
     """Quick action buttons"""
     st.subheader("⚡ Quick Actions")
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         if st.button("🔄 Scan All Platforms", use_container_width=True):
@@ -786,6 +1186,12 @@ def show_quick_actions():
             st.error("Crisis protocol activated!")
             time.sleep(1)
             st.warning("Alerting team members...")
+    
+    with col4:
+        if st.button("📈 Export Data", use_container_width=True):
+            st.success("Data export initiated!")
+            time.sleep(1)
+            st.info("Preparing CSV and PDF reports...")
 
 def show_access_required():
     st.header("🔒 Advanced Threat Analysis")
@@ -967,17 +1373,28 @@ def main():
     if "advanced_access" not in st.session_state:
         st.session_state.advanced_access = False
     
-    # Header
-    st.markdown("""
-    <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
-    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
+    # Header with professional logo
+    st.markdown(f"""
+    <div class="header-container">
+        <img src="data:image/png;base64,{logo_base64}" class="logo">
+        <div>
+            <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
+            <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
+        </div>
+    </div>
     """, unsafe_allow_html=True)
     
     # Sidebar
     with st.sidebar:
+        st.markdown(f"""
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="data:image/png;base64,{logo_base64}" style="width: 60px; height: 60px; filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));">
+        </div>
+        """, unsafe_allow_html=True)
+        
         st.header("Business Configuration")
         brand_name = st.text_input("Brand Name", "Nike")
-        sector = st.selectbox("Business Sector", ["technology", "finance", "retail"])
+        sector = st.selectbox("Business Sector", ["technology", "finance", "retail", "healthcare", "education"])
         st.session_state.sector = sector
         
         st.markdown("---")
