@@ -5,12 +5,12 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import re
-from collections import Counter, deque
+from collections import Counter
 import json
 import os
 import hashlib
 import base64
-import threading
+import math
 
 # Set page config first
 st.set_page_config(
@@ -19,25 +19,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-# Create a simple shield logo using HTML/CSS
-def create_shield_logo_html():
-    return """
-    <div style="
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #6366F1, #8B5CF6);
-        clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        font-weight: bold;
-        color: white;
-        margin-right: 20px;
-        filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
-    ">AI</div>
-    """
 
 # Advanced CSS with enhanced UI components
 st.markdown("""
@@ -58,27 +39,56 @@ st.markdown("""
     }
     
     @keyframes gradientBG {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+        0% { background-position: 0% 50% }
+        50% { background-position: 100% 50% }
+        100% { background-position: 0% 50% }
     }
     
-    .header-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1rem;
-        padding: 1rem;
+    /* Premium header styling */
+    .premium-header {
+        font-size: 3rem;
+        font-weight: 800;
+        text-align: center;
+        margin: 20px 0;
+        background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3);
+    }
+    
+    .floating {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .accent-text {
+        font-size: 1.2rem;
+        color: #A5B4FC;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    /* Card styling */
+    .metric-card {
         background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 20px;
         border-radius: 16px;
         border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 10px 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
     }
     
-    .logo-container {
-        width: 80px;
-        height: 80px;
-        margin-right: 20px;
-        filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .search-analysis-card {
@@ -89,13 +99,6 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 15px 0;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .search-analysis-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-        border-color: rgba(99, 102, 241, 0.3);
     }
     
     .search-result-card {
@@ -108,340 +111,199 @@ st.markdown("""
     }
     
     .search-result-card:hover {
-        background: rgba(255, 255, 255, 极客时间);
-        border-left: 4px solid #8B5CF6;
+        background: rgba(255, 255, 255, 0.07);
+        transform: translateX(5px);
     }
     
+    /* Threat indicators */
     .threat-indicator {
-        padding: 8极客时间 12px;
+        padding: 8px 12px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 600;
         margin: 5px;
+        display: inline-block;
     }
     
     .threat-high {
-        background: linear-gradient(135deg, #EF4444, #DC2626);
-        color: white;
-        border: none;
+        background: rgba(239, 68, 68, 0.2);
+        color: #EF4444;
+        border: 1px solid #EF4444;
     }
     
     .threat-medium {
-        background: linear-gradient(135deg, #F59E0B, #D97706);
-        color: white;
-        border: none;
+        background: rgba(245, 158, 11, 0.2);
+        color: #F59E0B;
+        border: 1px solid #F59E0B;
     }
     
     .threat-low {
-        background: linear-gradient(135deg, #10B981, #059669);
-        color: white;
-        border: none;
+        background: rgba(16, 185, 129, 0.2);
+        color: #10B981;
+        border: 1px solid #10B981;
     }
     
+    /* Status indicators */
     .api-status-connected {
         color: #10B981;
         font-weight: 600;
     }
     
-极客时间 .api-status-disconnected {
+    .api-status-disconnected {
         color: #EF4444;
         font-weight: 600;
     }
     
-    .rate-limit-warning {
-        background: rgba(245, 158, 11, 0.2);
-        color: #F59极客时间;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #F59E0B;
-        margin: 10px 0;
-    }
-    
-    .rate-limit-error {
-        background: rgba(239, 68, 68, 0.2);
-        color: #EF4444;
-        padding: 10px;
-        border-radius: 8px;
-       极客时间 1px solid #EF4444;
-        margin: 10px 0;
-    }
-    
-    .premium-header {
-        text-align: center;
-        font-size: 3rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #6366F1, #8B5CF6, #EC4899);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        animation: floating 3s ease-in-out infinite;
-    }
-    
-    @keyframes floating {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
-    }
-    
-    .accent-text {
-        text-align: center;
-        color: #A5B4FC;
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-    }
-    
-    .metric-card {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 12px;
-        padding: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-    
-    .metric-card:hover {
-        background: rgba(255, 255, 255, 0.06);
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(0, 极客时间, 0.2);
-    }
-    
-    .metric-value {
-        font-size: 2rem;
-        font-weight: 700;
-        margin: 5px 0;
-        background: linear-gradient(90deg, #6366F1, #8B5CF6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    .metric-label {
-        font-size: 0.9极客时间;
-        color: #A5B4FC;
-        margin: 0;
-    }
-    
-    .tab-content {
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.02);
-        border-radius: 0 0 12px 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: none;
-    }
-    
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: rgba(99, 102, 241, 0.5);
-        border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(99, 102, 241, 0.7);
-    }
-    
-    /* Button styles */
+    /* Button styling */
     .stButton > button {
-        background: linear-gradient(135deg, #6366F1, #8B5CF6);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .极客时间 > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
-        background: linear-gradient(135极客时间, #8B5CF6, #6366F1);
-    }
-    
-    /* Custom chart styles */
-    .chart-container {
-        background: rgba(255, 255, 255, 0.02);
         border-radius: 12px;
-        padding: 20px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 15px 0;
-    }
-    
-    .chart-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #A5B4FC;
-    }
-    
-    .bar-chart {
-        display: flex;
-        height: 200px;
-        align-items: flex-end;
-        gap: 10px;
-        padding: 20px 0;
-    }
-    
-    .bar {
-        background: linear-gradient(0deg极客时间 #6366F1, #8B5CF6);
-        border-radius: 4px 4极客时间 0 0;
-        min-width: 20px;
-        position: relative;
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
         transition: all 0.3s ease;
     }
     
-    .bar:hover {
-        background: linear-gradient(0deg, #8B5CF6, #6366F1);
-        transform: scale(1.05);
+    .stButton > button:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
     }
     
-    .bar-label {
-        position: absolute;
-        bottom: -25px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.8rem;
-        color: #A5B4FC;
-        white-space: nowrap;
+    /* Tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
     }
     
-    .bar-value {
-        position: absolute;
-        top: -25px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: white;
+    .stTabs [data-baseweb="tab"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px 12px 0 0;
+        padding: 10px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: none;
     }
     
-    .sentiment-meter {
-        display: flex;
+    .stTabs [aria-selected="true"] {
+        background: rgba(99, 102, 241, 0.2);
+        border: 1px solid rgba(99, 102, 241, 0.5);
+        border-bottom: none;
+    }
+    
+    /* Custom metric styling */
+    [data-testid="stMetricValue"] {
+        font-size: 1.8rem;
+    }
+    
+    [data-testid="stMetricDelta"] {
+        font-size: 1rem;
+    }
+    
+    /* Custom selectbox */
+    .stSelectbox [data-baseweb="select"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+    
+    /* Custom text input */
+    .stTextInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+    
+    /* Custom text area */
+    .stTextArea [data-baseweb="textarea"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+    
+    /* Custom spinner */
+    .stSpinner > div {
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top: 3px solid #6366F1;
+        width: 30px;
         height: 30px;
-        border-radius: 15px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Custom expander */
+    .streamlit-expanderHeader {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        padding: 10px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Custom dataframes */
+    .dataframe {
+        border-radius: 12px;
         overflow: hidden;
-        margin: 20px 0;
     }
     
-    .sentiment-negative {
-        background: linear-gradient(90deg, #EF4444, #DC2626);
+    /* Custom success/error boxes */
+    .stAlert {
+        border-radius: 12px;
     }
     
-    .sentiment-neutral {
-        background: linear-gradient(90deg, #F59E0B, #D97706);
-极客时间
-    
-    .sentiment-positive {
-        background: linear-gradient(90deg, #10B981, #059669);
+    /* Custom sidebar */
+    .css-1d391kg {
+        background: linear-gradient(180deg, #0f0c29 0%, #302b63 100%);
     }
     
-    .sentiment-label {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
+    /* Custom chart elements */
+    .stChart {
+        border-radius: 16px;
+        overflow: hidden;
     }
     
-    .sentiment-label span {
-        font-size: 0.8rem;
-        color: #A5B4FC;
+    /* Custom progress bars */
+    .stProgress > div > div {
+        background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
+    }
+    
+    /* Custom radio buttons */
+    .stRadio [role="radiogroup"] {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Custom number input */
+    .stNumberInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+    
+    /* Custom date input */
+    .stDateInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+    
+    /* Custom time input */
+    .stTimeInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+    
+    /* Custom slider */
+    .stSlider [role="slider"] {
+        background: #6366F1;
+    }
+    
+    /* Custom checkbox */
+    .stCheckbox [data-baseweb="checkbox"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
     }
 </style>
 """, unsafe_allow_html=True)
-
-# Rate Limiter Class
-class RateLimiter:
-    def __init__(self):
-        self.rate_limits = {
-            "search_analysis": {
-                "limit": 10,  # 10 requests
-                "period": 60,  # per 60 seconds
-                "counters": {}
-            },
-            "api_test": {
-                "极客时间": 5,
-                "period": 30,
-                "counters": {}
-            },
-            "threat_scan": {
-                "limit": 3,
-                "period": 60,
-                "counters": {}
-            },
-            "report_generation": {
-                "limit": 2,
-                "period": 300,
-                "counters": {}
-            }
-        }
-        self.lock = threading.Lock()
-        self.cleanup_interval = 300  # Clean up old records every 5 minutes
-        self.last_cleanup = time.time()
-    
-    def _cleanup_old_records(self):
-        """Remove old records to prevent memory buildup"""
-        current_time = time.time()
-        with self.lock:
-            for limit_type, limit_data in self.rate_limits.items():
-                user_keys = list(limit_data["counters"].keys())
-                for user_key in user_keys:
-                    # Remove timestamps older than 2x the period
-                    cutoff = current_time - (limit_data["period"] * 2)
-                    limit_data["counters"][user_key] = [
-                        t for t in limit_data["counters"][user_key] 
-                        if t > cutoff
-                    ]
-                    # Remove empty user entries
-                    if not limit_data["counters"][user_key]:
-                        del limit_data["counters"][user_key]
-    
-    def check_rate_limit(self, limit_type, user_key="default"):
-        """Check if a request is within rate limits"""
-        current_time = time.time()
-        
-        # Clean up old records periodically
-        if current_time - self.last_cleanup > self.cleanup_interval:
-            self._cleanup_old_records()
-            self.last_clean极客时间 = current_time
-        
-        if limit_type not in self.rate极客时间:
-            return True, "Rate limit type not defined", 0
-        
-        limit_data = self.rate_limits[limit_type]
-        period = limit_data["period"]
-        limit = limit_data["limit"]
-        
-        with self.lock:
-            # Initialize user counter if not exists
-            if user_key not in limit_data["counters"]:
-                limit_data["counters"][user_key] = deque(maxlen=limit * 2)
-            
-            # Remove timestamps outside the current period
-            cutoff = current_time - period
-            while (limit_data["counters"][user_key] and 
-                   limit_data["counters"][user_key][0] < cutoff):
-                limit_data["counters"][user_key].popleft()
-            
-            # Check if limit is exceeded
-            if len(limit_data["counters"][user_key]) >= limit:
-                oldest_time = limit_data["counters"][极客时间][0]
-                retry_after = int(period - (current_time - oldest_time))
-                return False, f"Rate limit exceeded. Try again in {retry_after} seconds.", retry_after
-            
-            # Add current timestamp
-            limit_data["counters"][user_key].append(current_time)
-            
-            # Calculate remaining requests
-            remaining = limit - len(limit_data["counters"][user_key])
-            return True, f"{remaining} requests remaining this period.", remaining
-
-# Initialize rate limiter
-rate_limiter = RateLimiter()
 
 # Security and Access Control
 class SecurityManager:
@@ -504,7 +366,7 @@ class SimpleEncryptor:
 class APIKeyManager:
     def __init__(self):
         self.encryptor = SimpleEncryptor()
-        self.api_keys极客时间 = "brand_api_keys.json"
+        self.api_keys_file = "brand_api_keys.json"
         self.supported_platforms = {
             "twitter": {
                 "name": "Twitter API v2",
@@ -525,7 +387,7 @@ class APIKeyManager:
             "instagram": {
                 "name": "Instagram Graph API",
                 "icon": "📸",
-                "help_url": "https://developers.facebook.com/docs/instagram",
+                "help_url": "https://developers.facebook.com/docs/instagram-api",
                 "field_name": "Access Token",
                 "field_help": "Enter your Instagram Access Token for business account",
                 "rate_limit": "200 calls/hour"
@@ -547,7 +409,7 @@ class APIKeyManager:
                 "rate_limit": "10,000 units/day"
             },
             "reddit": {
-                "name": "极客时间 API",
+                "name": "Reddit API",
                 "icon": "🔴",
                 "help_url": "https://www.reddit.com/dev/api/",
                 "field_name": "API Key",
@@ -627,22 +489,13 @@ class APIKeyManager:
     
     def test_connection(self, platform, api_key):
         try:
-            # Check rate limiting for API testing
-            allowed, message, remaining = rate_limiter.check_rate_limit("api_test", "default")
-            if not allowed:
-                return {
-                    "success": False,
-                    "message": f"❌ API test rate limit exceeded: {message}",
-                    "suggestion": "Please wait before testing another API connection."
-                }
-            
             time.sleep(1)
             success_rate = 0.9
             
             if random.random() < success_rate:
                 return {
                     "success": True,
-                    "message":极客时间"✅ Successfully connected to {self.supported_platforms[platform]['name']}",
+                    "message": f"✅ Successfully connected to {self.supported_platforms[platform]['name']}",
                     "platform": platform,
                     "rate_limit": self.supported_platforms[platform]['rate_limit']
                 }
@@ -659,32 +512,19 @@ class APIKeyManager:
             }
 
 # Initialize API Key Manager
-api_manager = API极客时间()
+api_manager = APIKeyManager()
 
 # Search Analysis System
 class SearchAnalyzer:
     def __init__(self):
         self.threat_keywords = {
-            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 's极客时间', 'crime'],
+            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
             'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed'],
             'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
         }
     
     def analyze_search(self, query, brand_name):
         """Analyze search query for threats"""
-        # Check rate limiting for search analysis
-        allowed, message, remaining = rate_limiter.check_rate_limit("search_analysis", "default")
-        if not allowed:
-            return {
-                'query': query,
-                'brand': brand_name,
-                'threat_level': "limit_exceeded",
-                'keywords_found': [],
-                'timestamp': datetime.now().isoformat(),
-                'analysis': f"Rate limit exceeded: {message}",
-                'recommendations': ["Wait before performing more analyses"]
-            }
-        
         query_lower = query.lower()
         brand_lower = brand_name.lower()
         
@@ -706,8 +546,7 @@ class SearchAnalyzer:
             'keywords_found': found_keywords,
             'timestamp': datetime.now().isoformat(),
             'analysis': self.generate_analysis(threat_level, found_keywords),
-            'recommendations': self.generate_recommendations(threat_level),
-            'rate_limit_remaining': remaining
+            'recommendations': self.generate_recommendations(threat_level)
         }
         
         return results
@@ -717,8 +556,7 @@ class SearchAnalyzer:
         analyses = {
             'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
             'medium': "⚠️ Medium threat level. Potential brand reputation issues detected. Monitor closely and consider proactive engagement.",
-            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended.",
-            'limit_exceeded': "⏰ Rate limit exceeded. Please wait before performing more analyses."
+            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended."
         }
         return analyses.get(threat_level, "Analysis completed.")
     
@@ -744,10 +582,6 @@ class SearchAnalyzer:
                 "Track sentiment trends",
                 "Update brand health metrics",
                 "Monthly review scheduling"
-            ],
-            'limit_exceeded': [
-               极客时间 before performing more analyses",
-                "Consider upgrading to premium for higher rate limits"
             ]
         }
         return recommendations.get(threat_level, [])
@@ -755,52 +589,127 @@ class SearchAnalyzer:
 # Initialize search analyzer
 search_analyzer = SearchAnalyzer()
 
-# Custom chart functions
-def create_bar_chart(labels, values, title="", height=200):
-    """Create a custom bar chart using HTML/CSS"""
-    max_value = max(values) if values else 1
-    bars_html = ""
+# Advanced Data Visualization
+class AdvancedVisualizations:
+    def __init__(self):
+        self.colors = {
+            'primary': '#6366F1',
+            'secondary': '#8B5CF6',
+            'success': '#10B981',
+            'warning': '#F59E0B',
+            'danger': '#EF4444',
+            'info': '#3B82F6',
+            'dark': '#1F2937',
+            'light': '#F3F4F6'
+        }
     
-    for i, (label, value) in enumerate(zip(labels, values)):
-        bar_height = (value / max_value) * height
-        bars_html += f"""
-        <div class="bar" style="极客时间: {bar_height}px;">
-            <div class="bar-value">{value}</div>
-            <div class="bar-label">{label}</div>
-        </div>
-        """
+    def create_radar_chart(self, data, labels, title):
+        """Create a radar chart using matplotlib and streamlit"""
+        try:
+            import matplotlib.pyplot as plt
+            import matplotlib.patches as patches
+            
+            # Set up the figure
+            fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+            
+            # Calculate angles for each category
+            angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+            angles += angles[:1]  # Close the circle
+            
+            # Close the data
+            values = data.tolist()
+            values += values[:1]
+            
+            # Plot the data
+            ax.plot(angles, values, color=self.colors['primary'], linewidth=2, linestyle='solid')
+            ax.fill(angles, values, color=self.colors['primary'], alpha=0.25)
+            
+            # Add labels
+            ax.set_thetagrids(np.degrees(angles[:-1]), labels)
+            
+            # Set ylim
+            ax.set_ylim(0, max(data) * 1.1)
+            
+            # Add title
+            plt.title(title, size=14, fontweight='bold', pad=20)
+            
+            # Style the plot
+            ax.spines['polar'].set_color('white')
+            ax.tick_params(colors='white')
+            ax.set_facecolor('none')
+            fig.patch.set_facecolor('none')
+            
+            # Display in Streamlit
+            st.pyplot(fig)
+            
+        except Exception as e:
+            st.error(f"Error creating radar chart: {e}")
+            # Fallback to bar chart
+            self.create_bar_chart(data, labels, title)
     
-    return f"""
-    <div class="chart-container">
-        <div class="chart-title">{title}</div>
-        <div class="bar-chart">
-            {bars_html}
-        </div>
-    </div>
-    """
+    def create_bar_chart(self, data, labels, title):
+        """Create a bar chart using Streamlit's native bar chart"""
+        chart_data = pd.DataFrame({
+            'Category': labels,
+            'Value': data
+        })
+        st.bar_chart(chart_data.set_index('Category'), use_container_width=True)
+    
+    def create_sentiment_timeline(self, dates, values, title):
+        """Create an advanced sentiment timeline"""
+        chart_data = pd.DataFrame({
+            'Date': dates,
+            'Sentiment': values
+        })
+        
+        # Create a line chart with streamlit
+        st.line_chart(chart_data.set_index('Date'), use_container_width=True)
+    
+    def create_threat_distribution(self, data, title):
+        """Create a donut chart for threat distribution"""
+        try:
+            import matplotlib.pyplot as plt
+            
+            labels = list(data.keys())
+            values = list(data.values())
+            colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
+            
+            fig, ax = plt.subplots(figsize=(8, 8))
+            wedges, texts, autotexts = ax.pie(
+                values, labels=labels, autopct='%1.1f%%', 
+                colors=colors, startangle=90, wedgeprops=dict(width=0.3)
+            )
+            
+            # Style the text
+            for autotext in autotexts:
+                autotext.set_color('white')
+                autotext.set_fontweight('bold')
+            
+            for text in texts:
+                text.set_color('white')
+                text.set_fontsize(12)
+            
+            # Add center circle to make it a donut
+            centre_circle = plt.Circle((0, 0), 0.70, fc='none')
+            ax.add_artist(centre_circle)
+            
+            # Add title
+            plt.title(title, color='white', fontsize=16, fontweight='bold', pad=20)
+            
+            # Style the plot
+            ax.set_facecolor('none')
+            fig.patch.set_facecolor('none')
+            
+            # Display in Streamlit
+            st.pyplot(fig)
+            
+        except Exception as e:
+            st.error(f"Error creating donut chart: {e}")
+            # Fallback to bar chart
+            self.create_bar_chart(np.array(list(data.values())), list(data.keys()), title)
 
-def create_sentiment_meter(negative, neutral, positive, title="Sentiment Analysis"):
-    """Create a sentiment meter using HTML极客时间"""
-    total = negative + neutral + positive
-    negative_width = (negative / total) * 100 if total > 0 else 0
-    neutral_width = (neutral / total) * 100 if total > 0 else 0
-    positive_width = (positive / total) * 100 if total > 0 else 0
-    
-    return f"""
-    <div class="chart-container">
-        <div class="chart-title">{title}</div>
-        <div class="sentiment-meter">
-            <div class="sentiment-negative" style="width: {negative_width}%"></div>
-            <div class="sentiment-neutral" style="width: {neutral_width}%"></div>
-            <div class="sentiment-positive" style="width: {positive_width}%"></div>
-        </div>
-        <div class="sentiment-label">
-            <span>Negative: {negative}%</span>
-            <span>Neutral: {neutral}%</span>
-            <span>Positive: {positive}%</span>
-        </div>
-    </div>
-    """
+# Initialize visualizations
+viz = AdvancedVisualizations()
 
 # Advanced Threat Analysis Functionality
 def show_advanced_threat_analysis():
@@ -811,12 +720,8 @@ def show_advanced_threat_analysis():
     st.header("🔍 Advanced Threat Analysis")
     st.success("✅ Premium Access Granted - Advanced Features Unlocked")
     
-    # Display rate limit status
-    allowed, message, remaining = rate_limiter.check_rate_limit("search_analysis", "default")
-    st.info(f"📊 Rate Limit Status: {message}")
-    
     # Tab system for advanced analysis
-    tab1, tab2, tab极客时间, tab4 = st.tabs([
+    tab1, tab2, tab3, tab4 = st.tabs([
         "📊 Threat Dashboard",
         "🔍 Search Analysis",
         "📈 Trend Analysis", 
@@ -845,100 +750,96 @@ def show_threat_dashboard():
     with col1:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">Active Threats</div>
-            <div class="metric-value">18</极客时间>
-            <div style="color: #EF4444;">+极客时间 from yesterday</div>
+            <h3>Active Threats</h3>
+            <h1>18</h1>
+            <p style="color: #EF4444;">+5 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">Threat Level</div>
-            <div class="metric-value">High</div>
-            <div style="color: #EF4444;">↑ Elevated</div>
+            <h3>Threat Level</h3>
+            <h1>High</h1>
+            <p style="color: #EF4444;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">Response Time</div>
-            <div class="metric-value">2.1s</div>
-            <div style="极客时间: #10B981;">-0.4s faster</div>
-极客时间 </div>
+            <h3>Response Time</h3>
+            <h1>2.1s</h1>
+            <p style="color: #10B981;">-0.4s improvement</p>
+        </div>
         """, unsafe_allow_html=True)
     
     with col4:
         st.markdown("""
         <div class="metric-card">
-            <div class="metric-label">Protected Assets</极客时间>
-            <div class="metric-value">24</div>
-            <div style="color: #10B981;">Fully secured</div>
+            <h3>Protected Assets</h3>
+            <h1>24</h1>
+            <p style="color: #10B981;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
     
-    # Threat timeline with custom chart
-    st.subheader("📈 Threat Timeline (30 Days)")
+    # Threat timeline with advanced visualization
+    st.subheader("📈 Threat Timeline (7 Days)")
     
-    dates = pd.date_range(end=datetime.now(), periods=30)
-    high_threats = np.random.poisson(5, 30) + np.random.randint(0, 5, 30)
+    # Generate sample data
+    dates = pd.date_range(end=datetime.now(), periods=7)
+    threats = [8, 12, 5, 18, 10, 7, 14]
     
-    # Create a simple line chart using Streamlit's native charting
-    threat_data = pd.DataFrame({
-        'Date': dates,
-        'High Threats': high_threats
-    })
+    # Create an advanced chart
+    viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
     
-    st.line_chart(threat_data.set_index('Date'), use_container_width=True, height=400)
+    # Threat distribution
+    st.subheader("🌡️ Threat Distribution")
     
-    # Platform distribution with custom chart
-    st.subheader("🌐 Threat Distribution by Platform")
+    col1, col2 = st.columns([2, 1])
     
-    platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn']
-    threats = [45, 32, 28, 19, 12, 8, 5]
+    with col1:
+        threat_data = {'High': 8, 'Medium': 5, 'Low': 5}
+        viz.create_threat_distribution(threat_data, "Threat Severity Distribution")
     
-    # Display custom bar chart
-    st.markdown(create_bar_chart(platforms, threats, "Threats by Platform", height=200), unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="search-analysis-card">
+            <h4>📊 Threat Insights</h4>
+            <p><span class="threat-high">High</span>: 8 threats detected</p>
+            <p><span class="threat-medium">Medium</span>: 5 threats detected</p>
+            <p><span class="threat-low">Low</span>: 5 threats detected</p>
+            <p>Most active platform: Twitter</p>
+            <p>Peak time: 14:00-16:00</p>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Recent threats table with enhanced styling
+    # Recent threats table
     st.subheader("🚨 Recent Threat Alerts")
     
     threat_alerts = []
-    status_colors = {
-        'Active': '#EF4444',
-        'Resolved': '#10B981',
-        'Monitoring': '#F59E0B'
-    }
-    
-    for i in range(10):
-        status = random.choice(['Active', 'Resolved', 'Monitoring'])
+    for i in range(8):
         threat_alerts.append({
             'Time': (datetime.now() - timedelta(hours=i)).strftime("%H:%M"),
-            'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube']),
-            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account', 'Copyright', 'Phishing']),
+            'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram']),
+            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account', 'Copyright']),
             'Severity': random.choice(['High', 'Medium', 'Low']),
-            'Status': status,
-            'StatusColor': status_colors[status]
+            'Status': random.choice(['Active', 'Resolved', 'Monitoring'])
         })
     
-    # Display with custom HTML for better styling
-    for alert in threat_alerts:
-        status_color = alert['StatusColor']
-        st.markdown(f"""
-        <div class="search-result-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <strong>{alert['Platform']}</strong> - {alert['Type']}
-                    <div style="font-size: 0.8rem; color: #A5B4FC;">{alert['Time']}</div>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <span class="threat-{alert['Severity'].lower()}">{alert['Severity']}</span>
-                    <span style="color: {status_color}; font-weight: 600;">{alert['Status']}</span>
-                </极客时间>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+    alert_df = pd.DataFrame(threat_alerts)
+    st.dataframe(
+        alert_df, 
+        use_container_width=True, 
+        hide_index=True,
+        column_config={
+            "Time": st.column_config.TextColumn("Time", width="small"),
+            "Platform": st.column_config.TextColumn("Platform", width="small"),
+            "Type": st.column_config.TextColumn("Type", width="medium"),
+            "Severity": st.column_config.TextColumn("Severity", width="small"),
+            "Status": st.column_config.TextColumn("Status", width="small")
+        }
+    )
 
 def show_search_analysis():
     """Search analysis functionality"""
@@ -962,10 +863,7 @@ def show_search_analysis():
                     time.sleep(2)
                     results = search_analyzer.analyze_search(search_query, brand_name)
                     st.session_state.search_results = results
-                    if results['threat_level'] == 'limit_exceeded':
-                        st.error("Rate limit exceeded. Please wait before performing more analyses.")
-                    else:
-                        st.success("Analysis complete!")
+                    st.success("Analysis complete!")
             else:
                 st.error("Please enter both search query and brand name")
     
@@ -983,7 +881,7 @@ def show_search_analysis():
         
         st.markdown("""
         <div class="search-analysis-card">
-            <h极客时间>📊 Threat Levels</h4>
+            <h4>📊 Threat Levels</h4>
             <p><span class="threat-high">High</span> - Immediate action needed</p>
             <p><span class="threat-medium">Medium</span> - Monitor closely</p>
             <p><span class="threat-low">Low</span> - Standard monitoring</p>
@@ -1005,7 +903,6 @@ def show_search_analysis():
             <p><strong>Query:</strong> {results['query']}</p>
             <p><strong>Brand:</strong> {results['brand']}</p>
             <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
-            <p><strong>Remaining Analyses:</strong> {results.get('rate_limit_remaining', 'N/A')}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -1013,35 +910,20 @@ def show_search_analysis():
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("""
+            st.markdown(f"""
             <div class="search-analysis-card">
                 <h4>📝 Analysis</h4>
-                <p>{}</p>
+                <p>{results['analysis']}</p>
             </div>
-            """.format(results['analysis']), unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
         
         with col2:
-            st.markdown("""
+            st.markdown(f"""
             <div class="search-analysis-card">
                 <h4>✅ Recommendations</h4>
-                {}
+                {''.join([f'<p>• {rec}</p>' for rec in results['recommendations']])}
             </div>
-            """.format(''.join([f'极客时间• {rec}</p>' for rec in results['recommendations']])), unsafe_allow_html=True)
-        
-        # Create a sentiment analysis visualization
-        if results['threat_level'] != 'limit_exceeded':
-            st.subheader("📊 Sentiment Analysis")
-            
-            # Generate sentiment data based on threat level
-            if results['threat_level'] == 'high':
-                negative, neutral, positive = 40极客时间 35, 25
-            elif results['threat_level'] == 'medium':
-                negative, neutral, positive = 25, 40, 35
-            else:
-                negative, neutral, positive = 10, 30, 60
-            
-            # Display custom sentiment meter
-            st.markdown(create_sentiment_meter(negative, neutral, positive), unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
         
         # Similar threat examples
         st.subheader("🔍 Similar Threat Patterns")
@@ -1072,11 +954,10 @@ def show_trend_analysis():
     
     # Generate trend data
     dates = pd.date_range(end=datetime.now(), periods=30)
-    high_threats = np.random.poisson(5, 30) + np.random.randint(0, 5, 30)
-    medium_threats = np.random.poisson(10, 30) + np.random.randint(0, 8, 30)
-    low_threats = np.random.poisson(20, 30) + np.random.randint(0, 10, 30)
+    high_threats = np.random.poisson(5, 30)
+    medium_threats = np.random.poisson(10, 30)
+    low_threats = np.random.poisson(20, 30)
     
-    # Create a DataFrame for the chart
     trend_data = pd.DataFrame({
         'Date': dates,
         'High Threats': high_threats,
@@ -1084,71 +965,77 @@ def show_trend_analysis():
         'Low Threats': low_threats
     })
     
-    # Create an area chart using Streamlit's native charting
-    st.area_chart(trend_data.set_index('Date'), use_container_width=True, height=500)
+    # Create an advanced multi-line chart
+    st.line_chart(
+        trend_data.set_index('Date'),
+        use_container_width=True,
+        color=['#EF4444', '#F59E0B', '#10B981']
+    )
     
-    # Platform distribution
+    # Platform distribution with radar chart
     st.subheader("🌐 Threat Distribution by Platform")
     
-    platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn']
-    threats = [45, 32, 28, 19, 极客时间, 8, 5]
-    high_severity = [15, 8, 12, 5, 3, 2, 1]
+    col1, col2 = st.columns([2, 1])
     
-    # Create a custom bar chart
-    st.markdown(create_bar_chart(platforms, threats, "Total Threats by Platform", height=200), unsafe_allow_html=True)
+    with col1:
+        platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube']
+        threat_counts = [45, 32, 28, 19, 12]
+        
+        # Create radar chart
+        viz.create_radar_chart(
+            np.array(threat_counts),
+            platforms,
+            "Threat Distribution Across Platforms"
+        )
     
-    # Create another chart for high severity threats
-    st.markdown(create_bar_chart(platforms, high_severity, "High Severity Threats by Platform", height=200), unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div class="search-analysis-card">
+            <h4>📊 Platform Insights</h4>
+            <p>Twitter: 45 threats (42%)</p>
+            <p>Facebook: 32 threats (30%)</p>
+            <p>Reddit: 28 threats (26%)</p>
+            <p>Instagram: 19 threats (18%)</p>
+            <p>YouTube: 12 threats (11%)</p>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Geographic threat distribution
-    st.subheader("🗺️ Geographic Threat Distribution")
+    # Sentiment analysis over time
+    st.subheader("📊 Sentiment Analysis")
     
-    # Generate mock geographic data
-    countries = ['USA', 'UK', 'Germany', 'France', 'Canada', 'Australia', 'Japan', 'Brazil', 'India', 'China']
-    threat_counts = np.random.randint(10, 100, len(countries))
+    sentiment_dates = pd.date_range(end=datetime.now(), periods=14)
+    sentiment_values = np.sin(np.linspace(0, 4*np.pi, 14)) * 0.5 + 0.5
     
-    # Create a bar chart for geographic distribution
-    st.markdown(create_bar_chart(countries, threat_counts, "Threats by Country", height=200), unsafe_allow_html=True)
+    sentiment_data = pd.DataFrame({
+        'Date': sentiment_dates,
+        'Sentiment Score': sentiment_values
+    })
+    
+    st.area_chart(sentiment_data.set_index('Date'), use_container_width=True)
 
 def show_quick_actions():
     """Quick action buttons"""
     st.subheader("⚡ Quick Actions")
     
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3 = st.columns(3)
     
     with col1:
         if st.button("🔄 Scan All Platforms", use_container_width=True):
-            # Check rate limiting极客时间 threat scanning
-            allowed, message, remaining = rate_limiter.check_rate_limit("threat_scan", "default")
-            if not allowed:
-                st.error(f"Scan rate limit exceeded: {message}")
-            else:
-                st.success("Platform scan initiated!")
-                time.sleep(1)
-                st.info("Scanning Twitter, Facebook, Instagram, Reddit...")
+            st.success("Platform scan initiated!")
+            time.sleep(1)
+            st.info("Scanning Twitter, Facebook, Instagram, Reddit...")
     
     with col2:
         if st.button("📊 Generate Report", use_container_width=True):
-            # Check rate limiting for report generation
-            allowed, message, remaining = rate_limiter.check_rate_limit("report_generation", "default")
-            if not allowed:
-                st.error(f"Report generation limit exceeded: {message}")
-            else:
-                st.success("Threat report generation started!")
-                time.sleep(1)
-                st.info("Compiling data from last 7 days...")
+            st.success("Threat report generation started!")
+            time.sleep(1)
+            st.info("Compiling data from last 7 days...")
     
     with col3:
         if st.button("🚨 Crisis Protocol", use_container_width=True):
             st.error("Crisis protocol activated!")
             time.sleep(1)
             st.warning("Alerting team members...")
-    
-    with col4:
-        if st.button("📈 Export Data", use_container_width=True):
-            st.success("Data export initiated!")
-            time.sleep(1)
-            st.info("Preparing CSV and PDF reports...")
 
 def show_access_required():
     st.header("🔒 Advanced Threat Analysis")
@@ -1166,7 +1053,7 @@ def show_access_required():
         access_key = st.text_input(
             "Enter Access Key:",
             type="password",
-            placeholder="BG202极客时间-ACCESS",
+            placeholder="BG2024-PRO-ACCESS",
             help="Enter your premium access key"
         )
     
@@ -1207,7 +1094,7 @@ def show_api_key_management():
         cols = st.columns(3)
         for i, (platform, encrypted_key) in enumerate(api_manager.api_keys.items()):
             if platform in api_manager.supported_platforms:
-                platform_info = api_manager.supported_platform极客时间[platform]
+                platform_info = api_manager.supported_platforms[platform]
                 with cols[i % 3]:
                     st.markdown(f"""
                     <div class="search-analysis-card">
@@ -1238,7 +1125,7 @@ def show_api_key_management():
     <div class="search-analysis-card">
         <h4>{platform_info['icon']} {platform_info['name']}</h4>
         <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
-        <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></极客时间>
+        <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1316,7 +1203,7 @@ class EnhancedSocialMediaMonitor:
         templates = {
             'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
             'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
-            'retail': [f"{brand_name} product quality", f"{brand_name} customer reviews"]
+            'retail': [f"{brand_name} product quality", f"{brand_name} store experience"]
         }
         return random.choice(templates.get(sector, templates['technology']))
 
@@ -1330,41 +1217,18 @@ def main():
     if "advanced_access" not in st.session_state:
         st.session_state.advanced_access = False
     
-    # Header with professional logo
-    st.markdown(f"""
-    <div class="header-container">
-        {create_shield_logo_html()}
-        <div>
-            <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
-            <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
-        </div>
-    </div>
+    # Header
+    st.markdown("""
+    <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
+    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
     # Sidebar
     with st.sidebar:
-        st.markdown(f"""
-        <div style="text-align: center; margin-bottom: 20px;">
-            <div style="
-                width: 60px;
-                height: 60px;
-                background: linear-gradient(135deg, #6366F1, #8B5CF6);
-                clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                font极客时间: 18px;
-                font-weight: bold;
-                color: white;
-                filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
-            ">AI</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
         st.header("Business Configuration")
         brand_name = st.text_input("Brand Name", "Nike")
-        sector = st.selectbox("Business Sector", ["technology", "finance", "retail", "healthcare", "education"])
-        st.session_state极客时间 = sector
+        sector = st.selectbox("Business Sector", ["technology", "finance", "retail"])
+        st.session_state.sector = sector
         
         st.markdown("---")
         st.subheader("🔐 Access Status")
@@ -1376,20 +1240,6 @@ def main():
         st.markdown("---")
         st.subheader("🔑 API Status")
         st.info(f"{len(api_manager.api_keys)} platform(s) connected")
-        
-        # Rate limit status in sidebar
-        st.markdown("---")
-        st.subheader("⏰ Rate Limits")
-        
-        search_allowed, search_msg, search_remaining = rate_limiter.check_rate_limit("search_analysis", "default")
-        api_allowed, api_msg, api_remaining = rate_limiter.check_rate_limit("api_test", "default")
-        scan_allowed, scan_msg, scan_remaining = rate_limiter.check_rate_limit("threat_scan", "default")
-        report_allowed, report_msg, report_remaining = rate_limiter.check_rate_limit("report_generation", "default")
-        
-        st.caption("Search Analysis: " + search_msg)
-        st.caption("API Tests: " + api_msg)
-        st.caption("Threat Scans: " + scan_msg)
-        st.caption("Report Generation: " + report_msg)
     
     # Navigation Tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
@@ -1414,7 +1264,7 @@ def main():
         st.header("Social Monitoring")
         posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, sector)
         for post in posts[:5]:
-            with st.expander(f"{post['platform']极客时间 - {post['content'][:50]}..."):
+            with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                 st.write(post['content'])
                 st.caption(f"Engagement: {post['engagement']}")
     
