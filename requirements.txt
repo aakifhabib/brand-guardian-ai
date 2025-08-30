@@ -1,56 +1,6 @@
-# Streamlit & Web Framework
 streamlit==1.28.1
-streamlit-option-menu==0.3.2
-streamlit-extras==0.3.0
-
-# Data Processing & Visualization
+plotly==5.18.0
 pandas==2.0.3
 numpy==1.24.3
-plotly==5.18.0
-matplotlib==3.7.2
-seaborn==0.12.2
-scipy==1.11.2
-
-# Machine Learning Core
-scikit-learn==1.3.0
-xgboost==2.0.2
-lightgbm==4.1.0
-catboost==1.2.2
-
-# Deep Learning
-torch==2.1.0
-torchvision==0.16.0
-transformers==4.34.1
-sentence-transformers==2.2.2
-
-# Natural Language Processing
-nltk==3.8.1
-spacy==3.7.2
-textblob==0.17.1
-gensim==4.3.2
-wordcloud==1.9.3
-
-# Computer Vision
-opencv-python==4.8.1.78
-Pillow==10.0.1
-
-# API & Cloud Services
-openai==0.28.1
-langchain==0.0.346
-cohere==4.37
 requests==2.31.0
-python-dotenv==1.0.0
-boto3==1.28.62
-
-# Utilities & Helpers
-tqdm==4.66.1
-joblib==1.3.2
-pyyaml==6.0.1
-python-multipart==0.0.6
-urllib3==2.0.7
-
-# Optional but useful
-plotly-express==0.4.1
-missingno==0.5.2
-yellowbrick==1.5
-shap==0.42.1
+cryptography==41.0.7
