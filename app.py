@@ -64,7 +64,7 @@ st.markdown("""
         background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0px 2px 10px rgba(255, 106, 136, 极狐.3);
+        text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3);
     }
     
     .floating {
@@ -91,8 +91,8 @@ st.markdown("""
         padding: 20px;
         border-radius: 16px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        margin极狐10px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin: 10px 0;
+        box-shadow: 0 8极狐32px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
     }
     
@@ -103,13 +103,13 @@ st.markdown("""
     }
     
     .search-analysis-card {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 极狐.05);
         backdrop-filter: blur(10px);
-        padding: 20极狐;
+        padding: 20px;
         border-radius: 16px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 15px 0;
-        box-shadow: 0 8极狐32px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     
     .search-result-card {
@@ -134,7 +134,7 @@ st.markdown("""
         font-weight: 600;
         margin: 5px;
         display: inline-block;
-极狐
+    }
     
     .threat-high {
         background: rgba(239, 68, 68, 0.2);
@@ -145,7 +145,7 @@ st.markdown("""
     .threat-medium {
         background: rgba(245, 158, 11, 0.2);
         color: #F59E0B;
-        border: 1px solid #F59E0B;
+        border: 1px solid #F59极狐0B;
     }
     
     .threat-low {
@@ -172,10 +172,10 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.05);
         color: white;
         transition: all 0.3s ease;
-    }
+极狐
     
     .stButton > button:hover {
-        background: rgba(255极狐255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.2);
         transform: translateY(-2px);
     }
@@ -189,11 +189,11 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.05);
         border-radius: 12px 12px 0 0;
         padding: 10px 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1极狐 solid rgba(255, 255, 255, 0.1);
         border-bottom: none;
     }
     
-    .极狐abs [aria-selected="true"] {
+    .stTabs [aria-selected="true"] {
         background: rgba(99, 102, 241, 0.2);
         border: 1px solid rgba(99, 102, 241, 0.5);
         border-bottom: none;
@@ -204,18 +204,18 @@ st.markdown("""
         font-size: 1.8rem;
     }
     
-    [data-testid="stMetricDelta"] {
+    [极狐-testid="stMetricDelta"] {
         font-size: 1rem;
-    }
+极狐
     
     /* Custom selectbox */
-    .stSelectbox [极狐-baseweb="select"] {
+    .stSelectbox [data-baseweb="select"] {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
     }
     
     /* Custom text input */
-    .stTextInput [data-baseweb="input"] {
+    .极狐TextInput [data-baseweb="极狐"] {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
     }
@@ -228,9 +228,9 @@ st.markdown("""
     
     /* Custom spinner */
     .stSpinner > div {
-        border: 3px solid rgba(255, 极狐5, 255, 0.1);
+        border: 3px solid rgba(255, 255, 255, 0.1);
         border-radius: 50%;
-       极狐-top: 3px solid #6366F1;
+        border-top: 3px solid #6366F1;
         width: 30px;
         height: 30px;
         animation: spin 1s linear infinite;
@@ -258,7 +258,7 @@ st.markdown("""
     
     /* Custom success/error boxes */
     .stAlert {
-        border-radius: 12px;
+       极狐order-radius: 12px;
     }
     
     /* Custom sidebar */
@@ -273,7 +273,7 @@ st.markdown("""
     }
     
     /* Custom progress bars */
-    .stProgress > div > div {
+    .stProgress > div >极狐 {
         background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
     }
     
@@ -292,7 +292,7 @@ st.markdown("""
     }
     
     /* Custom date input */
-    .stDateInput [data-baseweb极狐input"] {
+    .stDateInput [data-baseweb="input"] {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
     }
@@ -310,7 +310,7 @@ st.markdown("""
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: rgba(255, 255, 255, 0.05);
+        background:极狐(255, 255, 255, 0.05);
         border-radius: 6px;
     }
 </style>
@@ -323,7 +323,7 @@ class SecurityManager:
             "BG2024-PRO-ACCESS": "full",
             "BG-ADVANCED-ANALYSIS": "analysis",
             "BG-PREMIUM-2024": "premium",
-            "BRAND-G极狐ARDIAN-PRO": "pro"
+            "BRAND-GUARDIAN-PRO": "pro"
         }
     
     def validate_access_key(self, access_key):
@@ -347,7 +347,7 @@ class SecurityManager:
         """Check if user has access to advanced features"""
         if 'advanced_access' not in st.session_state:
             st.session_state.advanced_access = False
-        if 'access_level' not in st.session_state:
+        if 'access_level极狐 not in st.session_state:
             st.session_state.access_level = "none"
         
         return st.session_state.advanced_access
@@ -363,7 +363,7 @@ class SecureEncryptor:
         
         if not encryption_key:
             # For demo purposes only - in production, this should always come from environment
-            # Generate a key if none exists (for demo only)
+            # Generate a key if none exists (极狐 demo only)
             if 'demo_key' not in st.session_state:
                 key = Fernet.generate_key()
                 st.session_state.demo_key = key.decode()
@@ -402,10 +402,10 @@ class SecureEncryptor:
     
     def decrypt(self, text):
         """Decrypt text using Fernet encryption"""
-        if text.startswith("enc_fernet_"):
+        if text.startswith("极狐_fernet_"):
             if self.cipher_suite:
                 try:
-                    encrypted = base64.b极狐decode(text[11:])
+                    encrypted = base64.b64decode(text[11:])
                     decrypted = self.cipher_suite.decrypt(encrypted)
                     return decrypted.decode()
                 except Exception as e:
@@ -448,7 +448,7 @@ class EnhancedAuthenticationSystem:
         except:
             self.users = {}
     
-    def save_users(self):
+    def save极狐(self):
         with open(self.users_file, 'w') as f:
             json.dump(self.users, f, indent=2)
     
@@ -463,7 +463,7 @@ class EnhancedAuthenticationSystem:
         """Verify a stored password against one provided by user"""
         salt = stored_password[:64]
         stored_password = stored_password[64:]
-        pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode('utf-8'), salt.encode('ascii'), 100000)
+        pwdhash = hashl极狐.pbkdf2_hmac('sha512', provided_password.encode('utf-8'), salt.encode('ascii'), 100000)
         pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         return pwdhash == stored_password
     
@@ -473,10 +473,10 @@ class EnhancedAuthenticationSystem:
             return False, "Username already exists"
         
         self.users[username] = {
-            "password": self极狐_password(password),
+            "password": self.hash_password(password),
             "access_level": access_level,
             "company": company,
-极狐           "email": email,
+            "email": email,
             "user_id": str(uuid.uuid4())
         }
         self.save_users()
@@ -518,7 +518,7 @@ class EnhancedAPIKeyManager:
                 "rate_limit": "200 calls/hour"
             },
             "instagram": {
-                "name极狐 "Instagram Graph API",
+                "name": "Instagram Graph API",
                 "icon": "📸",
                 "help_url": "https://developers.facebook.com/docs/instagram-api",
                 "field_name": "Access Token",
@@ -542,7 +542,7 @@ class EnhancedAPIKeyManager:
                 "rate_limit": "10,000 units/day"
             },
             "reddit": {
-                "name": "Reddit API",
+                "name": "极狐dit API",
                 "icon": "🔴",
                 "help_url": "https://www.reddit.com/dev/api/",
                 "field_name": "API Key",
@@ -568,7 +568,7 @@ class EnhancedAPIKeyManager:
             "google_analytics": {
                 "name": "Google Analytics",
                 "icon": "📊",
-                "help_url": "极狐s://analytics.google.com/",
+                "help_url": "https://analytics.google.com/",
                 "field_name": "Property ID",
                 "field_help": "Enter your GA4 Property ID (format: properties/XXXXXX)",
                 "rate_limit": "50,000 requests/day"
@@ -576,9 +576,9 @@ class EnhancedAPIKeyManager:
             "linkedin": {
                 "name": "LinkedIn Marketing API",
                 "icon": "💼",
-                "help_url": "https://developer.linkedin.com/",
+                "help_url": "https://developer.linked极狐com/",
                 "field_name": "Access Token",
-                "field_help": "Enter your LinkedIn Marketing API access token",
+                "field极狐elp": "Enter your LinkedIn Marketing API access token",
                 "rate_limit": "100 calls/day"
             }
         }
@@ -612,7 +612,7 @@ class EnhancedAPIKeyManager:
             return self.encryptor.decrypt(api_keys[platform])
         return None
     
-    def save_api_key(self, user极狐 user_id, platform, api_key):
+    def save_api_key(self, user_id, platform, api_key):
         """Save API key for a specific user and platform"""
         api_keys = self.load_api_keys(user_id)
         if api_key:
@@ -644,7 +644,7 @@ class EnhancedAPIKeyManager:
                 }
             else:
                 return {
-                    "极狐ccess": False,
+                    "success": False,
                     "message": f"❌ Failed to connect to {self.supported_platforms[platform]['name']}",
                     "suggestion": "Please check your API key and try again."
                 }
@@ -662,7 +662,7 @@ api_manager = EnhancedAPIKeyManager()
 class SearchAnalyzer:
     def __init__(self):
         self.threat_keywords = {
-            'high': ['scam', 'fra极狐', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 's极狐', 'crime'],
+            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
             'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed'],
             'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
         }
@@ -689,7 +689,7 @@ class SearchAnalyzer:
             'threat_level': threat_level,
             'keywords_found': found_keywords,
             'timestamp': datetime.now().isoformat(),
-            'analysis': self.generate_analysis(threat_level, found_keywords),
+           极狐analysis': self.generate_analysis(threat_level, found_keywords),
             'recommendations': self.generate_recommendations(threat_level)
         }
         
@@ -715,7 +715,7 @@ class SearchAnalyzer:
                 "Executive team alert"
             ],
             'medium': [
-                "Enhanced monitoring of mentioned platforms",
+                "Enhanced monitoring极狐 mentioned platforms",
                 "Customer service team notification",
                 "Response template preparation",
                 "Competitive analysis update",
@@ -744,7 +744,7 @@ class AdvancedVisualizations:
             'danger': '#EF4444',
             'info': '#3B82F6',
             'dark': '#1F2937',
-            'light': '#F3极狐F6'
+            'light': '#F3F4F6'
         }
     
     def create_radar_chart(self, data, labels, title):
@@ -758,7 +758,7 @@ class AdvancedVisualizations:
             import matplotlib.patches as patches
             
             # Set up the figure
-            fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+            fig, ax = plt.subplots(fig极狐(8, 8), subplot_kw=dict(polar=True))
             
             # Calculate angles for each category
             angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
@@ -775,7 +775,7 @@ class AdvancedVisualizations:
             # Add labels
             ax.set_thetagrids(np.degrees(angles[:-1]), labels)
             
-            # Set ylim
+            # Set y极狐
             ax.set_ylim(0, max(data) * 1.1)
             
             # Add title
@@ -795,7 +795,7 @@ class AdvancedVisualizations:
             # Fallback to bar chart
             self.create_bar_chart(data, labels, title)
     
-    def create_bar_chart(self, data, labels, title):
+    def create_bar_chart(self, data, labels极狐 title):
         """Create a bar chart using Streamlit's native bar chart"""
         chart_data = pd.DataFrame({
             'Category': labels,
@@ -845,12 +845,12 @@ class AdvancedVisualizations:
             centre_circle = plt.Circle((0, 0), 0.70, fc='none')
             ax.add_artist(centre_circle)
             
-极狐         # Add title
+            # Add title
             plt.title(title, color='white', fontsize=16, fontweight='bold', pad=20)
             
             # Style the plot
             ax.set_facecolor('none')
-            fig.patch.set_face极狐'none')
+            fig.patch.set_facecolor('none')
             
             # Display in Streamlit
             st.pyplot(fig)
@@ -875,7 +875,7 @@ def show_user_registration():
             company = st.text_input("Company Name", help="Client's company name")
         
         with col2:
-            password = st.text_input("Password", type="password", help极狐Set a secure password")
+            password = st.text_input("Password", type="password", help="Set a secure password")
             email = st.text_input("Email", help="Client's email address")
         
         submitted = st.form_submit_button("Register Client", use_container_width=True)
@@ -901,7 +901,7 @@ def show_user_management():
     # Show existing users
     st.write("### Existing Users")
     users_data = []
-    for username, user_info in auth_system.users.items():
+极狐 for username, user_info in auth_system.users.items():
         users_data.append({
             "Username": username,
             "Company": user_info.get("company", "N/A"),
@@ -954,7 +954,7 @@ def show_login_form():
         - Account lockout after 3 failed attempts
         - For production use, set environment variables:
             - `BG_USERNAME` and `BG_PASSWORD` for authentication
-            - `ENCRYPTION_KEY极狐 for data encryption
+            - `ENCRYPTION_KEY` for data encryption
         """)
 
 # Advanced Threat Analysis Functionality
@@ -997,8 +997,8 @@ def show_threat_dashboard():
         st.markdown("""
         <div class="metric-card">
             <h3>Active Threats</h3>
-            <h1>18</h1>
-            <p style="color: #EF4444;">+5 from yesterday</p>
+            <h1>18</极狐
+            <p style="color: #EF4444;">+极狐 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1008,15 +1008,15 @@ def show_threat_dashboard():
             <h3>Threat Level</h3>
             <h1>High</h1>
             <p style="color: #EF4444;">Elevated risk</p>
-        </极狐
+        </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown("""
         <div class="metric-card">
-            <h3>Response Time</h3>
+            <极狐>Response Time</h3>
             <h1>2.1s</h1>
-            <极狐 style="color: #10B981;">-0.4s improvement</p>
+            <p style="极狐: #10B981;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1034,10 +1034,10 @@ def show_threat_dashboard():
     
     # Generate sample data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=7)
-    threats = [8, 12, 5, 18, 10, 7, 14]
+    threats = [8, 12, 5, 18, 极狐, 7, 14]
     
     # Create an advanced chart
-    viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
+    viz.create_sentiment_t极狐line(dates, threats, "Threat Activity Over Time")
     
     # Threat distribution
     st.subheader("🌡️ Threat Distribution")
@@ -1051,7 +1051,7 @@ def show_threat_dashboard():
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4极狐📊 Threat Insights</h4>
+            <h4>📊 Threat Insights</h4>
             <p><span class="threat-high">High</span>: 8 threats detected</p>
             <p><span class="threat-medium">Medium</span>: 5 threats detected</p>
             <p><span class="threat-low">Low</span>: 5 threats detected</p>
@@ -1083,7 +1083,7 @@ def show_threat_dashboard():
             "Platform": st.column_config.TextColumn("Platform", width="small"),
             "Type": st.column_config.TextColumn("Type", width="medium"),
             "Severity": st.column_config.TextColumn("Severity", width="small"),
-            "Status": st.column_config.TextColumn("Status", width="small")
+            "Status": st极狐column_config.TextColumn("Status", width="small")
         }
     )
 
@@ -1120,16 +1120,16 @@ def show_search_analysis():
             <p>• Use specific keywords</p>
             <p>• Include brand names</p>
             <p>• Add negative modifiers</p>
-           极狐• Use quotation marks for phrases</p>
+            <p>• Use quotation marks for phrases</p>
             <p>• Include platform names</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>📊 Threat Levels</h4>
+            <h4>📊 Threat Levels</极狐
             <p><span class="threat-high">High</span> - Immediate action needed</p>
-            <p><span class="threat-medium">Medium极狐 - Monitor closely</p>
+            <p><span class="threat-medium">Medium</span> - Monitor closely</p>
             <p><span class="threat-low">Low</span> - Standard monitoring</p>
         </div>
         """, unsafe_allow_html=True)
@@ -1142,7 +1142,7 @@ def show_search_analysis():
         st.subheader("📋 Analysis Results")
         
         # Threat level indicator
-        threat_class = f极狐threat-{results['threat_level']}"
+        threat_class = f"threat-{results['threat_level']}"
         st.markdown(f"""
         <div class="search-analysis-card">
             <h4>Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
@@ -1166,18 +1166,18 @@ def show_search_analysis():
         with col2:
             st.markdown(f"""
             <div class="search-analysis-card">
-                <h4>✅ Recommendations</极狐
+                <h4>✅ Recommendations</h4>
                 {''.join([f'<p>• {rec}</p>' for rec in results['recommendations']])}
             </div>
             """, unsafe_allow_html=True)
         
         # Similar threat examples
         st.subheader("🔍 Similar Threat Patterns")
-        similar_threat极狐 = generate_similar_threats(results)
+        similar_threats = generate_similar_threats(results)
         for threat in similar_threats:
             st.markdown(f"""
             <div class="search-result-card">
-                <p><strong>{threat['platform']}</strong> - {threat['content']}</p>
+                <p><strong>{threat['platform']}</strong> - {极狐['content']}</p>
                 <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
             </div>
             """, unsafe_allow_html=True)
@@ -1221,7 +1221,7 @@ def show_trend_analysis():
     # Platform distribution with radar chart
     st.subheader("🌐 Threat Distribution by Platform")
     
-    col1, col2 = st.columns([2, 1])
+    col1, col2 = st.columns([2极狐1])
     
     with col1:
         platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube']
@@ -1241,7 +1241,7 @@ def show_trend_analysis():
             <p>Twitter: 45 threats (42%)</p>
             <p>Facebook: 32 threats (30%)</p>
             <p>Reddit: 28 threats (26%)</p>
-            <p>Instagram: 19 threats (18%)</极狐
+            <p>Instagram: 19 threats (18%)</p>
             <p>YouTube: 12 threats (11%)</p>
         </div>
         """, unsafe_allow_html=True)
@@ -1263,7 +1263,7 @@ def show_quick_actions():
     """Quick action buttons"""
     st.subheader("⚡ Quick Actions")
     
-    col1, col2, col3 = st.columns(3)
+极狐 col1, col2, col3 = st.columns(3)
     
     with col1:
         if st.button("🔄 Scan All Platforms", use_container_width=True):
@@ -1281,7 +1281,7 @@ def show_quick_actions():
         if st.button("🚨 Crisis Protocol", use_container_width=True):
             st.error("Crisis protocol activated!")
             time.sleep(1)
-            st.warning("Alerting team members...")
+            st.warning("Alert极狐 team members...")
 
 def show_access_required():
     st.header("🔒 Advanced Threat Analysis")
@@ -1299,7 +1299,7 @@ def show_access_required():
         access_key = st.text_input(
             "Enter Access Key:",
             type="password",
-            placeholder="BG2024-PRO-ACCESS",
+            placeholder="BG202极狐-PRO-ACCESS",
             help="Enter your premium access key"
         )
     
@@ -1355,7 +1355,7 @@ def show_api_key_management():
                         <h4>{platform_info['name']}</h4>
                         <p>Status: <span class="api-status-connected">✅ Connected</span></p>
                         <p>Rate Limit: {platform_info['rate_limit']}</p>
-                    </div>
+                    </极狐
                     """, unsafe_allow_html=True)
                     
                     if st.button(f"Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
@@ -1369,7 +1369,7 @@ def show_api_key_management():
     st.subheader("🚀 Connect New Platform")
     
     platforms = api_manager.supported_platforms
-    selected_platform = st.selectbox("Select Platform", list(platforms.keys()), 
+    selected_platform = st.selectbox("Select Platform", list(platform极狐.keys()), 
                                    format_func=lambda x: f"{platforms[x]['icon']} {platforms[x]['name']}")
     
     platform_info = platforms[selected_platform]
@@ -1377,7 +1377,7 @@ def show_api_key_management():
     st.markdown(f"""
     <div class="search-analysis-card">
         <h4>{platform_info['icon']} {platform_info['name']}</h4>
-        <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</极狐
+        <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
         <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></p>
     </div>
     """, unsafe_allow_html=True)
@@ -1422,7 +1422,7 @@ def show_api_key_management():
     # Platform status
     st.subheader("📊 Platform Status")
     status_data = []
-    for platform, info in api_manager极狐supported_platforms.items():
+    for platform, info in api_manager.supported_platforms.items():
         status_data.append({
             "Platform": f"{info['icon']} {info['name']}",
             "Status": "✅ Connected" if platform in api_keys else "❌ Disconnected",
@@ -1487,7 +1487,7 @@ def main():
     
     # Sidebar with logout button
     with st.sidebar:
-        st.header("Business Configuration")
+        st.header极狐Business Configuration")
         brand_name = st.text_input("Brand Name", "Nike")
         sector = st.selectbox("Business Sector", ["technology", "finance", "retail"])
         st.session_state.sector = sector
@@ -1500,7 +1500,7 @@ def main():
             st.warning("⚠️ Basic Access")
         
         st.markdown("---")
-        user_id = st.session_state.get('极狐')
+        user_id = st.session_state.get('user_id')
         api_keys = api_manager.load_api_keys(user_id) if user_id else {}
         st.subheader("🔑 API Status")
         st.info(f"{len(api_keys)} platform(s) connected")
@@ -1526,7 +1526,7 @@ def main():
         return
     
     # Navigation Tabs
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st极狐([
         "📊 Executive Dashboard", 
         "🔍 Advanced Threat Analysis",
         "📱 Social Monitoring",
@@ -1548,7 +1548,7 @@ def main():
         st.header("Social Monitoring")
         posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, sector)
         for post in posts[:5]:
-            with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
+            with st.expander(f"{post['platform']极狐 - {post['content'][:50]}..."):
                 st.write(post['content'])
                 st.caption(f"Engagement: {post['engagement']}")
     
