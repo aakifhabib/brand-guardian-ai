@@ -5,47 +5,8 @@ import json
 import os
 import hashlib
 import re
-import requests
-import time
 from datetime import datetime, timedelta
-from urllib.parse import urlencode
-
-# Handle all imports with fallbacks
-try:
-    from cryptography.fernet import Fernet
-    CRYPTOGRAPHY_AVAILABLE = True
-except ImportError:
-    st.error("Cryptography is not installed! Please add 'cryptography>=41.0.0' to requirements.txt")
-    CRYPTOGRAPHY_AVAILABLE = False
-    # Create a dummy Fernet class for fallback
-    class Fernet:
-        def __init__(self, *args, **kwargs):
-            pass
-        def encrypt(self, data):
-            return data
-        def decrypt(self, data):
-            return data
-        def generate_key(self):
-            return b'dummy_key_123456789012345678901234567890='
-
-try:
-    import plotly.express as px
-    import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
-    PLOTLY_AVAILABLE = True
-except ImportError:
-    st.error("Plotly is not installed! Please add 'plotly>=5.18.0' to requirements.txt")
-    PLOTLY_AVAILABLE = False
-    # Create dummy classes to avoid NameErrors
-    class PlotlyFallback:
-        def __getattr__(self, name):
-            def fallback(*args, **kwargs):
-                st.warning("Plotly is not available. Charts require plotly installation.")
-                return None
-            return fallback
-    px = PlotlyFallback()
-    go = PlotlyFallback()
-    make_subplots = PlotlyFallback()
+import random
 
 # Set page configuration
 st.set_page_config(
@@ -55,131 +16,35 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for professional design
+# Custom CSS for enhanced UI
 st.markdown("""
 <style>
-    .main { 
-        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-        color: #ffffff;
-        font-family: 'Inter', sans-serif;
+    .main { background-color: #0f1116; color: #ffffff; }
+    .stApp { background-color: #0f1116; }
+    .metric-card { 
+        background: rgba(255, 255, 255, 0.05); 
+        padding: 20px; 
+        border-radius: 10px; 
+        margin: 10px 0;
     }
-    
-    .stApp {
-        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
-    }
-    
-    @keyframes gradientBG {
-        0% { background-position: 0% 50% }
-        50% { background-position: 100% 50% }
-        100% { background-position: 0% 50% }
-    }
-    
-    .header-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-    
-    .metric-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        padding: 25px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 15px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        background: rgba(255, 255, 255, 0.08);
-    }
-    
-    .api-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(12px);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 20px;
-        margin: 15px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    }
-    
-    .positive { color: #10B981; }
-    .negative { color: #EF4444; }
-    .warning { color: #F59E0B; }
-    
+    .positive { color: #00cc96; }
+    .negative { color: #ef553b; }
     .subscription-card {
         background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-        padding: 30px;
-        border-radius: 20px;
+        padding: 25px;
+        border-radius: 15px;
         color: white;
-        margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(99, 102, 241, 0.3);
+        margin: 15px 0;
     }
-    
     .crisis-alert {
-        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+        background-color: #ff4b4b;
         color: white;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        border-left: 5px solid #FCA5A5;
-    }
-    
-    .success-alert {
-        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        border-left: 5px solid #A7F3D0;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 12px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-    }
-    
-    .platform-icon {
-        font-size: 2rem;
-        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 10px 0;
     }
 </style>
 """, unsafe_allow_html=True)
-
-# Encryption setup with fallback
-def generate_encryption_key():
-    if not CRYPTOGRAPHY_AVAILABLE:
-        return b'dummy_key_123456789012345678901234567890='
-    
-    if not os.path.exists('encryption.key'):
-        key = Fernet.generate_key()
-        with open('encryption.key', 'wb') as key_file:
-            key_file.write(key)
-    with open('encryption.key', 'rb') as key_file:
-        return key_file.read()
-
-encryption_key = generate_encryption_key()
-cipher_suite = Fernet(encryption_key)
 
 # Subscription Tiers
 SUBSCRIPTION_TIERS = {
@@ -187,51 +52,40 @@ SUBSCRIPTION_TIERS = {
         "price": 299,
         "features": [
             "Basic sentiment monitoring", 
-            "2 social platforms", 
+            "1 social platform", 
             "Daily reports", 
             "Email alerts", 
-            "10 keyword monitors",
-            "7-day data retention"
+            "5 keyword monitors"
         ],
         "limits": {
-            "social_platforms": 2, 
-            "keywords": 10, 
-            "historical_data": 7
+            "social_platforms": 1, 
+            "keywords": 5, 
+            "historical_data": 30
         }
     },
     "professional": {
         "price": 799,
         "features": [
             "Advanced sentiment analysis", 
-            "5 social platforms", 
+            "3 social platforms", 
             "Real-time alerts", 
             "Competitive analysis", 
-            "50 keyword monitors",
-            "30-day data retention",
-            "API access",
-            "Basic webhooks"
+            "20 keyword monitors"
         ],
         "limits": {
-            "social_platforms": 5, 
-            "keywords": 50, 
-            "historical_data": 30
+            "social_platforms": 3, 
+            "keywords": 20, 
+            "historical_data": 90
         }
     },
     "enterprise": {
         "price": 1999,
         "features": [
-            "AI-powered sentiment analysis", 
-            "Unlimited social platforms", 
-            "Real-time alerts", 
-            "Advanced competitive intelligence", 
-            "Unlimited keyword monitors",
-            "1-year data retention",
-            "Full API access",
-            "Advanced webhooks",
-            "Custom integrations",
-            "Priority support",
-            "White-label options",
-            "SLA guarantee"
+            "Full AI-powered protection", 
+            "All social platforms", 
+            "Multi-language support", 
+            "Advanced crisis prediction", 
+            "Unlimited keyword monitors"
         ],
         "limits": {
             "social_platforms": 999, 
@@ -241,46 +95,35 @@ SUBSCRIPTION_TIERS = {
     }
 }
 
-# Database Class with Encryption fallback
-class SecureBrandDB:
+# Database Class
+class SimpleDB:
     def __init__(self):
-        self.data_file = "brands_secure_data.json"
+        self.data_file = "brands_data.json"
         self.load_data()
     
     def load_data(self):
         if os.path.exists(self.data_file):
-            try:
-                with open(self.data_file, 'r') as f:
-                    if CRYPTOGRAPHY_AVAILABLE:
-                        encrypted_data = f.read()
-                        if encrypted_data:
-                            decrypted_data = cipher_suite.decrypt(encrypted_data.encode()).decode()
-                            self.brands = json.loads(decrypted_data)
-                        else:
-                            self.brands = {}
-                    else:
-                        # Without cryptography, read plain JSON
-                        self.brands = json.load(f)
-            except Exception as e:
-                st.error(f"Error loading data: {e}")
-                self.brands = {}
+            with open(self.data_file, 'r') as f:
+                self.brands = json.load(f)
         else:
-            self.brands = {}
-        self.save_data()
+            # Initialize with demo account
+            self.brands = {
+                "acme_corp": {
+                    "password": self._hash_password("demo123"),
+                    "brand_name": "Acme Corporation",
+                    "email": "marketing@acme-corp.com",
+                    "subscription_tier": "enterprise",
+                    "subscription_status": "active",
+                    "connected_platforms": {},
+                    "monitoring_keywords": ["acme", "acme corp", "acme corporation"],
+                    "created_at": datetime.now().isoformat()
+                }
+            }
+            self.save_data()
     
     def save_data(self):
-        try:
-            data_str = json.dumps(self.brands, indent=2)
-            if CRYPTOGRAPHY_AVAILABLE:
-                encrypted_data = cipher_suite.encrypt(data_str.encode()).decode()
-                with open(self.data_file, 'w') as f:
-                    f.write(encrypted_data)
-            else:
-                # Without cryptography, save plain JSON
-                with open(self.data_file, 'w') as f:
-                    f.write(data_str)
-        except Exception as e:
-            st.error(f"Error saving data: {e}")
+        with open(self.data_file, 'w') as f:
+            json.dump(self.brands, f, indent=2)
     
     def _hash_password(self, password):
         return hashlib.sha256(password.encode()).hexdigest()
@@ -296,11 +139,8 @@ class SecureBrandDB:
             "subscription_tier": tier,
             "subscription_status": "active",
             "connected_platforms": {},
-            "api_keys": {},
             "monitoring_keywords": [],
-            "webhook_urls": {},
-            "created_at": datetime.now().isoformat(),
-            "last_login": datetime.now().isoformat()
+            "created_at": datetime.now().isoformat()
         }
         self.save_data()
         return True
@@ -308,8 +148,6 @@ class SecureBrandDB:
     def authenticate(self, brand_id, password):
         brand = self.brands.get(brand_id)
         if brand and brand["password"] == self._hash_password(password):
-            brand["last_login"] = datetime.now().isoformat()
-            self.save_data()
             return True
         return False
     
@@ -323,354 +161,284 @@ class SecureBrandDB:
             return True
         return False
 
-    def add_api_key(self, brand_id, platform, api_data):
-        brand = self.get_brand(brand_id)
-        if brand:
-            if "api_keys" not in brand:
-                brand["api_keys"] = {}
-            
-            # Only encrypt if cryptography is available
-            if CRYPTOGRAPHY_AVAILABLE:
-                encrypted_data = {}
-                for key, value in api_data.items():
-                    if value:
-                        encrypted_data[key] = cipher_suite.encrypt(value.encode()).decode()
-                api_data_to_store = encrypted_data
-            else:
-                api_data_to_store = api_data  # Store plain text if no cryptography
-            
-            brand["api_keys"][platform] = {
-                "data": api_data_to_store,
-                "added_date": datetime.now().isoformat(),
-                "last_used": None,
-                "status": "connected"
-            }
-            return self.update_brand(brand_id, {"api_keys": brand["api_keys"]})
-        return False
-
-    def get_api_key(self, brand_id, platform, key_name):
-        brand = self.get_brand(brand_id)
-        if brand and platform in brand.get("api_keys", {}):
-            stored_value = brand["api_keys"][platform]["data"].get(key_name)
-            if stored_value:
-                if CRYPTOGRAPHY_AVAILABLE:
-                    return cipher_suite.decrypt(stored_value.encode()).decode()
-                else:
-                    return stored_value  # Return plain text if no cryptography
-        return None
-
-# API Integration System
-class ProfessionalAPIManager:
+# Sentiment Analysis Engine
+class SentimentAnalyzer:
     def __init__(self):
-        self.supported_platforms = {
-            "twitter": {
-                "name": "Twitter API v2",
-                "icon": "🐦",
-                "help_url": "https://developer.twitter.com/en/docs/twitter-api",
-                "auth_type": "bearer_token",
-                "fields": [
-                    {"name": "Bearer Token", "type": "password", "required": True, 
-                     "help": "Get this from your Twitter Developer Portal"}
-                ],
-                "rate_limit": "500,000 tweets/month"
-            },
-            "facebook": {
-                "name": "Facebook Graph API",
-                "icon": "📘",
-                "help_url": "https://developers.facebook.com/docs/graph-api",
-                "auth_type": "access_token",
-                "fields": [
-                    {"name": "Access Token", "type": "password", "required": True,
-                     "help": "Long-lived user access token with required permissions"},
-                    {"name": "Page ID", "type": "text", "required": True,
-                     "help": "ID of the Facebook Page you want to monitor"}
-                ],
-                "rate_limit": "200 calls/hour"
-            },
-            "instagram": {
-                "name": "Instagram Graph API",
-                "icon": "📸",
-                "help_url": "https://developers.facebook.com/docs/instagram-api",
-                "auth_type": "access_token",
-                "fields": [
-                    {"name": "Access Token", "type": "password", "required": True,
-                     "help": "Instagram Graph API access token"},
-                    {"name": "Business Account ID", "type": "text", "required": True,
-                     "help": "Your Instagram Business Account ID"}
-                ],
-                "rate_limit": "200 calls/hour"
-            },
-            "youtube": {
-                "name": "YouTube Data API",
-                "icon": "📺",
-                "help_url": "https://developers.google.com/youtube/v3",
-                "auth_type": "api_key",
-                "fields": [
-                    {"name": "API Key", "type": "password", "required": True,
-                     "help": "YouTube Data API v3 key"}
-                ],
-                "rate_limit": "10,000 units/day"
-            },
-            "reddit": {
-                "name": "Reddit API",
-                "icon": "🔴",
-                "help_url": "https://www.reddit.com/dev/api/",
-                "auth_type": "oauth",
-                "fields": [
-                    {"name": "Client ID", "type": "text", "required": True,
-                     "help": "Reddit app client ID"},
-                    {"name": "Client Secret", "type": "password", "required": True,
-                     "help": "Reddit app client secret"},
-                    {"name": "User Agent", "type": "text", "required": True,
-                     "help": "Unique user agent for your application"}
-                ],
-                "rate_limit": "60 calls/minute"
-            },
-            "google_analytics": {
-                "name": "Google Analytics",
-                "icon": "📊",
-                "help_url": "https://developers.google.com/analytics",
-                "auth_type": "service_account",
-                "fields": [
-                    {"name": "Property ID", "type": "text", "required": True,
-                     "help": "GA4 property ID (format: properties/XXXXXX)"},
-                    {"name": "Service Account JSON", "type": "textarea", "required": True,
-                     "help": "Service account key file contents"}
-                ],
-                "rate_limit": "50,000 requests/day"
-            }
+        self.positive_words = {
+            'excellent': 1.0, 'amazing': 0.9, 'great': 0.8, 'good': 0.7, 'love': 0.9,
+            'best': 0.8, 'awesome': 0.9, 'fantastic': 0.9, 'perfect': 1.0, 'wonderful': 0.8,
+            'outstanding': 0.9, 'superb': 0.9, 'brilliant': 0.8, 'favorite': 0.7, 'recommend': 0.6
         }
-    
-    def test_connection(self, platform, credentials):
-        """Test API connection with provided credentials"""
-        try:
-            if platform == "twitter":
-                return self._test_twitter(credentials)
-            elif platform == "facebook":
-                return self._test_facebook(credentials)
-            elif platform == "youtube":
-                return self._test_youtube(credentials)
-            else:
-                # Simulate successful connection for other platforms
-                time.sleep(1.5)
-                return {
-                    "success": True,
-                    "message": f"✅ Successfully connected to {self.supported_platforms[platform]['name']}",
-                    "rate_limit": self.supported_platforms[platform]["rate_limit"]
-                }
-        except Exception as e:
-            return {
-                "success": False,
-                "message": f"❌ Connection failed: {str(e)}",
-                "suggestion": "Please check your credentials and try again"
-            }
-    
-    def _test_twitter(self, credentials):
-        """Test Twitter API connection"""
-        bearer_token = credentials.get("Bearer Token")
-        if not bearer_token:
-            return {"success": False, "message": "Bearer Token is required"}
         
-        try:
-            headers = {"Authorization": f"Bearer {bearer_token}"}
-            response = requests.get(
-                "https://api.twitter.com/2/users/me",
-                headers=headers,
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                return {
-                    "success": True,
-                    "message": "✅ Twitter API connection successful",
-                    "user_data": response.json(),
-                    "rate_limit": "500,000 tweets/month"
-                }
-            else:
-                return {
-                    "success": False,
-                    "message": f"❌ Twitter API error: {response.status_code}",
-                    "suggestion": "Check your Bearer Token and API permissions"
-                }
-        except Exception as e:
-            return {
-                "success": False,
-                "message": f"❌ Connection error: {str(e)}",
-                "suggestion": "Check your internet connection and try again"
-            }
-    
-    def _test_facebook(self, credentials):
-        """Test Facebook Graph API connection"""
-        access_token = credentials.get("Access Token")
-        page_id = credentials.get("Page ID")
-        
-        if not access_token or not page_id:
-            return {"success": False, "message": "Access Token and Page ID are required"}
-        
-        try:
-            url = f"https://graph.facebook.com/v19.0/{page_id}"
-            params = {
-                "access_token": access_token,
-                "fields": "id,name"
-            }
-            
-            response = requests.get(url, params=params, timeout=10)
-            
-            if response.status_code == 200:
-                return {
-                    "success": True,
-                    "message": "✅ Facebook Graph API connection successful",
-                    "page_data": response.json(),
-                    "rate_limit": "200 calls/hour"
-                }
-            else:
-                return {
-                    "success": False,
-                    "message": f"❌ Facebook API error: {response.status_code}",
-                    "suggestion": "Check your Access Token and Page ID"
-                }
-        except Exception as e:
-            return {
-                "success": False,
-                "message": f"❌ Connection error: {str(e)}",
-                "suggestion": "Check your internet connection and try again"
-            }
-    
-    def _test_youtube(self, credentials):
-        """Test YouTube Data API connection"""
-        api_key = credentials.get("API Key")
-        if not api_key:
-            return {"success": False, "message": "API Key is required"}
-        
-        try:
-            params = {
-                "key": api_key,
-                "part": "snippet",
-                "chart": "mostPopular",
-                "maxResults": 1,
-                "regionCode": "US"
-            }
-            
-            response = requests.get(
-                "https://www.googleapis.com/youtube/v3/videos",
-                params=params,
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                return {
-                    "success": True,
-                    "message": "✅ YouTube Data API connection successful",
-                    "rate_limit": "10,000 units/day"
-                }
-            else:
-                return {
-                    "success": False,
-                    "message": f"❌ YouTube API error: {response.status_code}",
-                    "suggestion": "Check your API Key and ensure YouTube Data API is enabled"
-                }
-        except Exception as e:
-            return {
-                "success": False,
-                "message": f"❌ Connection error: {str(e)}",
-                "suggestion": "Check your internet connection and try again"
-            }
-
-# Advanced Sentiment Analysis with AI
-class AdvancedSentimentAnalyzer:
-    def __init__(self):
-        # Enhanced sentiment lexicon with weights and context
-        self.lexicon = self._build_advanced_lexicon()
-        self.negators = {"not", "no", "never", "without", "isn't", "aren't", "wasn't", "weren't", "don't", "doesn't", "didn't"}
-        self.intensifiers = {
-            "very": 1.3, "extremely": 1.5, "really": 1.2, "so": 1.2, "quite": 1.1,
-            "somewhat": 0.8, "slightly": 0.7, "barely": 0.6, "highly": 1.4
+        self.negative_words = {
+            'terrible': 1.0, 'awful': 0.9, 'bad': 0.7, 'hate': 0.9, 'worst': 1.0,
+            'disappointing': 0.8, 'poor': 0.7, 'failure': 0.8, 'rubbish': 0.7, 'waste': 0.6,
+            'avoid': 0.6, 'broken': 0.7, 'useless': 0.8, 'horrible': 0.9, 'disaster': 0.9
         }
+        
+        self.intensifiers = {'very': 1.3, 'extremely': 1.5, 'really': 1.2, 'so': 1.2}
+        self.negators = {'not': -1, 'no': -1, 'never': -1, "n't": -1}
     
-    def _build_advanced_lexicon(self):
-        return {
-            # Positive words with weights
-            "excellent": 1.0, "amazing": 0.9, "great": 0.8, "good": 0.7, "love": 0.9,
-            "best": 0.8, "awesome": 0.9, "fantastic": 0.9, "perfect": 1.0, "wonderful": 0.8,
-            "outstanding": 0.9, "superb": 0.9, "brilliant": 0.8, "favorite": 0.7, "recommend": 0.6,
-            "stellar": 0.9, "phenomenal": 1.0, "exceptional": 0.9, "marvelous": 0.8,
-            
-            # Negative words with weights
-            "terrible": 1.0, "awful": 0.9, "bad": 0.7, "hate": 0.9, "worst": 1.0,
-            "disappointing": 0.8, "poor": 0.7, "failure": 0.8, "rubbish": 0.7, "waste": 0.6,
-            "avoid": 0.6, "broken": 0.7, "useless": 0.8, "horrible": 0.9, "disaster": 0.9,
-            "pathetic": 0.8, "appalling": 0.9, "dreadful": 0.8, "unacceptable": 0.7,
-            
-            # Business context words
-            "profit": 0.6, "growth": 0.7, "success": 0.8, "innovation": 0.7,
-            "bankruptcy": -0.9, "layoff": -0.8, "lawsuit": -0.9, "recall": -0.8,
-            "investment": 0.6, "acquisition": 0.5, "merger": 0.4, "expansion": 0.6
-        }
-    
-    def analyze_sentiment(self, text):
-        """Advanced sentiment analysis with context awareness"""
+    def analyze_text(self, text):
         text_lower = text.lower()
         words = re.findall(r'\b\w+\b', text_lower)
         
         sentiment_score = 0
-        significant_words = 0
-        negation = False
-        intensity = 1.0
+        word_count = 0
         
         i = 0
         while i < len(words):
             word = words[i]
-            
-            # Check for negators
-            if word in self.negators:
-                negation = not negation
-                i += 1
-                continue
+            modifier = 1.0
             
             # Check for intensifiers
-            if word in self.intensifiers:
-                intensity = self.intensifiers[word]
-                i += 1
-                continue
+            if i > 0 and words[i-1] in self.intensifiers:
+                modifier = self.intensifiers[words[i-1]]
+            
+            # Check for negators
+            negate = False
+            if i > 0 and words[i-1] in self.negators:
+                negate = True
+                modifier *= -1
             
             # Calculate word sentiment
-            if word in self.lexicon:
-                word_sentiment = self.lexicon[word] * intensity
-                if negation:
-                    word_sentiment *= -1
-                
-                sentiment_score += word_sentiment
-                significant_words += 1
-                
-                # Reset modifiers
-                negation = False
-                intensity = 1.0
+            if word in self.positive_words:
+                sentiment_score += self.positive_words[word] * modifier
+                word_count += 1
+            elif word in self.negative_words:
+                sentiment_score += self.negative_words[word] * modifier
+                word_count += 1
             
             i += 1
         
         # Normalize score
-        if significant_words > 0:
-            final_score = sentiment_score / significant_words
+        if word_count > 0:
+            final_score = sentiment_score / word_count
             return max(-1.0, min(1.0, final_score))
-        
         return 0.0
+
+# Social Media Monitor
+class SocialMonitor:
+    def __init__(self):
+        self.sentiment_analyzer = SentimentAnalyzer()
+        self.platform_templates = {
+            "twitter": {
+                "positive": [
+                    "Loving my new {} product! 🔥",
+                    "{} has the best customer service! 👏",
+                    "Just tried {} - absolutely amazing!",
+                    "Shoutout to {} for their fantastic support!",
+                    "{} never disappoints! 💯"
+                ],
+                "negative": [
+                    "Really disappointed with {} service 😞",
+                    "{} product broke after one week!",
+                    "Never buying from {} again 👎",
+                    "Terrible experience with {} support",
+                    "{} needs to improve quality control"
+                ],
+                "neutral": [
+                    "Just saw an ad from {}",
+                    "Has anyone tried {} products?",
+                    "Thinking about buying from {}",
+                    "{} is having a sale right now",
+                    "Comparing {} with other brands"
+                ]
+            },
+            "facebook": {
+                "positive": [
+                    "I'm really impressed with {}!",
+                    "Great experience with {} customer service",
+                    "{} products are top quality!",
+                    "Highly recommend {} to everyone",
+                    "{} exceeded my expectations!"
+                ],
+                "negative": [
+                    "Very disappointed with {} quality",
+                    "{} customer service was unhelpful",
+                    "Won't be purchasing from {} again",
+                    "Poor experience with {} delivery",
+                    "{} product didn't meet expectations"
+                ],
+                "neutral": [
+                    "Saw a post about {}",
+                    "Considering {} for my business",
+                    "{} has new products available",
+                    "Looking for reviews of {}",
+                    "What's everyone's experience with {}?"
+                ]
+            },
+            "instagram": {
+                "positive": [
+                    "Love the new {} collection! ❤️",
+                    "{} always delivers quality 📦",
+                    "So happy with my {} purchase!",
+                    "{} has the best products!",
+                    "Couldn't be happier with {}! 😊"
+                ],
+                "negative": [
+                    "Really unhappy with {} service",
+                    "{} product quality is declining",
+                    "Disappointed in {} recently",
+                    "{} needs to do better",
+                    "Not satisfied with {} at all"
+                ],
+                "neutral": [
+                    "Checking out {} products",
+                    "Heard about {} from a friend",
+                    "{} has some interesting offers",
+                    "Looking at {} options",
+                    "Researching {} products"
+                ]
+            }
+        }
     
-    def get_sentiment_label(self, score):
-        if score >= 0.7:
-            return "Very Positive", "😊"
-        elif score >= 0.3:
-            return "Positive", "🙂"
-        elif score >= -0.2:
-            return "Neutral", "😐"
-        elif score >= -0.6:
-            return "Negative", "😠"
+    def generate_posts(self, platform, brand_keywords, count=10):
+        posts = []
+        
+        for _ in range(count):
+            # Choose sentiment weighted toward positive/neutral
+            sentiment_type = random.choices(
+                ["positive", "negative", "neutral"], 
+                weights=[0.5, 0.2, 0.3]
+            )[0]
+            
+            template = random.choice(self.platform_templates[platform][sentiment_type])
+            brand_keyword = random.choice(brand_keywords)
+            post_text = template.format(brand_keyword)
+            
+            # Generate engagement based on sentiment
+            base_engagement = random.randint(10, 100)
+            if sentiment_type == "positive":
+                engagement = base_engagement * random.randint(2, 5)
+            elif sentiment_type == "negative":
+                engagement = base_engagement * random.randint(3, 6)  # Negative often gets more engagement
+            else:
+                engagement = base_engagement
+            
+            posts.append({
+                "text": post_text,
+                "platform": platform,
+                "engagement": engagement,
+                "author": f"user_{random.randint(1000, 9999)}",
+                "timestamp": datetime.now() - timedelta(hours=random.randint(0, 72)),
+                "sentiment": self.sentiment_analyzer.analyze_text(post_text)
+            })
+        
+        return posts
+
+# Crisis Detector
+class CrisisDetector:
+    def __init__(self):
+        self.crisis_keywords = {
+            'sue': 0.8, 'lawsuit': 0.9, 'boycott': 0.7, 'scam': 1.0, 'fraud': 1.0,
+            'fake': 0.7, 'dangerous': 0.9, 'recall': 0.8, 'unsafe': 0.8, 'harmful': 0.9,
+            'broken': 0.6, 'exploded': 0.9, 'fire': 0.8, 'injured': 0.9, 'hospital': 0.8
+        }
+        
+        self.crisis_patterns = [
+            r"class action",
+            r"legal action against",
+            r"never.*again",
+            r"worst.*ever",
+            r"dangerous.*product",
+            r"hurt.*by",
+            r"hospitalized.*from"
+        ]
+    
+    def detect_crisis(self, posts, brand_keywords):
+        crisis_score = 0
+        crisis_posts = []
+        
+        for post in posts:
+            text_lower = post["text"].lower()
+            post_score = 0
+            
+            # Check for crisis keywords
+            for keyword, weight in self.crisis_keywords.items():
+                if keyword in text_lower:
+                    post_score += weight
+            
+            # Check for crisis patterns
+            for pattern in self.crisis_patterns:
+                if re.search(pattern, text_lower):
+                    post_score += 0.5
+            
+            # Check if brand is mentioned
+            brand_mentioned = any(brand_kw.lower() in text_lower for brand_kw in brand_keywords)
+            
+            if brand_mentioned and post_score > 0.5:
+                crisis_score += post_score
+                crisis_posts.append({
+                    "post": post,
+                    "crisis_score": post_score,
+                    "reasons": self._get_crisis_reasons(text_lower)
+                })
+        
+        # Determine crisis level
+        if crisis_score > 5:
+            level = "critical"
+        elif crisis_score > 3:
+            level = "high"
+        elif crisis_score > 1:
+            level = "medium"
         else:
-            return "Very Negative", "😡"
+            level = "low"
+        
+        return {
+            "crisis_score": min(10, crisis_score),
+            "crisis_level": level,
+            "crisis_posts": crisis_posts
+        }
+    
+    def _get_crisis_reasons(self, text):
+        reasons = []
+        for keyword in self.crisis_keywords:
+            if keyword in text:
+                reasons.append(f"Crisis keyword: {keyword}")
+        
+        for pattern in self.crisis_patterns:
+            if re.search(pattern, text):
+                reasons.append(f"Crisis pattern: {pattern}")
+        
+        return reasons
+
+# OAuth Manager
+class OAuthManager:
+    def __init__(self):
+        self.platforms = {
+            "twitter": {
+                "auth_url": "https://twitter.com/i/oauth2/authorize",
+                "scopes": ["tweet.read", "users.read", "offline.access"]
+            },
+            "facebook": {
+                "auth_url": "https://www.facebook.com/dialog/oauth",
+                "scopes": ["pages_read_engagement", "public_profile"]
+            },
+            "instagram": {
+                "auth_url": "https://api.instagram.com/oauth/authorize",
+                "scopes": ["user_profile", "user_media"]
+            }
+        }
+    
+    def get_auth_url(self, platform, brand_id):
+        if platform in self.platforms:
+            return f"{self.platforms[platform]['auth_url']}?client_id=bgai_{platform}&redirect_uri=https://yourdomain.com/oauth/callback&state={brand_id}_{platform}"
+        return None
+    
+    def simulate_connection(self, platform, brand_id):
+        # Simulate successful OAuth connection
+        return {
+            "access_token": f"simulated_token_{platform}_{brand_id}",
+            "connected_at": datetime.now().isoformat(),
+            "platform": platform
+        }
 
 # Initialize components
-db = SecureBrandDB()
-api_manager = ProfessionalAPIManager()
-sentiment_analyzer = AdvancedSentimentAnalyzer()
+db = SimpleDB()
+oauth_manager = OAuthManager()
+social_monitor = SocialMonitor()
+crisis_detector = CrisisDetector()
 
 # Authentication functions
 def init_session_state():
@@ -682,412 +450,295 @@ def init_session_state():
         st.session_state.subscription_tier = None
 
 def login_section():
-    st.sidebar.header("🔐 Brand Login")
+    st.sidebar.header("Brand Login")
     
     with st.sidebar.form("login_form"):
-        brand_id = st.text_input("Brand ID", placeholder="your_brand_name")
-        password = st.text_input("Password", type="password", placeholder="••••••••")
-        submitted = st.form_submit_button("Login", use_container_width=True)
+        brand_id = st.text_input("Brand ID")
+        password = st.text_input("Password", type="password")
+        submitted = st.form_submit_button("Login")
         
         if submitted:
             if db.authenticate(brand_id, password):
                 st.session_state.authenticated = True
                 st.session_state.current_brand = brand_id
-                brand_data = db.get_brand(brand_id)
-                st.session_state.subscription_tier = brand_data["subscription_tier"]
-                st.sidebar.success(f"Welcome back, {brand_data['brand_name']}! 🎉")
+                st.session_state.subscription_tier = db.get_brand(brand_id)["subscription_tier"]
+                st.sidebar.success(f"Welcome {db.get_brand(brand_id)['brand_name']}!")
             else:
-                st.sidebar.error("Invalid credentials. Please try again.")
+                st.sidebar.error("Invalid credentials")
     
     if st.session_state.authenticated:
-        if st.sidebar.button("🚪 Logout", use_container_width=True):
+        if st.sidebar.button("Logout"):
             st.session_state.authenticated = False
             st.session_state.current_brand = None
             st.session_state.subscription_tier = None
             st.rerun()
 
 def registration_section():
-    with st.sidebar.expander("📝 New Brand Registration", expanded=False):
+    with st.sidebar.expander("New Brand Registration"):
         with st.form("register_form"):
-            st.write("Create your BrandGuardian account")
+            brand_id = st.text_input("Choose Brand ID")
+            brand_name = st.text_input("Brand Name")
+            email = st.text_input("Contact Email")
+            password = st.text_input("Password", type="password")
+            confirm_password = st.text_input("Confirm Password", type="password")
+            tier = st.selectbox("Subscription Tier", ["starter", "professional", "enterprise"])
             
-            col1, col2 = st.columns(2)
-            with col1:
-                brand_id = st.text_input("Brand ID*", help="Unique identifier for your brand")
-            with col2:
-                brand_name = st.text_input("Brand Name*")
-            
-            email = st.text_input("Email Address*")
-            
-            col3, col4 = st.columns(2)
-            with col3:
-                password = st.text_input("Password*", type="password")
-            with col4:
-                confirm_password = st.text_input("Confirm Password*", type="password")
-            
-            tier = st.selectbox("Subscription Tier*", 
-                              list(SUBSCRIPTION_TIERS.keys()),
-                              format_func=lambda x: f"{x.title()} - ${SUBSCRIPTION_TIERS[x]['price']}/mo")
-            
-            submitted = st.form_submit_button("Create Account", use_container_width=True)
+            submitted = st.form_submit_button("Register")
             
             if submitted:
-                if not all([brand_id, brand_name, email, password, confirm_password]):
-                    st.error("Please fill in all required fields (*)")
-                elif password != confirm_password:
-                    st.error("Passwords do not match")
+                if password != confirm_password:
+                    st.error("Passwords don't match")
                 elif db.create_brand(brand_id, password, brand_name, email, tier):
-                    st.success("🎉 Account created successfully! Please login.")
+                    st.success("Registration successful! Please login.")
                 else:
-                    st.error("Brand ID already exists. Please choose a different one.")
+                    st.error("Brand ID already exists")
 
-# API Management Section
-def api_management_section():
-    st.header("🔌 API & Integration Center")
-    st.write("Connect your social media accounts and platforms to start monitoring")
+# Application sections
+def platform_connection_section():
+    st.header("🔌 Platform Connections")
     
     brand_data = db.get_brand(st.session_state.current_brand)
+    tier_limits = SUBSCRIPTION_TIERS[st.session_state.subscription_tier]["limits"]
     
-    # Display connected APIs
-    st.subheader("📊 Connected Platforms")
+    connected_count = len(brand_data.get("connected_platforms", {}))
+    max_connections = tier_limits["social_platforms"]
     
-    if "api_keys" in brand_data and brand_data["api_keys"]:
-        cols = st.columns(3)
-        for i, (platform, details) in enumerate(brand_data["api_keys"].items()):
-            with cols[i % 3]:
-                platform_info = api_manager.supported_platforms.get(platform, {})
-                st.markdown(f"""
-                <div class="api-card">
-                    <div class="platform-icon">{platform_info.get('icon', '🔗')}</div>
-                    <h4>{platform_info.get('name', platform.title())}</h4>
-                    <p>Connected: {details.get('added_date', 'N/A')[:10]}</p>
-                    <p>Status: <span class="positive">✅ Active</span></p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                if st.button(f"Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
-                    updated_keys = brand_data["api_keys"]
-                    updated_keys.pop(platform)
-                    db.update_brand(st.session_state.current_brand, {"api_keys": updated_keys})
+    st.write(f"**Connected:** {connected_count} of {max_connections} platforms")
+    
+    for platform in ["twitter", "facebook", "instagram"]:
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.subheader(platform.title())
+        with col2:
+            if platform in brand_data.get("connected_platforms", {}):
+                if st.button(f"Disconnect", key=f"disconnect_{platform}"):
+                    updated_platforms = brand_data.get("connected_platforms", {})
+                    updated_platforms.pop(platform, None)
+                    db.update_brand(st.session_state.current_brand, {"connected_platforms": updated_platforms})
                     st.success(f"Disconnected from {platform}")
                     st.rerun()
-    else:
-        st.info("No platforms connected yet. Add your first integration below.")
-    
-    # Add new API connection
-    st.subheader("➕ Add New Integration")
-    
-    platforms = api_manager.supported_platforms
-    selected_platform = st.selectbox("Select Platform", list(platforms.keys()), 
-                                   format_func=lambda x: f"{platforms[x]['icon']} {platforms[x]['name']}")
-    
-    platform_info = platforms[selected_platform]
-    
-    st.markdown(f"""
-    <div class="api-card">
-        <h4>{platform_info['icon']} {platform_info['name']}</h4>
-        <p><strong>Authentication:</strong> {platform_info['auth_type'].replace('_', ' ').title()}</p>
-        <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
-        <p><a href="{platform_info['help_url']}" target="_blank">📚 API Documentation</a></p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    with st.form(f"add_{selected_platform}_api"):
-        st.write("**API Credentials**")
-        
-        credentials = {}
-        for field in platform_info["fields"]:
-            if field["type"] == "password":
-                credentials[field["name"]] = st.text_input(
-                    f"{field['name']}*" if field["required"] else field["name"],
-                    type="password",
-                    help=field["help"]
-                )
-            elif field["type"] == "textarea":
-                credentials[field["name"]] = st.text_area(
-                    f"{field['name']}*" if field["required"] else field["name"],
-                    height=100,
-                    help=field["help"]
-                )
             else:
-                credentials[field["name"]] = st.text_input(
-                    f"{field['name']}*" if field["required"] else field["name"],
-                    help=field["help"]
-                )
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            test_connection = st.form_submit_button("🧪 Test Connection", use_container_width=True)
-        with col2:
-            save_connection = st.form_submit_button("💾 Save Connection", use_container_width=True)
-        
-        if test_connection:
-            with st.spinner("Testing connection..."):
-                result = api_manager.test_connection(selected_platform, credentials)
-            
-            if result["success"]:
-                st.markdown(f"""
-                <div class="success-alert">
-                    <h4>✅ Connection Successful!</h4>
-                    <p>{result['message']}</p>
-                    <p><strong>Rate Limit:</strong> {result.get('rate_limit', 'N/A')}</p>
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                st.error(f"❌ {result['message']}")
-                if "suggestion" in result:
-                    st.info(result["suggestion"])
-        
-        if save_connection:
-            # Validate required fields
-            missing_fields = []
-            for field in platform_info["fields"]:
-                if field["required"] and not credentials[field["name"]]:
-                    missing_fields.append(field["name"])
-            
-            if missing_fields:
-                st.error(f"Missing required fields: {', '.join(missing_fields)}")
-            else:
-                db.add_api_key(st.session_state.current_brand, selected_platform, credentials)
-                st.success(f"✅ {platform_info['name']} credentials saved successfully!")
+                if connected_count < max_connections:
+                    if st.button(f"Connect", key=f"connect_{platform}"):
+                        auth_url = oauth_manager.get_auth_url(platform, st.session_state.current_brand)
+                        st.info(f"🔗 [Connect to {platform.title()}]({auth_url})")
+                        
+                        # Simulate connection for demo
+                        token_data = oauth_manager.simulate_connection(platform, st.session_state.current_brand)
+                        updated_platforms = brand_data.get("connected_platforms", {})
+                        updated_platforms[platform] = token_data
+                        db.update_brand(st.session_state.current_brand, {"connected_platforms": updated_platforms})
+                        st.success(f"✅ Successfully connected to {platform}!")
+                        st.rerun()
+                else:
+                    st.warning("⚠️ Upgrade plan for more connections")
 
-# Professional Dashboard
-def professional_dashboard():
-    st.markdown("<h1 class='header-title'>BrandGuardian AI</h1>", unsafe_allow_html=True)
+def dashboard_section():
+    st.header("📊 Brand Dashboard")
     
     brand_data = db.get_brand(st.session_state.current_brand)
-    st.write(f"### Welcome back, {brand_data['brand_name']}! 👋")
+    connected_platforms = brand_data.get("connected_platforms", {})
+    keywords = brand_data.get("monitoring_keywords", [])
     
-    # Key Metrics
-    st.subheader("📈 Brand Health Dashboard")
+    if not connected_platforms:
+        st.warning("Connect at least one platform to start monitoring")
+        return
     
+    # Generate simulated posts
+    all_posts = []
+    for platform in connected_platforms:
+        posts = social_monitor.generate_posts(platform, keywords, count=15)
+        all_posts.extend(posts)
+    
+    # Calculate metrics
+    total_mentions = len(all_posts)
+    avg_sentiment = np.mean([p["sentiment"] for p in all_posts]) if all_posts else 0
+    total_engagement = sum(p["engagement"] for p in all_posts)
+    
+    # Crisis detection
+    crisis_data = crisis_detector.detect_crisis(all_posts, keywords)
+    
+    # Display metrics
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.markdown("""
-        <div class="metric-card">
-            <h3>84%</h3>
-            <p>Brand Sentiment</p>
-            <p class="positive">+4% from last week</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.metric("Total Mentions", total_mentions)
     with col2:
-        st.markdown("""
-        <div class="metric-card">
-            <h3>1,247</h3>
-            <p>Total Mentions</p>
-            <p class="positive">+12% from last week</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.metric("Avg Sentiment", f"{avg_sentiment:.2f}")
     with col3:
-        st.markdown("""
-        <div class="metric-card">
-            <h3>5.2%</h3>
-            <p>Engagement Rate</p>
-            <p class="positive">+1.2% from last week</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.metric("Total Engagement", f"{total_engagement:,}")
     with col4:
-        st.markdown("""
-        <div class="metric-card">
-            <h3>Low</h3>
-            <p>Crisis Level</p>
-            <p class="positive">-2% from last week</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.metric("Crisis Level", crisis_data["crisis_level"].title())
     
-    # Sentiment Trend Chart
-    st.subheader("📊 Sentiment Trend (Last 7 Days)")
-    
-    # Generate sample sentiment data
-    dates = pd.date_range(end=datetime.now(), periods=7)
-    sentiment_data = pd.DataFrame({
-        'Date': dates,
-        'Sentiment': [0.7, 0.65, 0.8, 0.75, 0.82, 0.78, 0.84],
-        'Mentions': [150, 180, 220, 190, 240, 210, 247]
-    })
-    
-    if PLOTLY_AVAILABLE:
-        fig = make_subplots(specs=[[{"secondary_y": True}]])
+    # Sentiment timeline
+    st.subheader("📈 Sentiment Trend")
+    if all_posts:
+        timeline_data = []
+        for hour in range(72, 0, -6):
+            time_point = datetime.now() - timedelta(hours=hour)
+            period_posts = [p for p in all_posts if p["timestamp"] > time_point - timedelta(hours=6)]
+            if period_posts:
+                period_sentiment = np.mean([p["sentiment"] for p in period_posts])
+                timeline_data.append({
+                    "time": time_point.strftime("%m/%d %H:00"),
+                    "sentiment": period_sentiment
+                })
         
-        fig.add_trace(
-            go.Scatter(x=sentiment_data['Date'], y=sentiment_data['Sentiment'], 
-                      name="Sentiment Score", line=dict(color="#6366F1", width=3)),
-            secondary_y=False,
-        )
-        
-        fig.add_trace(
-            go.Bar(x=sentiment_data['Date'], y=sentiment_data['Mentions'], 
-                   name="Mentions", marker_color="#8B5CF6", opacity=0.6),
-            secondary_y=True,
-        )
-        
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='white'),
-            hovermode='x unified'
-        )
-        
-        fig.update_yaxes(title_text="Sentiment Score", secondary_y=False)
-        fig.update_yaxes(title_text="Mentions", secondary_y=True)
-        
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.warning("Plotly charts are not available. Please install plotly to view charts.")
+        if timeline_data:
+            chart_data = pd.DataFrame(timeline_data)
+            st.line_chart(chart_data.set_index("time"))
     
-    # Platform Distribution
-    st.subheader("🌐 Mentions by Platform")
+    # Recent mentions
+    st.subheader("💬 Recent Mentions")
+    for post in sorted(all_posts, key=lambda x: x["timestamp"], reverse=True)[:5]:
+        sentiment_icon = "😊" if post["sentiment"] > 0.3 else "😠" if post["sentiment"] < -0.3 else "😐"
+        with st.expander(f"{sentiment_icon} {post['text'][:50]}...", expanded=False):
+            st.write(f"**Platform:** {post['platform']}")
+            st.write(f"**Sentiment:** {post['sentiment']:.2f}")
+            st.write(f"**Engagement:** {post['engagement']}")
+            st.write(f"**Time:** {post['timestamp'].strftime('%Y-%m-%d %H:%M')}")
     
-    platform_data = pd.DataFrame({
-        'Platform': ['Twitter', 'Facebook', 'Instagram', 'YouTube', 'Reddit'],
-        'Mentions': [450, 320, 280, 120, 77],
-        'Sentiment': [0.8, 0.75, 0.82, 0.7, 0.65]
-    })
+    # Crisis alerts
+    if crisis_data["crisis_posts"]:
+        st.subheader("🚨 Crisis Alerts")
+        for crisis in crisis_data["crisis_posts"][:3]:
+            st.markdown(f"""
+            <div class="crisis-alert">
+                <strong>{crisis['post']['text']}</strong><br>
+                Score: {crisis['crisis_score']:.1f} • Platform: {crisis['post']['platform']}
+            </div>
+            """, unsafe_allow_html=True)
+
+def subscription_section():
+    st.header("💰 Subscription Management")
     
-    col1, col2 = st.columns(2)
-    with col1:
-        if PLOTLY_AVAILABLE:
-            fig = px.pie(platform_data, values='Mentions', names='Platform',
-                        color_discrete_sequence=px.colors.sequential.Plasma)
-            fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                             font=dict(color='white'))
-            st.plotly_chart(fig, use_container_width=True)
+    brand_data = db.get_brand(st.session_state.current_brand)
+    current_tier = st.session_state.subscription_tier
+    current_tier_data = SUBSCRIPTION_TIERS[current_tier]
+    
+    # Current plan
+    st.subheader("Current Plan")
+    st.info(f"**{current_tier.title()} Plan** - ${current_tier_data['price']}/month")
+    
+    for feature in current_tier_data["features"]:
+        st.write(f"✅ {feature}")
+    
+    # Upgrade options
+    st.subheader("Upgrade Options")
+    for tier, data in SUBSCRIPTION_TIERS.items():
+        if tier != current_tier:
+            with st.expander(f"{tier.title()} - ${data['price']}/month"):
+                for feature in data["features"]:
+                    st.write(f"▪️ {feature}")
+                if st.button(f"Upgrade to {tier.title()}", key=f"upgrade_{tier}"):
+                    db.update_brand(st.session_state.current_brand, {"subscription_tier": tier})
+                    st.session_state.subscription_tier = tier
+                    st.success(f"Upgraded to {tier} plan!")
+                    st.rerun()
+
+def settings_section():
+    st.header("⚙️ Brand Settings")
+    
+    brand_data = db.get_brand(st.session_state.current_brand)
+    
+    # Keyword monitoring
+    st.subheader("Monitoring Keywords")
+    current_keywords = brand_data.get("monitoring_keywords", [])
+    max_keywords = SUBSCRIPTION_TIERS[st.session_state.subscription_tier]["limits"]["keywords"]
+    
+    st.write(f"**Current keywords:** {len(current_keywords)} of {max_keywords}")
+    
+    new_keyword = st.text_input("Add new keyword to monitor")
+    if st.button("Add Keyword") and new_keyword:
+        if len(current_keywords) < max_keywords:
+            updated_keywords = current_keywords + [new_keyword.lower()]
+            db.update_brand(st.session_state.current_brand, {"monitoring_keywords": updated_keywords})
+            st.success(f"Added keyword: {new_keyword}")
+            st.rerun()
         else:
-            st.info("Pie chart requires plotly")
+            st.error(f"Keyword limit reached. Upgrade plan to monitor more keywords.")
+    
+    # Display current keywords
+    for keyword in current_keywords:
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.write(f"▪️ {keyword}")
+        with col2:
+            if st.button("Remove", key=f"remove_{keyword}"):
+                updated_keywords = [k for k in current_keywords if k != keyword]
+                db.update_brand(st.session_state.current_brand, {"monitoring_keywords": updated_keywords})
+                st.success(f"Removed keyword: {keyword}")
+                st.rerun()
+    
+    # Alert preferences
+    st.subheader("🔔 Alert Preferences")
+    email_alerts = st.checkbox("Email alerts for critical issues", value=True)
+    daily_digest = st.checkbox("Daily summary report", value=True)
+    
+    if st.button("Save Preferences"):
+        st.success("Preferences saved!")
+
+def landing_page():
+    st.title("🛡️ BrandGuardian AI")
+    st.write("### Complete Brand Protection & Intelligence Platform")
+    
+    # Pricing columns
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.subheader("Starter")
+        st.metric("Price", "$299/month")
+        st.write("**Ideal for small businesses**")
+        for feature in SUBSCRIPTION_TIERS['starter']['features'][:3]:
+            st.write(f"▪️ {feature}")
+        if st.button("Get Started - Starter", key="starter_btn"):
+            st.info("Please register to get started")
     
     with col2:
-        if PLOTLY_AVAILABLE:
-            fig = px.bar(platform_data, x='Platform', y='Sentiment',
-                        color='Sentiment', color_continuous_scale='Viridis')
-            fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                             font=dict(color='white'))
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info("Bar chart requires plotly")
+        st.subheader("Professional")
+        st.metric("Price", "$799/month")
+        st.write("**Perfect for growing brands**")
+        for feature in SUBSCRIPTION_TIERS['professional']['features'][:4]:
+            st.write(f"▪️ {feature}")
+        if st.button("Get Started - Professional", key="professional_btn"):
+            st.info("Please register to get started")
     
-    # Recent Mentions
-    st.subheader("💬 Recent Brand Mentions")
+    with col3:
+        st.subheader("Enterprise")
+        st.metric("Price", "$1,999/month")
+        st.write("**Complete protection for enterprises**")
+        for feature in SUBSCRIPTION_TIERS['enterprise']['features'][:5]:
+            st.write(f"▪️ {feature}")
+        if st.button("Contact Sales - Enterprise", key="enterprise_btn"):
+            st.info("Contact sales@brandguardian.ai for enterprise pricing")
     
-    sample_mentions = [
-        {"text": "Loving the new product from @OurBrand! The quality is exceptional! 👍", "sentiment": 0.9, "platform": "Twitter"},
-        {"text": "Customer service was really helpful today. Quick response and solved my issue!", "sentiment": 0.8, "platform": "Facebook"},
-        {"text": "The new update has some bugs. Hope they fix it soon.", "sentiment": -0.3, "platform": "Twitter"},
-        {"text": "Best purchase I've made this year! Highly recommend!", "sentiment": 0.95, "platform": "Instagram"},
-        {"text": "Disappointed with the shipping time. Took longer than expected.", "sentiment": -0.6, "platform": "Twitter"}
-    ]
-    
-    for mention in sample_mentions:
-        sentiment_label, emoji = sentiment_analyzer.get_sentiment_label(mention["sentiment"])
-        sentiment_color = "positive" if mention["sentiment"] > 0.3 else "negative" if mention["sentiment"] < -0.3 else "warning"
-        
-        st.markdown(f"""
-        <div class="metric-card">
-            <p>{mention['text']}</p>
-            <p><strong>Platform:</strong> {mention['platform']} • 
-            <strong>Sentiment:</strong> <span class="{sentiment_color}">{sentiment_label} {emoji}</span></p>
-        </div>
-        """, unsafe_allow_html=True)
+    # Demo credentials
+    with st.expander("Demo Access"):
+        st.write("Use these demo credentials:")
+        st.code("Brand ID: acme_corp\nPassword: demo123")
 
 # Main application
 def main():
     init_session_state()
-    
-    # Show warnings for missing packages
-    if not CRYPTOGRAPHY_AVAILABLE:
-        st.warning("⚠️ Cryptography package not installed. Data encryption disabled. Add 'cryptography' to requirements.txt for security.")
-    if not PLOTLY_AVAILABLE:
-        st.warning("⚠️ Plotly package not installed. Charts disabled. Add 'plotly' to requirements.txt for visualizations.")
-    
-    # Sidebar sections
-    with st.sidebar:
-        login_section()
-        if not st.session_state.authenticated:
-            registration_section()
+    login_section()
+    registration_section()
     
     if not st.session_state.authenticated:
-        # Landing page for non-authenticated users
-        st.markdown("<h1 class='header-title'>BrandGuardian AI</h1>", unsafe_allow_html=True)
-        st.write("### Enterprise-Grade Brand Protection & Intelligence Platform")
-        
-        # Features grid
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.markdown("""
-            <div class="metric-card">
-                <h3>🔍 AI-Powered Monitoring</h3>
-                <p>Advanced sentiment analysis across all social platforms</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            st.markdown("""
-            <div class="metric-card">
-                <h3>🚨 Real-Time Alerts</h3>
-                <p>Instant notifications for brand crises and opportunities</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            st.markdown("""
-            <div class="metric-card">
-                <h3>📊 Competitive Intelligence</h3>
-                <p>Comprehensive market analysis and benchmarking</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        # Pricing
-        st.subheader("💎 Pricing Plans")
-        pricing_cols = st.columns(3)
-        for i, (tier, details) in enumerate(SUBSCRIPTION_TIERS.items()):
-            with pricing_cols[i]:
-                st.markdown(f"""
-                <div class="subscription-card">
-                    <h3>{tier.title()}</h3>
-                    <h2>${details['price']}/mo</h2>
-                    <div style="text-align: left; margin-top: 20px;">
-                        {"".join([f"<p>✓ {feature}</p>" for feature in details['features'][:4]])}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                if st.button(f"Get Started with {tier.title()}", key=f"pricing_{tier}", use_container_width=True):
-                    st.info("Please register to get started")
-        
-        # Demo access
-        with st.expander("🎯 Quick Demo Access", expanded=True):
-            st.write("Experience the platform instantly with demo credentials:")
-            st.code("Brand ID: demo_brand\nPassword: demo123")
-            
-            if st.button("🚀 Launch Demo Dashboard", use_container_width=True):
-                st.session_state.authenticated = True
-                st.session_state.current_brand = "demo_brand"
-                st.session_state.subscription_tier = "enterprise"
-                st.rerun()
-        
+        landing_page()
         return
     
-    # Authenticated user experience
+    # Authenticated user navigation
     brand_data = db.get_brand(st.session_state.current_brand)
-    
-    # Navigation
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("📊 Navigation")
+    st.sidebar.title(f"👋 {brand_data['brand_name']}")
+    st.sidebar.write(f"**Plan:** {st.session_state.subscription_tier.title()}")
     
     app_sections = {
-        "Dashboard": professional_dashboard,
-        "API Management": api_management_section,
+        "Dashboard": dashboard_section,
+        "Platform Connections": platform_connection_section,
+        "Subscription": subscription_section,
+        "Settings": settings_section
     }
     
-    selected_section = st.sidebar.radio("Go to", list(app_sections.keys()))
-    
-    # User info in sidebar
-    st.sidebar.markdown("---")
-    st.sidebar.markdown(f"""
-    **Account Info**
-    - **Plan:** {st.session_state.subscription_tier.title()}
-    - **Status:** Active ✅
-    - **Member since:** {brand_data.get('created_at', 'N/A')[:10]}
-    """)
-    
-    # Display selected section
+    selected_section = st.sidebar.selectbox("Navigation", list(app_sections.keys()))
     app_sections[selected_section]()
 
 if __name__ == "__main__":
