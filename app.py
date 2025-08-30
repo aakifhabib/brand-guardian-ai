@@ -12,6 +12,8 @@ import hashlib
 import base64
 import math
 from cryptography.fernet import Fernet
+import binascii
+import uuid
 
 # Set page config first
 st.set_page_config(
@@ -412,128 +414,127 @@ class SecureEncryptor:
         else:
             return text
 
-# API Key Manager Class
-class APIKeyManager:
+# Enhanced Authentication System with Multi-User Support
+class EnhancedAuthenticationSystem:
+    def __init__(self):
+        self.users_file = "users.json"
+        self.load_users()
+        
+    def load_users(self):
+        try:
+            if os.path.exists(self.users_file):
+                with open(self.users_file, 'r') as f:
+                    self.users = json.load(f)
+            else:
+                # Default admin user - should be changed after first login
+                self.users = {
+                    "admin": {
+                        "password": self.hash_password("brandguardian2024"),
+                        "access_level": "admin",
+                        "company": "Default Company",
+                        "email": "admin@example.com",
+                        "user_id": str(uuid.uuid4())
+                    }
+                }
+                self.save_users()
+        except:
+            self.users = {}
+    
+    def save_users(self):
+        with open(self.users_file, 'w') as f:
+            json.dump(self.users, f, indent=2)
+    
+    def hash_password(self, password):
+        """Hash a password for storing."""
+        salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
+        pwdhash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'), salt, 100000)
+        pwdhash = binascii.hexlify(pwdhash)
+        return (salt + pwdhash).decode('ascii')
+    
+    def verify_password(self, stored_password, provided_password):
+        """Verify a stored password against one provided by user"""
+        salt = stored_password[:64]
+        stored_password = stored_password[64:]
+        pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode('utf-8'), salt.encode('ascii'), 100000)
+        pwdhash = binascii.hexlify(pwdhash).decode('ascii')
+        return pwdhash == stored_password
+    
+    def register_user(self, username, password, company, email, access_level="client"):
+        """Register a new client user"""
+        if username in self.users:
+            return False, "Username already exists"
+        
+        self.users[username] = {
+            "password": self.hash_password(password),
+            "access_level": access_level,
+            "company": company,
+            "email": email,
+            "user_id": str(uuid.uuid4())
+        }
+        self.save_users()
+        return True, "User registered successfully"
+    
+    def authenticate(self, username, password):
+        """Authenticate a user"""
+        if username not in self.users:
+            return False, "User not found"
+        
+        if self.verify_password(self.users[username]["password"], password):
+            return True, "Authentication successful"
+        
+        return False, "Invalid password"
+
+# Enhanced API Key Manager with User Isolation
+class EnhancedAPIKeyManager:
     def __init__(self):
         self.encryptor = SecureEncryptor()
-        self.api_keys_file = "brand_api_keys.json"
-        self.supported_platforms = {
-            "twitter": {
-                "name": "Twitter API v2",
-                "icon": "🐦",
-                "help_url": "https://developer.twitter.com/",
-                "field_name": "Bearer Token",
-                "field_help": "Enter your Twitter Bearer Token from developer portal",
-                "rate_limit": "500,000 tweets/month"
-            },
-            "facebook": {
-                "name": "Facebook Graph API",
-                "icon": "📘",
-                "help_url": "https://developers.facebook.com/",
-                "field_name": "Access Token",
-                "field_help": "Enter your Facebook Access Token with pages permissions",
-                "rate_limit": "200 calls/hour"
-            },
-            "instagram": {
-                "name": "Instagram Graph API",
-                "icon": "📸",
-                "help_url": "https://developers.facebook.com/docs/instagram-api",
-                "field_name": "Access Token",
-                "field_help": "Enter your Instagram Access Token for business account",
-                "rate_limit": "200 calls/hour"
-            },
-            "google": {
-                "name": "Google APIs",
-                "icon": "🔍",
-                "help_url": "https://console.cloud.google.com/",
-                "field_name": "API Key",
-                "field_help": "Enter your Google Cloud API Key",
-                "rate_limit": "10,000 requests/day"
-            },
-            "youtube": {
-                "name": "YouTube Data API",
-                "icon": "📺",
-                "help_url": "https://developers.google.com/youtube",
-                "field_name": "API Key",
-                "field_help": "Enter your YouTube Data API key",
-                "rate_limit": "10,000 units/day"
-            },
-            "reddit": {
-                "name": "Reddit API",
-                "icon": "🔴",
-                "help_url": "https://www.reddit.com/dev/api/",
-                "field_name": "API Key",
-                "field_help": "Enter your Reddit API key",
-                "rate_limit": "60 calls/minute"
-            },
-            "tiktok": {
-                "name": "TikTok Business API",
-                "icon": "🎵",
-                "help_url": "https://developers.tiktok.com/",
-                "field_name": "Access Token",
-                "field_help": "Enter your TikTok Business API access token",
-                "rate_limit": "1,000 calls/day"
-            },
-            "openai": {
-                "name": "OpenAI API",
-                "icon": "🤖",
-                "help_url": "https://platform.openai.com/",
-                "field_name": "API Key",
-                "field_help": "Enter your OpenAI API key for AI analysis",
-                "rate_limit": "3,500 requests/day"
-            },
-            "google_analytics": {
-                "name": "Google Analytics",
-                "icon": "📊",
-                "help_url": "https://analytics.google.com/",
-                "field_name": "Property ID",
-                "field_help": "Enter your GA4 Property ID (format: properties/XXXXXX)",
-                "rate_limit": "50,000 requests/day"
-            },
-            "linkedin": {
-                "name": "LinkedIn Marketing API",
-                "icon": "💼",
-                "help_url": "https://developer.linkedin.com/",
-                "field_name": "Access Token",
-                "field_help": "Enter your LinkedIn Marketing API access token",
-                "rate_limit": "100 calls/day"
-            }
-        }
-        self.load_api_keys()
+        self.api_keys_dir = "api_keys"
+        os.makedirs(self.api_keys_dir, exist_ok=True)
+        
+    def get_user_file(self, user_id):
+        """Get the API key file for a specific user"""
+        return os.path.join(self.api_keys_dir, f"{user_id}_keys.json")
     
-    def load_api_keys(self):
+    def load_api_keys(self, user_id):
+        """Load API keys for a specific user"""
+        user_file = self.get_user_file(user_id)
         try:
-            if os.path.exists(self.api_keys_file):
-                with open(self.api_keys_file, 'r') as f:
-                    self.api_keys = json.load(f)
+            if os.path.exists(user_file):
+                with open(user_file, 'r') as f:
+                    return json.load(f)
             else:
-                self.api_keys = {}
+                return {}
         except:
-            self.api_keys = {}
+            return {}
     
-    def save_api_keys(self):
-        try:
-            with open(self.api_keys_file, 'w') as f:
-                json.dump(self.api_keys, f, indent=2)
-        except Exception as e:
-            st.error(f"Error saving API keys: {e}")
+    def save_api_keys(self, user_id, api_keys):
+        """Save API keys for a specific user"""
+        user_file = self.get_user_file(user_id)
+        with open(user_file, 'w') as f:
+            json.dump(api_keys, f, indent=2)
     
-    def get_api_key(self, platform):
-        if platform in self.api_keys:
-            return self.encryptor.decrypt(self.api_keys[platform])
+    def get_api_key(self, user_id, platform):
+        """Get API key for a specific user and platform"""
+        api_keys = self.load_api_keys(user_id)
+        if platform in api_keys:
+            return self.encryptor.decrypt(api_keys[platform])
         return None
     
-    def save_api_key(self, platform, api_key):
+    def save_api_key(self, user_id, platform, api_key):
+        """Save API key for a specific user and platform"""
+        api_keys = self.load_api_keys(user_id)
         if api_key:
-            self.api_keys[platform] = self.encryptor.encrypt(api_key)
-            self.save_api_keys()
+            api_keys[platform] = self.encryptor.encrypt(api_key)
+            self.save_api_keys(user_id, api_keys)
             return True
         return False
     
-    def delete_api_key(self, platform):
-        if platform in self.api_keys:
-            del self.api_keys[platform]
-            self.save_api_keys()
+    def delete_api_key(self, user_id, platform):
+        """Delete API key for a specific user and platform"""
+        api_keys = self.load_api_keys(user_id)
+        if platform in api_keys:
+            del api_keys[platform]
+            self.save_api_keys(user_id, api_keys)
             return True
         return False
     
@@ -561,8 +562,9 @@ class APIKeyManager:
                 "message": f"❌ Connection error: {str(e)}"
             }
 
-# Initialize API Key Manager
-api_manager = APIKeyManager()
+# Initialize enhanced authentication and API manager
+auth_system = EnhancedAuthenticationSystem()
+api_manager = EnhancedAPIKeyManager()
 
 # Search Analysis System
 class SearchAnalyzer:
@@ -761,89 +763,99 @@ class AdvancedVisualizations:
 # Initialize visualizations
 viz = AdvancedVisualizations()
 
-# Authentication System
-class AuthenticationSystem:
-    def __init__(self):
-        # In production, these should come from environment variables or a secure database
-        # For demo purposes, we're using default credentials
-        self.valid_username = os.environ.get("BG_USERNAME", "admin")
-        self.valid_password = os.environ.get("BG_PASSWORD", "brandguardian2024")
-        
-        # Initialize session state
-        if 'authenticated' not in st.session_state:
-            st.session_state.authenticated = False
-        if 'login_attempts' not in st.session_state:
-            st.session_state.login_attempts = 0
-        if 'lockout_time' not in st.session_state:
-            st.session_state.lockout_time = None
+# User registration and management functions
+def show_user_registration():
+    st.subheader("👥 Client Registration")
     
-    def check_lockout(self):
-        """Check if user is locked out due to too many failed attempts"""
-        if st.session_state.lockout_time:
-            elapsed = (datetime.now() - st.session_state.lockout_time).total_seconds()
-            if elapsed < 300:  # 5 minute lockout
-                return True
+    with st.form("register_form"):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            username = st.text_input("Username", help="Choose a username for the client")
+            company = st.text_input("Company Name", help="Client's company name")
+        
+        with col2:
+            password = st.text_input("Password", type="password", help="Set a secure password")
+            email = st.text_input("Email", help="Client's email address")
+        
+        submitted = st.form_submit_button("Register Client", use_container_width=True)
+        
+        if submitted:
+            if all([username, password, company, email]):
+                success, message = auth_system.register_user(username, password, company, email)
+                if success:
+                    st.success(f"✅ {message}")
+                    st.balloons()
+                else:
+                    st.error(f"❌ {message}")
             else:
-                # Lockout period over
-                st.session_state.lockout_time = None
-                st.session_state.login_attempts = 0
-        return False
-    
-    def authenticate(self, username, password):
-        """Authenticate user credentials"""
-        # Check if user is locked out
-        if self.check_lockout():
-            st.error("Account temporarily locked. Please try again in 5 minutes.")
-            return False
-        
-        # Check credentials
-        if username == self.valid_username and password == self.valid_password:
-            st.session_state.authenticated = True
-            st.session_state.login_attempts = 0
-            return True
-        else:
-            st.session_state.login_attempts += 1
-            # Lock account after 3 failed attempts
-            if st.session_state.login_attempts >= 3:
-                st.session_state.lockout_time = datetime.now()
-                st.error("Too many failed attempts. Account locked for 5 minutes.")
-            else:
-                st.error(f"Invalid credentials. {3 - st.session_state.login_attempts} attempts remaining.")
-            return False
-    
-    def show_login_form(self):
-        """Display login form"""
-        st.markdown("""
-        <div style='text-align: center; margin-bottom: 30px;'>
-            <h1>🔒 BrandGuardian AI</h1>
-            <p>Please login to access the platform</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        with st.form("login_form"):
-            username = st.text_input("Username", placeholder="Enter your username")
-            password = st.text_input("Password", type="password", placeholder="Enter your password")
-            submit = st.form_submit_button("Login", use_container_width=True)
-            
-            if submit:
-                if self.authenticate(username, password):
-                    st.rerun()
-        
-        st.info("**Demo Credentials:** username: `admin` / password: `brandguardian2024`")
-        
-        # Add security information
-        with st.expander("🔒 Security Information"):
-            st.markdown("""
-            - All API keys are encrypted using Fernet encryption
-            - Passwords are never stored in plain text
-            - Account lockout after 3 failed attempts
-            - For production use, set environment variables:
-                - `BG_USERNAME` and `BG_PASSWORD` for authentication
-                - `ENCRYPTION_KEY` for data encryption
-            """)
+                st.error("Please fill all fields")
 
-# Initialize authentication
-auth_system = AuthenticationSystem()
+def show_user_management():
+    st.subheader("👥 User Management")
+    
+    if st.session_state.get('user_access_level') != 'admin':
+        st.warning("⛔ Admin access required to manage users")
+        return
+    
+    # Show existing users
+    st.write("### Existing Users")
+    users_data = []
+    for username, user_info in auth_system.users.items():
+        users_data.append({
+            "Username": username,
+            "Company": user_info.get("company", "N/A"),
+            "Email": user_info.get("email", "N/A"),
+            "Access Level": user_info.get("access_level", "client")
+        })
+    
+    if users_data:
+        st.dataframe(pd.DataFrame(users_data), use_container_width=True)
+    else:
+        st.info("No users registered yet")
+    
+    # Registration form
+    show_user_registration()
+
+def show_login_form():
+    """Display login form"""
+    st.markdown("""
+    <div style='text-align: center; margin-bottom: 30px;'>
+        <h1>🔒 BrandGuardian AI</h1>
+        <p>Please login to access the platform</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    with st.form("login_form"):
+        username = st.text_input("Username", placeholder="Enter your username")
+        password = st.text_input("Password", type="password", placeholder="Enter your password")
+        submit = st.form_submit_button("Login", use_container_width=True)
+        
+        if submit:
+            success, message = auth_system.authenticate(username, password)
+            if success:
+                st.session_state.authenticated = True
+                st.session_state.username = username
+                st.session_state.user_access_level = auth_system.users[username]["access_level"]
+                st.session_state.user_id = auth_system.users[username]["user_id"]
+                st.success("✅ Login successful!")
+                time.sleep(1)
+                st.rerun()
+            else:
+                st.error(f"❌ {message}")
+    
+    st.info("**Demo Credentials:** username: `admin` / password: `brandguardian2024`")
+    
+    # Add security information
+    with st.expander("🔒 Security Information"):
+        st.markdown("""
+        - All API keys are encrypted using Fernet encryption
+        - Passwords are never stored in plain text
+        - Account lockout after 3 failed attempts
+        - For production use, set environment variables:
+            - `BG_USERNAME` and `BG_PASSWORD` for authentication
+            - `ENCRYPTION_KEY` for data encryption
+        """)
 
 # Advanced Threat Analysis Functionality
 def show_advanced_threat_analysis():
@@ -1221,12 +1233,19 @@ def show_access_required():
 def show_api_key_management():
     st.header("🔑 API Key Management Center")
     
+    # Get current user's ID
+    user_id = st.session_state.get('user_id')
+    if not user_id:
+        st.error("User not authenticated")
+        return
+    
     # Display current connections
     st.subheader("🌐 Connected Platforms")
     
-    if api_manager.api_keys:
+    api_keys = api_manager.load_api_keys(user_id)
+    if api_keys:
         cols = st.columns(3)
-        for i, (platform, encrypted_key) in enumerate(api_manager.api_keys.items()):
+        for i, (platform, encrypted_key) in enumerate(api_keys.items()):
             if platform in api_manager.supported_platforms:
                 platform_info = api_manager.supported_platforms[platform]
                 with cols[i % 3]:
@@ -1240,7 +1259,7 @@ def show_api_key_management():
                     """, unsafe_allow_html=True)
                     
                     if st.button(f"Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
-                        if api_manager.delete_api_key(platform):
+                        if api_manager.delete_api_key(user_id, platform):
                             st.success(f"Disconnected from {platform_info['name']}")
                             st.rerun()
     else:
@@ -1288,7 +1307,7 @@ def show_api_key_management():
     with col2:
         if st.button("💾 Save Connection", use_container_width=True):
             if api_key:
-                if api_manager.save_api_key(selected_platform, api_key):
+                if api_manager.save_api_key(user_id, selected_platform, api_key):
                     st.success("✅ Connection saved!")
                     st.balloons()
                 else:
@@ -1306,7 +1325,7 @@ def show_api_key_management():
     for platform, info in api_manager.supported_platforms.items():
         status_data.append({
             "Platform": f"{info['icon']} {info['name']}",
-            "Status": "✅ Connected" if platform in api_manager.api_keys else "❌ Disconnected",
+            "Status": "✅ Connected" if platform in api_keys else "❌ Disconnected",
             "Rate Limit": info['rate_limit']
         })
     
@@ -1320,7 +1339,11 @@ class EnhancedSocialMediaMonitor:
     
     def simulate_monitoring_with_api(self, brand_name, sector):
         posts = []
-        connected_platforms = list(self.api_manager.api_keys.keys()) or ['twitter', 'facebook', 'instagram']
+        user_id = st.session_state.get('user_id')
+        if not user_id:
+            return posts
+            
+        connected_platforms = list(api_manager.load_api_keys(user_id).keys()) or ['twitter', 'facebook', 'instagram']
         
         for platform in connected_platforms:
             for _ in range(random.randint(3, 8)):
@@ -1329,7 +1352,7 @@ class EnhancedSocialMediaMonitor:
                     'content': self.generate_business_post(brand_name, sector),
                     'author': f"user_{random.randint(1000, 9999)}",
                     'engagement': random.randint(50, 5000),
-                    'api_connected': platform in self.api_manager.api_keys
+                    'api_connected': platform in api_manager.load_api_keys(user_id)
                 })
         return posts
     
@@ -1347,7 +1370,7 @@ enhanced_monitor = EnhancedSocialMediaMonitor()
 def main():
     # Check authentication first
     if not st.session_state.get('authenticated', False):
-        auth_system.show_login_form()
+        show_login_form()
         return
     
     # Initialize session state
@@ -1377,13 +1400,30 @@ def main():
             st.warning("⚠️ Basic Access")
         
         st.markdown("---")
+        user_id = st.session_state.get('user_id')
+        api_keys = api_manager.load_api_keys(user_id) if user_id else {}
         st.subheader("🔑 API Status")
-        st.info(f"{len(api_manager.api_keys)} platform(s) connected")
+        st.info(f"{len(api_keys)} platform(s) connected")
+        
+        # User management for admin only
+        if st.session_state.get('user_access_level') == 'admin':
+            st.markdown("---")
+            if st.button("👥 User Management", use_container_width=True):
+                st.session_state.show_user_management = True
         
         st.markdown("---")
         if st.button("🚪 Logout", use_container_width=True):
-            st.session_state.authenticated = False
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
             st.rerun()
+    
+    # Show user management if admin clicked the button
+    if st.session_state.get('show_user_management', False):
+        show_user_management()
+        if st.button("Back to Dashboard", use_container_width=True):
+            st.session_state.show_user_management = False
+            st.rerun()
+        return
     
     # Navigation Tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
