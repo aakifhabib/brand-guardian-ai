@@ -5,11 +5,12 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import re
-from collections import Counter
+from collections import Counter, deque
 import json
 import os
 import hashlib
 import base64
+import threading
 
 # Set page config first
 st.set_page_config(
@@ -97,10 +98,138 @@ st.markdown("""
         font-weight: 600;
     }
     
-    /* ... (keep all your existing CSS styles) ... */
+    .rate-limit-warning {
+        background: rgba(245, 158, 11, 0.2);
+        color: #F59E0B;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #F59E0B;
+        margin: 10px 0;
+    }
     
+    .rate-limit-error {
+        background: rgba(239, 68, 68, 0.2);
+        color: #EF4444;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #EF4444;
+        margin: 10px 0;
+    }
+    
+    .premium-header {
+        text-align: center;
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #6366F1, #8B5CF6, #EC4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+        animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .accent-text {
+        text-align: center;
+        color: #A5B4FC;
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
 </style>
 """, unsafe_allow_html=True)
+
+# Rate Limiter Class
+class RateLimiter:
+    def __init__(self):
+        self.rate_limits = {
+            "search_analysis": {
+                "limit": 10,  # 10 requests
+                "period": 60,  # per 60 seconds
+                "counters": {}
+            },
+            "api_test": {
+                "limit": 5,
+                "period": 30,
+                "counters": {}
+            },
+            "threat_scan": {
+                "limit": 3,
+                "period": 60,
+                "counters": {}
+            },
+            "report_generation": {
+                "limit": 2,
+                "period": 300,
+                "counters": {}
+            }
+        }
+        self.lock = threading.Lock()
+        self.cleanup_interval = 300  # Clean up old records every 5 minutes
+        self.last_cleanup = time.time()
+    
+    def _cleanup_old_records(self):
+        """Remove old records to prevent memory buildup"""
+        current_time = time.time()
+        with self.lock:
+            for limit_type, limit_data in self.rate_limits.items():
+                user_keys = list(limit_data["counters"].keys())
+                for user_key in user_keys:
+                    # Remove timestamps older than 2x the period
+                    cutoff = current_time - (limit_data["period"] * 2)
+                    limit_data["counters"][user_key] = [
+                        t for t in limit_data["counters"][user_key] 
+                        if t > cutoff
+                    ]
+                    # Remove empty user entries
+                    if not limit_data["counters"][user_key]:
+                        del limit_data["counters"][user_key]
+    
+    def check_rate_limit(self, limit_type, user_key="default"):
+        """Check if a request is within rate limits"""
+        current_time = time.time()
+        
+        # Clean up old records periodically
+        if current_time - self.last_cleanup > self.cleanup_interval:
+            self._cleanup_old_records()
+            self.last_cleanup = current_time
+        
+        if limit_type not in self.rate_limits:
+            return True, "Rate limit type not defined", 0
+        
+        limit_data = self.rate_limits[limit_type]
+        period = limit_data["period"]
+        limit = limit_data["limit"]
+        
+        with self.lock:
+            # Initialize user counter if not exists
+            if user_key not in limit_data["counters"]:
+                limit_data["counters"][user_key] = deque(maxlen=limit * 2)
+            
+            # Remove timestamps outside the current period
+            cutoff = current_time - period
+            while (limit_data["counters"][user_key] and 
+                   limit_data["counters"][user_key][0] < cutoff):
+                limit_data["counters"][user_key].popleft()
+            
+            # Check if limit is exceeded
+            if len(limit_data["counters"][user_key]) >= limit:
+                oldest_time = limit_data["counters"][user_key][0]
+                retry_after = int(period - (current_time - oldest_time))
+                return False, f"Rate limit exceeded. Try again in {retry_after} seconds.", retry_after
+            
+            # Add current timestamp
+            limit_data["counters"][user_key].append(current_time)
+            
+            # Calculate remaining requests
+            remaining = limit - len(limit_data["counters"][user_key])
+            return True, f"{remaining} requests remaining this period.", remaining
+
+# Initialize rate limiter
+rate_limiter = RateLimiter()
 
 # Security and Access Control
 class SecurityManager:
@@ -286,6 +415,15 @@ class APIKeyManager:
     
     def test_connection(self, platform, api_key):
         try:
+            # Check rate limiting for API testing
+            allowed, message, remaining = rate_limiter.check_rate_limit("api_test", "default")
+            if not allowed:
+                return {
+                    "success": False,
+                    "message": f"❌ API test rate limit exceeded: {message}",
+                    "suggestion": "Please wait before testing another API connection."
+                }
+            
             time.sleep(1)
             success_rate = 0.9
             
@@ -322,6 +460,19 @@ class SearchAnalyzer:
     
     def analyze_search(self, query, brand_name):
         """Analyze search query for threats"""
+        # Check rate limiting for search analysis
+        allowed, message, remaining = rate_limiter.check_rate_limit("search_analysis", "default")
+        if not allowed:
+            return {
+                'query': query,
+                'brand': brand_name,
+                'threat_level': "limit_exceeded",
+                'keywords_found': [],
+                'timestamp': datetime.now().isoformat(),
+                'analysis': f"Rate limit exceeded: {message}",
+                'recommendations': ["Wait before performing more analyses"]
+            }
+        
         query_lower = query.lower()
         brand_lower = brand_name.lower()
         
@@ -343,7 +494,8 @@ class SearchAnalyzer:
             'keywords_found': found_keywords,
             'timestamp': datetime.now().isoformat(),
             'analysis': self.generate_analysis(threat_level, found_keywords),
-            'recommendations': self.generate_recommendations(threat_level)
+            'recommendations': self.generate_recommendations(threat_level),
+            'rate_limit_remaining': remaining
         }
         
         return results
@@ -353,7 +505,8 @@ class SearchAnalyzer:
         analyses = {
             'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
             'medium': "⚠️ Medium threat level. Potential brand reputation issues detected. Monitor closely and consider proactive engagement.",
-            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended."
+            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended.",
+            'limit_exceeded': "⏰ Rate limit exceeded. Please wait before performing more analyses."
         }
         return analyses.get(threat_level, "Analysis completed.")
     
@@ -379,6 +532,10 @@ class SearchAnalyzer:
                 "Track sentiment trends",
                 "Update brand health metrics",
                 "Monthly review scheduling"
+            ],
+            'limit_exceeded': [
+                "Wait before performing more analyses",
+                "Consider upgrading to premium for higher rate limits"
             ]
         }
         return recommendations.get(threat_level, [])
@@ -394,6 +551,10 @@ def show_advanced_threat_analysis():
     
     st.header("🔍 Advanced Threat Analysis")
     st.success("✅ Premium Access Granted - Advanced Features Unlocked")
+    
+    # Display rate limit status
+    allowed, message, remaining = rate_limiter.check_rate_limit("search_analysis", "default")
+    st.info(f"📊 Rate Limit Status: {message}")
     
     # Tab system for advanced analysis
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -474,7 +635,10 @@ def show_search_analysis():
                     time.sleep(2)
                     results = search_analyzer.analyze_search(search_query, brand_name)
                     st.session_state.search_results = results
-                    st.success("Analysis complete!")
+                    if results['threat_level'] == 'limit_exceeded':
+                        st.error("Rate limit exceeded. Please wait before performing more analyses.")
+                    else:
+                        st.success("Analysis complete!")
             else:
                 st.error("Please enter both search query and brand name")
     
@@ -514,6 +678,7 @@ def show_search_analysis():
             <p><strong>Query:</strong> {results['query']}</p>
             <p><strong>Brand:</strong> {results['brand']}</p>
             <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
+            <p><strong>Remaining Analyses:</strong> {results.get('rate_limit_remaining', 'N/A')}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -596,15 +761,25 @@ def show_quick_actions():
     
     with col1:
         if st.button("🔄 Scan All Platforms", use_container_width=True):
-            st.success("Platform scan initiated!")
-            time.sleep(1)
-            st.info("Scanning Twitter, Facebook, Instagram, Reddit...")
+            # Check rate limiting for threat scanning
+            allowed, message, remaining = rate_limiter.check_rate_limit("threat_scan", "default")
+            if not allowed:
+                st.error(f"Scan rate limit exceeded: {message}")
+            else:
+                st.success("Platform scan initiated!")
+                time.sleep(1)
+                st.info("Scanning Twitter, Facebook, Instagram, Reddit...")
     
     with col2:
         if st.button("📊 Generate Report", use_container_width=True):
-            st.success("Threat report generation started!")
-            time.sleep(1)
-            st.info("Compiling data from last 7 days...")
+            # Check rate limiting for report generation
+            allowed, message, remaining = rate_limiter.check_rate_limit("report_generation", "default")
+            if not allowed:
+                st.error(f"Report generation limit exceeded: {message}")
+            else:
+                st.success("Threat report generation started!")
+                time.sleep(1)
+                st.info("Compiling data from last 7 days...")
     
     with col3:
         if st.button("🚨 Crisis Protocol", use_container_width=True):
@@ -815,6 +990,20 @@ def main():
         st.markdown("---")
         st.subheader("🔑 API Status")
         st.info(f"{len(api_manager.api_keys)} platform(s) connected")
+        
+        # Rate limit status in sidebar
+        st.markdown("---")
+        st.subheader("⏰ Rate Limits")
+        
+        search_allowed, search_msg, search_remaining = rate_limiter.check_rate_limit("search_analysis", "default")
+        api_allowed, api_msg, api_remaining = rate_limiter.check_rate_limit("api_test", "default")
+        scan_allowed, scan_msg, scan_remaining = rate_limiter.check_rate_limit("threat_scan", "default")
+        report_allowed, report_msg, report_remaining = rate_limiter.check_rate_limit("report_generation", "default")
+        
+        st.caption("Search Analysis: " + search_msg)
+        st.caption("API Tests: " + api_msg)
+        st.caption("Threat Scans: " + scan_msg)
+        st.caption("Report Generation: " + report_msg)
     
     # Navigation Tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
