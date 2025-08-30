@@ -8,11 +8,28 @@ import re
 import requests
 import time
 from datetime import datetime, timedelta
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 from urllib.parse import urlencode
 from cryptography.fernet import Fernet
+
+# Plotly import with fallback
+try:
+    import plotly.express as px
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    PLOTLY_AVAILABLE = True
+except ImportError:
+    st.error("Plotly is not installed! Please add 'plotly>=5.18.0' to your requirements.txt")
+    PLOTLY_AVAILABLE = False
+    # Create dummy classes to avoid NameErrors
+    class PlotlyFallback:
+        def __getattr__(self, name):
+            def fallback(*args, **kwargs):
+                st.warning("Plotly is not available. Charts require plotly installation.")
+                return None
+            return fallback
+    px = PlotlyFallback()
+    go = PlotlyFallback()
+    make_subplots = PlotlyFallback()
 
 # Set page configuration
 st.set_page_config(
@@ -213,19 +230,29 @@ class SecureBrandDB:
     
     def load_data(self):
         if os.path.exists(self.data_file):
-            with open(self.data_file, 'r') as f:
-                encrypted_data = f.read()
-                decrypted_data = cipher_suite.decrypt(encrypted_data.encode()).decode()
-                self.brands = json.loads(decrypted_data)
+            try:
+                with open(self.data_file, 'r') as f:
+                    encrypted_data = f.read()
+                    if encrypted_data:
+                        decrypted_data = cipher_suite.decrypt(encrypted_data.encode()).decode()
+                        self.brands = json.loads(decrypted_data)
+                    else:
+                        self.brands = {}
+            except Exception as e:
+                st.error(f"Error loading data: {e}")
+                self.brands = {}
         else:
             self.brands = {}
-            self.save_data()
+        self.save_data()
     
     def save_data(self):
-        data_str = json.dumps(self.brands, indent=2)
-        encrypted_data = cipher_suite.encrypt(data_str.encode()).decode()
-        with open(self.data_file, 'w') as f:
-            f.write(encrypted_data)
+        try:
+            data_str = json.dumps(self.brands, indent=2)
+            encrypted_data = cipher_suite.encrypt(data_str.encode()).decode()
+            with open(self.data_file, 'w') as f:
+                f.write(encrypted_data)
+        except Exception as e:
+            st.error(f"Error saving data: {e}")
     
     def _hash_password(self, password):
         return hashlib.sha256(password.encode()).hexdigest()
@@ -844,31 +871,34 @@ def professional_dashboard():
         'Mentions': [150, 180, 220, 190, 240, 210, 247]
     })
     
-    fig = make_subplots(specs=[[{"secondary_y": True}]])
-    
-    fig.add_trace(
-        go.Scatter(x=sentiment_data['Date'], y=sentiment_data['Sentiment'], 
-                  name="Sentiment Score", line=dict(color="#6366F1", width=3)),
-        secondary_y=False,
-    )
-    
-    fig.add_trace(
-        go.Bar(x=sentiment_data['Date'], y=sentiment_data['Mentions'], 
-               name="Mentions", marker_color="#8B5CF6", opacity=0.6),
-        secondary_y=True,
-    )
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        hovermode='x unified'
-    )
-    
-    fig.update_yaxes(title_text="Sentiment Score", secondary_y=False)
-    fig.update_yaxes(title_text="Mentions", secondary_y=True)
-    
-    st.plotly_chart(fig, use_container_width=True)
+    if PLOTLY_AVAILABLE:
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+        
+        fig.add_trace(
+            go.Scatter(x=sentiment_data['Date'], y=sentiment_data['Sentiment'], 
+                      name="Sentiment Score", line=dict(color="#6366F1", width=3)),
+            secondary_y=False,
+        )
+        
+        fig.add_trace(
+            go.Bar(x=sentiment_data['Date'], y=sentiment_data['Mentions'], 
+                   name="Mentions", marker_color="#8B5CF6", opacity=0.6),
+            secondary_y=True,
+        )
+        
+        fig.update_layout(
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='white'),
+            hovermode='x unified'
+        )
+        
+        fig.update_yaxes(title_text="Sentiment Score", secondary_y=False)
+        fig.update_yaxes(title_text="Mentions", secondary_y=True)
+        
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.warning("Plotly charts are not available. Please install plotly to view charts.")
     
     # Platform Distribution
     st.subheader("🌐 Mentions by Platform")
@@ -881,18 +911,24 @@ def professional_dashboard():
     
     col1, col2 = st.columns(2)
     with col1:
-        fig = px.pie(platform_data, values='Mentions', names='Platform',
-                    color_discrete_sequence=px.colors.sequential.Plasma)
-        fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                         font=dict(color='white'))
-        st.plotly_chart(fig, use_container_width=True)
+        if PLOTLY_AVAILABLE:
+            fig = px.pie(platform_data, values='Mentions', names='Platform',
+                        color_discrete_sequence=px.colors.sequential.Plasma)
+            fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                             font=dict(color='white'))
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("Pie chart requires plotly")
     
     with col2:
-        fig = px.bar(platform_data, x='Platform', y='Sentiment',
-                    color='Sentiment', color_continuous_scale='Viridis')
-        fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                         font=dict(color='white'))
-        st.plotly_chart(fig, use_container_width=True)
+        if PLOTLY_AVAILABLE:
+            fig = px.bar(platform_data, x='Platform', y='Sentiment',
+                        color='Sentiment', color_continuous_scale='Viridis')
+            fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                             font=dict(color='white'))
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("Bar chart requires plotly")
     
     # Recent Mentions
     st.subheader("💬 Recent Brand Mentions")
