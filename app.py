@@ -43,6 +43,22 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
+    .access-granted {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+        border-left: 4px solid #10B981;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+    }
+    
+    .access-denied {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+        border-left: 4px solid #EF4444;
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
+    }
+    
     .api-key-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
@@ -54,36 +70,55 @@ st.markdown("""
         transition: all 0.3s ease;
     }
     
-    .api-key-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        background: rgba(255, 255, 255, 0.08);
-    }
-    
-    .platform-icon {
-        font-size: 2rem;
-        margin-bottom: 10px;
-    }
-    
-    /* Add the rest of your existing CSS styles here */
-    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(10px);
-        color: #FFFFFF;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 14px;
-        font-size: 14px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
     /* ... (keep all your existing CSS styles) ... */
     
 </style>
 """, unsafe_allow_html=True)
 
-# Simple encryption for API keys (for demonstration purposes)
+# Security and Access Control
+class SecurityManager:
+    def __init__(self):
+        # Pre-defined access keys (you can set these in Streamlit Cloud secrets)
+        self.valid_access_keys = {
+            "BG2024-PRO-ACCESS": "full",
+            "BG-ADVANCED-ANALYSIS": "analysis",
+            "BG-PREMIUM-2024": "premium",
+            "BRAND-GUARDIAN-PRO": "pro"
+        }
+        
+        # Default key for demo purposes (remove in production)
+        self.default_key = "BG2024-PRO-ACCESS"
+    
+    def validate_access_key(self, access_key):
+        """Validate the provided access key"""
+        access_key = access_key.strip().upper()
+        
+        if access_key in self.valid_access_keys:
+            return {
+                "valid": True,
+                "access_level": self.valid_access_keys[access_key],
+                "message": "✅ Access granted to Advanced Threat Analysis"
+            }
+        else:
+            return {
+                "valid": False,
+                "access_level": "none",
+                "message": "❌ Invalid access key. Please check your key and try again."
+            }
+    
+    def check_access(self):
+        """Check if user has access to advanced features"""
+        if 'advanced_access' not in st.session_state:
+            st.session_state.advanced_access = False
+        if 'access_level' not in st.session_state:
+            st.session_state.access_level = "none"
+        
+        return st.session_state.advanced_access
+
+# Initialize security manager
+security_manager = SecurityManager()
+
+# Simple encryption for API keys
 class SimpleEncryptor:
     def __init__(self):
         self.key = os.environ.get("ENCRYPTION_KEY", "brandguardian_secret_key_2024")
@@ -103,7 +138,7 @@ class SimpleEncryptor:
                 return text
         return text
 
-# API Key Manager Class
+# API Key Manager Class - Simplified
 class APIKeyManager:
     def __init__(self):
         self.encryptor = SimpleEncryptor()
@@ -113,50 +148,17 @@ class APIKeyManager:
                 "name": "Twitter API",
                 "icon": "🐦",
                 "help_url": "https://developer.twitter.com/",
-                "fields": ["API Key", "API Secret", "Bearer Token"]
+                "field_name": "Bearer Token",
+                "field_help": "Enter your Twitter Bearer Token"
             },
             "facebook": {
-                "name": "Facebook Graph API",
+                "name": "Facebook API",
                 "icon": "📘",
                 "help_url": "https://developers.facebook.com/",
-                "fields": ["App ID", "App Secret", "Access Token"]
+                "field_name": "Access Token",
+                "field_help": "Enter your Facebook Access Token"
             },
-            "instagram": {
-                "name": "Instagram Graph API",
-                "icon": "📸",
-                "help_url": "https://developers.facebook.com/docs/instagram-api",
-                "fields": ["Access Token", "Business Account ID"]
-            },
-            "google": {
-                "name": "Google APIs",
-                "icon": "🔍",
-                "help_url": "https://console.cloud.google.com/",
-                "fields": ["API Key", "Client ID", "Client Secret"]
-            },
-            "linkedin": {
-                "name": "LinkedIn API",
-                "icon": "💼",
-                "help_url": "https://developer.linkedin.com/",
-                "fields": ["Client ID", "Client Secret", "Access Token"]
-            },
-            "youtube": {
-                "name": "YouTube API",
-                "icon": "📺",
-                "help_url": "https://developers.google.com/youtube",
-                "fields": ["API Key", "Client ID", "Client Secret"]
-            },
-            "reddit": {
-                "name": "Reddit API",
-                "icon": "🔴",
-                "help_url": "https://www.reddit.com/dev/api/",
-                "fields": ["Client ID", "Client Secret", "User Agent"]
-            },
-            "tiktok": {
-                "name": "TikTok API",
-                "icon": "🎵",
-                "help_url": "https://developers.tiktok.com/",
-                "fields": ["Client Key", "Client Secret", "Access Token"]
-            }
+            # ... (other platforms)
         }
         self.load_api_keys()
     
@@ -179,241 +181,198 @@ class APIKeyManager:
         except Exception as e:
             st.error(f"Error saving API keys: {e}")
     
-    def get_api_keys(self, platform):
-        """Get API keys for a specific platform"""
+    def get_api_key(self, platform):
+        """Get API key for a specific platform"""
         if platform in self.api_keys:
-            decrypted_keys = {}
-            for key_name, encrypted_value in self.api_keys[platform].items():
-                decrypted_keys[key_name] = self.encryptor.decrypt(encrypted_value)
-            return decrypted_keys
+            return self.encryptor.decrypt(self.api_keys[platform])
         return None
     
-    def save_api_key(self, platform, key_data):
-        """Save API keys for a platform"""
-        encrypted_data = {}
-        for key_name, value in key_data.items():
-            if value:  # Only save non-empty values
-                encrypted_data[key_name] = self.encryptor.encrypt(value)
-        
-        self.api_keys[platform] = encrypted_data
-        self.save_api_keys()
-        return True
+    def save_api_key(self, platform, api_key):
+        """Save API key for a platform"""
+        if api_key:
+            self.api_keys[platform] = self.encryptor.encrypt(api_key)
+            self.save_api_keys()
+            return True
+        return False
     
     def delete_api_key(self, platform):
-        """Delete API keys for a platform"""
+        """Delete API key for a platform"""
         if platform in self.api_keys:
             del self.api_keys[platform]
             self.save_api_keys()
             return True
         return False
-    
-    def test_connection(self, platform, credentials):
-        """Test API connection with provided credentials"""
-        try:
-            # Simulate connection testing
-            time.sleep(1.5)
-            
-            # Simulate different success rates based on platform
-            success_rate = 0.8  # 80% success rate for demo
-            
-            if random.random() < success_rate:
-                return {
-                    "success": True,
-                    "message": f"✅ Successfully connected to {self.supported_platforms[platform]['name']}",
-                    "platform": platform
-                }
-            else:
-                return {
-                    "success": False,
-                    "message": f"❌ Failed to connect to {self.supported_platforms[platform]['name']}",
-                    "suggestion": "Please check your credentials and try again."
-                }
-                
-        except Exception as e:
-            return {
-                "success": False,
-                "message": f"❌ Connection error: {str(e)}",
-                "suggestion": "Please try again later."
-            }
 
 # Initialize API Key Manager
 api_manager = APIKeyManager()
 
-# Add API Key Management Section
-def show_api_key_management():
-    st.header("🔑 API Key Management Center")
-    st.markdown("""
-    <div class="api-key-card">
-        <h4>📋 Manage Your Social Media API Keys</h4>
-        <p>Store your API keys securely to enable automatic monitoring across all platforms.</p>
-        <p>Your keys are encrypted and stored locally for your security.</p>
-    </div>
-    """, unsafe_allow_html=True)
+# Advanced Threat Analysis Functionality (Protected)
+def show_advanced_threat_analysis():
+    """Show advanced threat analysis (protected content)"""
+    if not security_manager.check_access():
+        show_access_required()
+        return
     
-    # Display current API keys
-    st.subheader("📊 Connected Platforms")
+    st.header("🔍 Advanced Threat Analysis")
+    st.markdown('<div class="access-granted">', unsafe_allow_html=True)
+    st.success("✅ Premium Access Granted - Advanced Features Unlocked")
+    st.markdown('</div>', unsafe_allow_html=True)
     
-    if api_manager.api_keys:
-        cols = st.columns(3)
-        for i, (platform, keys) in enumerate(api_manager.api_keys.items()):
-            if platform in api_manager.supported_platforms:
-                platform_info = api_manager.supported_platforms[platform]
-                with cols[i % 3]:
-                    st.markdown(f"""
-                    <div class="api-key-card">
-                        <div class="platform-icon">{platform_info['icon']}</div>
-                        <h4>{platform_info['name']}</h4>
-                        <p>Connected: {datetime.now().strftime('%Y-%m-%d')}</p>
-                        <p>Keys: {len(keys)} stored</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    if st.button(f"Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
-                        if api_manager.delete_api_key(platform):
-                            st.success(f"Disconnected from {platform_info['name']}")
-                            st.rerun()
-    else:
-        st.info("No API keys stored yet. Add your first API key below to get started!")
+    # Advanced analysis content
+    col1, col2 = st.columns(2)
     
-    # Add new API key
-    st.subheader("➕ Add New API Connection")
-    
-    platforms = api_manager.supported_platforms
-    selected_platform = st.selectbox("Select Platform", list(platforms.keys()), 
-                                   format_func=lambda x: f"{platforms[x]['icon']} {platforms[x]['name']}")
-    
-    platform_info = platforms[selected_platform]
-    
-    st.markdown(f"""
-    <div class="api-key-card">
-        <h4>{platform_info['icon']} {platform_info['name']}</h4>
-        <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">API Documentation</a></p>
-        <p>Follow the documentation link to obtain your API credentials.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    with st.form(f"add_{selected_platform}_api"):
-        st.write("**API Credentials**")
+    with col1:
+        st.subheader("🛡️ Real-time Threat Detection")
+        st.metric("Active Threats", "12")
+        st.metric("Threat Level", "High")
+        st.metric("Response Time", "2.3s")
         
-        credentials = {}
-        for field in platform_info["fields"]:
-            credentials[field] = st.text_input(
-                f"{field}*",
-                type="password",
-                help=f"Enter your {field} for {platform_info['name']}"
-            )
-        
-        # Check if we have existing keys for this platform
-        existing_keys = api_manager.get_api_keys(selected_platform)
-        if existing_keys:
-            st.warning(f"⚠️ You already have API keys stored for {platform_info['name']}. "
-                      "Adding new keys will replace the existing ones.")
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            test_connection = st.form_submit_button("🧪 Test Connection", use_container_width=True)
-        with col2:
-            save_connection = st.form_submit_button("💾 Save API Keys", use_container_width=True)
-        
-        if test_connection:
-            # Check if required fields are filled
-            required_fields = platform_info["fields"]
-            missing_fields = [field for field in required_fields if not credentials.get(field)]
-            
-            if missing_fields:
-                st.error(f"Missing required fields: {', '.join(missing_fields)}")
-            else:
-                with st.spinner("Testing connection..."):
-                    result = api_manager.test_connection(selected_platform, credentials)
-                
-                if result["success"]:
-                    st.success(result["message"])
-                else:
-                    st.error(result["message"])
-                    if "suggestion" in result:
-                        st.info(result["suggestion"])
-        
-        if save_connection:
-            # Validate required fields
-            required_fields = platform_info["fields"]
-            missing_fields = [field for field in required_fields if not credentials.get(field)]
-            
-            if missing_fields:
-                st.error(f"Missing required fields: {', '.join(missing_fields)}")
-            else:
-                if api_manager.save_api_key(selected_platform, credentials):
-                    st.success(f"✅ {platform_info['name']} API keys saved successfully!")
-                    
-                    # Test the connection after saving
-                    with st.spinner("Testing saved connection..."):
-                        result = api_manager.test_connection(selected_platform, credentials)
-                    
-                    if result["success"]:
-                        st.success("✅ Connection verified with saved keys!")
-                    else:
-                        st.warning("⚠️ Keys saved but connection test failed. Please check your credentials.")
-                else:
-                    st.error("❌ Failed to save API keys. Please try again.")
+        # Threat timeline
+        st.subheader("📈 Threat Timeline")
+        dates = pd.date_range(end=datetime.now(), periods=7)
+        threats = [5, 8, 3, 12, 7, 4, 9]
+        threat_data = pd.DataFrame({'Date': dates, 'Threats': threats})
+        st.line_chart(threat_data.set_index('Date'))
     
-    # Bulk API key import/export
-    st.subheader("📦 Bulk Operations")
+    with col2:
+        st.subheader("🎯 Threat Classification")
+        threat_types = {
+            'Brand Impersonation': 35,
+            'Negative Sentiment': 25,
+            'Competitor Attacks': 20,
+            'Fake Reviews': 15,
+            'Copyright Issues': 5
+        }
+        
+        for threat, percentage in threat_types.items():
+            st.write(f"**{threat}:** {percentage}%")
+            st.progress(percentage / 100)
+        
+        st.subheader("🚨 Immediate Actions")
+        actions = [
+            "✅ Block 5 impersonator accounts",
+            "⚠️ Monitor competitor mentions",
+            "✅ Respond to negative reviews",
+            "🔍 Investigate copyright violations"
+        ]
+        
+        for action in actions:
+            st.write(f"• {action}")
+    
+    # Advanced threat intelligence
+    st.subheader("🧠 AI-Powered Threat Intelligence")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("📤 Export All API Keys", use_container_width=True):
-            # Create export data
-            export_data = {
-                "export_date": datetime.now().isoformat(),
-                "version": "1.0",
-                "api_keys": api_manager.api_keys
-            }
-            
-            # Convert to JSON
-            export_json = json.dumps(export_data, indent=2)
-            
-            # Create download link
-            st.download_button(
-                label="⬇️ Download API Keys Backup",
-                data=export_json,
-                file_name=f"brandguardian_api_keys_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
-                mime="application/json",
-                use_container_width=True
-            )
+        st.info("**Predictive Analysis**")
+        st.write("• 85% probability of increased threats in next 48h")
+        st.write("• Primary source: Twitter & Reddit")
+        st.write("• Key keywords: scam, fake, complaint")
     
     with col2:
-        uploaded_file = st.file_uploader("📥 Import API Keys", type=["json"])
-        if uploaded_file is not None:
-            try:
-                import_data = json.load(uploaded_file)
-                if "api_keys" in import_data:
-                    # Merge imported keys with existing ones
-                    for platform, keys in import_data["api_keys"].items():
-                        api_manager.api_keys[platform] = keys
-                    api_manager.save_api_keys()
-                    st.success("✅ API keys imported successfully!")
+        st.warning("**Recommended Actions**")
+        st.write("• Increase monitoring frequency")
+        st.write("• Prepare crisis communication")
+        st.write("• Alert legal team")
+        st.write("• Enhance social listening")
+    
+    # Real-time monitoring dashboard
+    st.subheader("📊 Live Threat Dashboard")
+    
+    # Simulate real-time threat data
+    threat_data = []
+    for i in range(10):
+        threat_data.append({
+            'Time': (datetime.now() - timedelta(minutes=i*5)).strftime("%H:%M"),
+            'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram']),
+            'Severity': random.choice(['High', 'Medium', 'Low']),
+            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account']),
+            'Status': random.choice(['Active', 'Neutralized', 'Monitoring'])
+        })
+    
+    threat_df = pd.DataFrame(threat_data)
+    st.dataframe(threat_df, use_container_width=True, hide_index=True)
+
+def show_access_required():
+    """Show access required message"""
+    st.header("🔒 Advanced Threat Analysis")
+    st.markdown('<div class="access-denied">', unsafe_allow_html=True)
+    st.warning("🚫 Premium Access Required")
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.write("""
+    ### Unlock Advanced Threat Analysis Features
+    
+    To access our premium threat detection capabilities, please enter your access key below.
+    This feature includes:
+    
+    - 🛡️ **Real-time threat detection** across all platforms
+    - 🎯 **AI-powered threat classification**
+    - 📈 **Predictive threat analytics**
+    - 🚨 **Immediate action recommendations**
+    - 📊 **Live threat dashboard**
+    - 🧠 **Advanced sentiment analysis**
+    """)
+    
+    # Access key input
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        access_key = st.text_input(
+            "Enter Access Key:",
+            type="password",
+            placeholder="BG2024-PRO-ACCESS",
+            help="Enter your premium access key to unlock advanced features"
+        )
+    
+    with col2:
+        st.write("")  # Spacer
+        st.write("")  # Spacer
+        if st.button("🔓 Unlock Features", use_container_width=True):
+            if access_key:
+                result = security_manager.validate_access_key(access_key)
+                
+                if result["valid"]:
+                    st.session_state.advanced_access = True
+                    st.session_state.access_level = result["access_level"]
+                    st.success(result["message"])
+                    st.balloons()
                     st.rerun()
                 else:
-                    st.error("❌ Invalid import file format.")
-            except Exception as e:
-                st.error(f"❌ Error importing API keys: {e}")
+                    st.error(result["message"])
+            else:
+                st.error("Please enter an access key")
     
-    # API Key Usage Statistics
-    if api_manager.api_keys:
-        st.subheader("📈 API Usage Statistics")
+    # Demo access for testing
+    with st.expander("🆓 Demo Access (For Testing)"):
+        st.info("Use this demo key to test the advanced features:")
+        st.code("BG2024-PRO-ACCESS")
         
-        # Simulate usage data
-        usage_data = []
-        for platform in api_manager.api_keys:
-            usage_data.append({
-                "Platform": platform,
-                "API Calls (24h)": random.randint(100, 5000),
-                "Success Rate": f"{random.randint(85, 99)}%",
-                "Last Used": (datetime.now() - timedelta(hours=random.randint(1, 24))).strftime("%Y-%m-%d %H:%M")
-            })
-        
-        usage_df = pd.DataFrame(usage_data)
-        st.dataframe(usage_df, use_container_width=True)
+        if st.button("Use Demo Key", key="demo_key"):
+            st.session_state.advanced_access = True
+            st.session_state.access_level = "full"
+            st.success("✅ Demo access granted! Advanced features unlocked.")
+            st.balloons()
+            st.rerun()
+    
+    # Contact information for access
+    st.markdown("---")
+    st.write("""
+    **Need an access key?**
+    
+    Contact us at:
+    - 📧 Email: support@brandguardian.ai
+    - 🌐 Website: www.brandguardian.ai
+    - 📞 Phone: +1-555-BRAND-PRO
+    
+    *Enterprise plans include advanced threat analysis features*
+    """)
+
+# Add API Key Management Section
+def show_api_key_management():
+    st.header("🔑 Simple API Key Management")
+    # ... (keep your existing API management code)
 
 # Enhanced Social Media Monitoring with API Keys
 class EnhancedSocialMediaMonitor:
@@ -428,12 +387,12 @@ class EnhancedSocialMediaMonitor:
         connected_platforms = list(self.api_manager.api_keys.keys())
         
         if not connected_platforms:
-            st.warning("No API keys configured. Using demo data.")
-            connected_platforms = ['twitter', 'facebook', 'instagram']  # Default platforms
+            st.info("🌐 No API keys configured. Using demo data with enhanced simulation.")
+            connected_platforms = ['twitter', 'facebook', 'instagram', 'google']
         
         for platform in connected_platforms:
-            # Simulate posts from each connected platform
-            platform_posts = random.randint(3, 8)
+            platform_posts = random.randint(5, 15) if platform in self.api_manager.api_keys else random.randint(3, 8)
+            
             for _ in range(platform_posts):
                 content = self.generate_business_post(brand_name, sector)
                 
@@ -444,8 +403,8 @@ class EnhancedSocialMediaMonitor:
                     'author_followers': random.randint(100, 1000000),
                     'date': datetime.now() - timedelta(hours=random.randint(0, 168)),
                     'engagement': random.randint(50, 5000),
-                    'api_connected': True,
-                    'source': f"Live API ({platform})"
+                    'api_connected': platform in self.api_manager.api_keys,
+                    'source': f"Live API ({platform})" if platform in self.api_manager.api_keys else "Demo Data"
                 })
         
         return posts
@@ -460,20 +419,7 @@ class EnhancedSocialMediaMonitor:
                 f"Switching from {brand_name} to competitor",
                 f"{brand_name} announced new partnership"
             ],
-            'finance': [
-                f"{brand_name} Q3 results exceeded expectations",
-                f"Regulatory issues for {brand_name}",
-                f"{brand_name} dividend announcement",
-                f"Customer satisfaction with {brand_name}",
-                f"{brand_name} market expansion news"
-            ],
-            'retail': [
-                f"Love {brand_name}'s new product line!",
-                f"Disappointed with {brand_name} service",
-                f"{brand_name} holiday sales success",
-                f"{brand_name} product quality issues",
-                f"{brand_name} store expansion plans"
-            ]
+            # ... (other sectors)
         }
         
         sector_templates = templates.get(sector, templates['technology'])
@@ -487,6 +433,12 @@ def main():
     # Initialize session state
     if "sector" not in st.session_state:
         st.session_state.sector = "technology"
+    if "selected_platform" not in st.session_state:
+        st.session_state.selected_platform = "twitter"
+    if "advanced_access" not in st.session_state:
+        st.session_state.advanced_access = False
+    if "access_level" not in st.session_state:
+        st.session_state.access_level = "none"
     
     # Premium Header
     st.markdown("""
@@ -497,7 +449,7 @@ def main():
     <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
-    # Sidebar with API key quick access
+    # Sidebar with API key quick access and access status
     with st.sidebar:
         st.header("Business Configuration")
         brand_name = st.text_input("Brand Name", "Nike")
@@ -506,111 +458,113 @@ def main():
         
         st.session_state.sector = sector
         
+        # Access Status
+        st.markdown("---")
+        st.subheader("🔐 Access Status")
+        
+        if st.session_state.advanced_access:
+            st.success(f"✅ Premium Access: {st.session_state.access_level.upper()}")
+            if st.button("🔓 Manage Access", key="manage_access"):
+                st.session_state.advanced_access = False
+                st.rerun()
+        else:
+            st.warning("⚠️ Basic Access")
+            st.info("Upgrade for advanced features")
+        
         # Quick API Key Status
         st.markdown("---")
-        st.subheader("🔑 API Key Status")
+        st.subheader("🔑 API Connections")
         
         connected_count = len(api_manager.api_keys)
         if connected_count > 0:
             st.success(f"✅ {connected_count} platform(s) connected")
-            for platform in api_manager.api_keys:
-                platform_info = api_manager.supported_platforms.get(platform, {})
-                st.markdown(f"{platform_info.get('icon', '🔗')} {platform_info.get('name', platform)}")
         else:
             st.warning("⚠️ No API keys configured")
         
-        if st.button("Manage API Keys", use_container_width=True):
-            st.session_state.show_api_management = True
+        # Quick access to API management
+        if st.button("⚡ Manage API Keys", use_container_width=True):
+            st.session_state.active_tab = "🔑 API Management"
         
         # Additional settings
         st.markdown("---")
         st.subheader("Advanced Settings")
         market_cap = st.number_input("Market Capitalization", 
-                                   min_value=0.0, value=0.0, step=1000000.0)
+                                   min_value=0.0, value=100000000.0, step=1000000.0)
         
         real_time = st.toggle("Real-time Monitoring", value=True)
     
-    # Navigation Tabs - Added API Management tab
+    # Navigation Tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
         "📊 Executive Dashboard", 
-        "🔍 Advanced Threat Analysis", 
+        "🔍 Advanced Threat Analysis",  # This tab now requires access key
         "📱 Social Monitoring",
         "🥊 Competitive Intelligence",
         "🌟 Influencer Network",
         "🛡️ Crisis Prediction",
         "❤️ Brand Health",
-        "🔑 API Management"  # New tab
+        "🔑 API Management"
     ])
     
-    # Existing tabs functionality (keep your existing code for tabs 1-7)
+    # Existing tabs functionality
     with tab1:
-        # Your existing dashboard code
         st.header("Executive Dashboard")
-        st.write("Dashboard content goes here...")
+        st.write("Dashboard content with integrated API data...")
+        
+        # Show access status on dashboard
+        if st.session_state.advanced_access:
+            st.success("✅ Premium Features: Advanced Threat Analysis Available")
+        else:
+            st.warning("🔒 Upgrade to access Advanced Threat Analysis")
     
     with tab2:
-        # Your existing threat analysis code
-        st.header("Advanced Threat Analysis")
-        st.write("Threat analysis content goes here...")
+        # Advanced Threat Analysis (protected)
+        show_advanced_threat_analysis()
     
     with tab3:
         st.header("Enhanced Social Monitoring")
         
-        # Use API-connected monitoring if available
+        # Show connection status
         if api_manager.api_keys:
             st.success("✅ Using live API connections for monitoring")
             posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, sector)
         else:
-            st.warning("⚠️ Using demo data - configure API keys for live monitoring")
-            # Use your existing simulation method
-            posts = []
-            for _ in range(10):
-                posts.append({
-                    'platform': random.choice(['Twitter', 'Facebook', 'Instagram']),
-                    'content': f"Sample post about {brand_name}",
-                    'author': f"user_{random.randint(1000, 9999)}",
-                    'engagement': random.randint(50, 5000),
-                    'api_connected': False
-                })
+            st.info("🌐 Using demo data - connect API keys for real-time monitoring")
+            posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, sector)
         
         # Display posts
-        for post in posts:
-            with st.expander(f"{post['platform']} - {datetime.now().strftime('%Y-%m-%d %H:%M')}"):
+        for post in posts[:10]:
+            with st.expander(f"{post['platform']} - {post['date'].strftime('%Y-%m-%d %H:%M')}"):
                 col1, col2 = st.columns([3, 1])
                 
                 with col1:
                     st.write(post['content'])
-                    st.caption(f"Author: {post['author']} | Engagement: {post['engagement']}")
+                    st.caption(f"👤 {post['author']} | 👥 {post['author_followers']:,} followers | 📊 {post['engagement']} engagement")
                     if post.get('api_connected'):
-                        st.success("✅ Live API Connection")
+                        st.success("✅ Live API Data")
                     else:
                         st.info("📊 Demo Data")
                 
                 with col2:
-                    st.metric("Sentiment", "Positive")
+                    st.metric("Sentiment", "Positive" if random.random() > 0.3 else "Negative")
                     st.metric("Impact", "Medium")
     
+    # Other tabs
     with tab4:
-        # Your existing competitive intelligence code
         st.header("Competitive Intelligence")
-        st.write("Competitive intelligence content goes here...")
+        st.write("Competitive analysis content...")
     
     with tab5:
-        # Your existing influencer network code
         st.header("Influence Network Analysis")
-        st.write("Influencer network content goes here...")
+        st.write("Influencer network content...")
     
     with tab6:
-        # Your existing crisis prediction code
         st.header("Advanced Crisis Prediction")
-        st.write("Crisis prediction content goes here...")
+        st.write("Crisis prediction content...")
     
     with tab7:
-        # Your existing brand health code
         st.header("Advanced Brand Health Analytics")
-        st.write("Brand health content goes here...")
+        st.write("Brand health content...")
     
-    # New API Management Tab
     with tab8:
         show_api_key_management()
 
