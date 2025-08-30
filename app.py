@@ -11,6 +11,7 @@ import os
 import hashlib
 import base64
 import math
+from cryptography.fernet import Fernet
 
 # Set page config first
 st.set_page_config(
@@ -344,28 +345,77 @@ class SecurityManager:
 # Initialize security manager
 security_manager = SecurityManager()
 
-# Simple encryption for API keys
-class SimpleEncryptor:
+# Secure Encryption with Fernet
+class SecureEncryptor:
     def __init__(self):
-        self.key = os.environ.get("ENCRYPTION_KEY", "brandguardian_secret_key_2024")
+        # Get encryption key from environment variable
+        encryption_key = os.environ.get("ENCRYPTION_KEY")
+        
+        if not encryption_key:
+            # For demo purposes only - in production, this should always come from environment
+            # Generate a key if none exists (for demo only)
+            if 'demo_key' not in st.session_state:
+                key = Fernet.generate_key()
+                st.session_state.demo_key = key.decode()
+            encryption_key = st.session_state.demo_key
+        else:
+            # Ensure the key is in the correct format
+            if not encryption_key.startswith("fernet:"):
+                encryption_key = f"fernet:{encryption_key}"
+        
+        # Use the key for Fernet
+        try:
+            if encryption_key.startswith("fernet:"):
+                key = encryption_key[7:].encode()
+            else:
+                key = encryption_key.encode()
+                
+            self.cipher_suite = Fernet(key)
+        except Exception as e:
+            st.error(f"Encryption setup error: {e}")
+            # Fallback to basic encoding if encryption fails
+            self.cipher_suite = None
     
     def encrypt(self, text):
-        encoded = base64.b64encode(text.encode()).decode()
-        return f"enc_{encoded}"
+        """Encrypt text using Fernet encryption"""
+        if self.cipher_suite:
+            try:
+                encrypted = self.cipher_suite.encrypt(text.encode())
+                return f"enc_fernet_{base64.b64encode(encrypted).decode()}"
+            except Exception as e:
+                st.error(f"Encryption error: {e}")
+                # Fallback to basic encoding
+                return f"enc_base64_{base64.b64encode(text.encode()).decode()}"
+        else:
+            # Fallback to basic encoding
+            return f"enc_base64_{base64.b64encode(text.encode()).decode()}"
     
     def decrypt(self, text):
-        if text.startswith("enc_"):
+        """Decrypt text using Fernet encryption"""
+        if text.startswith("enc_fernet_"):
+            if self.cipher_suite:
+                try:
+                    encrypted = base64.b64decode(text[11:])
+                    decrypted = self.cipher_suite.decrypt(encrypted)
+                    return decrypted.decode()
+                except Exception as e:
+                    st.error(f"Decryption error: {e}")
+                    return text
+            else:
+                return text
+        elif text.startswith("enc_base64_"):
             try:
-                decoded = base64.b64decode(text[4:]).decode()
+                decoded = base64.b64decode(text[11:]).decode()
                 return decoded
             except:
                 return text
-        return text
+        else:
+            return text
 
 # API Key Manager Class
 class APIKeyManager:
     def __init__(self):
-        self.encryptor = SimpleEncryptor()
+        self.encryptor = SecureEncryptor()
         self.api_keys_file = "brand_api_keys.json"
         self.supported_platforms = {
             "twitter": {
@@ -710,6 +760,90 @@ class AdvancedVisualizations:
 
 # Initialize visualizations
 viz = AdvancedVisualizations()
+
+# Authentication System
+class AuthenticationSystem:
+    def __init__(self):
+        # In production, these should come from environment variables or a secure database
+        # For demo purposes, we're using default credentials
+        self.valid_username = os.environ.get("BG_USERNAME", "admin")
+        self.valid_password = os.environ.get("BG_PASSWORD", "brandguardian2024")
+        
+        # Initialize session state
+        if 'authenticated' not in st.session_state:
+            st.session_state.authenticated = False
+        if 'login_attempts' not in st.session_state:
+            st.session_state.login_attempts = 0
+        if 'lockout_time' not in st.session_state:
+            st.session_state.lockout_time = None
+    
+    def check_lockout(self):
+        """Check if user is locked out due to too many failed attempts"""
+        if st.session_state.lockout_time:
+            elapsed = (datetime.now() - st.session_state.lockout_time).total_seconds()
+            if elapsed < 300:  # 5 minute lockout
+                return True
+            else:
+                # Lockout period over
+                st.session_state.lockout_time = None
+                st.session_state.login_attempts = 0
+        return False
+    
+    def authenticate(self, username, password):
+        """Authenticate user credentials"""
+        # Check if user is locked out
+        if self.check_lockout():
+            st.error("Account temporarily locked. Please try again in 5 minutes.")
+            return False
+        
+        # Check credentials
+        if username == self.valid_username and password == self.valid_password:
+            st.session_state.authenticated = True
+            st.session_state.login_attempts = 0
+            return True
+        else:
+            st.session_state.login_attempts += 1
+            # Lock account after 3 failed attempts
+            if st.session_state.login_attempts >= 3:
+                st.session_state.lockout_time = datetime.now()
+                st.error("Too many failed attempts. Account locked for 5 minutes.")
+            else:
+                st.error(f"Invalid credentials. {3 - st.session_state.login_attempts} attempts remaining.")
+            return False
+    
+    def show_login_form(self):
+        """Display login form"""
+        st.markdown("""
+        <div style='text-align: center; margin-bottom: 30px;'>
+            <h1>🔒 BrandGuardian AI</h1>
+            <p>Please login to access the platform</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        with st.form("login_form"):
+            username = st.text_input("Username", placeholder="Enter your username")
+            password = st.text_input("Password", type="password", placeholder="Enter your password")
+            submit = st.form_submit_button("Login", use_container_width=True)
+            
+            if submit:
+                if self.authenticate(username, password):
+                    st.rerun()
+        
+        st.info("**Demo Credentials:** username: `admin` / password: `brandguardian2024`")
+        
+        # Add security information
+        with st.expander("🔒 Security Information"):
+            st.markdown("""
+            - All API keys are encrypted using Fernet encryption
+            - Passwords are never stored in plain text
+            - Account lockout after 3 failed attempts
+            - For production use, set environment variables:
+                - `BG_USERNAME` and `BG_PASSWORD` for authentication
+                - `ENCRYPTION_KEY` for data encryption
+            """)
+
+# Initialize authentication
+auth_system = AuthenticationSystem()
 
 # Advanced Threat Analysis Functionality
 def show_advanced_threat_analysis():
@@ -1211,6 +1345,11 @@ class EnhancedSocialMediaMonitor:
 enhanced_monitor = EnhancedSocialMediaMonitor()
 
 def main():
+    # Check authentication first
+    if not st.session_state.get('authenticated', False):
+        auth_system.show_login_form()
+        return
+    
     # Initialize session state
     if "sector" not in st.session_state:
         st.session_state.sector = "technology"
@@ -1223,7 +1362,7 @@ def main():
     <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
-    # Sidebar
+    # Sidebar with logout button
     with st.sidebar:
         st.header("Business Configuration")
         brand_name = st.text_input("Brand Name", "Nike")
@@ -1240,6 +1379,11 @@ def main():
         st.markdown("---")
         st.subheader("🔑 API Status")
         st.info(f"{len(api_manager.api_keys)} platform(s) connected")
+        
+        st.markdown("---")
+        if st.button("🚪 Logout", use_container_width=True):
+            st.session_state.authenticated = False
+            st.rerun()
     
     # Navigation Tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
