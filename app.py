@@ -491,6 +491,90 @@ class EnhancedAPIKeyManager:
         self.api_keys_dir = "api_keys"
         os.makedirs(self.api_keys_dir, exist_ok=True)
         
+        # Add the supported_platforms attribute that was missing
+        self.supported_platforms = {
+            "twitter": {
+                "name": "Twitter API v2",
+                "icon": "🐦",
+                "help_url": "https://developer.twitter.com/",
+                "field_name": "Bearer Token",
+                "field_help": "Enter your Twitter Bearer Token from developer portal",
+                "rate_limit": "500,000 tweets/month"
+            },
+            "facebook": {
+                "name": "Facebook Graph API",
+                "icon": "📘",
+                "help_url": "https://developers.facebook.com/",
+                "field_name": "Access Token",
+                "field_help": "Enter your Facebook Access Token with pages permissions",
+                "rate_limit": "200 calls/hour"
+            },
+            "instagram": {
+                "name": "Instagram Graph API",
+                "icon": "📸",
+                "help_url": "https://developers.facebook.com/docs/instagram-api",
+                "field_name": "Access Token",
+                "field_help": "Enter your Instagram Access Token for business account",
+                "rate_limit": "200 calls/hour"
+            },
+            "google": {
+                "name": "Google APIs",
+                "icon": "🔍",
+                "help_url": "https://console.cloud.google.com/",
+                "field_name": "API Key",
+                "field_help": "Enter your Google Cloud API Key",
+                "rate_limit": "10,000 requests/day"
+            },
+            "youtube": {
+                "name": "YouTube Data API",
+                "icon": "📺",
+                "help_url": "https://developers.google.com/youtube",
+                "field_name": "API Key",
+                "field_help": "Enter your YouTube Data API key",
+                "rate_limit": "10,000 units/day"
+            },
+            "reddit": {
+                "name": "Reddit API",
+                "icon": "🔴",
+                "help_url": "https://www.reddit.com/dev/api/",
+                "field_name": "API Key",
+                "field_help": "Enter your Reddit API key",
+                "rate_limit": "60 calls/minute"
+            },
+            "tiktok": {
+                "name": "TikTok Business API",
+                "icon": "🎵",
+                "help_url": "https://developers.tiktok.com/",
+                "field_name": "Access Token",
+                "field_help": "Enter your TikTok Business API access token",
+                "rate_limit": "1,000 calls/day"
+            },
+            "openai": {
+                "name": "OpenAI API",
+                "icon": "🤖",
+                "help_url": "https://platform.openai.com/",
+                "field_name": "API Key",
+                "field_help": "Enter your OpenAI API key for AI analysis",
+                "rate_limit": "3,500 requests/day"
+            },
+            "google_analytics": {
+                "name": "Google Analytics",
+                "icon": "📊",
+                "help_url": "https://analytics.google.com/",
+                "field_name": "Property ID",
+                "field_help": "Enter your GA4 Property ID (format: properties/XXXXXX)",
+                "rate_limit": "50,000 requests/day"
+            },
+            "linkedin": {
+                "name": "LinkedIn Marketing API",
+                "icon": "💼",
+                "help_url": "https://developer.linkedin.com/",
+                "field_name": "Access Token",
+                "field_help": "Enter your LinkedIn Marketing API access token",
+                "rate_limit": "100 calls/day"
+            }
+        }
+        
     def get_user_file(self, user_id):
         """Get the API key file for a specific user"""
         return os.path.join(self.api_keys_dir, f"{user_id}_keys.json")
@@ -726,7 +810,7 @@ class AdvancedVisualizations:
             values = list(data.values())
             colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
             
-            fig, ax = plt.subplots(figsize=(8, 8))
+            fig, ax = plt.subforms(figsize=(8, 8))
             wedges, texts, autotexts = ax.pie(
                 values, labels=labels, autopct='%1.1f%%', 
                 colors=colors, startangle=90, wedgeprops=dict(width=0.3)
