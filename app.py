@@ -12,8 +12,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from urllib.parse import urlencode
-import hmac
-import base64
 from cryptography.fernet import Fernet
 
 # Set page configuration
@@ -411,25 +409,32 @@ class ProfessionalAPIManager:
         if not bearer_token:
             return {"success": False, "message": "Bearer Token is required"}
         
-        headers = {"Authorization": f"Bearer {bearer_token}"}
-        response = requests.get(
-            "https://api.twitter.com/2/users/me",
-            headers=headers,
-            timeout=10
-        )
-        
-        if response.status_code == 200:
-            return {
-                "success": True,
-                "message": "✅ Twitter API connection successful",
-                "user_data": response.json(),
-                "rate_limit": "500,000 tweets/month"
-            }
-        else:
+        try:
+            headers = {"Authorization": f"Bearer {bearer_token}"}
+            response = requests.get(
+                "https://api.twitter.com/2/users/me",
+                headers=headers,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                return {
+                    "success": True,
+                    "message": "✅ Twitter API connection successful",
+                    "user_data": response.json(),
+                    "rate_limit": "500,000 tweets/month"
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": f"❌ Twitter API error: {response.status_code}",
+                    "suggestion": "Check your Bearer Token and API permissions"
+                }
+        except Exception as e:
             return {
                 "success": False,
-                "message": f"❌ Twitter API error: {response.status_code}",
-                "suggestion": "Check your Bearer Token and API permissions"
+                "message": f"❌ Connection error: {str(e)}",
+                "suggestion": "Check your internet connection and try again"
             }
     
     def _test_facebook(self, credentials):
@@ -440,26 +445,33 @@ class ProfessionalAPIManager:
         if not access_token or not page_id:
             return {"success": False, "message": "Access Token and Page ID are required"}
         
-        url = f"https://graph.facebook.com/v19.0/{page_id}"
-        params = {
-            "access_token": access_token,
-            "fields": "id,name"
-        }
-        
-        response = requests.get(url, params=params, timeout=10)
-        
-        if response.status_code == 200:
-            return {
-                "success": True,
-                "message": "✅ Facebook Graph API connection successful",
-                "page_data": response.json(),
-                "rate_limit": "200 calls/hour"
+        try:
+            url = f"https://graph.facebook.com/v19.0/{page_id}"
+            params = {
+                "access_token": access_token,
+                "fields": "id,name"
             }
-        else:
+            
+            response = requests.get(url, params=params, timeout=10)
+            
+            if response.status_code == 200:
+                return {
+                    "success": True,
+                    "message": "✅ Facebook Graph API connection successful",
+                    "page_data": response.json(),
+                    "rate_limit": "200 calls/hour"
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": f"❌ Facebook API error: {response.status_code}",
+                    "suggestion": "Check your Access Token and Page ID"
+                }
+        except Exception as e:
             return {
                 "success": False,
-                "message": f"❌ Facebook API error: {response.status_code}",
-                "suggestion": "Check your Access Token and Page ID"
+                "message": f"❌ Connection error: {str(e)}",
+                "suggestion": "Check your internet connection and try again"
             }
     
     def _test_youtube(self, credentials):
@@ -468,30 +480,38 @@ class ProfessionalAPIManager:
         if not api_key:
             return {"success": False, "message": "API Key is required"}
         
-        params = {
-            "key": api_key,
-            "part": "snippet",
-            "chart": "mostPopular",
-            "maxResults": 1
-        }
-        
-        response = requests.get(
-            "https://www.googleapis.com/youtube/v3/videos",
-            params=params,
-            timeout=10
-        )
-        
-        if response.status_code == 200:
-            return {
-                "success": True,
-                "message": "✅ YouTube Data API connection successful",
-                "rate_limit": "10,000 units/day"
+        try:
+            params = {
+                "key": api_key,
+                "part": "snippet",
+                "chart": "mostPopular",
+                "maxResults": 1,
+                "regionCode": "US"
             }
-        else:
+            
+            response = requests.get(
+                "https://www.googleapis.com/youtube/v3/videos",
+                params=params,
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                return {
+                    "success": True,
+                    "message": "✅ YouTube Data API connection successful",
+                    "rate_limit": "10,000 units/day"
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": f"❌ YouTube API error: {response.status_code}",
+                    "suggestion": "Check your API Key and ensure YouTube Data API is enabled"
+                }
+        except Exception as e:
             return {
                 "success": False,
-                "message": f"❌ YouTube API error: {response.status_code}",
-                "suggestion": "Check your API Key and ensure YouTube Data API is enabled"
+                "message": f"❌ Connection error: {str(e)}",
+                "suggestion": "Check your internet connection and try again"
             }
 
 # Advanced Sentiment Analysis with AI
@@ -675,7 +695,7 @@ def api_management_section():
             with cols[i % 3]:
                 platform_info = api_manager.supported_platforms.get(platform, {})
                 st.markdown(f"""
-                <div class="api-card connected">
+                <div class="api-card">
                     <div class="platform-icon">{platform_info.get('icon', '🔗')}</div>
                     <h4>{platform_info.get('name', platform.title())}</h4>
                     <p>Connected: {details.get('added_date', 'N/A')[:10]}</p>
@@ -977,7 +997,6 @@ def main():
     app_sections = {
         "Dashboard": professional_dashboard,
         "API Management": api_management_section,
-        # Additional sections would be added here
     }
     
     selected_section = st.sidebar.radio("Go to", list(app_sections.keys()))
