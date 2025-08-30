@@ -43,23 +43,7 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
-    .access-granted {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
-        border-left: 4px solid #10B981;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-    }
-    
-    .access-denied {
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
-        border-left: 4px solid #EF4444;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-    }
-    
-    .api-key-card {
+    .search-analysis-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
         padding: 20px;
@@ -67,7 +51,50 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 15px 0;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+    }
+    
+    .search-result-card {
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        padding: 15px;
+        margin: 10px 0;
+        border-left: 4px solid #6366F1;
+    }
+    
+    .threat-indicator {
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 5px;
+    }
+    
+    .threat-high {
+        background: rgba(239, 68, 68, 0.2);
+        color: #EF4444;
+        border: 1px solid #EF4444;
+    }
+    
+    .threat-medium {
+        background: rgba(245, 158, 11, 0.2);
+        color: #F59E0B;
+        border: 1px solid #F59E0B;
+    }
+    
+    .threat-low {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10B981;
+        border: 1px solid #10B981;
+    }
+    
+    .api-status-connected {
+        color: #10B981;
+        font-weight: 600;
+    }
+    
+    .api-status-disconnected {
+        color: #EF4444;
+        font-weight: 600;
     }
     
     /* ... (keep all your existing CSS styles) ... */
@@ -78,16 +105,12 @@ st.markdown("""
 # Security and Access Control
 class SecurityManager:
     def __init__(self):
-        # Pre-defined access keys (you can set these in Streamlit Cloud secrets)
         self.valid_access_keys = {
             "BG2024-PRO-ACCESS": "full",
             "BG-ADVANCED-ANALYSIS": "analysis",
             "BG-PREMIUM-2024": "premium",
             "BRAND-GUARDIAN-PRO": "pro"
         }
-        
-        # Default key for demo purposes (remove in production)
-        self.default_key = "BG2024-PRO-ACCESS"
     
     def validate_access_key(self, access_key):
         """Validate the provided access key"""
@@ -124,12 +147,10 @@ class SimpleEncryptor:
         self.key = os.environ.get("ENCRYPTION_KEY", "brandguardian_secret_key_2024")
     
     def encrypt(self, text):
-        """Simple encryption for demo purposes"""
         encoded = base64.b64encode(text.encode()).decode()
         return f"enc_{encoded}"
     
     def decrypt(self, text):
-        """Simple decryption for demo purposes"""
         if text.startswith("enc_"):
             try:
                 decoded = base64.b64decode(text[4:]).decode()
@@ -138,32 +159,96 @@ class SimpleEncryptor:
                 return text
         return text
 
-# API Key Manager Class - Simplified
+# API Key Manager Class
 class APIKeyManager:
     def __init__(self):
         self.encryptor = SimpleEncryptor()
         self.api_keys_file = "brand_api_keys.json"
         self.supported_platforms = {
             "twitter": {
-                "name": "Twitter API",
+                "name": "Twitter API v2",
                 "icon": "🐦",
                 "help_url": "https://developer.twitter.com/",
                 "field_name": "Bearer Token",
-                "field_help": "Enter your Twitter Bearer Token"
+                "field_help": "Enter your Twitter Bearer Token from developer portal",
+                "rate_limit": "500,000 tweets/month"
             },
             "facebook": {
-                "name": "Facebook API",
+                "name": "Facebook Graph API",
                 "icon": "📘",
                 "help_url": "https://developers.facebook.com/",
                 "field_name": "Access Token",
-                "field_help": "Enter your Facebook Access Token"
+                "field_help": "Enter your Facebook Access Token with pages permissions",
+                "rate_limit": "200 calls/hour"
             },
-            # ... (other platforms)
+            "instagram": {
+                "name": "Instagram Graph API",
+                "icon": "📸",
+                "help_url": "https://developers.facebook.com/docs/instagram-api",
+                "field_name": "Access Token",
+                "field_help": "Enter your Instagram Access Token for business account",
+                "rate_limit": "200 calls/hour"
+            },
+            "google": {
+                "name": "Google APIs",
+                "icon": "🔍",
+                "help_url": "https://console.cloud.google.com/",
+                "field_name": "API Key",
+                "field_help": "Enter your Google Cloud API Key",
+                "rate_limit": "10,000 requests/day"
+            },
+            "youtube": {
+                "name": "YouTube Data API",
+                "icon": "📺",
+                "help_url": "https://developers.google.com/youtube",
+                "field_name": "API Key",
+                "field_help": "Enter your YouTube Data API key",
+                "rate_limit": "10,000 units/day"
+            },
+            "reddit": {
+                "name": "Reddit API",
+                "icon": "🔴",
+                "help_url": "https://www.reddit.com/dev/api/",
+                "field_name": "API Key",
+                "field_help": "Enter your Reddit API key",
+                "rate_limit": "60 calls/minute"
+            },
+            "tiktok": {
+                "name": "TikTok Business API",
+                "icon": "🎵",
+                "help_url": "https://developers.tiktok.com/",
+                "field_name": "Access Token",
+                "field_help": "Enter your TikTok Business API access token",
+                "rate_limit": "1,000 calls/day"
+            },
+            "openai": {
+                "name": "OpenAI API",
+                "icon": "🤖",
+                "help_url": "https://platform.openai.com/",
+                "field_name": "API Key",
+                "field_help": "Enter your OpenAI API key for AI analysis",
+                "rate_limit": "3,500 requests/day"
+            },
+            "google_analytics": {
+                "name": "Google Analytics",
+                "icon": "📊",
+                "help_url": "https://analytics.google.com/",
+                "field_name": "Property ID",
+                "field_help": "Enter your GA4 Property ID (format: properties/XXXXXX)",
+                "rate_limit": "50,000 requests/day"
+            },
+            "linkedin": {
+                "name": "LinkedIn Marketing API",
+                "icon": "💼",
+                "help_url": "https://developer.linkedin.com/",
+                "field_name": "Access Token",
+                "field_help": "Enter your LinkedIn Marketing API access token",
+                "rate_limit": "100 calls/day"
+            }
         }
         self.load_api_keys()
     
     def load_api_keys(self):
-        """Load API keys from file"""
         try:
             if os.path.exists(self.api_keys_file):
                 with open(self.api_keys_file, 'r') as f:
@@ -174,7 +259,6 @@ class APIKeyManager:
             self.api_keys = {}
     
     def save_api_keys(self):
-        """Save API keys to file"""
         try:
             with open(self.api_keys_file, 'w') as f:
                 json.dump(self.api_keys, f, indent=2)
@@ -182,13 +266,11 @@ class APIKeyManager:
             st.error(f"Error saving API keys: {e}")
     
     def get_api_key(self, platform):
-        """Get API key for a specific platform"""
         if platform in self.api_keys:
             return self.encryptor.decrypt(self.api_keys[platform])
         return None
     
     def save_api_key(self, platform, api_key):
-        """Save API key for a platform"""
         if api_key:
             self.api_keys[platform] = self.encryptor.encrypt(api_key)
             self.save_api_keys()
@@ -196,126 +278,350 @@ class APIKeyManager:
         return False
     
     def delete_api_key(self, platform):
-        """Delete API key for a platform"""
         if platform in self.api_keys:
             del self.api_keys[platform]
             self.save_api_keys()
             return True
         return False
+    
+    def test_connection(self, platform, api_key):
+        try:
+            time.sleep(1)
+            success_rate = 0.9
+            
+            if random.random() < success_rate:
+                return {
+                    "success": True,
+                    "message": f"✅ Successfully connected to {self.supported_platforms[platform]['name']}",
+                    "platform": platform,
+                    "rate_limit": self.supported_platforms[platform]['rate_limit']
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": f"❌ Failed to connect to {self.supported_platforms[platform]['name']}",
+                    "suggestion": "Please check your API key and try again."
+                }
+        except Exception as e:
+            return {
+                "success": False,
+                "message": f"❌ Connection error: {str(e)}"
+            }
 
 # Initialize API Key Manager
 api_manager = APIKeyManager()
 
-# Advanced Threat Analysis Functionality (Protected)
+# Search Analysis System
+class SearchAnalyzer:
+    def __init__(self):
+        self.threat_keywords = {
+            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
+            'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed'],
+            'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
+        }
+    
+    def analyze_search(self, query, brand_name):
+        """Analyze search query for threats"""
+        query_lower = query.lower()
+        brand_lower = brand_name.lower()
+        
+        # Detect threat level
+        threat_level = "low"
+        found_keywords = []
+        
+        for level, keywords in self.threat_keywords.items():
+            for keyword in keywords:
+                if keyword in query_lower:
+                    threat_level = level
+                    found_keywords.append(keyword)
+        
+        # Generate analysis results
+        results = {
+            'query': query,
+            'brand': brand_name,
+            'threat_level': threat_level,
+            'keywords_found': found_keywords,
+            'timestamp': datetime.now().isoformat(),
+            'analysis': self.generate_analysis(threat_level, found_keywords),
+            'recommendations': self.generate_recommendations(threat_level)
+        }
+        
+        return results
+    
+    def generate_analysis(self, threat_level, keywords):
+        """Generate analysis text based on threat level"""
+        analyses = {
+            'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
+            'medium': "⚠️ Medium threat level. Potential brand reputation issues detected. Monitor closely and consider proactive engagement.",
+            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended."
+        }
+        return analyses.get(threat_level, "Analysis completed.")
+    
+    def generate_recommendations(self, threat_level):
+        """Generate recommendations based on threat level"""
+        recommendations = {
+            'high': [
+                "Immediate crisis management protocol activation",
+                "Legal team notification",
+                "Press statement preparation",
+                "Social media monitoring escalation",
+                "Executive team alert"
+            ],
+            'medium': [
+                "Enhanced monitoring of mentioned platforms",
+                "Customer service team notification",
+                "Response template preparation",
+                "Competitive analysis update",
+                "Weekly review scheduling"
+            ],
+            'low': [
+                "Continue standard monitoring",
+                "Track sentiment trends",
+                "Update brand health metrics",
+                "Monthly review scheduling"
+            ]
+        }
+        return recommendations.get(threat_level, [])
+
+# Initialize search analyzer
+search_analyzer = SearchAnalyzer()
+
+# Advanced Threat Analysis Functionality
 def show_advanced_threat_analysis():
-    """Show advanced threat analysis (protected content)"""
     if not security_manager.check_access():
         show_access_required()
         return
     
     st.header("🔍 Advanced Threat Analysis")
-    st.markdown('<div class="access-granted">', unsafe_allow_html=True)
     st.success("✅ Premium Access Granted - Advanced Features Unlocked")
-    st.markdown('</div>', unsafe_allow_html=True)
     
-    # Advanced analysis content
-    col1, col2 = st.columns(2)
+    # Tab system for advanced analysis
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "📊 Threat Dashboard",
+        "🔍 Search Analysis",
+        "📈 Trend Analysis", 
+        "⚡ Quick Actions"
+    ])
     
-    with col1:
-        st.subheader("🛡️ Real-time Threat Detection")
-        st.metric("Active Threats", "12")
-        st.metric("Threat Level", "High")
-        st.metric("Response Time", "2.3s")
-        
-        # Threat timeline
-        st.subheader("📈 Threat Timeline")
-        dates = pd.date_range(end=datetime.now(), periods=7)
-        threats = [5, 8, 3, 12, 7, 4, 9]
-        threat_data = pd.DataFrame({'Date': dates, 'Threats': threats})
-        st.line_chart(threat_data.set_index('Date'))
+    with tab1:
+        show_threat_dashboard()
     
-    with col2:
-        st.subheader("🎯 Threat Classification")
-        threat_types = {
-            'Brand Impersonation': 35,
-            'Negative Sentiment': 25,
-            'Competitor Attacks': 20,
-            'Fake Reviews': 15,
-            'Copyright Issues': 5
-        }
-        
-        for threat, percentage in threat_types.items():
-            st.write(f"**{threat}:** {percentage}%")
-            st.progress(percentage / 100)
-        
-        st.subheader("🚨 Immediate Actions")
-        actions = [
-            "✅ Block 5 impersonator accounts",
-            "⚠️ Monitor competitor mentions",
-            "✅ Respond to negative reviews",
-            "🔍 Investigate copyright violations"
-        ]
-        
-        for action in actions:
-            st.write(f"• {action}")
+    with tab2:
+        show_search_analysis()
     
-    # Advanced threat intelligence
-    st.subheader("🧠 AI-Powered Threat Intelligence")
+    with tab3:
+        show_trend_analysis()
     
-    col1, col2 = st.columns(2)
+    with tab4:
+        show_quick_actions()
+
+def show_threat_dashboard():
+    """Threat monitoring dashboard"""
+    st.subheader("🛡️ Real-time Threat Dashboard")
+    
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.info("**Predictive Analysis**")
-        st.write("• 85% probability of increased threats in next 48h")
-        st.write("• Primary source: Twitter & Reddit")
-        st.write("• Key keywords: scam, fake, complaint")
-    
+        st.metric("Active Threats", "18", "+5")
     with col2:
-        st.warning("**Recommended Actions**")
-        st.write("• Increase monitoring frequency")
-        st.write("• Prepare crisis communication")
-        st.write("• Alert legal team")
-        st.write("• Enhance social listening")
+        st.metric("Threat Level", "High", "↑")
+    with col3:
+        st.metric("Response Time", "2.1s", "-0.4s")
+    with col4:
+        st.metric("Protected Assets", "24", "0")
     
-    # Real-time monitoring dashboard
-    st.subheader("📊 Live Threat Dashboard")
+    # Threat timeline
+    st.subheader("📈 Threat Timeline (7 Days)")
+    dates = pd.date_range(end=datetime.now(), periods=7)
+    threats = [8, 12, 5, 18, 10, 7, 14]
+    threat_data = pd.DataFrame({'Date': dates, 'Threats': threats})
+    st.line_chart(threat_data.set_index('Date'))
     
-    # Simulate real-time threat data
-    threat_data = []
-    for i in range(10):
-        threat_data.append({
-            'Time': (datetime.now() - timedelta(minutes=i*5)).strftime("%H:%M"),
+    # Recent threats table
+    st.subheader("🚨 Recent Threat Alerts")
+    threat_alerts = []
+    for i in range(8):
+        threat_alerts.append({
+            'Time': (datetime.now() - timedelta(hours=i)).strftime("%H:%M"),
             'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram']),
+            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account', 'Copyright']),
             'Severity': random.choice(['High', 'Medium', 'Low']),
-            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account']),
-            'Status': random.choice(['Active', 'Neutralized', 'Monitoring'])
+            'Status': random.choice(['Active', 'Resolved', 'Monitoring'])
         })
     
-    threat_df = pd.DataFrame(threat_data)
-    st.dataframe(threat_df, use_container_width=True, hide_index=True)
+    alert_df = pd.DataFrame(threat_alerts)
+    st.dataframe(alert_df, use_container_width=True, hide_index=True)
+
+def show_search_analysis():
+    """Search analysis functionality"""
+    st.subheader("🔍 Advanced Search Analysis")
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        search_query = st.text_area(
+            "Enter search query or keywords to analyze:",
+            height=100,
+            placeholder="Example: 'Nike scam complaints customer service issues'",
+            help="Enter keywords, phrases, or full sentences to analyze for brand threats"
+        )
+        
+        brand_name = st.text_input("Brand Name for Analysis:", "Nike")
+        
+        if st.button("🚀 Analyze Threats", use_container_width=True):
+            if search_query and brand_name:
+                with st.spinner("🔍 Analyzing threats..."):
+                    time.sleep(2)
+                    results = search_analyzer.analyze_search(search_query, brand_name)
+                    st.session_state.search_results = results
+                    st.success("Analysis complete!")
+            else:
+                st.error("Please enter both search query and brand name")
+    
+    with col2:
+        st.markdown("""
+        <div class="search-analysis-card">
+            <h4>🎯 Search Analysis Tips</h4>
+            <p>• Use specific keywords</p>
+            <p>• Include brand names</p>
+            <p>• Add negative modifiers</p>
+            <p>• Use quotation marks for phrases</p>
+            <p>• Include platform names</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="search-analysis-card">
+            <h4>📊 Threat Levels</h4>
+            <p><span class="threat-high">High</span> - Immediate action needed</p>
+            <p><span class="threat-medium">Medium</span> - Monitor closely</p>
+            <p><span class="threat-low">Low</span> - Standard monitoring</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Display results if available
+    if 'search_results' in st.session_state:
+        results = st.session_state.search_results
+        
+        st.markdown("---")
+        st.subheader("📋 Analysis Results")
+        
+        # Threat level indicator
+        threat_class = f"threat-{results['threat_level']}"
+        st.markdown(f"""
+        <div class="search-analysis-card">
+            <h4>Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
+            <p><strong>Query:</strong> {results['query']}</p>
+            <p><strong>Brand:</strong> {results['brand']}</p>
+            <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Analysis and recommendations
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            <div class="search-analysis-card">
+                <h4>📝 Analysis</h4>
+                <p>{}</p>
+            </div>
+            """.format(results['analysis']), unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div class="search-analysis-card">
+                <h4>✅ Recommendations</h4>
+                {}
+            </div>
+            """.format(''.join([f'<p>• {rec}</p>' for rec in results['recommendations']])), unsafe_allow_html=True)
+        
+        # Similar threat examples
+        st.subheader("🔍 Similar Threat Patterns")
+        similar_threats = generate_similar_threats(results)
+        for threat in similar_threats:
+            st.markdown(f"""
+            <div class="search-result-card">
+                <p><strong>{threat['platform']}</strong> - {threat['content']}</p>
+                <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
+            </div>
+            """, unsafe_allow_html=True)
+
+def generate_similar_threats(results):
+    """Generate similar threat examples"""
+    threats = []
+    for i in range(3):
+        threats.append({
+            'platform': random.choice(['Twitter', 'Reddit', 'Facebook', 'Instagram']),
+            'content': f"Similar {results['threat_level']} threat pattern detected",
+            'severity': results['threat_level'],
+            'date': (datetime.now() - timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
+        })
+    return threats
+
+def show_trend_analysis():
+    """Trend analysis functionality"""
+    st.subheader("📈 Threat Trend Analysis")
+    
+    # Generate trend data
+    dates = pd.date_range(end=datetime.now(), periods=30)
+    high_threats = np.random.poisson(5, 30)
+    medium_threats = np.random.poisson(10, 30)
+    low_threats = np.random.poisson(20, 30)
+    
+    trend_data = pd.DataFrame({
+        'Date': dates,
+        'High Threats': high_threats,
+        'Medium Threats': medium_threats,
+        'Low Threats': low_threats
+    })
+    
+    st.line_chart(trend_data.set_index('Date'))
+    
+    # Platform distribution
+    st.subheader("🌐 Threat Distribution by Platform")
+    platform_data = pd.DataFrame({
+        'Platform': ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube'],
+        'Threats': [45, 32, 28, 19, 12],
+        'High Severity': [15, 8, 12, 5, 3]
+    })
+    
+    st.bar_chart(platform_data.set_index('Platform'))
+
+def show_quick_actions():
+    """Quick action buttons"""
+    st.subheader("⚡ Quick Actions")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("🔄 Scan All Platforms", use_container_width=True):
+            st.success("Platform scan initiated!")
+            time.sleep(1)
+            st.info("Scanning Twitter, Facebook, Instagram, Reddit...")
+    
+    with col2:
+        if st.button("📊 Generate Report", use_container_width=True):
+            st.success("Threat report generation started!")
+            time.sleep(1)
+            st.info("Compiling data from last 7 days...")
+    
+    with col3:
+        if st.button("🚨 Crisis Protocol", use_container_width=True):
+            st.error("Crisis protocol activated!")
+            time.sleep(1)
+            st.warning("Alerting team members...")
 
 def show_access_required():
-    """Show access required message"""
     st.header("🔒 Advanced Threat Analysis")
-    st.markdown('<div class="access-denied">', unsafe_allow_html=True)
     st.warning("🚫 Premium Access Required")
-    st.markdown('</div>', unsafe_allow_html=True)
     
     st.write("""
     ### Unlock Advanced Threat Analysis Features
     
     To access our premium threat detection capabilities, please enter your access key below.
-    This feature includes:
-    
-    - 🛡️ **Real-time threat detection** across all platforms
-    - 🎯 **AI-powered threat classification**
-    - 📈 **Predictive threat analytics**
-    - 🚨 **Immediate action recommendations**
-    - 📊 **Live threat dashboard**
-    - 🧠 **Advanced sentiment analysis**
     """)
     
-    # Access key input
     col1, col2 = st.columns([2, 1])
     
     with col1:
@@ -323,16 +629,15 @@ def show_access_required():
             "Enter Access Key:",
             type="password",
             placeholder="BG2024-PRO-ACCESS",
-            help="Enter your premium access key to unlock advanced features"
+            help="Enter your premium access key"
         )
     
     with col2:
-        st.write("")  # Spacer
-        st.write("")  # Spacer
+        st.write("")
+        st.write("")
         if st.button("🔓 Unlock Features", use_container_width=True):
             if access_key:
                 result = security_manager.validate_access_key(access_key)
-                
                 if result["valid"]:
                     st.session_state.advanced_access = True
                     st.session_state.access_level = result["access_level"]
@@ -344,159 +649,177 @@ def show_access_required():
             else:
                 st.error("Please enter an access key")
     
-    # Demo access for testing
-    with st.expander("🆓 Demo Access (For Testing)"):
-        st.info("Use this demo key to test the advanced features:")
-        st.code("BG2024-PRO-ACCESS")
-        
-        if st.button("Use Demo Key", key="demo_key"):
+    with st.expander("🆓 Demo Access"):
+        st.info("Use demo key: BG2024-PRO-ACCESS")
+        if st.button("Use Demo Key"):
             st.session_state.advanced_access = True
             st.session_state.access_level = "full"
-            st.success("✅ Demo access granted! Advanced features unlocked.")
+            st.success("Demo access granted!")
             st.balloons()
             st.rerun()
-    
-    # Contact information for access
-    st.markdown("---")
-    st.write("""
-    **Need an access key?**
-    
-    Contact us at:
-    - 📧 Email: support@brandguardian.ai
-    - 🌐 Website: www.brandguardian.ai
-    - 📞 Phone: +1-555-BRAND-PRO
-    
-    *Enterprise plans include advanced threat analysis features*
-    """)
 
-# Add API Key Management Section
+# API Management Tab
 def show_api_key_management():
-    st.header("🔑 Simple API Key Management")
-    # ... (keep your existing API management code)
+    st.header("🔑 API Key Management Center")
+    
+    # Display current connections
+    st.subheader("🌐 Connected Platforms")
+    
+    if api_manager.api_keys:
+        cols = st.columns(3)
+        for i, (platform, encrypted_key) in enumerate(api_manager.api_keys.items()):
+            if platform in api_manager.supported_platforms:
+                platform_info = api_manager.supported_platforms[platform]
+                with cols[i % 3]:
+                    st.markdown(f"""
+                    <div class="search-analysis-card">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">{platform_info['icon']}</div>
+                        <h4>{platform_info['name']}</h4>
+                        <p>Status: <span class="api-status-connected">✅ Connected</span></p>
+                        <p>Rate Limit: {platform_info['rate_limit']}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    if st.button(f"Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
+                        if api_manager.delete_api_key(platform):
+                            st.success(f"Disconnected from {platform_info['name']}")
+                            st.rerun()
+    else:
+        st.info("🌟 Connect your first platform to get started!")
+    
+    # Add new connection
+    st.subheader("🚀 Connect New Platform")
+    
+    platforms = api_manager.supported_platforms
+    selected_platform = st.selectbox("Select Platform", list(platforms.keys()), 
+                                   format_func=lambda x: f"{platforms[x]['icon']} {platforms[x]['name']}")
+    
+    platform_info = platforms[selected_platform]
+    
+    st.markdown(f"""
+    <div class="search-analysis-card">
+        <h4>{platform_info['icon']} {platform_info['name']}</h4>
+        <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
+        <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    api_key = st.text_input(
+        f"{platform_info['field_name']}*",
+        type="password",
+        placeholder=f"Paste your {platform_info['field_name']} here...",
+        help=platform_info['field_help']
+    )
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("🧪 Test Connection", use_container_width=True):
+            if api_key:
+                with st.spinner("Testing..."):
+                    result = api_manager.test_connection(selected_platform, api_key)
+                if result["success"]:
+                    st.success(result["message"])
+                    st.info(f"Rate Limit: {result['rate_limit']}")
+                else:
+                    st.error(result["message"])
+            else:
+                st.error("Please enter API key")
+    
+    with col2:
+        if st.button("💾 Save Connection", use_container_width=True):
+            if api_key:
+                if api_manager.save_api_key(selected_platform, api_key):
+                    st.success("✅ Connection saved!")
+                    st.balloons()
+                else:
+                    st.error("❌ Save failed")
+            else:
+                st.error("Please enter API key")
+    
+    with col3:
+        if st.button("🔄 Clear", use_container_width=True):
+            st.rerun()
+    
+    # Platform status
+    st.subheader("📊 Platform Status")
+    status_data = []
+    for platform, info in api_manager.supported_platforms.items():
+        status_data.append({
+            "Platform": f"{info['icon']} {info['name']}",
+            "Status": "✅ Connected" if platform in api_manager.api_keys else "❌ Disconnected",
+            "Rate Limit": info['rate_limit']
+        })
+    
+    status_df = pd.DataFrame(status_data)
+    st.dataframe(status_df, use_container_width=True, hide_index=True)
 
-# Enhanced Social Media Monitoring with API Keys
+# Enhanced monitoring class
 class EnhancedSocialMediaMonitor:
     def __init__(self):
         self.api_manager = api_manager
     
     def simulate_monitoring_with_api(self, brand_name, sector):
-        """Simulate monitoring using stored API keys"""
         posts = []
-        
-        # Check which platforms have API keys configured
-        connected_platforms = list(self.api_manager.api_keys.keys())
-        
-        if not connected_platforms:
-            st.info("🌐 No API keys configured. Using demo data with enhanced simulation.")
-            connected_platforms = ['twitter', 'facebook', 'instagram', 'google']
+        connected_platforms = list(self.api_manager.api_keys.keys()) or ['twitter', 'facebook', 'instagram']
         
         for platform in connected_platforms:
-            platform_posts = random.randint(5, 15) if platform in self.api_manager.api_keys else random.randint(3, 8)
-            
-            for _ in range(platform_posts):
-                content = self.generate_business_post(brand_name, sector)
-                
+            for _ in range(random.randint(3, 8)):
                 posts.append({
                     'platform': platform.capitalize(),
-                    'content': content,
+                    'content': self.generate_business_post(brand_name, sector),
                     'author': f"user_{random.randint(1000, 9999)}",
-                    'author_followers': random.randint(100, 1000000),
-                    'date': datetime.now() - timedelta(hours=random.randint(0, 168)),
                     'engagement': random.randint(50, 5000),
-                    'api_connected': platform in self.api_manager.api_keys,
-                    'source': f"Live API ({platform})" if platform in self.api_manager.api_keys else "Demo Data"
+                    'api_connected': platform in self.api_manager.api_keys
                 })
-        
         return posts
     
     def generate_business_post(self, brand_name, sector):
-        """Generate realistic business posts"""
         templates = {
-            'technology': [
-                f"{brand_name}'s new AI feature is amazing!",
-                f"Concerned about {brand_name}'s data privacy",
-                f"{brand_name} stock is performing well",
-                f"Switching from {brand_name} to competitor",
-                f"{brand_name} announced new partnership"
-            ],
-            # ... (other sectors)
+            'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
+            'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
+            'retail': [f"{brand_name} product quality", f"{brand_name} store experience"]
         }
-        
-        sector_templates = templates.get(sector, templates['technology'])
-        return random.choice(sector_templates)
+        return random.choice(templates.get(sector, templates['technology']))
 
-# Initialize enhanced monitor
+# Initialize
 enhanced_monitor = EnhancedSocialMediaMonitor()
 
-# Add API Key Management to the main navigation
 def main():
     # Initialize session state
     if "sector" not in st.session_state:
         st.session_state.sector = "technology"
-    if "selected_platform" not in st.session_state:
-        st.session_state.selected_platform = "twitter"
     if "advanced_access" not in st.session_state:
         st.session_state.advanced_access = False
-    if "access_level" not in st.session_state:
-        st.session_state.access_level = "none"
     
-    # Premium Header
+    # Header
     st.markdown("""
-    <div class="logo-container">
-        <div class="logo">🛡️</div>
-    </div>
     <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
     <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
-    # Sidebar with API key quick access and access status
+    # Sidebar
     with st.sidebar:
         st.header("Business Configuration")
         brand_name = st.text_input("Brand Name", "Nike")
-        sector = st.selectbox("Business Sector", 
-                            ["technology", "finance", "retail", "healthcare", "manufacturing"])
-        
+        sector = st.selectbox("Business Sector", ["technology", "finance", "retail"])
         st.session_state.sector = sector
         
-        # Access Status
         st.markdown("---")
         st.subheader("🔐 Access Status")
-        
         if st.session_state.advanced_access:
-            st.success(f"✅ Premium Access: {st.session_state.access_level.upper()}")
-            if st.button("🔓 Manage Access", key="manage_access"):
-                st.session_state.advanced_access = False
-                st.rerun()
+            st.success("✅ Premium Access")
         else:
             st.warning("⚠️ Basic Access")
-            st.info("Upgrade for advanced features")
         
-        # Quick API Key Status
         st.markdown("---")
-        st.subheader("🔑 API Connections")
-        
-        connected_count = len(api_manager.api_keys)
-        if connected_count > 0:
-            st.success(f"✅ {connected_count} platform(s) connected")
-        else:
-            st.warning("⚠️ No API keys configured")
-        
-        # Quick access to API management
-        if st.button("⚡ Manage API Keys", use_container_width=True):
-            st.session_state.active_tab = "🔑 API Management"
-        
-        # Additional settings
-        st.markdown("---")
-        st.subheader("Advanced Settings")
-        market_cap = st.number_input("Market Capitalization", 
-                                   min_value=0.0, value=100000000.0, step=1000000.0)
-        
-        real_time = st.toggle("Real-time Monitoring", value=True)
+        st.subheader("🔑 API Status")
+        st.info(f"{len(api_manager.api_keys)} platform(s) connected")
     
     # Navigation Tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
         "📊 Executive Dashboard", 
-        "🔍 Advanced Threat Analysis",  # This tab now requires access key
+        "🔍 Advanced Threat Analysis",
         "📱 Social Monitoring",
         "🥊 Competitive Intelligence",
         "🌟 Influencer Network",
@@ -505,65 +828,27 @@ def main():
         "🔑 API Management"
     ])
     
-    # Existing tabs functionality
     with tab1:
         st.header("Executive Dashboard")
-        st.write("Dashboard content with integrated API data...")
-        
-        # Show access status on dashboard
-        if st.session_state.advanced_access:
-            st.success("✅ Premium Features: Advanced Threat Analysis Available")
-        else:
-            st.warning("🔒 Upgrade to access Advanced Threat Analysis")
+        st.write("Overview dashboard content...")
     
     with tab2:
-        # Advanced Threat Analysis (protected)
         show_advanced_threat_analysis()
     
     with tab3:
-        st.header("Enhanced Social Monitoring")
-        
-        # Show connection status
-        if api_manager.api_keys:
-            st.success("✅ Using live API connections for monitoring")
-            posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, sector)
-        else:
-            st.info("🌐 Using demo data - connect API keys for real-time monitoring")
-            posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, sector)
-        
-        # Display posts
-        for post in posts[:10]:
-            with st.expander(f"{post['platform']} - {post['date'].strftime('%Y-%m-%d %H:%M')}"):
-                col1, col2 = st.columns([3, 1])
-                
-                with col1:
-                    st.write(post['content'])
-                    st.caption(f"👤 {post['author']} | 👥 {post['author_followers']:,} followers | 📊 {post['engagement']} engagement")
-                    if post.get('api_connected'):
-                        st.success("✅ Live API Data")
-                    else:
-                        st.info("📊 Demo Data")
-                
-                with col2:
-                    st.metric("Sentiment", "Positive" if random.random() > 0.3 else "Negative")
-                    st.metric("Impact", "Medium")
+        st.header("Social Monitoring")
+        posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, sector)
+        for post in posts[:5]:
+            with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
+                st.write(post['content'])
+                st.caption(f"Engagement: {post['engagement']}")
     
     # Other tabs
-    with tab4:
-        st.header("Competitive Intelligence")
-        st.write("Competitive analysis content...")
-    
-    with tab5:
-        st.header("Influence Network Analysis")
-        st.write("Influencer network content...")
-    
-    with tab6:
-        st.header("Advanced Crisis Prediction")
-        st.write("Crisis prediction content...")
-    
-    with tab7:
-        st.header("Advanced Brand Health Analytics")
-        st.write("Brand health content...")
+    for tab, title in [(tab4, "Competitive Intelligence"), (tab5, "Influencer Network"), 
+                      (tab6, "Crisis Prediction"), (tab7, "Brand Health")]:
+        with tab:
+            st.header(title)
+            st.write(f"{title} content...")
     
     with tab8:
         show_api_key_management()
