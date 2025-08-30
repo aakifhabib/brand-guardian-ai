@@ -11,10 +11,6 @@ import os
 import hashlib
 import base64
 import threading
-import matplotlib.pyplot as plt
-from PIL import Image
-import io
-import base64
 
 # Set page config first
 st.set_page_config(
@@ -24,39 +20,24 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Generate a professional shield logo programmatically
-def generate_shield_logo():
-    # Create a shield shape with matplotlib
-    fig, ax = plt.subplots(figsize=(3, 3))
-    fig.patch.set_facecolor('none')
-    ax.set_facecolor('none')
-    
-    # Draw shield shape
-    x = [0, 1, 2, 1.5, 1, 0.5, 0]
-    y = [0, 0.5, 0, 1, 1.5, 1.5, 1]
-    ax.fill(x, y, color='#6366F1', alpha=0.9)
-    
-    # Add AI text
-    ax.text(1, 0.75, "AI", fontsize=20, fontweight='bold', 
-            ha='center', va='center', color='white')
-    
-    # Remove axes
-    ax.axis('off')
-    ax.set_xlim(-0.5, 2.5)
-    ax.set_ylim(-0.5, 2)
-    
-    # Convert to image
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png', transparent=True, dpi=100)
-    buf.seek(0)
-    img = Image.open(buf)
-    return img
-
-# Generate and encode logo
-shield_logo = generate_shield_logo()
-buffered = io.BytesIO()
-shield_logo.save(buffered, format="PNG")
-logo_base64 = base64.b64encode(buffered.getvalue()).decode()
+# Create a simple shield logo using HTML/CSS
+def create_shield_logo_html():
+    return f"""
+    <div style="
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #6366F1, #8B5CF6);
+        clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        margin-right: 20px;
+        filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+    ">AI</div>
+    """
 
 # Advanced CSS with enhanced UI components
 st.markdown(f"""
@@ -93,7 +74,7 @@ st.markdown(f"""
         border: 1px solid rgba(255, 255, 255, 0.1);
     }}
     
-    .logo {{
+    .logo-container {{
         width: 80px;
         height: 80px;
         margin-right: 20px;
@@ -281,6 +262,94 @@ st.markdown(f"""
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
         background: linear-gradient(135deg, #8B5CF6, #6366F1);
+    }}
+    
+    /* Custom chart styles */
+    .chart-container {{
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 15px 0;
+    }}
+    
+    .chart-title {{
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #A5B4FC;
+    }}
+    
+    .bar-chart {{
+        display: flex;
+        height: 200px;
+        align-items: flex-end;
+        gap: 10px;
+        padding: 20px 0;
+    }}
+    
+    .bar {{
+        background: linear-gradient(0deg, #6366F1, #8B5CF6);
+        border-radius: 4px 4px 0 0;
+        min-width: 20px;
+        position: relative;
+        transition: all 0.3s ease;
+    }}
+    
+    .bar:hover {{
+        background: linear-gradient(0deg, #8B5CF6, #6366F1);
+        transform: scale(1.05);
+    }}
+    
+    .bar-label {{
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        color: #A5B4FC;
+        white-space: nowrap;
+    }}
+    
+    .bar-value {{
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: white;
+    }}
+    
+    .sentiment-meter {{
+        display: flex;
+        height: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        margin: 20px 0;
+    }}
+    
+    .sentiment-negative {{
+        background: linear-gradient(90deg, #EF4444, #DC2626);
+    }}
+    
+    .sentiment-neutral {{
+        background: linear-gradient(90deg, #F59E0B, #D97706);
+    }}
+    
+    .sentiment-positive {{
+        background: linear-gradient(90deg, #10B981, #059669);
+    }}
+    
+    .sentiment-label {{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }}
+    
+    .sentiment-label span {{
+        font-size: 0.8rem;
+        color: #A5B4FC;
     }}
 </style>
 """, unsafe_allow_html=True)
@@ -686,6 +755,53 @@ class SearchAnalyzer:
 # Initialize search analyzer
 search_analyzer = SearchAnalyzer()
 
+# Custom chart functions
+def create_bar_chart(labels, values, title="", height=200):
+    """Create a custom bar chart using HTML/CSS"""
+    max_value = max(values) if values else 1
+    bars_html = ""
+    
+    for i, (label, value) in enumerate(zip(labels, values)):
+        bar_height = (value / max_value) * height
+        bars_html += f"""
+        <div class="bar" style="height: {bar_height}px;">
+            <div class="bar-value">{value}</div>
+            <div class="bar-label">{label}</div>
+        </div>
+        """
+    
+    return f"""
+    <div class="chart-container">
+        <div class="chart-title">{title}</div>
+        <div class="bar-chart">
+            {bars_html}
+        </div>
+    </div>
+    """
+
+def create_sentiment_meter(negative, neutral, positive, title="Sentiment Analysis"):
+    """Create a sentiment meter using HTML/CSS"""
+    total = negative + neutral + positive
+    negative_width = (negative / total) * 100 if total > 0 else 0
+    neutral_width = (neutral / total) * 100 if total > 0 else 0
+    positive_width = (positive / total) * 100 if total > 0 else 0
+    
+    return f"""
+    <div class="chart-container">
+        <div class="chart-title">{title}</div>
+        <div class="sentiment-meter">
+            <div class="sentiment-negative" style="width: {negative_width}%"></div>
+            <div class="sentiment-neutral" style="width: {neutral_width}%"></div>
+            <div class="sentiment-positive" style="width: {positive_width}%"></div>
+        </div>
+        <div class="sentiment-label">
+            <span>Negative: {negative}%</span>
+            <span>Neutral: {neutral}%</span>
+            <span>Positive: {positive}%</span>
+        </div>
+    </div>
+    """
+
 # Advanced Threat Analysis Functionality
 def show_advanced_threat_analysis():
     if not security_manager.check_access():
@@ -762,37 +878,28 @@ def show_threat_dashboard():
         </div>
         """, unsafe_allow_html=True)
     
-    # Threat timeline
+    # Threat timeline with custom chart
     st.subheader("📈 Threat Timeline (30 Days)")
     
     dates = pd.date_range(end=datetime.now(), periods=30)
     high_threats = np.random.poisson(5, 30) + np.random.randint(0, 5, 30)
-    medium_threats = np.random.poisson(10, 30) + np.random.randint(0, 8, 30)
-    low_threats = np.random.poisson(20, 30) + np.random.randint(0, 10, 30)
     
-    # Create a DataFrame for the chart
+    # Create a simple line chart using Streamlit's native charting
     threat_data = pd.DataFrame({
         'Date': dates,
-        'High Threats': high_threats,
-        'Medium Threats': medium_threats,
-        'Low Threats': low_threats
+        'High Threats': high_threats
     })
     
-    # Create a line chart using Streamlit's native charting
     st.line_chart(threat_data.set_index('Date'), use_container_width=True, height=400)
     
-    # Platform distribution
+    # Platform distribution with custom chart
     st.subheader("🌐 Threat Distribution by Platform")
     
-    platform_data = pd.DataFrame({
-        'Platform': ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn'],
-        'Threats': [45, 32, 28, 19, 12, 8, 5],
-        'High Severity': [15, 8, 12, 5, 3, 2, 1],
-        'Response Time (ms)': [2100, 1800, 2500, 2200, 1900, 2300, 2100]
-    })
+    platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn']
+    threats = [45, 32, 28, 19, 12, 8, 5]
     
-    # Create a bar chart for platform distribution
-    st.bar_chart(platform_data.set_index('Platform')['Threats'], use_container_width=True, height=400)
+    # Display custom bar chart
+    st.markdown(create_bar_chart(platforms, threats, "Threats by Platform", height=200), unsafe_allow_html=True)
     
     # Recent threats table with enhanced styling
     st.subheader("🚨 Recent Threat Alerts")
@@ -925,16 +1032,16 @@ def show_search_analysis():
         if results['threat_level'] != 'limit_exceeded':
             st.subheader("📊 Sentiment Analysis")
             
-            # Generate sentiment data
-            sentiment_data = pd.DataFrame({
-                'Sentiment': ['Negative', 'Neutral', 'Positive'],
-                'Percentage': [40, 35, 25] if results['threat_level'] == 'high' else 
-                             [25, 40, 35] if results['threat_level'] == 'medium' else 
-                             [10, 30, 60]
-            })
+            # Generate sentiment data based on threat level
+            if results['threat_level'] == 'high':
+                negative, neutral, positive = 40, 35, 25
+            elif results['threat_level'] == 'medium':
+                negative, neutral, positive = 25, 40, 35
+            else:
+                negative, neutral, positive = 10, 30, 60
             
-            # Create a bar chart for sentiment
-            st.bar_chart(sentiment_data.set_index('Sentiment'), use_container_width=True, height=300)
+            # Display custom sentiment meter
+            st.markdown(create_sentiment_meter(negative, neutral, positive), unsafe_allow_html=True)
         
         # Similar threat examples
         st.subheader("🔍 Similar Threat Patterns")
@@ -983,15 +1090,15 @@ def show_trend_analysis():
     # Platform distribution
     st.subheader("🌐 Threat Distribution by Platform")
     
-    platform_data = pd.DataFrame({
-        'Platform': ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn'],
-        'Threats': [45, 32, 28, 19, 12, 8, 5],
-        'High Severity': [15, 8, 12, 5, 3, 2, 1],
-        'Response Time (ms)': [2100, 1800, 2500, 2200, 1900, 2300, 2100]
-    })
+    platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube', 'TikTok', 'LinkedIn']
+    threats = [45, 32, 28, 19, 12, 8, 5]
+    high_severity = [15, 8, 12, 5, 3, 2, 1]
     
-    # Create a bar chart for platform distribution
-    st.bar_chart(platform_data.set_index('Platform')[['Threats', 'High Severity']], use_container_width=True, height=400)
+    # Create a custom bar chart
+    st.markdown(create_bar_chart(platforms, threats, "Total Threats by Platform", height=200), unsafe_allow_html=True)
+    
+    # Create another chart for high severity threats
+    st.markdown(create_bar_chart(platforms, high_severity, "High Severity Threats by Platform", height=200), unsafe_allow_html=True)
     
     # Geographic threat distribution
     st.subheader("🗺️ Geographic Threat Distribution")
@@ -1000,15 +1107,8 @@ def show_trend_analysis():
     countries = ['USA', 'UK', 'Germany', 'France', 'Canada', 'Australia', 'Japan', 'Brazil', 'India', 'China']
     threat_counts = np.random.randint(10, 100, len(countries))
     
-    geo_data = pd.DataFrame({
-        'Country': countries,
-        'Threats': threat_counts,
-        'Region': ['North America', 'Europe', 'Europe', 'Europe', 'North America', 
-                  'Oceania', 'Asia', 'South America', 'Asia', 'Asia']
-    })
-    
     # Create a bar chart for geographic distribution
-    st.bar_chart(geo_data.set_index('Country'), use_container_width=True, height=400)
+    st.markdown(create_bar_chart(countries, threat_counts, "Threats by Country", height=200), unsafe_allow_html=True)
 
 def show_quick_actions():
     """Quick action buttons"""
@@ -1233,7 +1333,7 @@ def main():
     # Header with professional logo
     st.markdown(f"""
     <div class="header-container">
-        <img src="data:image/png;base64,{logo_base64}" class="logo">
+        {create_shield_logo_html()}
         <div>
             <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
             <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
@@ -1245,7 +1345,19 @@ def main():
     with st.sidebar:
         st.markdown(f"""
         <div style="text-align: center; margin-bottom: 20px;">
-            <img src="data:image/png;base64,{logo_base64}" style="width: 60px; height: 60px; filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));">
+            <div style="
+                width: 60px;
+                height: 60px;
+                background: linear-gradient(135deg, #6366F1, #8B5CF6);
+                clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                font-weight: bold;
+                color: white;
+                filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+            ">AI</div>
         </div>
         """, unsafe_allow_html=True)
         
