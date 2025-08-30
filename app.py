@@ -11,9 +11,6 @@ import os
 import hashlib
 import base64
 import threading
-import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 from PIL import Image
 import io
@@ -765,7 +762,7 @@ def show_threat_dashboard():
         </div>
         """, unsafe_allow_html=True)
     
-    # Advanced threat timeline with Plotly
+    # Threat timeline
     st.subheader("📈 Threat Timeline (30 Days)")
     
     dates = pd.date_range(end=datetime.now(), periods=30)
@@ -773,47 +770,18 @@ def show_threat_dashboard():
     medium_threats = np.random.poisson(10, 30) + np.random.randint(0, 8, 30)
     low_threats = np.random.poisson(20, 30) + np.random.randint(0, 10, 30)
     
-    # Create Plotly figure
-    fig = go.Figure()
+    # Create a DataFrame for the chart
+    threat_data = pd.DataFrame({
+        'Date': dates,
+        'High Threats': high_threats,
+        'Medium Threats': medium_threats,
+        'Low Threats': low_threats
+    })
     
-    fig.add_trace(go.Scatter(
-        x=dates, y=high_threats,
-        mode='lines+markers',
-        name='High Threats',
-        line=dict(color='#EF4444', width=3),
-        marker=dict(size=6)
-    ))
+    # Create a line chart using Streamlit's native charting
+    st.line_chart(threat_data.set_index('Date'), use_container_width=True, height=400)
     
-    fig.add_trace(go.Scatter(
-        x=dates, y=medium_threats,
-        mode='lines+markers',
-        name='Medium Threats',
-        line=dict(color='#F59E0B', width=3),
-        marker=dict(size=6)
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=dates, y=low_threats,
-        mode='lines+markers',
-        name='Low Threats',
-        line=dict(color='#10B981', width=3),
-        marker=dict(size=6)
-    ))
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0, 0, 0, 0)',
-        paper_bgcolor='rgba(0, 0, 0, 0)',
-        font=dict(color='white'),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
-        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
-        hovermode="x unified",
-        height=400
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Threat distribution by platform with advanced chart
+    # Platform distribution
     st.subheader("🌐 Threat Distribution by Platform")
     
     platform_data = pd.DataFrame({
@@ -823,46 +791,8 @@ def show_threat_dashboard():
         'Response Time (ms)': [2100, 1800, 2500, 2200, 1900, 2300, 2100]
     })
     
-    # Create a subplot with a different chart type
-    fig = make_subplots(
-        rows=1, cols=2,
-        specs=[[{"type": "pie"}, {"type": "bar"}]],
-        subplot_titles=("Threats by Platform", "Response Time by Platform")
-    )
-    
-    # Add pie chart
-    fig.add_trace(
-        go.Pie(
-            labels=platform_data['Platform'],
-            values=platform_data['Threats'],
-            hole=0.4,
-            marker=dict(colors=px.colors.qualitative.Set3)
-        ),
-        row=1, col=1
-    )
-    
-    # Add bar chart
-    fig.add_trace(
-        go.Bar(
-            x=platform_data['Platform'],
-            y=platform_data['Response Time (ms)'],
-            marker_color=platform_data['High Severity'],
-            marker_colorscale='Viridis',
-            text=platform_data['Response Time (ms)'],
-            textposition='auto'
-        ),
-        row=1, col=2
-    )
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0, 0, 0, 0)',
-        paper_bgcolor='rgba(0, 0, 0, 0)',
-        font=dict(color='white'),
-        showlegend=True,
-        height=400
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
+    # Create a bar chart for platform distribution
+    st.bar_chart(platform_data.set_index('Platform')['Threats'], use_container_width=True, height=400)
     
     # Recent threats table with enhanced styling
     st.subheader("🚨 Recent Threat Alerts")
@@ -885,11 +815,8 @@ def show_threat_dashboard():
             'StatusColor': status_colors[status]
         })
     
-    # Create a styled dataframe
-    alert_df = pd.DataFrame(threat_alerts)
-    
     # Display with custom HTML for better styling
-    for _, alert in alert_df.iterrows():
+    for alert in threat_alerts:
         status_color = alert['StatusColor']
         st.markdown(f"""
         <div class="search-result-card">
@@ -1006,21 +933,8 @@ def show_search_analysis():
                              [10, 30, 60]
             })
             
-            # Create a donut chart
-            fig = px.pie(sentiment_data, values='Percentage', names='Sentiment', 
-                         hole=0.6, color='Sentiment',
-                         color_discrete_map={'Negative': '#EF4444', 'Neutral': '#F59E0B', 'Positive': '#10B981'})
-            
-            fig.update_layout(
-                plot_bgcolor='rgba(0, 0, 0, 0)',
-                paper_bgcolor='rgba(0, 0, 0, 0)',
-                font=dict(color='white'),
-                showlegend=True,
-                height=300,
-                annotations=[dict(text='Sentiment', x=0.5, y=0.5, font_size=14, showarrow=False)]
-            )
-            
-            st.plotly_chart(fig, use_container_width=True)
+            # Create a bar chart for sentiment
+            st.bar_chart(sentiment_data.set_index('Sentiment'), use_container_width=True, height=300)
         
         # Similar threat examples
         st.subheader("🔍 Similar Threat Patterns")
@@ -1055,50 +969,18 @@ def show_trend_analysis():
     medium_threats = np.random.poisson(10, 30) + np.random.randint(0, 8, 30)
     low_threats = np.random.poisson(20, 30) + np.random.randint(0, 10, 30)
     
-    # Create an advanced time series chart with Plotly
-    fig = go.Figure()
+    # Create a DataFrame for the chart
+    trend_data = pd.DataFrame({
+        'Date': dates,
+        'High Threats': high_threats,
+        'Medium Threats': medium_threats,
+        'Low Threats': low_threats
+    })
     
-    fig.add_trace(go.Scatter(
-        x=dates, y=high_threats,
-        mode='lines',
-        name='High Threats',
-        line=dict(color='#EF4444', width=3),
-        fill='tozeroy',
-        fillcolor='rgba(239, 68, 68, 0.1)'
-    ))
+    # Create an area chart using Streamlit's native charting
+    st.area_chart(trend_data.set_index('Date'), use_container_width=True, height=500)
     
-    fig.add_trace(go.Scatter(
-        x=dates, y=medium_threats,
-        mode='lines',
-        name='Medium Threats',
-        line=dict(color='#F59E0B', width=3),
-        fill='tonexty',
-        fillcolor='rgba(245, 158, 11, 0.1)'
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=dates, y=low_threats,
-        mode='lines',
-        name='Low Threats',
-        line=dict(color='#10B981', width=3),
-        fill='tonexty',
-        fillcolor='rgba(16, 185, 129, 0.1)'
-    ))
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0, 0, 0, 0)',
-        paper_bgcolor='rgba(0, 0, 0, 0)',
-        font=dict(color='white'),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
-        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
-        hovermode="x unified",
-        height=500
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Platform distribution with advanced chart
+    # Platform distribution
     st.subheader("🌐 Threat Distribution by Platform")
     
     platform_data = pd.DataFrame({
@@ -1108,21 +990,8 @@ def show_trend_analysis():
         'Response Time (ms)': [2100, 1800, 2500, 2200, 1900, 2300, 2100]
     })
     
-    # Create a bubble chart
-    fig = px.scatter(platform_data, x="Platform", y="Threats", size="High Severity", color="Response Time (ms)",
-                     hover_name="Platform", size_max=40,
-                     color_continuous_scale=px.colors.sequential.Viridis)
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0, 0, 0, 0)',
-        paper_bgcolor='rgba(0, 0, 0, 0)',
-        font=dict(color='white'),
-        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
-        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
-        height=400
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
+    # Create a bar chart for platform distribution
+    st.bar_chart(platform_data.set_index('Platform')[['Threats', 'High Severity']], use_container_width=True, height=400)
     
     # Geographic threat distribution
     st.subheader("🗺️ Geographic Threat Distribution")
@@ -1138,20 +1007,8 @@ def show_trend_analysis():
                   'Oceania', 'Asia', 'South America', 'Asia', 'Asia']
     })
     
-    # Create a choropleth map (simulated with bar chart for simplicity)
-    fig = px.bar(geo_data, x='Country', y='Threats', color='Region',
-                 color_discrete_sequence=px.colors.qualitative.Set3)
-    
-    fig.update_layout(
-        plot_bgcolor='rgba(0, 0, 0, 0)',
-        paper_bgcolor='rgba(0, 0, 0, 0)',
-        font=dict(color='white'),
-        xaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
-        yaxis=dict(gridcolor='rgba(255, 255, 255, 0.1)'),
-        height=400
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
+    # Create a bar chart for geographic distribution
+    st.bar_chart(geo_data.set_index('Country'), use_container_width=True, height=400)
 
 def show_quick_actions():
     """Quick action buttons"""
