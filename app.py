@@ -1091,11 +1091,12 @@ def show_search_analysis():
         search_query = st.text_area(
             "Enter search query or keywords to analyze:",
             height=100,
-            placeholder="Example: 'Nike scam complaints customer service issues'",
+            placeholder="Example: 'Your Brand scam complaints customer service issues'",
             help="Enter keywords, phrases, or full sentences to analyze for brand threats"
         )
         
-        brand_name = st.text_input("Brand Name for Analysis:", "Nike")
+        # Get the brand name from session state or use a default
+        brand_name = st.session_state.get('brand_name', 'Your Brand')
         
         if st.button("🚀 Analyze Threats", use_container_width=True):
             if search_query and brand_name:
@@ -1472,6 +1473,8 @@ def main():
         st.session_state.sector = "technology"
     if "advanced_access" not in st.session_state:
         st.session_state.advanced_access = False
+    if "brand_name" not in st.session_state:
+        st.session_state.brand_name = "Your Brand"
     
     # Header
     st.markdown("""
@@ -1482,7 +1485,9 @@ def main():
     # Sidebar with logout button
     with st.sidebar:
         st.header("Business Configuration")
-        brand_name = st.text_input("Brand Name", "Nike")
+        brand_name = st.text_input("Brand Name", st.session_state.brand_name)
+        st.session_state.brand_name = brand_name
+        
         sector = st.selectbox("Business Sector", ["technology", "finance", "retail"])
         st.session_state.sector = sector
         
