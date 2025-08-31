@@ -15,13 +15,6 @@ from cryptography.fernet import Fernet
 import binascii
 import uuid
 
-# Check for matplotlib availability
-try:
-    import matplotlib.pyplot as plt
-    MATPLOTLIB_AVAILABLE = True
-except ImportError:
-    MATPLOTLIB_AVAILABLE = False
-
 # Set page config first
 st.set_page_config(
     page_title="BrandGuardian AI Pro",
@@ -30,19 +23,16 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Enhanced CSS with vibrant, professional theme and improved visibility
+# Advanced CSS with enhanced UI components
 st.markdown("""
 <style>
-    /* Base styles with improved visibility */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
-    
-    * {
-        font-family: 'Inter', sans-serif;
-    }
+    /* Base styles */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     .main {
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         color: #FFFFFF;
+        font-family: 'Inter', sans-serif;
     }
     
     .stApp {
@@ -57,18 +47,16 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
-    /* Premium header styling with better visibility */
+    /* Premium header styling */
     .premium-header {
-        font-family: 'Poppins', sans-serif;
-        font-size: 3.5rem;
+        font-size: 3rem;
         font-weight: 800;
         text-align: center;
-        margin: 25px 0;
-        background: linear-gradient(90deg, #FF9A8B 极狐, #FF6A88 35%, #FF99AC 70%, #F6D365 100%);
+        margin: 20px 0;
+        background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0px 4px 15px rgba(255, 106, 136, 0.4);
-        letter-spacing: -0.5px;
+        text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3);
     }
     
     .floating {
@@ -77,336 +65,245 @@ st.markdown("""
     
     @keyframes float {
         0% { transform: translateY(0px); }
-        50% { transform: translateY(-12px); }
+        50% { transform: translateY(-10px); }
         100% { transform: translateY(0px); }
     }
     
     .accent-text {
-        font-family: 'Inter', sans-serif;
-        font-size: 1.3rem;
-        font-weight: 500;
+        font-size: 1.2rem;
         color: #A5B4FC;
         text-align: center;
-        margin-bottom极狐 45px;
-        text-shadow: 0px 2px 8px rgba(165, 180, 252, 0.3);
+        margin-bottom: 40px;
     }
     
-    /* Enhanced card styling with better contrast */
+    /* Card styling */
     .metric-card {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(12px);
-        padding: 25px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        margin: 12px 0;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 10px 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
     }
     
     .metric-card:hover {
-        transform: translateY(-7px);
-        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
-        border: 1极狐 solid rgba(255, 255, 255, 0.25);
-        background: rgba极狐55, 255, 255, 0.12);
-    }
-    
-    .metric-card h3 {
-        font-family: 'Inter', sans-serif;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #E0E7FF;
-        margin-bottom: 15px;
-    }
-    
-    .metric-card h1 {
-        font-family: 'Poppins', sans-serif;
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #FFFFFF;
-        margin: 10px 0;
-    }
-    
-    .metric-card p {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.95rem;
-        font-weight: 500;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .search-analysis-card {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(12px);
-        padding: 25px;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        margin: 18px 0;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
-    }
-    
-    .search-analysis-card h4 {
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #FFFFFF;
-        margin-bottom: 18px;
-        border-bottom: 2px solid rgba(99, 102, 241, 0.5);
-        padding-bottom: 10px;
-    }
-    
-    .search-analysis-card p {
-        font-family: 'Inter', sans-serif;
-极狐     font-size: 1rem;
-        font-weight: 500;
-        color: #E0E7FF;
-        margin: 8极狐 0;
-        line-height: 1.5;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin: 15px 0;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     
     .search-result-card {
-        background: rgba(255, 255, 255, 0.06);
-        border-radius: 16px;
-        padding: 18px;
-        margin: 12px 0;
-        border-left: 5px solid #6366F1;
-        transition: all 0.25s ease;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+        padding: 15px;
+        margin: 10px 0;
+        border-left: 4px solid #6366F1;
+        transition: all 0.2s ease;
     }
     
     .search-result-card:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateX(8px);
+        background: rgba(255, 255, 255, 0.07);
+        transform: translateX(5px);
     }
     
-    /* Enhanced threat indicators */
+    /* Threat indicators */
     .threat-indicator {
-        padding: 10px 16极狐;
-        border-radius: 25px;
-        font-size: 13px;
-        font-weight: 700;
-        margin: 6px;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin: 5px;
         display: inline-block;
-        font-family: 'Inter', sans-serif;
-        letter-spacing: 0.3px;
     }
     
     .threat-high {
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.4) 100%);
-        color: #FECACA;
-        border: 1.5px solid #EF4444;
-        box-shadow: 0 4px 15px rgba(239, 68, 68, 极狐.25);
+        background: rgba(239, 68, 68, 0.2);
+        color: #EF4444;
+        border: 1px solid #EF4444;
     }
     
     .threat-medium {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.4) 100%);
-        color: #FDE68A;
-        border: 1.5px solid #F59E0B;
-        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+        background: rgba(245, 158, 11, 0.2);
+        color: #F59E0B;
+        border: 1px solid #F59E0B;
     }
     
     .threat-low {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.4) 100%);
-        color: #A7极狐D0;
-        border: 1.5px solid #10B981;
-        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+        background: rgba(16, 185, 129, 0.2);
+        color: #10B981;
+        border: 1px solid #10B981;
     }
     
-    /* Enhanced status indicators */
+    /* Status indicators */
     .api-status-connected {
         color: #10B981;
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-        text-shadow: 0px 2px 8px rgba(16, 185, 129, 0.3);
+        font-weight: 600;
     }
     
     .api-status-disconnected {
         color: #EF4444;
-        font-weight: 700;
-        font-family: 'Inter', sans-serif;
-        text-shadow: 0px 2px 8px rgba(239, 68, 68, 0.3);
+        font-weight: 600;
     }
     
-    /* Enhanced button styling */
+    /* Button styling */
     .stButton > button {
-        border-radius: 14px;
-        border: 1.5px solid rgba(255, 255, 255, 0.15);
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
         color: white;
-        font-family: 'Inter', sans-serif;
-        font-weight: 600;
-        padding: 12px 24px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
-        border: 1.5px solid rgba(255, 255, 255, 0.25);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
     }
     
-    /* Enhanced tab styling */
+    /* Tab styling */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 16px;
-        padding: 8px;
+        gap: 8px;
     }
     
-    .极狐abs [data-baseweb="tab"] {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 12px;
-        padding: 12px 20px;
+    .stTabs [data-baseweb="tab"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px 12px 0 0;
+        padding: 10px 16px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-bottom: none;
-        font-family: 'Inter', sans-serif;
-        font-weight: 600;
-        transition: all 0.3s ease;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.25) 极狐00%);
-        border: 1px solid rgba(99, 102, 241, 0.6);
+        background: rgba(99, 102, 241, 0.2);
+        border: 1px solid rgba(99, 102, 241, 0.5);
         border-bottom: none;
-        color: #FFFFFF;
-        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
     }
     
-    /* Enhanced metric styling */
+    /* Custom metric styling */
     [data-testid="stMetricValue"] {
-        font-size: 2rem;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700;
-        color: #FFFFFF;
+        font-size: 1.8rem;
     }
     
     [data-testid="stMetricDelta"] {
-        font-size: 1.1rem;
-        font-family: 'Inter', sans-serif;
-        font-weight: 600;
+        font-size: 1rem;
     }
     
-    /* Enhanced input styling */
-    .stSelectbox [data-baseweb="select"], 
-    .stTextInput [data-baseweb="input"], 
-    .stTextArea [data-baseweb="textarea"],
-    .stNumberInput [极狐-baseweb="input"],
-    .stDateInput [data-baseweb="input"],
-极狐 .stTimeInput [data-baseweb="input"] {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        font-family: 'Inter', sans-serif;
+    /* Custom selectbox */
+    .stSelectbox [data-baseweb="select"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
     }
     
-    .stSelectbox [data-baseweb="select"]:hover, 
-    .stTextInput [data-baseweb="input"]:hover, 
-    .stTextArea [data-baseweb="textarea"]:hover,
-    .stNumberInput [data-baseweb="input"]:hover,
-    .stDateInput [data-baseweb="input"]:hover,
-    .stTimeInput [data-baseweb="input"]:hover {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Custom text input */
+    .stTextInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
     }
     
-    /* Enhanced spinner */
+    /* Custom text area */
+    .stTextArea [data-baseweb="textarea"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+    
+    /* Custom spinner */
     .stSpinner > div {
-        border: 4px solid rgba(255, 255, 255, 0.1);
+        border: 3px solid rgba(255, 255, 255, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #6366F1;
-        width: 35px;
-        height: 35px;
+        border-top: 3px solid #6366F1;
+        width: 30px;
+        height: 30px;
         animation: spin 1s linear infinite;
         margin: 0 auto;
     }
     
-    /* Enhanced expander */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Custom expander */
     .streamlit-expanderHeader {
-        background: rgba(255, 255, 255, 0.06);
-        border-radius: 12px;
-        padding: 12px 18px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        padding: 10px 15px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        font-family: 'Inter', sans-serif;
-        font-weight: 600;
     }
     
-    /* Enhanced dataframes */
+    /* Custom dataframes */
     .dataframe {
-        border-radius: 16px;
+        border-radius: 12px;
         overflow: hidden;
-        background: rgba(255, 255, 255, 0.05);
     }
     
-    /* Enhanced alerts */
+    /* Custom success/error boxes */
     .stAlert {
-        border-radius: 16px;
-        font-family: 'Inter', sans-serif;
+        border-radius: 12px;
     }
     
-    /* Enhanced sidebar */
+    /* Custom sidebar */
     .css-1d391kg {
         background: linear-gradient(180deg, #0f0c29 0%, #302b63 100%);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    /* Enhanced chart elements */
-    .chart {
-        border-radius: 20px;
+    /* Custom chart elements */
+    .stChart {
+        border-radius: 16px;
         overflow: hidden;
+    }
+    
+    /* Custom progress bars */
+    .stProgress > div > div {
+        background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
+    }
+    
+    /* Custom radio buttons */
+    .stRadio [role="radiogroup"] {
         background: rgba(255, 255, 255, 0.05);
         padding: 15px;
+        border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    /* Enhanced progress bars */
-    .stProgress > div > div {
-        background: linear-gradient(90deg, #6366F极狐 0%, #8B5CF6 100%);
-        border-radius: 10px;
+    /* Custom number input */
+    .stNumberInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
     }
     
-    /* Enhanced radio buttons */
-    .stRadio [role="radiogroup"] {
-        background: rgba(255, 255, 255, 0.08);
-        padding: 18px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+    /* Custom date input */
+    .stDateInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
     }
     
-    /* Enhanced slider */
+    /* Custom time input */
+    .stTimeInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+    }
+    
+    /* Custom slider */
     .stSlider [role="slider"] {
         background: #6366F1;
-        box-shadow: 极狐 2px 8px rgba(99, 102, 241, 0.4);
     }
     
-    /* Enhanced checkbox */
-    .stCheckbox [data-baseweb极狐"checkbox"] {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-    
-    /* Text visibility enhancements */
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Poppins', sans-serif;
-        color: #FFFFFF;
-        text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
-    }
-    
-    p, div, span, li {
-        font-family: 'Inter', sans-serif;
-        color: #E0E7FF;
-    }
-    
-    /* Table enhancements */
-    .stDataFrame {
-        border-radius: 16px;
-        overflow: hidden;
-    }
-    
-    /* Form enhancements */
-    .stForm {
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 18px;
-        padding: 20px;
-        background: rgba(255, 255, 255, 极狐.05);
+    /* Custom checkbox */
+    .stCheckbox [data-baseweb="checkbox"] {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -417,7 +314,7 @@ class SecurityManager:
         self.valid_access_keys = {
             "BG2024-PRO-ACCESS": "full",
             "BG-ADVANCED-ANALYSIS": "analysis",
-            "BG-PREMI极狐-2024": "premium",
+            "BG-PREMIUM-2024": "premium",
             "BRAND-GUARDIAN-PRO": "pro"
         }
     
@@ -523,7 +420,7 @@ class EnhancedAuthenticationSystem:
         self.users_file = "users.json"
         self.load_users()
         
-    def load_users极狐):
+    def load_users(self):
         try:
             if os.path.exists(self.users_file):
                 with open(self.users_file, 'r') as f:
@@ -558,7 +455,7 @@ class EnhancedAuthenticationSystem:
         """Verify a stored password against one provided by user"""
         salt = stored_password[:64]
         stored_password = stored_password[64:]
-        pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode('utf-8'), salt.encode('asci极狐), 100000)
+        pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode('utf-8'), salt.encode('ascii'), 100000)
         pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         return pwdhash == stored_password
     
@@ -615,7 +512,7 @@ class EnhancedAPIKeyManager:
             "instagram": {
                 "name": "Instagram Graph API",
                 "icon": "📸",
-                "help_url": "极狐://developers.facebook.com/docs/instagram-api",
+                "help_url": "https://developers.facebook.com/docs/instagram-api",
                 "field_name": "Access Token",
                 "field_help": "Enter your Instagram Access Token for business account",
                 "rate_limit": "200 calls/hour"
@@ -633,7 +530,7 @@ class EnhancedAPIKeyManager:
                 "icon": "📺",
                 "help_url": "https://developers.google.com/youtube",
                 "field_name": "API Key",
-                "field极狐elp": "Enter your YouTube Data API key",
+                "field_help": "Enter your YouTube Data API key",
                 "rate_limit": "10,000 units/day"
             },
             "reddit": {
@@ -711,7 +608,7 @@ class EnhancedAPIKeyManager:
         """Save API key for a specific user and platform"""
         api_keys = self.load_api_keys(user_id)
         if api_key:
-            api_keys极狐platform] = self.encryptor.encrypt(api_key)
+            api_keys[platform] = self.encryptor.encrypt(api_key)
             self.save_api_keys(user_id, api_keys)
             return True
         return False
@@ -757,7 +654,7 @@ api_manager = EnhancedAPIKeyManager()
 class SearchAnalyzer:
     def __init__(self):
         self.threat_keywords = {
-            'high': ['scam', 'fra极狐', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
+            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
             'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed'],
             'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
         }
@@ -844,11 +741,8 @@ class AdvancedVisualizations:
     
     def create_radar_chart(self, data, labels, title):
         """Create a radar chart using matplotlib and streamlit"""
-        if not MATPLOTLIB_AVAILABLE:
-            st.warning("Matplotlib not available. Using simplified visualization.")
-            return self.create_bar_chart(data, labels, title)
-        
         try:
+            # Try to import matplotlib
             import matplotlib.pyplot as plt
             import matplotlib.patches as patches
             
@@ -871,13 +765,13 @@ class AdvancedVisualizations:
             ax.set_thetagrids(np.degrees(angles[:-1]), labels)
             
             # Set ylim
-            ax.set_ylim(0, max(data) * 极狐.1)
+            ax.set_ylim(0, max(data) * 1.1)
             
             # Add title
             plt.title(title, size=14, fontweight='bold', pad=20)
             
             # Style the plot
-            ax.spines['polar'].极狐olor('white')
+            ax.spines['polar'].set_color('white')
             ax.tick_params(colors='white')
             ax.set_facecolor('none')
             fig.patch.set_facecolor('none')
@@ -885,6 +779,10 @@ class AdvancedVisualizations:
             # Display in Streamlit
             st.pyplot(fig)
             
+        except ImportError:
+            # If matplotlib is not available, use a fallback
+            st.warning("Matplotlib not available. Using simplified visualization.")
+            self.create_bar_chart(data, labels, title)
         except Exception as e:
             st.error(f"Error creating radar chart: {e}")
             # Fallback to bar chart
@@ -910,18 +808,15 @@ class AdvancedVisualizations:
     
     def create_threat_distribution(self, data, title):
         """Create a donut chart for threat distribution"""
-        if not MATPLOTLIB_AVAILABLE:
-            st.warning("Matplotlib not available. Using simplified visualization.")
-            return self.create_bar_chart(np.array(list(data.values())), list(data.keys()), title)
-        
         try:
+            # Try to import matplotlib
             import matplotlib.pyplot as plt
             
             labels = list(data.keys())
             values = list(data.values())
             colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
             
-            fig, ax = plt.subplots(fig极狐(8, 8))
+            fig, ax = plt.subplots(figsize=(8, 8))
             wedges, texts, autotexts = ax.pie(
                 values, labels=labels, autopct='%1.1f%%', 
                 colors=colors, startangle=90, wedgeprops=dict(width=0.3)
@@ -950,6 +845,10 @@ class AdvancedVisualizations:
             # Display in Streamlit
             st.pyplot(fig)
             
+        except ImportError:
+            # If matplotlib is not available, use a fallback
+            st.warning("Matplotlib not available. Using simplified visualization.")
+            self.create_bar_chart(np.array(list(data.values())), list(data.keys()), title)
         except Exception as e:
             st.error(f"Error creating donut chart: {e}")
             # Fallback to bar chart
@@ -970,7 +869,7 @@ def show_user_registration():
             company = st.text_input("Company Name", help="Client's company name")
         
         with col2:
-            password = st.text_input("Password", type="password", help极狐Set a secure password")
+            password = st.text_input("Password", type="password", help="Set a secure password")
             email = st.text_input("Email", help="Client's email address")
         
         submitted = st.form_submit_button("Register Client", use_container_width=True)
@@ -1032,7 +931,7 @@ def show_login_form():
                 st.session_state.authenticated = True
                 st.session_state.username = username
                 st.session_state.user_access_level = auth_system.users[username]["access_level"]
-                st.session_state.user极狐 = auth_system.users[username]["user_id"]
+                st.session_state.user_id = auth_system.users[username]["user_id"]
                 st.success("✅ Login successful!")
                 time.sleep(1)
                 st.rerun()
@@ -1078,7 +977,7 @@ def show_advanced_threat_analysis():
     with tab3:
         show_trend_analysis()
     
-    with tab极狐:
+    with tab4:
         show_quick_actions()
 
 def show_threat_dashboard():
@@ -1099,9 +998,9 @@ def show_threat_dashboard():
     
     with col2:
         st.markdown("""
-        <极狐 class="metric-card">
+        <div class="metric-card">
             <h3>Threat Level</h3>
-            <h1>High</极狐
+            <h1>High</h1>
             <p style="color: #EF4444;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
@@ -1221,7 +1120,7 @@ def show_search_analysis():
         """, unsafe_allow_html=True)
         
         st.markdown("""
-        <div class极狐search-analysis-card">
+        <div class="search-analysis-card">
             <h4>📊 Threat Levels</h4>
             <p><span class="threat-high">High</span> - Immediate action needed</p>
             <p><span class="threat-medium">Medium</span> - Monitor closely</p>
@@ -1243,7 +1142,7 @@ def show_search_analysis():
             <h4>Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
             <p><strong>Query:</strong> {results['query']}</p>
             <p><strong>Brand:</strong> {results['brand']}</p>
-            <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</极狐
+            <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -1297,7 +1196,7 @@ def show_trend_analysis():
     dates = pd.date_range(end=datetime.now(), periods=30)
     high_threats = np.random.poisson(5, 30)
     medium_threats = np.random.poisson(10, 30)
-    low_threat极狐 = np.random.poisson(20, 30)
+    low_threats = np.random.poisson(20, 30)
     
     trend_data = pd.DataFrame({
         'Date': dates,
@@ -1318,7 +1217,7 @@ def show_trend_analysis():
     
     col1, col2 = st.columns([2, 1])
     
-极狐 with col1:
+    with col1:
         platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube']
         threat_counts = [45, 32, 28, 19, 12]
         
@@ -1464,12 +1363,12 @@ def show_api_key_management():
     st.subheader("🚀 Connect New Platform")
     
     platforms = api_manager.supported_platforms
-    selected_platform = st.selectbox("Select Platform", list(platform极狐.keys()), 
+    selected_platform = st.selectbox("Select Platform", list(platforms.keys()), 
                                    format_func=lambda x: f"{platforms[x]['icon']} {platforms[x]['name']}")
     
     platform_info = platforms[selected_platform]
     
-    st.markdown极狐"""
+    st.markdown(f"""
     <div class="search-analysis-card">
         <h4>{platform_info['icon']} {platform_info['name']}</h4>
         <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
@@ -1574,7 +1473,7 @@ def main():
     if "advanced_access" not in st.session_state:
         st.session_state.advanced_access = False
     
-    # Header with enhanced styling
+    # Header
     st.markdown("""
     <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
     <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
