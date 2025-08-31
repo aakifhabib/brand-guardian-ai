@@ -4,4 +4,5 @@ requests
 textblob
 cryptography==41.0.7
 matplotlib
+plotly>=5.0.0
 
