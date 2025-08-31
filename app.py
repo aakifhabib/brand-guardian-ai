@@ -18,13 +18,30 @@ import secrets
 from PIL import Image
 import io
 import requests
-import plotly.graph_objects as go
-import plotly.express as px
-from plotly.subplots import make_subplots
+
+# Fix for plotly import error
+try:
+    import plotly.graph_objects as go
+    import plotly.express as px
+    from plotly.subplots import make_subplots
+    PLOTLY_AVAILABLE = True
+except ImportError:
+    PLOTLY_AVAILABLE = False
+    # Create dummy classes to prevent errors if plotly isn't installed
+    class go:
+        @staticmethod
+        def Figure(*args, **kwargs):
+            return None
+    class px:
+        @staticmethod
+        def line(*args, **kwargs):
+            return None
+    def make_subplots(*args, **kwargs):
+        return None
 
 # Set page config first
 st.set_page_config(
-    page_title="Virelo AI Pro",
+    page_title="Brand Guardian AI",  # Changed from "Virelo AI Pro"
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -34,7 +51,7 @@ st.set_page_config(
 def generate_premium_key():
     """Generate a secure premium access key"""
     key = secrets.token_urlsafe(16)
-    premium_key = f"VR-PREMIUM-{key.upper()}"
+    premium_key = f"BG-PREMIUM-{key.upper()}"  # Changed from "VR-PREMIUM-"
     return premium_key
 
 # Display the premium key in the console (for admin use)
@@ -1166,10 +1183,10 @@ ai_system = AIAnalysisSystem()
 class SecurityManager:
     def __init__(self):
         self.valid_access_keys = {
-            "VR2024-PRO-ACCESS": "full",
-            "VR-ADVANCED-ANALYSIS": "analysis",
-            "VR-PREMIUM-2024": "premium",
-            "VIRELO-PRO": "pro",
+            "BG2024-PRO-ACCESS": "full",  # Changed from "VR2024-PRO-ACCESS"
+            "BG-ADVANCED-ANALYSIS": "analysis",  # Changed from "VR-ADVANCED-ANALYSIS"
+            "BG-PREMIUM-2024": "premium",  # Changed from "VR-PREMIUM-2024"
+            "BRANDGUARDIAN-PRO": "pro",  # Changed from "VIRELO-PRO"
             premium_access_key: "premium"  # Add the generated key
         }
         self.failed_attempts = {}
@@ -1372,11 +1389,11 @@ class EnhancedAuthenticationSystem:
                 # Default admin user - should be changed after first login
                 self.users = {
                     "admin": {
-                        "password": self.hash_password("virelo2024"),
+                        "password": self.hash_password("brandguardian2024"),  # Changed default password
                         "access_level": "admin",
                         "subscription_tier": "premium",  # Admin gets premium for free
-                        "company": "Virelo",
-                        "email": "admin@virelo.com",
+                        "company": "Brand Guardian AI",  # Changed company name
+                        "email": "admin@brandguardian.com",  # Changed email
                         "user_id": str(uuid.uuid4()),
                         "created_at": datetime.now().isoformat(),
                         "last_login": None,
@@ -1737,6 +1754,10 @@ class AdvancedVisualizations:
     
     def create_threat_radar_chart(self, data, labels, title):
         """Create an enhanced radar chart using Plotly"""
+        if not PLOTLY_AVAILABLE:
+            st.error("Plotly is not installed. Charts cannot be displayed.")
+            return None
+            
         fig = go.Figure()
         
         fig.add_trace(go.Scatterpolar(
@@ -1771,6 +1792,10 @@ class AdvancedVisualizations:
     
     def create_sentiment_timeline(self, dates, values, title):
         """Create an enhanced sentiment timeline using Plotly"""
+        if not PLOTLY_AVAILABLE:
+            st.error("Plotly is not installed. Charts cannot be displayed.")
+            return None
+            
         fig = go.Figure()
         
         fig.add_trace(go.Scatter(
@@ -1828,6 +1853,10 @@ class AdvancedVisualizations:
     
     def create_threat_distribution(self, data, title):
         """Create an enhanced donut chart for threat distribution using Plotly"""
+        if not PLOTLY_AVAILABLE:
+            st.error("Plotly is not installed. Charts cannot be displayed.")
+            return None
+            
         labels = list(data.keys())
         values = list(data.values())
         colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
@@ -1861,6 +1890,10 @@ class AdvancedVisualizations:
     
     def create_threat_heatmap(self, data, title):
         """Create a threat heatmap using Plotly"""
+        if not PLOTLY_AVAILABLE:
+            st.error("Plotly is not installed. Charts cannot be displayed.")
+            return None
+            
         fig = go.Figure(data=go.Heatmap(
             z=data,
             colorscale='YlOrRd',
@@ -1887,6 +1920,10 @@ class AdvancedVisualizations:
     
     def create_threat_gauge(self, value, title, min_val=0, max_val=100):
         """Create a threat gauge using Plotly"""
+        if not PLOTLY_AVAILABLE:
+            st.error("Plotly is not installed. Charts cannot be displayed.")
+            return None
+            
         fig = go.Figure(go.Indicator(
             mode="gauge+number+delta",
             value=value,
@@ -2161,7 +2198,7 @@ def show_login_form():
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FF8C00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 Virelo AI</h1>
+        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FF8C00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 Brand Guardian AI</h1>
         <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence Platform</p>
     </div>
     """, unsafe_allow_html=True)
@@ -2311,7 +2348,8 @@ def show_threat_dashboard():
     
     # Create an enhanced chart
     fig = viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
-    st.plotly_chart(fig, use_container_width=True)
+    if fig:
+        st.plotly_chart(fig, use_container_width=True)
     
     # Threat distribution with enhanced visualization
     st.subheader("🌡️ Threat Distribution")
@@ -2321,7 +2359,8 @@ def show_threat_dashboard():
     with col1:
         threat_data = {'High': 8, 'Medium': 5, 'Low': 5}
         fig = viz.create_threat_distribution(threat_data, "Threat Severity Distribution")
-        st.plotly_chart(fig, use_container_width=True)
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown("""
@@ -2342,15 +2381,18 @@ def show_threat_dashboard():
     
     with col1:
         fig = viz.create_threat_gauge(75, "Overall Threat Level")
-        st.plotly_chart(fig, use_container_width=True)
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         fig = viz.create_threat_gauge(60, "Response Urgency")
-        st.plotly_chart(fig, use_container_width=True)
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
     
     with col3:
         fig = viz.create_threat_gauge(85, "Impact Assessment")
-        st.plotly_chart(fig, use_container_width=True)
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
     
     # Recent threats table
     st.subheader("🚨 Recent Threat Alerts")
@@ -2604,7 +2646,10 @@ def show_trend_analysis():
         )
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    if PLOTLY_AVAILABLE:
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.error("Plotly is not installed. Charts cannot be displayed.")
     
     # Platform distribution with enhanced radar chart
     st.subheader("🌐 Threat Distribution by Platform")
@@ -2621,7 +2666,8 @@ def show_trend_analysis():
             platforms,
             "Threat Distribution Across Platforms"
         )
-        st.plotly_chart(fig, use_container_width=True)
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown("""
@@ -2676,7 +2722,10 @@ def show_trend_analysis():
         )
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    if PLOTLY_AVAILABLE:
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.error("Plotly is not installed. Charts cannot be displayed.")
     
     # Threat heatmap
     st.subheader("🔥 Threat Heatmap by Hour and Day")
@@ -2689,7 +2738,8 @@ def show_trend_analysis():
     heatmap_data = np.random.rand(7, 24) * 100
     
     fig = viz.create_threat_heatmap(heatmap_data, "Threat Intensity Heatmap")
-    st.plotly_chart(fig, use_container_width=True)
+    if fig:
+        st.plotly_chart(fig, use_container_width=True)
 
 def show_quick_actions():
     """Quick action buttons"""
@@ -2751,7 +2801,7 @@ def show_access_required():
                 st.error("Please enter an access key")
     
     with st.expander("🆓 Demo Access"):
-        st.info("Use demo key: VR2024-PRO-ACCESS")
+        st.info("Use demo key: BG2024-PRO-ACCESS")  # Changed from "VR2024-PRO-ACCESS"
         if st.button("Use Demo Key"):
             st.session_state.advanced_access = True
             st.session_state.access_level = "full"
@@ -2766,7 +2816,7 @@ def show_access_required():
     st.markdown("""
     <div class="premium-access-card">
         <h3>🌟 Premium Access Features</h3>
-        <p>Unlock the full potential of Virelo AI with our premium features:</p>
+        <p>Unlock the full potential of Brand Guardian AI with our premium features:</p>
         <ul style="text-align: left; display: inline-block;">
             <li>Advanced threat detection algorithms</li>
             <li>Real-time monitoring across all platforms</li>
@@ -2935,7 +2985,7 @@ enhanced_monitor = EnhancedSocialMediaMonitor()
 
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
-    st.header("🤖 Virelo AI Dashboard")
+    st.header("🤖 Brand Guardian AI Dashboard")
     
     # Welcome message with user's brand name
     brand_name = st.session_state.get('brand_name', 'Your Brand')
@@ -3050,8 +3100,8 @@ def main():
     
     # Header
     st.markdown("""
-    <h1 class="premium-header floating">Virelo AI Pro</h1>
-    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
+    <h1 class="premium-header floating">Brand Guardian AI</h1>
+    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Brand Protection & Threat Intelligence Platform</div>
     """, unsafe_allow_html=True)
     
     # Sidebar with user info and logout button
