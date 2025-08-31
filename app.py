@@ -40,21 +40,21 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Advanced CSS with enhanced UI components
+# Advanced CSS with enhanced UI components - New Theme
 st.markdown("""
 <style>
     /* Base styles */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     .main {
-        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
         color: #FFFFFF;
         font-family: 'Inter', sans-serif;
         overflow-x: hidden;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
         background-size: 400% 400%;
         animation: gradientBG 15s ease infinite;
     }
@@ -78,7 +78,7 @@ st.markdown("""
     
     .particle {
         position: absolute;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(100, 255, 218, 0.1);
         border-radius: 50%;
         animation: float 20s infinite linear;
     }
@@ -96,16 +96,16 @@ st.markdown("""
         font-weight: 800;
         text-align: center;
         margin: 20px 0;
-        background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
+        background: linear-gradient(90deg, #64ffda 0%, #00bcd4 55%, #03a9f4 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3);
+        text-shadow: 0px 2px 10px rgba(100, 255, 218, 0.3);
         animation: glow 2s ease-in-out infinite alternate;
     }
     
     @keyframes glow {
-        from { text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3); }
-        to { text-shadow: 0px 2px 20px rgba(255, 106, 136, 0.6); }
+        from { text-shadow: 0px 2px 10px rgba(100, 255, 218, 0.3); }
+        to { text-shadow: 0px 2px 20px rgba(100, 255, 218, 0.6); }
     }
     
     .floating {
@@ -120,7 +120,7 @@ st.markdown("""
     
     .accent-text {
         font-size: 1.2rem;
-        color: #A5B4FC;
+        color: #64ffda;
         text-align: center;
         margin-bottom: 40px;
         animation: fadeIn 2s ease-in;
@@ -133,13 +133,13 @@ st.markdown("""
     
     /* Enhanced card styling */
     .metric-card {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(26, 26, 46, 0.7);
         backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(100, 255, 218, 0.2);
         margin: 15px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
@@ -152,7 +152,7 @@ st.markdown("""
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        background: linear-gradient(45deg, transparent, rgba(100, 255, 218, 0.1), transparent);
         transform: translateX(-100%);
         transition: transform 0.6s;
     }
@@ -163,39 +163,39 @@ st.markdown("""
     
     .metric-card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(100, 255, 218, 0.3);
     }
     
     .search-analysis-card {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(26, 26, 46, 0.7);
         backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(100, 255, 218, 0.2);
         margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease;
     }
     
     .search-analysis-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
     }
     
     .search-result-card {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(26, 26, 46, 0.5);
         border-radius: 15px;
         padding: 20px;
         margin: 15px 0;
-        border-left: 5px solid #6366F1;
+        border-left: 5px solid #00bcd4;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .search-result-card:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(26, 26, 46, 0.7);
         transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 188, 212, 0.2);
     }
     
     /* Enhanced threat indicators */
@@ -207,36 +207,36 @@ st.markdown("""
         margin: 8px;
         display: inline-block;
         letter-spacing: 0.5px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease;
     }
     
     .threat-indicator:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
     
     .threat-high {
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.1));
-        color: #EF4444;
-        border: 1px solid rgba(239, 68, 68, 0.5);
+        background: linear-gradient(135deg, rgba(244, 67, 54, 0.3), rgba(244, 67, 54, 0.1));
+        color: #ff6b6b;
+        border: 1px solid rgba(244, 67, 54, 0.5);
     }
     
     .threat-medium {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(245, 158, 11, 0.1));
-        color: #F59E0B;
-        border: 1px solid rgba(245, 158, 11, 0.5);
+        background: linear-gradient(135deg, rgba(255, 152, 0, 0.3), rgba(255, 152, 0, 0.1));
+        color: #ffa726;
+        border: 1px solid rgba(255, 152, 0, 0.5);
     }
     
     .threat-low {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.1));
-        color: #10B981;
-        border: 1px solid rgba(16, 185, 129, 0.5);
+        background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1));
+        color: #66bb6a;
+        border: 1px solid rgba(76, 175, 80, 0.5);
     }
     
     /* Status indicators */
     .api-status-connected {
-        color: #10B981;
+        color: #66bb6a;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
@@ -255,22 +255,22 @@ st.markdown("""
     }
     
     .api-status-disconnected {
-        color: #EF4444;
+        color: #ff6b6b;
         font-weight: 700;
     }
     
     /* Enhanced button styling */
     .stButton > button {
         border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+        border: 1px solid rgba(100, 255, 218, 0.3);
+        background: linear-gradient(135deg, rgba(0, 188, 212, 0.2), rgba(3, 169, 244, 0.2));
         color: white;
         font-weight: 600;
         padding: 12px 24px;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
     .stButton > button::before {
@@ -280,7 +280,7 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
         transition: left 0.5s;
     }
     
@@ -289,10 +289,10 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: linear-gradient(135deg, rgba(0, 188, 212, 0.3), rgba(3, 169, 244, 0.3));
+        border: 1px solid rgba(100, 255, 218, 0.5);
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     }
     
     /* Enhanced tab styling */
@@ -302,24 +302,24 @@ st.markdown("""
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(26, 26, 46, 0.7);
         border-radius: 15px 15px 0 0;
         padding: 14px 20px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(100, 255, 218, 0.2);
         border-bottom: none;
         font-weight: 600;
         transition: all 0.3s ease;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(26, 26, 46, 0.9);
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
-        border: 1px solid rgba(99, 102, 241, 0.5);
+        background: linear-gradient(135deg, rgba(0, 188, 212, 0.3), rgba(3, 169, 244, 0.3));
+        border: 1px solid rgba(100, 255, 218, 0.5);
         border-bottom: none;
-        box-shadow: 0 -4px 15px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 -4px 15px rgba(0, 188, 212, 0.3);
     }
     
     /* Custom metric styling */
@@ -340,10 +340,10 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"],
     .stDateInput [data-baseweb="input"],
     .stTimeInput [data-baseweb="input"] {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(26, 26, 46, 0.7);
         backdrop-filter: blur(10px);
         border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(100, 255, 218, 0.2);
         color: white;
         transition: all 0.3s ease;
     }
@@ -354,15 +354,15 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"]:hover,
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(26, 26, 46, 0.9);
+        border: 1px solid rgba(100, 255, 218, 0.4);
     }
     
     /* Custom spinner */
     .stSpinner > div {
-        border: 4px solid rgba(255, 255, 255, 0.1);
+        border: 4px solid rgba(100, 255, 218, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #6366F1;
+        border-top: 4px solid #00bcd4;
         width: 40px;
         height: 40px;
         animation: spin 1s linear infinite;
@@ -376,23 +376,23 @@ st.markdown("""
     
     /* Custom expander */
     .streamlit-expanderHeader {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(26, 26, 46, 0.7);
         border-radius: 12px;
         padding: 14px 18px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(100, 255, 218, 0.2);
         font-weight: 600;
         transition: all 0.3s ease;
     }
     
     .streamlit-expanderHeader:hover {
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(26, 26, 46, 0.9);
     }
     
     /* Custom dataframes */
     .dataframe {
         border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
     
     /* Custom success/error boxes */
@@ -400,62 +400,62 @@ st.markdown("""
         border-radius: 15px;
         padding: 16px 20px;
         font-weight: 600;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
     
     /* Custom sidebar */
     .css-1d391kg {
-        background: linear-gradient(180deg, #0f0c29 0%, #302b63 100%);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        border-right: 1px solid rgba(100, 255, 218, 0.1);
     }
     
     /* Custom chart elements */
     .stChart {
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
+        background: linear-gradient(90deg, #00bcd4 0%, #03a9f4 50%, #64ffda 100%);
         border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(26, 26, 46, 0.7);
         padding: 18px;
         border-radius: 15px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(100, 255, 218, 0.2);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: linear-gradient(90deg, #6366F1, #8B5CF6);
+        background: linear-gradient(90deg, #00bcd4, #03a9f4);
         border-radius: 10px;
         height: 8px;
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(26, 26, 46, 0.7);
         border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(100, 255, 218, 0.2);
     }
     
     /* Premium badge */
     .premium-badge {
-        background: linear-gradient(135deg, #FFD700, #FFA500);
-        color: #1a1a1a;
+        background: linear-gradient(135deg, #00bcd4, #64ffda);
+        color: #1a1a2e;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 700;
         display: inline-block;
         margin-left: 10px;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
         animation: shimmer 2s infinite;
     }
     
@@ -478,12 +478,12 @@ st.markdown("""
     
     /* Login form enhancements */
     .login-container {
-        background: rgba(255, 255, 255, 0.08);
+        background: rgba(26, 26, 46, 0.8);
         backdrop-filter: blur(20px);
         border-radius: 25px;
         padding: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(100, 255, 218, 0.2);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         max-width: 500px;
         margin: 0 auto;
     }
@@ -496,9 +496,9 @@ st.markdown("""
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%),
-                    radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3), transparent 50%);
+        background: radial-gradient(circle at 20% 50%, rgba(0, 188, 212, 0.2), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(100, 255, 218, 0.2), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(3, 169, 244, 0.2), transparent 50%);
         animation: bgMove 20s ease infinite;
     }
     
@@ -510,12 +510,12 @@ st.markdown("""
     
     /* Premium access card */
     .premium-access-card {
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
-        border: 2px solid rgba(255, 215, 0, 0.3);
+        background: linear-gradient(135deg, rgba(0, 188, 212, 0.1), rgba(100, 255, 218, 0.1));
+        border: 2px solid rgba(100, 255, 218, 0.3);
         border-radius: 20px;
         padding: 30px;
         margin: 20px 0;
-        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 15px 40px rgba(0, 188, 212, 0.2);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -528,7 +528,7 @@ st.markdown("""
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(100, 255, 218, 0.1) 0%, transparent 70%);
         animation: rotate 20s linear infinite;
     }
     
@@ -547,7 +547,7 @@ st.markdown("""
     
     .radar-circle {
         position: absolute;
-        border: 2px solid rgba(99, 102, 241, 0.3);
+        border: 2px solid rgba(0, 188, 212, 0.3);
         border-radius: 50%;
         animation: radarPulse 2s infinite;
     }
@@ -555,6 +555,82 @@ st.markdown("""
     @keyframes radarPulse {
         0% { transform: scale(0.8); opacity: 1; }
         100% { transform: scale(1.2); opacity: 0; }
+    }
+    
+    /* User profile card */
+    .user-profile-card {
+        background: rgba(26, 26, 46, 0.7);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 25px;
+        border: 1px solid rgba(100, 255, 218, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .user-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #00bcd4, #64ffda);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 15px;
+        box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+    }
+    
+    /* Activity log */
+    .activity-log {
+        background: rgba(26, 26, 46, 0.5);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px 0;
+        border-left: 4px solid #00bcd4;
+    }
+    
+    .activity-time {
+        color: #64ffda;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    /* Admin panel */
+    .admin-panel {
+        background: rgba(26, 26, 46, 0.7);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 25px;
+        border: 1px solid rgba(100, 255, 218, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        margin: 20px 0;
+    }
+    
+    .admin-stat {
+        text-align: center;
+        padding: 20px;
+        border-radius: 15px;
+        background: rgba(0, 188, 212, 0.1);
+        margin: 10px 0;
+        transition: all 0.3s ease;
+    }
+    
+    .admin-stat:hover {
+        background: rgba(0, 188, 212, 0.2);
+        transform: translateY(-5px);
+    }
+    
+    .admin-stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #64ffda;
+    }
+    
+    .admin-stat-label {
+        color: #ffffff;
+        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -591,6 +667,7 @@ class SecurityManager:
         self.session_timeout = timedelta(minutes=30)
         self.encryption_key = Fernet.generate_key()
         self.cipher_suite = Fernet(self.encryption_key)
+        self.activity_log = []
     
     def encrypt_data(self, data):
         """Encrypt sensitive data"""
@@ -601,6 +678,15 @@ class SecurityManager:
     def decrypt_data(self, encrypted_data):
         """Decrypt sensitive data"""
         return self.cipher_suite.decrypt(encrypted_data).decode()
+    
+    def log_activity(self, user_id, action, details):
+        """Log user activity"""
+        self.activity_log.append({
+            'timestamp': datetime.now().isoformat(),
+            'user_id': user_id,
+            'action': action,
+            'details': details
+        })
     
     def validate_access_key(self, access_key):
         """Validate the provided access key with enhanced security"""
@@ -636,7 +722,7 @@ class SecurityManager:
                 last_attempt, attempts = self.failed_attempts[user_ip]
                 self.failed_attempts[user_ip] = (datetime.now(), attempts + 1)
                 
-            remaining_attempts = self.max_attempts - self.failed_attempts[user_ip][1]
+            remaining_attempts = self.max_attempts - self.failed_attempts[user_id][1]
             if remaining_attempts <= 0:
                 return {
                     "valid": False,
@@ -679,6 +765,12 @@ class SecurityManager:
     def generate_secure_token(self):
         """Generate a secure session token"""
         return secrets.token_urlsafe(32)
+    
+    def get_activity_log(self, user_id=None):
+        """Get activity log, optionally filtered by user"""
+        if user_id:
+            return [log for log in self.activity_log if log['user_id'] == user_id]
+        return self.activity_log
 
 # Initialize security manager
 security_manager = SecurityManager()
@@ -779,7 +871,16 @@ class EnhancedAuthenticationSystem:
                         "failed_attempts": 0,
                         "last_failed_attempt": None,
                         "session_token": None,
-                        "mfa_enabled": False
+                        "mfa_enabled": False,
+                        "profile": {
+                            "avatar": "👤",
+                            "bio": "System Administrator",
+                            "preferences": {
+                                "theme": "dark",
+                                "notifications": True,
+                                "language": "en"
+                            }
+                        }
                     }
                 }
                 self.save_users()
@@ -833,7 +934,16 @@ class EnhancedAuthenticationSystem:
             "failed_attempts": 0,
             "last_failed_attempt": None,
             "session_token": None,
-            "mfa_enabled": False
+            "mfa_enabled": False,
+            "profile": {
+                "avatar": "👤",
+                "bio": f"User at {company}",
+                "preferences": {
+                    "theme": "dark",
+                    "notifications": True,
+                    "language": "en"
+                }
+            }
         }
         self.save_users()
         return True, "User registered successfully"
@@ -862,12 +972,19 @@ class EnhancedAuthenticationSystem:
             session_token = security_manager.generate_secure_token()
             user_data['session_token'] = session_token
             
+            # Log activity
+            security_manager.log_activity(user_data['user_id'], "login", f"User {username} logged in")
+            
             self.save_users()
             return True, "Authentication successful"
         else:
             # Increment failed attempts
             user_data['failed_attempts'] = user_data.get('failed_attempts', 0) + 1
             user_data['last_failed_attempt'] = datetime.now().isoformat()
+            
+            # Log failed attempt
+            security_manager.log_activity(user_data['user_id'], "failed_login", f"Failed login attempt for {username}")
+            
             self.save_users()
             
             remaining_attempts = self.max_attempts - user_data['failed_attempts']
@@ -875,6 +992,21 @@ class EnhancedAuthenticationSystem:
                 return False, "Account locked. Please try again in 15 minutes."
             else:
                 return False, f"Invalid password. {remaining_attempts} attempts remaining."
+    
+    def update_user_profile(self, username, profile_data):
+        """Update user profile information"""
+        if username in self.users:
+            self.users[username]['profile'].update(profile_data)
+            self.save_users()
+            security_manager.log_activity(self.users[username]['user_id'], "profile_update", f"Profile updated for {username}")
+            return True
+        return False
+    
+    def get_user_profile(self, username):
+        """Get user profile information"""
+        if username in self.users:
+            return self.users[username].get('profile', {})
+        return {}
 
 # Enhanced API Key Manager with User Isolation
 class EnhancedAPIKeyManager:
@@ -1121,14 +1253,14 @@ search_analyzer = SearchAnalyzer()
 class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
-            'primary': '#6366F1',
-            'secondary': '#8B5CF6',
-            'success': '#10B981',
-            'warning': '#F59E0B',
-            'danger': '#EF4444',
-            'info': '#3B82F6',
-            'dark': '#1F2937',
-            'light': '#F3F4F6'
+            'primary': '#00bcd4',
+            'secondary': '#03a9f4',
+            'success': '#66bb6a',
+            'warning': '#ffa726',
+            'danger': '#ff6b6b',
+            'info': '#29b6f6',
+            'dark': '#1a1a2e',
+            'light': '#64ffda'
         }
     
     def create_radar_chart(self, data, labels, title):
@@ -1286,6 +1418,44 @@ def show_user_management():
         st.info("Only administrators can access user management features.")
         return
     
+    # Admin statistics
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.markdown("""
+        <div class="admin-stat">
+            <div class="admin-stat-value">{}</div>
+            <div class="admin-stat-label">Total Users</div>
+        </div>
+        """.format(len(auth_system.users)), unsafe_allow_html=True)
+    
+    with col2:
+        active_users = sum(1 for user in auth_system.users.values() if user.get('last_login'))
+        st.markdown("""
+        <div class="admin-stat">
+            <div class="admin-stat-value">{}</div>
+            <div class="admin-stat-label">Active Users</div>
+        </div>
+        """.format(active_users), unsafe_allow_html=True)
+    
+    with col3:
+        premium_users = sum(1 for user in auth_system.users.values() if user.get('access_level') == 'premium')
+        st.markdown("""
+        <div class="admin-stat">
+            <div class="admin-stat-value">{}</div>
+            <div class="admin-stat-label">Premium Users</div>
+        </div>
+        """.format(premium_users), unsafe_allow_html=True)
+    
+    with col4:
+        failed_logins = len([log for log in security_manager.activity_log if log['action'] == 'failed_login'])
+        st.markdown("""
+        <div class="admin-stat">
+            <div class="admin-stat-value">{}</div>
+            <div class="admin-stat-label">Failed Logins</div>
+        </div>
+        """.format(failed_logins), unsafe_allow_html=True)
+    
     # Show existing users
     st.write("### Existing Users")
     users_data = []
@@ -1296,7 +1466,8 @@ def show_user_management():
             "Email": user_info.get("email", "N/A"),
             "Access Level": user_info.get("access_level", "client"),
             "Last Login": user_info.get("last_login", "Never"),
-            "Created": user_info.get("created_at", "N/A")[:10] if user_info.get("created_at") else "N/A"
+            "Created": user_info.get("created_at", "N/A")[:10] if user_info.get("created_at") else "N/A",
+            "Status": "Active" if user_info.get('failed_attempts', 0) < 5 else "Locked"
         })
     
     if users_data:
@@ -1320,6 +1491,7 @@ def show_user_management():
             if user_to_manage:
                 # In a real application, you would send a password reset email
                 st.info(f"Password reset initiated for {user_to_manage}. An email has been sent with instructions.")
+                security_manager.log_activity(auth_system.users[user_to_manage]['user_id'], "password_reset", f"Password reset for {user_to_manage}")
     
     with col2:
         if st.button("Delete User", use_container_width=True, type="secondary"):
@@ -1327,18 +1499,34 @@ def show_user_management():
                 if st.checkbox(f"Confirm deletion of {user_to_manage}"):
                     del auth_system.users[user_to_manage]
                     auth_system.save_users()
+                    security_manager.log_activity(auth_system.users[user_to_manage]['user_id'], "user_deleted", f"User {user_to_manage} deleted")
                     st.success(f"User {user_to_manage} deleted")
                     st.rerun()
             elif user_to_manage == st.session_state.username:
                 st.error("You cannot delete your own account")
+    
+    # Activity log
+    st.markdown("---")
+    st.subheader("📋 Recent Activity Log")
+    
+    activity_logs = security_manager.get_activity_log()[-10:]  # Get last 10 activities
+    for log in reversed(activity_logs):
+        st.markdown(f"""
+        <div class="activity-log">
+            <div class="activity-time">{datetime.fromisoformat(log['timestamp']).strftime('%Y-%m-%d %H:%M:%S')}</div>
+            <div><strong>Action:</strong> {log['action']}</div>
+            <div><strong>User ID:</strong> {log['user_id']}</div>
+            <div><strong>Details:</strong> {log['details']}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 def show_login_form():
     """Display login form with enhanced design"""
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
-        <p style="font-size: 1.2rem; color: #A5B4FC;">Advanced Brand Protection & Threat Intelligence Platform</p>
+        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #64ffda 0%, #00bcd4 55%, #03a9f4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
+        <p style="font-size: 1.2rem; color: #64ffda;">Advanced Brand Protection & Threat Intelligence Platform</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1350,14 +1538,14 @@ def show_login_form():
         <div style='text-align: center;'>
             <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🛡️</div>
             <h3 style="color: white;">Secure Login</h3>
-            <p style="color: #A5B4FC;">Access your brand protection dashboard</p>
+            <p style="color: #64ffda;">Access your brand protection dashboard</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         with st.form("login_form"):
-            username = st.text_input("👤 Username", placeholder="Enter your username")
-            password = st.text_input("🔒 Password", type="password", placeholder="Enter your password")
+            username = st.text_input("👤 Username")
+            password = st.text_input("🔒 Password", type="password")
             
             # Remember me checkbox
             remember_me = st.checkbox("Remember me")
@@ -1393,7 +1581,7 @@ def show_login_form():
     # Forgot password link
     st.markdown("""
     <div style='text-align: center; margin-top: 20px;'>
-        <a href='#' style='color: #8B5CF6; text-decoration: none;'>Forgot your password?</a>
+        <a href='#' style='color: #64ffda; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1438,7 +1626,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Active Threats</h3>
             <h1>18</h1>
-            <p style="color: #EF4444;">+5 from yesterday</p>
+            <p style="color: #ff6b6b;">+5 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1447,7 +1635,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>High</h1>
-            <p style="color: #EF4444;">Elevated risk</p>
+            <p style="color: #ff6b6b;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1456,7 +1644,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Response Time</h3>
             <h1>2.1s</h1>
-            <p style="color: #10B981;">-0.4s improvement</p>
+            <p style="color: #66bb6a;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1465,7 +1653,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Protected Assets</h3>
             <h1>24</h1>
-            <p style="color: #10B981;">Fully secured</p>
+            <p style="color: #66bb6a;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1656,7 +1844,7 @@ def show_trend_analysis():
     st.line_chart(
         trend_data.set_index('Date'),
         use_container_width=True,
-        color=['#EF4444', '#F59E0B', '#10B981']
+        color=['#ff6b6b', '#ffa726', '#66bb6a']
     )
     
     # Platform distribution with radar chart
@@ -1739,9 +1927,7 @@ def show_access_required():
     with col1:
         access_key = st.text_input(
             "Enter Access Key:",
-            type="password",
-            placeholder="BG2024-PRO-ACCESS",
-            help="Enter your premium access key"
+            type="password"
         )
     
     with col2:
@@ -1843,7 +2029,6 @@ def show_api_key_management():
     api_key = st.text_input(
         f"{platform_info['field_name']}*",
         type="password",
-        placeholder=f"Paste your {platform_info['field_name']} here...",
         help=platform_info['field_help']
     )
     
@@ -1933,6 +2118,18 @@ def show_user_ai_dashboard():
     brand_name = st.session_state.get('brand_name', 'Your Brand')
     st.success(f"Welcome to your brand protection dashboard, {brand_name}!")
     
+    # User profile section
+    user_profile = auth_system.get_user_profile(st.session_state.username)
+    
+    st.markdown(f"""
+    <div class="user-profile-card">
+        <div class="user-avatar">{user_profile.get('avatar', '👤')}</div>
+        <h3>{st.session_state.username}</h3>
+        <p>{user_profile.get('bio', 'Brand Protection Specialist')}</p>
+        <p><strong>Company:</strong> {auth_system.users[st.session_state.username]['company']}</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Quick stats
     col1, col2, col3 = st.columns(3)
     
@@ -1941,7 +2138,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Brand Mentions</h3>
             <h1>142</h1>
-            <p style="color: #10B981;">+12 from last week</p>
+            <p style="color: #66bb6a;">+12 from last week</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1950,7 +2147,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>Low</h1>
-            <p style="color: #10B981;">Stable</p>
+            <p style="color: #66bb6a;">Stable</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1959,7 +2156,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Response Rate</h3>
             <h1>92%</h1>
-            <p style="color: #10B981;">Excellent</p>
+            <p style="color: #66bb6a;">Excellent</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2027,13 +2224,16 @@ def main():
     
     # Sidebar with user info and logout button
     with st.sidebar:
-        # User info
+        # User profile card
+        user_profile = auth_system.get_user_profile(st.session_state.username)
+        
         st.markdown(f"""
-        <div style="text-align: center; margin-bottom: 20px;">
-            <div style="font-size: 3rem;">👤</div>
+        <div class="user-profile-card">
+            <div class="user-avatar">{user_profile.get('avatar', '👤')}</div>
             <h3>{st.session_state.username}</h3>
-            <p>{st.session_state.get('user_access_level', 'user').title()} Access</p>
-            <p>{auth_system.users[st.session_state.username]['company']}</p>
+            <p>{user_profile.get('bio', 'Brand Protection Specialist')}</p>
+            <p><strong>Company:</strong> {auth_system.users[st.session_state.username]['company']}</p>
+            <p><strong>Access Level:</strong> {st.session_state.get('user_access_level', 'user').title()}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -2058,6 +2258,16 @@ def main():
         st.subheader("🔑 API Status")
         st.info(f"{len(api_keys)} platform(s) connected")
         
+        # User activity log
+        st.subheader("📋 Recent Activity")
+        user_activity = security_manager.get_activity_log(user_id)[-5:]  # Last 5 activities
+        for activity in reversed(user_activity):
+            st.markdown(f"""
+            <div style="font-size: 0.8rem; margin-bottom: 5px;">
+                <span style="color: #64ffda;">{datetime.fromisoformat(activity['timestamp']).strftime('%H:%M')}</span> - {activity['action']}
+            </div>
+            """, unsafe_allow_html=True)
+        
         # User management for admin only
         if st.session_state.get('user_access_level') == 'admin':
             st.markdown("---")
@@ -2066,6 +2276,7 @@ def main():
         
         st.markdown("---")
         if st.button("🚪 Logout", use_container_width=True):
+            security_manager.log_activity(user_id, "logout", f"User {st.session_state.username} logged out")
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
