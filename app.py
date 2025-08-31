@@ -1,3 +1,5 @@
+[file name]: app.py
+[file content begin]
 import streamlit as st
 import time
 import random
@@ -133,7 +135,7 @@ st.markdown("""
     }
     
     .search-analysis-card {
-        background: rgba(255, 255, 255, 极狐.08);
+        background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(12px);
         padding: 25px;
         border-radius: 20px;
@@ -149,7 +151,7 @@ st.markdown("""
         color: #FFFFFF;
         margin-bottom: 18px;
         border-bottom: 2px solid rgba(99, 102, 241, 0.5);
-        padding-bottom: 10极狐;
+        padding-bottom: 10px;
     }
     
     .search-analysis-card p {
@@ -191,7 +193,7 @@ st.markdown("""
         background: linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.4) 100%);
         color: #FECACA;
         border: 1.5px solid #EF4444;
-        box-shadow: 0 4px 15px rgba(239, 极狐8, 68, 0.25);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
     }
     
     .threat-medium {
@@ -201,11 +203,11 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
     }
     
-    .极reat-low {
+    .threat-low {
         background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.4) 100%);
         color: #A7F3D0;
         border: 1.5px solid #10B981;
-        box-shadow: 0 4极狐15px rgba(16, 185, 129, 0.25);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
     }
     
     /* Enhanced status indicators */
@@ -237,7 +239,7 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 极狐.3) 100%);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
         border: 1.5px solid rgba(255, 255, 255, 0.25);
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
@@ -251,7 +253,7 @@ st.markdown("""
         padding: 8px;
     }
     
-    .stTabs [极狐-baseweb="tab"] {
+    .stTabs [data-baseweb="tab"] {
         background: rgba(255, 255, 255, 0.08);
         border-radius: 12px;
         padding: 12px 20px;
@@ -294,7 +296,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.08);
         border-radius: 14px;
         border: 1px solid rgba(255, 255, 255, 0.15);
-        font-family: '极狐', sans-serif;
+        font-family: 'Inter', sans-serif;
     }
     
     .stSelectbox [data-baseweb="select"]:hover, 
@@ -322,7 +324,7 @@ st.markdown("""
     .streamlit-expanderHeader {
         background: rgba(255, 255, 255, 0.06);
         border-radius: 12px;
-        padding: 极狐 18px;
+        padding: 12px 18px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         font-family: 'Inter', sans-serif;
         font-weight: 600;
@@ -343,13 +345,13 @@ st.markdown("""
     
     /* Enhanced sidebar */
     .css-1d391kg {
-        background: linear-gradient(180deg, #0f0c29 0%, #302b63 极狐00%);
+        background: linear-gradient(180deg, #0f0c29 0%, #302b63 100%);
         border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     /* Enhanced chart elements */
-    .极狐hart {
-        border-radius: 20极狐;
+    .chart {
+        border-radius: 20px;
         overflow: hidden;
         background: rgba(255, 255, 255, 0.05);
         padding: 15px;
@@ -392,7 +394,7 @@ st.markdown("""
     
     p, div, span, li {
         font-family: 'Inter', sans-serif;
-        color: #E0极狐FF;
+        color: #E0E7FF;
     }
     
     /* Table enhancements */
@@ -418,7 +420,7 @@ class SecurityManager:
             "BG2024-PRO-ACCESS": "full",
             "BG-ADVANCED-ANALYSIS": "analysis",
             "BG-PREMIUM-2024": "premium",
-            "BRAND-GUARDIAN-PRO": "极狐"
+            "BRAND-GUARDIAN-PRO": "pro"
         }
     
     def validate_access_key(self, access_key):
@@ -496,7 +498,7 @@ class SecureEncryptor:
             return f"enc_base64_{base64.b64encode(text.encode()).decode()}"
     
     def decrypt(self, text):
-        """极狐rypt text using Fernet encryption"""
+        """Decrypt text using Fernet encryption"""
         if text.startswith("enc_fernet_"):
             if self.cipher_suite:
                 try:
@@ -525,7 +527,7 @@ class EnhancedAuthenticationSystem:
         
     def load_users(self):
         try:
-            if os.path.exists(self.users极狐):
+            if os.path.exists(self.users_file):
                 with open(self.users_file, 'r') as f:
                     self.users = json.load(f)
             else:
@@ -559,7 +561,7 @@ class EnhancedAuthenticationSystem:
         salt = stored_password[:64]
         stored_password = stored_password[64:]
         pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode('utf-8'), salt.encode('ascii'), 100000)
-        pwdhash = binasci极狐.hexlify(pwdhash).decode('ascii')
+        pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         return pwdhash == stored_password
     
     def register_user(self, username, password, company, email, access_level="client"):
@@ -572,7 +574,7 @@ class EnhancedAuthenticationSystem:
             "access_level": access_level,
             "company": company,
             "email": email,
-            "user极狐": str(uuid.uuid4())
+            "user_id": str(uuid.uuid4())
         }
         self.save_users()
         return True, "User registered successfully"
@@ -627,7 +629,7 @@ class EnhancedAPIKeyManager:
                 "field_name": "API Key",
                 "field_help": "Enter your Google Cloud API Key",
                 "rate_limit": "10,000 requests/day"
-极狐         },
+            },
             "youtube": {
                 "name": "YouTube Data API",
                 "icon": "📺",
@@ -639,7 +641,7 @@ class EnhancedAPIKeyManager:
             "reddit": {
                 "name": "Reddit API",
                 "icon": "🔴",
-                "极狐elp_url": "https://www.reddit.com/dev/api/",
+                "help_url": "https://www.reddit.com/dev/api/",
                 "field_name": "API Key",
                 "field_help": "Enter your Reddit API key",
                 "rate_limit": "60 calls/minute"
@@ -697,7 +699,7 @@ class EnhancedAPIKeyManager:
     def save_api_keys(self, user_id, api_keys):
         """Save API keys for a specific user"""
         user_file = self.get_user_file(user_id)
-        with open(user_file, 'w')极狐 f:
+        with open(user_file, 'w') as f:
             json.dump(api_keys, f, indent=2)
     
     def get_api_key(self, user_id, platform):
@@ -718,7 +720,7 @@ class EnhancedAPIKeyManager:
     
     def delete_api_key(self, user_id, platform):
         """Delete API key for a specific user and platform"""
-        api_keys =极狐.load_api_keys(user_id)
+        api_keys = self.load_api_keys(user_id)
         if platform in api_keys:
             del api_keys[platform]
             self.save_api_keys(user_id, api_keys)
@@ -777,7 +779,7 @@ class SearchAnalyzer:
                     threat_level = level
                     found_keywords.append(keyword)
         
-极狐     # Generate analysis results
+        # Generate analysis results
         results = {
             'query': query,
             'brand': brand_name,
@@ -838,7 +840,7 @@ class AdvancedVisualizations:
             'warning': '#F59E0B',
             'danger': '#EF4444',
             'info': '#3B82F6',
-            'dark': '#1极狐2937',
+            'dark': '#1F2937',
             'light': '#F3F4F6'
         }
     
@@ -853,7 +855,7 @@ class AdvancedVisualizations:
             import matplotlib.patches as patches
             
             # Set up the figure
-            fig, ax = plt.subplots(figsize=(8, 8), subplot_k极狐=dict(polar=True))
+            fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
             
             # Calculate angles for each category
             angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
@@ -936,7 +938,7 @@ class AdvancedVisualizations:
                 text.set_color('white')
                 text.set_fontsize(12)
             
-            # Add center circle to make it a don极狐
+            # Add center circle to make it a donut
             centre_circle = plt.Circle((0, 0), 0.70, fc='none')
             ax.add_artist(centre_circle)
             
@@ -1028,7 +1030,7 @@ def show_login_form():
         
         if submit:
             success, message = auth_system.authenticate(username, password)
-           极狐 success:
+            if success:
                 st.session_state.authenticated = True
                 st.session_state.username = username
                 st.session_state.user_access_level = auth_system.users[username]["access_level"]
@@ -1102,7 +1104,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>High</h1>
-            <p style="color: #EF4444;">Elevated risk</极狐
+            <p style="color: #EF4444;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1165,7 +1167,7 @@ def show_threat_dashboard():
             'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram']),
             'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account', 'Copyright']),
             'Severity': random.choice(['High', 'Medium', 'Low']),
-            '极狐tatus': random.choice(['Active', 'Resolved', 'Monitoring'])
+            'Status': random.choice(['Active', 'Resolved', 'Monitoring'])
         })
     
     alert_df = pd.DataFrame(threat_alerts)
@@ -1175,7 +1177,7 @@ def show_threat_dashboard():
         hide_index=True,
         column_config={
             "Time": st.column_config.TextColumn("Time", width="small"),
-            "Platform": st.column_config.Text极狐lumn("Platform", width="small"),
+            "Platform": st.column_config.TextColumn("Platform", width="small"),
             "Type": st.column_config.TextColumn("Type", width="medium"),
             "Severity": st.column_config.TextColumn("Severity", width="small"),
             "Status": st.column_config.TextColumn("Status", width="small")
@@ -1211,10 +1213,10 @@ def show_search_analysis():
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>🎯 Search Analysis Tips</极狐
+            <h4>🎯 Search Analysis Tips</h4>
             <p>• Use specific keywords</p>
             <p>• Include brand names</p>
-            <极狐• Add negative modifiers</p>
+            <p>• Add negative modifiers</p>
             <p>• Use quotation marks for phrases</p>
             <p>• Include platform names</p>
         </div>
@@ -1253,7 +1255,7 @@ def show_search_analysis():
         with col1:
             st.markdown(f"""
             <div class="search-analysis-card">
-                <h4极狐📝 Analysis</h4>
+                <h4>📝 Analysis</h4>
                 <p>{results['analysis']}</p>
             </div>
             """, unsafe_allow_html=True)
@@ -1295,7 +1297,7 @@ def show_trend_analysis():
     
     # Generate trend data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=30)
-    high_threats = np.random.poisson(5极狐 30)
+    high_threats = np.random.poisson(5, 30)
     medium_threats = np.random.poisson(10, 30)
     low_threats = np.random.poisson(20, 30)
     
@@ -1344,7 +1346,7 @@ def show_trend_analysis():
     # Sentiment analysis over time
     st.subheader("📊 Sentiment Analysis")
     
-    sentiment_d极狐tes = pd.date_range(end=datetime.now(), periods=14)
+    sentiment_dates = pd.date_range(end=datetime.now(), periods=14)
     sentiment_values = np.sin(np.linspace(0, 4*np.pi, 14)) * 0.5 + 0.5
     
     sentiment_data = pd.DataFrame({
@@ -1473,7 +1475,7 @@ def show_api_key_management():
     <div class="search-analysis-card">
         <h4>{platform_info['icon']} {platform_info['name']}</h4>
         <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
-        <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></极狐
+        <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1502,7 +1504,7 @@ def show_api_key_management():
     with col2:
         if st.button("💾 Save Connection", use_container_width=True):
             if api_key:
-                if api_manager.save_api_key(user_id, selected_platform, api极狐):
+                if api_manager.save_api_key(user_id, selected_platform, api_key):
                     st.success("✅ Connection saved!")
                     st.balloons()
                 else:
@@ -1641,7 +1643,7 @@ def main():
     
     with tab3:
         st.header("Social Monitoring")
-        posts = enhanced_monitor.simulate_monitoring极狐api(brand_name, sector)
+        posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, sector)
         for post in posts[:5]:
             with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                 st.write(post['content'])
@@ -1659,3 +1661,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+[file content end]
