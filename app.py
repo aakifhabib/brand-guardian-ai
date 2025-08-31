@@ -141,7 +141,7 @@ st.markdown("""
     }
     
     .threat-low {
-        background: rgba(16, 185, 129, 极速分析，快速响应");
+        background: rgba(16, 185, 129, 0.2);
         color: #10B981;
         border: 1px solid #10B981;
     }
@@ -161,7 +161,7 @@ st.markdown("""
     .stButton > button {
         border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 极速分析，快速响应");
+        background: rgba(255, 255, 255, 0.05);
         color: white;
         transition: all 0.3s ease;
     }
@@ -173,7 +173,7 @@ st.markdown("""
     }
     
     /* Tab styling */
-    .stTabs [data-baseweb="极速分析，快速响应"] {
+    .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
     }
     
@@ -185,9 +185,9 @@ st.markdown("""
         border-bottom: none;
     }
     
-极速分析，快速响应 [aria-selected="true"] {
+    .stTabs [aria-selected="true"] {
         background: rgba(99, 102, 241, 0.2);
-        border: 1px极速分析，快速响应 rgba(99, 102, 241, 0.5);
+        border: 1px solid rgba(99, 102, 241, 0.5);
         border-bottom: none;
     }
     
@@ -196,9 +196,9 @@ st.markdown("""
         font-size: 1.8rem;
     }
     
-    [data极速分析，快速响应="stMetricDelta"] {
+    [data-testid="stMetricDelta"] {
         font-size: 1rem;
-极速分析，快速响应
+    }
     
     /* Custom selectbox */
     .stSelectbox [data-baseweb="select"] {
@@ -238,7 +238,7 @@ st.markdown("""
     .streamlit-expanderHeader {
         background: rgba(255, 255, 255, 0.03);
         border-radius: 8px;
-        padding: 10极速分析，快速响应 15px;
+        padding: 10px 15px;
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
@@ -260,7 +260,7 @@ st.markdown("""
     
     /* Custom chart elements */
     .stChart {
-       极速分析，快速响应: 16px;
+        border-radius: 16px;
         overflow: hidden;
     }
     
@@ -279,7 +279,7 @@ st.markdown("""
     
     /* Custom number input */
     .stNumberInput [data-baseweb="input"] {
-        background: rgba(255, 255, 255, 0极速分析，快速响应");
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
     }
     
@@ -290,8 +290,8 @@ st.markdown("""
     }
     
     /* Custom time input */
-    .stTime极速分析，快速响应 [data-baseweb="input"] {
-        background: rgba极速分析，快速响应, 255, 255, 0.05);
+    .stTimeInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
     }
     
@@ -317,42 +317,18 @@ class SecurityManager:
             "BG-PREMIUM-2024": "premium",
             "BRAND-GUARDIAN-PRO": "pro"
         }
-        self.failed_attempts = {}
-        self.lockout_time = timedelta(minutes=15)
     
     def validate_access_key(self, access_key):
         """Validate the provided access key"""
-        # Check if user is temporarily locked out
-        user_ip = self.get_user_ip()
-        if user_ip in self.failed_attempts:
-            last_attempt, attempts = self.failed_attempts[user_ip]
-            if attempts >= 5 and datetime.now() - last_attempt < self.lockout_time:
-                return {
-                    "valid": False,
-                    "access_level": "none",
-                    "message": "❌ Too many failed attempts. Please try again in 15 minutes."
-                }
-        
         access_key = access_key.strip().upper()
         
         if access_key in self.valid_access_keys:
-            # Reset failed attempts on success
-            if user_ip in self.failed_attempts:
-                del self.failed_attempts[user_ip]
-                
             return {
                 "valid": True,
                 "access_level": self.valid_access_keys[access_key],
                 "message": "✅ Access granted to Advanced Threat Analysis"
             }
         else:
-            # Track failed attempts
-            if user_ip not in self.failed_attempts:
-                self.failed_attempts[user_ip] = (datetime.now(), 1)
-            else:
-                last_attempt, attempts = self.failed_attempts[user_ip]
-                self.failed_attempts[user_ip] = (datetime.now(), attempts + 1)
-                
             return {
                 "valid": False,
                 "access_level": "none",
@@ -367,14 +343,6 @@ class SecurityManager:
             st.session_state.access_level = "none"
         
         return st.session_state.advanced_access
-    
-    def get_user_ip(self):
-        """Get user IP address for security tracking"""
-        try:
-            # This is a simplified approach - in production, use proper IP detection
-            return str(hash(str(st.session_state.get('user_id', 'anonymous'))))
-        except:
-            return "unknown"
 
 # Initialize security manager
 security_manager = SecurityManager()
@@ -399,7 +367,7 @@ class SecureEncryptor:
         
         # Use the key for Fernet
         try:
-            if encryption_key极速分析，快速响应swith("fernet:"):
+            if encryption_key.startswith("fernet:"):
                 key = encryption_key[7:].encode()
             else:
                 key = encryption_key.encode()
@@ -450,8 +418,6 @@ class SecureEncryptor:
 class EnhancedAuthenticationSystem:
     def __init__(self):
         self.users_file = "users.json"
-        self.failed_attempts = {}
-        self.lockout_time = timedelta(minutes=15)
         self.load_users()
         
     def load_users(self):
@@ -467,10 +433,7 @@ class EnhancedAuthenticationSystem:
                         "access_level": "admin",
                         "company": "Default Company",
                         "email": "admin@example.com",
-                        "user_id": str(uuid.uuid4()),
-                        "created_at": datetime.now().isoformat(),
-                        "last_login": None,
-                        "failed_attempts": 0
+                        "user_id": str(uuid.uuid4())
                     }
                 }
                 self.save_users()
@@ -501,24 +464,12 @@ class EnhancedAuthenticationSystem:
         if username in self.users:
             return False, "Username already exists"
         
-        # Password strength validation
-        if len(password) < 8:
-            return False, "Password must be at least 8 characters long"
-        if not re.search(r"[A-Z]", password):
-            return False, "Password must contain at least one uppercase letter"
-        if not re.search(r"[a-z]", password):
-            return False, "Password must contain at least one lowercase letter"
-        if not re.search(r"[0-9]", password):
-            return False, "Password must contain at least one number"
-        
         self.users[username] = {
             "password": self.hash_password(password),
             "access_level": access_level,
-极速分析，快速响应            "email": email,
-            "user_id": str(uuid.uuid4()),
-            "created_at": datetime.now().isoformat(),
-            "last_login": None,
-            "failed_attempts": 0
+            "company": company,
+            "email": email,
+            "user_id": str(uuid.uuid4())
         }
         self.save_users()
         return True, "User registered successfully"
@@ -528,33 +479,10 @@ class EnhancedAuthenticationSystem:
         if username not in self.users:
             return False, "User not found"
         
-        # Check if account is locked
-        user_data = self.users[username]
-        if user_data.get('failed_attempts', 0) >= 5:
-            last_attempt = user_data.get('last_failed_attempt')
-            if last_attempt and (datetime.now() - datetime.fromisoformat(last_attempt)) < self.lockout_time:
-                return False, "Account locked. Please try again in 15 minutes."
-            else:
-                # Reset failed attempts after lockout period
-                user_data['failed_attempts'] = 0
-        
-        if self.verify_password(user_data["password"], password):
-            # Reset failed attempts on successful login
-            user_data['failed_attempts'] = 0
-            user_data['last_login'] = datetime.now().isoformat()
-            self.save_users()
+        if self.verify_password(self.users[username]["password"], password):
             return True, "Authentication successful"
-        else:
-            # Increment failed attempts
-            user_data['failed_attempts'] = user_data.get('failed_attempts', 0) + 1
-            user_data['last_failed_attempt'] = datetime.now().isoformat()
-            self.save_users()
-            
-            remaining_attempts = 5 - user_data['failed_attempts']
-            if remaining_attempts <= 0:
-                return False, "Account locked. Please try again in 15 minutes."
-            else:
-                return False, f"Invalid password. {remaining_attempts} attempts remaining."
+        
+        return False, "Invalid password"
 
 # Enhanced API Key Manager with User Isolation
 class EnhancedAPIKeyManager:
@@ -577,7 +505,7 @@ class EnhancedAPIKeyManager:
                 "name": "Facebook Graph API",
                 "icon": "📘",
                 "help_url": "https://developers.facebook.com/",
-                "field_name极速分析，快速响应": "Access Token",
+                "field_name": "Access Token",
                 "field_help": "Enter your Facebook Access Token with pages permissions",
                 "rate_limit": "200 calls/hour"
             },
@@ -608,12 +536,12 @@ class EnhancedAPIKeyManager:
             "reddit": {
                 "name": "Reddit API",
                 "icon": "🔴",
-                "help_url":极速分析，快速响应://www.reddit.com/dev/api/",
+                "help_url": "https://www.reddit.com/dev/api/",
                 "field_name": "API Key",
                 "field_help": "Enter your Reddit API key",
                 "rate_limit": "60 calls/minute"
             },
-            "tikt极速分析，快速响应": {
+            "tiktok": {
                 "name": "TikTok Business API",
                 "icon": "🎵",
                 "help_url": "https://developers.tiktok.com/",
@@ -663,7 +591,7 @@ class EnhancedAPIKeyManager:
         except:
             return {}
     
-    def save_api_keys极速分析，快速响应 user_id, api_keys):
+    def save_api_keys(self, user_id, api_keys):
         """Save API keys for a specific user"""
         user_file = self.get_user_file(user_id)
         with open(user_file, 'w') as f:
@@ -709,7 +637,7 @@ class EnhancedAPIKeyManager:
             else:
                 return {
                     "success": False,
-                    "message": f"❌ Failed to connect to {self.supported_platforms极速分析，快速响应]['name']}",
+                    "message": f"❌ Failed to connect to {self.supported_platforms[platform]['name']}",
                     "suggestion": "Please check your API key and try again."
                 }
         except Exception as e:
@@ -771,7 +699,7 @@ class SearchAnalyzer:
     def generate_recommendations(self, threat_level):
         """Generate recommendations based on threat level"""
         recommendations = {
-            '极速分析，快速响应': [
+            'high': [
                 "Immediate crisis management protocol activation",
                 "Legal team notification",
                 "Press statement preparation",
@@ -806,7 +734,7 @@ class AdvancedVisualizations:
             'success': '#10B981',
             'warning': '#F59E0B',
             'danger': '#EF4444',
-            'info': '#3B82极速分析，快速响应',
+            'info': '#3B82F6',
             'dark': '#1F2937',
             'light': '#F3F4F6'
         }
@@ -819,7 +747,7 @@ class AdvancedVisualizations:
             import matplotlib.patches as patches
             
             # Set up the figure
-            fig极速分析，快速响应 ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+            fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
             
             # Calculate angles for each category
             angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
@@ -868,7 +796,7 @@ class AdvancedVisualizations:
         })
         st.bar_chart(chart_data.set_index('Category'), use_container_width=True)
     
-    def create_sentiment_timeline(self, dates, values极速分析，快速响应 title):
+    def create_sentiment_timeline(self, dates, values, title):
         """Create an advanced sentiment timeline"""
         chart_data = pd.DataFrame({
             'Date': dates,
@@ -900,7 +828,7 @@ class AdvancedVisualizations:
                 autotext.set_fontweight('bold')
             
             for text in texts:
-                text极速分析，快速响应('white')
+                text.set_color('white')
                 text.set_fontsize(12)
             
             # Add center circle to make it a donut
@@ -908,7 +836,7 @@ class AdvancedVisualizations:
             ax.add_artist(centre_circle)
             
             # Add title
-            plt.title(title, color='white', fontsize=16, fontweight='bold', pad极速分析，快速响应
+            plt.title(title, color='white', fontsize=16, fontweight='bold', pad=20)
             
             # Style the plot
             ax.set_facecolor('none')
@@ -941,7 +869,7 @@ def show_user_registration():
             company = st.text_input("Company Name", help="Client's company name")
         
         with col2:
-            password = st.text_input("Password", type="password", help="Set a secure password (min 8 chars, upper/lowercase, number)")
+            password = st.text_input("Password", type="password", help="Set a secure password")
             email = st.text_input("Email", help="Client's email address")
         
         submitted = st.form_submit_button("Register Client", use_container_width=True)
@@ -960,10 +888,8 @@ def show_user_registration():
 def show_user_management():
     st.subheader("👥 User Management")
     
-    # Check if user is admin
     if st.session_state.get('user_access_level') != 'admin':
-        st.error("⛔ Administrator access required")
-        st.info("Only administrators can access user management features.")
+        st.warning("⛔ Admin access required to manage users")
         return
     
     # Show existing users
@@ -974,9 +900,7 @@ def show_user_management():
             "Username": username,
             "Company": user_info.get("company", "N/A"),
             "Email": user_info.get("email", "N/A"),
-            "Access Level": user_info.get("access_level", "client"),
-            "Last Login": user_info.get("last_login", "Never"),
-            "Created": user_info.get("created_at", "N/A")[:10] if user_info.get("created_at") else "N/A"
+            "Access Level": user_info.get("access_level", "client")
         })
     
     if users_data:
@@ -986,31 +910,6 @@ def show_user_management():
     
     # Registration form
     show_user_registration()
-    
-    # User actions (delete, reset password)
-    st.markdown("---")
-    st.subheader("User Actions")
-    
-    user_to_manage = st.selectbox("Select User", list(auth_system.users.keys()))
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        if st.button("Reset Password", use_container_width=True):
-            if user_to_manage:
-                # In a real application, you would send a password reset email
-                st.info(f"Password reset initiated for {user_to_manage}. An email has been sent with instructions.")
-    
-    with col2:
-        if st.button("Delete User", use_container_width=True, type="secondary"):
-            if user_to_manage and user_to_manage != st.session_state.username:
-                if st.checkbox(f"Confirm deletion of {user_to_manage}"):
-                    del auth_system.users[user_to_manage]
-                    auth_system.save_users()
-                    st.success(f"User {user_to_manage} deleted")
-                    st.rerun()
-            elif user_to_manage == st.session_state.username:
-                st.error("You cannot delete your own account")
 
 def show_login_form():
     """Display login form"""
@@ -1033,28 +932,22 @@ def show_login_form():
                 st.session_state.username = username
                 st.session_state.user_access_level = auth_system.users[username]["access_level"]
                 st.session_state.user_id = auth_system.users[username]["user_id"]
-                st.session_state.login_time = datetime.now().isoformat()
                 st.success("✅ Login successful!")
                 time.sleep(1)
                 st.rerun()
             else:
                 st.error(f"❌ {message}")
     
-    # Don't show demo credentials on the login page for security
-    with st.expander("Need Help?"):
-        st.markdown("""
-        - Contact your administrator for account access
-        - Passwords are case-sensitive
-        - Account lockout after 5 failed attempts
-        """)
+    st.info("**Demo Credentials:** username: `admin` / password: `brandguardian2024`")
     
     # Add security information
     with st.expander("🔒 Security Information"):
         st.markdown("""
         - All API keys are encrypted using Fernet encryption
         - Passwords are never stored in plain text
-        - Account lockout after 5 failed attempts
+        - Account lockout after 3 failed attempts
         - For production use, set environment variables:
+            - `BG_USERNAME` and `BG_PASSWORD` for authentication
             - `ENCRYPTION_KEY` for data encryption
         """)
 
@@ -1099,7 +992,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Active Threats</h3>
             <h1>18</h1>
-            <p style="color: #EF4444;">+5 from yesterday</极速分析，快速响应>
+            <p style="color: #EF4444;">+5 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1123,7 +1016,7 @@ def show_threat_dashboard():
     
     with col4:
         st.markdown("""
-        <极速分析，快速响应 class="metric-card">
+        <div class="metric-card">
             <h3>Protected Assets</h3>
             <h1>24</h1>
             <p style="color: #10B981;">Fully secured</p>
@@ -1221,13 +1114,13 @@ def show_search_analysis():
             <h4>🎯 Search Analysis Tips</h4>
             <p>• Use specific keywords</p>
             <p>• Include brand names</p>
-            <p>• Add negative modifiers</极速分析，快速响应>
+            <p>• Add negative modifiers</p>
             <p>• Use quotation marks for phrases</p>
             <p>• Include platform names</p>
         </div>
         """, unsafe_allow_html=True)
         
-        st.mark极速分析，快速响应("""
+        st.markdown("""
         <div class="search-analysis-card">
             <h4>📊 Threat Levels</h4>
             <p><span class="threat-high">High</span> - Immediate action needed</p>
@@ -1244,11 +1137,11 @@ def show_search_analysis():
         st.subheader("📋 Analysis Results")
         
         # Threat level indicator
-        threat_class = f"th极速分析，快速响应-{results['threat_level']}"
+        threat_class = f"threat-{results['threat_level']}"
         st.markdown(f"""
         <div class="search-analysis-card">
             <h4>Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
-            <p><strong>Query:</strong> {results['query极速分析，快速响应']}</p>
+            <p><strong>Query:</strong> {results['query']}</p>
             <p><strong>Brand:</strong> {results['brand']}</p>
             <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
         </div>
@@ -1339,7 +1232,7 @@ def show_trend_analysis():
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4极速分析，快速响应 Platform Insights</h4>
+            <h4>📊 Platform Insights</h4>
             <p>Twitter: 45 threats (42%)</p>
             <p>Facebook: 32 threats (30%)</p>
             <p>Reddit: 28 threats (26%)</p>
@@ -1367,7 +1260,7 @@ def show_quick_actions():
     
     col1, col2, col3 = st.columns(3)
     
-    with极速分析，快速响应:
+    with col1:
         if st.button("🔄 Scan All Platforms", use_container_width=True):
             st.success("Platform scan initiated!")
             time.sleep(1)
@@ -1456,7 +1349,7 @@ def show_api_key_management():
                         <div style="font-size: 2rem; margin-bottom: 10px;">{platform_info['icon']}</div>
                         <h4>{platform_info['name']}</h4>
                         <p>Status: <span class="api-status-connected">✅ Connected</span></p>
-                        <p>Rate Limit: {platform_info['rate_limit']}</极速分析，快速响应>
+                        <p>Rate Limit: {platform_info['rate_limit']}</p>
                     </div>
                     """, unsafe_allow_html=True)
                     
@@ -1509,7 +1402,7 @@ def show_api_key_management():
     with col2:
         if st.button("💾 Save Connection", use_container_width=True):
             if api_key:
-                if api_manager.save_api_key(user_id, selected极速分析，快速响应, api_key):
+                if api_manager.save_api_key(user_id, selected_platform, api_key):
                     st.success("✅ Connection saved!")
                     st.balloons()
                 else:
@@ -1562,7 +1455,7 @@ class EnhancedSocialMediaMonitor:
         templates = {
             'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
             'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
-            'retail': [极速分析，快速响应 product quality", f"{brand_name} store experience"]
+            'retail': [f"{brand_name} product quality", f"{brand_name} store experience"]
         }
         return random.choice(templates.get(sector, templates['technology']))
 
