@@ -99,14 +99,14 @@ st.markdown("""
         backdrop-filter: blur(10px);
         padding: 20px;
         border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 极速分析，快速响应);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         margin: 15px 0;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
     
     .search-result-card {
         background: rgba(255, 255, 255, 0.03);
-        border-radius: 12极速分析，快速响应;
+        border-radius: 12px;
         padding: 15px;
         margin: 10px 0;
         border-left: 4px solid #6366F1;
@@ -131,7 +131,7 @@ st.markdown("""
     .threat-high {
         background: rgba(239, 68, 68, 0.2);
         color: #EF4444;
-        border: 1px solid #极速分析，快速响应;
+        border: 1px solid #EF4444;
     }
     
     .threat-medium {
@@ -167,7 +167,7 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: rgba(255, 255, 255, 0.极速分析，快速响应);
+        background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.2);
         transform: translateY(-2px);
     }
@@ -177,10 +177,10 @@ st.markdown("""
         gap: 8px;
     }
     
-    .st极速分析，快速响应 [data-baseweb="tab"] {
+    .stTabs [data-baseweb="tab"] {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 12px 12px 0 0;
-       极速分析，快速响应: 10px 16px;
+        padding: 10px 16px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-bottom: none;
     }
@@ -219,7 +219,7 @@ st.markdown("""
     }
     
     /* Custom spinner */
-    .stSp极速分析，快速响应 > div {
+    .stSpinner > div {
         border: 3px solid rgba(255, 255, 255, 0.1);
         border-radius: 50%;
         border-top: 3px solid #6366F1;
@@ -230,7 +230,7 @@ st.markdown("""
     }
     
     @keyframes spin {
-        0% { transform: rotate(0极速分析，快速响应); }
+        0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
     
@@ -265,8 +265,8 @@ st.markdown("""
     }
     
     /* Custom progress bars */
-    .stProgress > div >极速分析，快速响应 {
-        background: linear-gradient(90极速分析，快速响应, #6366F1 0%, #8B5CF6 100%);
+    .stProgress > div > div > div {
+        background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
     }
     
     /* Custom radio buttons */
@@ -275,7 +275,7 @@ st.markdown("""
         padding: 15px;
         border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.1);
-极速分析，快速响应
+    }
     
     /* Custom number input */
     .stNumberInput [data-baseweb="input"] {
@@ -284,7 +284,7 @@ st.markdown("""
     }
     
     /* Custom date input */
-    .stDateInput [极速分析，快速响应="input"] {
+    .stDateInput [data-baseweb="input"] {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 12px;
     }
@@ -431,7 +431,7 @@ class SecureEncryptor:
                 return f"enc_base64_{base64.b64encode(text.encode()).decode()}"
         else:
             # Fallback to basic encoding
-            return f"极速分析，快速响应_base64_{base64.b64encode(text.encode()).decode()}"
+            return f"enc_base64_{base64.b64encode(text.encode()).decode()}"
     
     def decrypt(self, text):
         """Decrypt text using Fernet encryption"""
@@ -504,7 +504,7 @@ class EnhancedAuthenticationSystem:
         salt = stored_password[:64]
         stored_password = stored_password[64:]
         pwdhash = hashlib.pbkdf2_hmac('sha512', provided_password.encode('utf-8'), salt.encode('ascii'), 100000)
-        pwdhash = binasci极速分析，快速响应.hexlify(pwdhash).decode('ascii')
+        pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         return pwdhash == stored_password
     
     def register_user(self, username, password, company, email, access_level="client"):
@@ -607,7 +607,7 @@ class EnhancedAPIKeyManager:
             "google": {
                 "name": "Google APIs",
                 "icon": "🔍",
-                "极速分析，快速响应_url": "https://console.cloud.google.com/",
+                "help_url": "https://console.cloud.google.com/",
                 "field_name": "API Key",
                 "field_help": "Enter your Google Cloud API Key",
                 "rate_limit": "10,000 requests/day"
@@ -645,7 +645,7 @@ class EnhancedAPIKeyManager:
                 "rate_limit": "3,500 requests/day"
             },
             "google_analytics": {
-                "name": "极速分析，快速响应 Analytics",
+                "name": "Google Analytics",
                 "icon": "📊",
                 "help_url": "https://analytics.google.com/",
                 "field_name": "Property ID",
@@ -663,7 +663,7 @@ class EnhancedAPIKeyManager:
         }
         
     def get_user_file(self, user_id):
-        """Get the API极速分析，快速响应 key file for a specific user"""
+        """Get the API key file for a specific user"""
         return os.path.join(self.api_keys_dir, f"{user_id}_keys.json")
     
     def load_api_keys(self, user_id):
@@ -695,7 +695,7 @@ class EnhancedAPIKeyManager:
         """Save API key for a specific user and platform"""
         api_keys = self.load_api_keys(user_id)
         if api_key:
-            api_keys极速分析，快速响应[platform] = self.encryptor.encrypt(api_key)
+            api_keys[platform] = self.encryptor.encrypt(api_key)
             self.save_api_keys(user_id, api_keys)
             return True
         return False
@@ -800,7 +800,7 @@ class SearchAnalyzer:
                 "Competitive analysis update",
                 "Weekly review scheduling"
             ],
-            '极速分析，快速响应': [
+            'low': [
                 "Continue standard monitoring",
                 "Track sentiment trends",
                 "Update brand health metrics",
@@ -823,7 +823,7 @@ class AdvancedVisualizations:
             'danger': '#EF4444',
             'info': '#3B82F6',
             'dark': '#1F2937',
-            'light': '#F3极速分析，快速响应'
+            'light': '#F3F4F6'
         }
     
     def create_radar_chart(self, data, labels, title):
@@ -846,7 +846,7 @@ class AdvancedVisualizations:
             
             # Plot the data
             ax.plot(angles, values, color=self.colors['primary'], linewidth=2, linestyle='solid')
-            ax.fill(angles, values, color=self.colors['primary'], alpha极速分析，快速响应.25)
+            ax.fill(angles, values, color=self.colors['primary'], alpha=0.25)
             
             # Add labels
             ax.set_thetagrids(np.degrees(angles[:-1]), labels)
@@ -885,7 +885,7 @@ class AdvancedVisualizations:
     
     def create_sentiment_timeline(self, dates, values, title):
         """Create an advanced sentiment timeline"""
-        chart极速分析，快速响应 = pd.DataFrame({
+        chart_data = pd.DataFrame({
             'Date': dates,
             'Sentiment': values
         })
@@ -1138,7 +1138,7 @@ def show_threat_dashboard():
     
     with col2:
         st.markdown("""
-        <极速分析，快速响应 class="metric-card">
+        <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>High</h1>
             <p style="color: #EF4444;">Elevated risk</p>
@@ -1150,7 +1150,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Response Time</h3>
             <h1>2.1s</h1>
-            <p style="极速分析，快速响应: #10B981;">-0.4s improvement</p>
+            <p style="color: #10B981;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1158,7 +1158,7 @@ def show_threat_dashboard():
         st.markdown("""
         <div class="metric-card">
             <h3>Protected Assets</h3>
-            <h1>24</极速分析，快速响应>
+            <h1>24</h1>
             <p style="color: #10B981;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
@@ -1171,7 +1171,7 @@ def show_threat_dashboard():
     threats = [8, 12, 5, 18, 10, 7, 14]
     
     # Create an advanced chart
-    viz.create_sentiment_t极速分析，快速响应eline(dates, threats, "Threat Activity Over Time")
+    viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
     
     # Threat distribution
     st.subheader("🌡️ Threat Distribution")
@@ -1187,7 +1187,7 @@ def show_threat_dashboard():
         <div class="search-analysis-card">
             <h4>📊 Threat Insights</h4>
             <p><span class="threat-high">High</span>: 8 threats detected</p>
-            <p><span class="threat-medium">Medium</span>: 5 threats detected</极速分析，快速响应>
+            <p><span class="threat-medium">Medium</span>: 5 threats detected</p>
             <p><span class="threat-low">Low</span>: 5 threats detected</p>
             <p>Most active platform: Twitter</p>
             <p>Peak time: 14:00-16:00</p>
@@ -1256,14 +1256,14 @@ def show_search_analysis():
             <p>• Include brand names</p>
             <p>• Add negative modifiers</p>
             <p>• Use quotation marks for phrases</p>
-            <极速分析，快速响应>• Include platform names</p>
+            <p>• Include platform names</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown("""
         <div class="search-analysis-card">
             <h4>📊 Threat Levels</h4>
-            <p><span class="极速分析，快速响应-high">High</span> - Immediate action needed</p>
+            <p><span class="threat-high">High</span> - Immediate action needed</p>
             <p><span class="threat-medium">Medium</span> - Monitor closely</p>
             <p><span class="threat-low">Low</span> - Standard monitoring</p>
         </div>
@@ -1294,7 +1294,7 @@ def show_search_analysis():
             st.markdown(f"""
             <div class="search-analysis-card">
                 <h4>📝 Analysis</h4>
-                <p>{results['analysis']}</极速分析，快速响应>
+                <p>{results['analysis']}</p>
             </div>
             """, unsafe_allow_html=True)
         
@@ -1350,7 +1350,7 @@ def show_trend_analysis():
     st.line_chart(
         trend_data.set_index('Date'),
         use_container_width=True,
-        color=['#EF444极速分析，快速响应', '#F59E0B', '#10B981']
+        color=['#EF4444', '#F59E0B', '#10B981']
     )
     
     # Platform distribution with radar chart
@@ -1360,7 +1360,7 @@ def show_trend_analysis():
     
     with col1:
         platforms = ['Twitter', 'Facebook', 'Reddit', 'Instagram', 'YouTube']
-        threat_counts = [45, 32, 28, 19极速分析，快速响应 12]
+        threat_counts = [45, 32, 28, 19, 12]
         
         # Create radar chart
         viz.create_radar_chart(
@@ -1376,7 +1376,7 @@ def show_trend_analysis():
             <p>Twitter: 45 threats (42%)</p>
             <p>Facebook: 32 threats (30%)</p>
             <p>Reddit: 28 threats (26%)</p>
-            <p>Instagram: 19 threats (18%)</极速分析，快速响应>
+            <p>Instagram: 19 threats (18%)</p>
             <p>YouTube: 12 threats (11%)</p>
         </div>
         """, unsafe_allow_html=True)
@@ -1407,7 +1407,7 @@ def show_quick_actions():
             st.info("Scanning Twitter, Facebook, Instagram, Reddit...")
     
     with col2:
-       极速分析，快速响应 st.button("📊 Generate Report", use_container_width=True):
+        if st.button("📊 Generate Report", use_container_width=True):
             st.success("Threat report generation started!")
             time.sleep(1)
             st.info("Compiling data from last 7 days...")
@@ -1482,7 +1482,7 @@ def show_api_key_management():
         cols = st.columns(3)
         for i, (platform, encrypted_key) in enumerate(api_keys.items()):
             if platform in api_manager.supported_platforms:
-                platform_info = api_manager.supported_platform极速分析，快速响应[platform]
+                platform_info = api_manager.supported_platforms[platform]
                 with cols[i % 3]:
                     st.markdown(f"""
                     <div class="search-analysis-card">
