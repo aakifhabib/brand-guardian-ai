@@ -14,6 +14,10 @@ import math
 from cryptography.fernet import Fernet
 import binascii
 import uuid
+import secrets
+from PIL import Image
+import io
+import requests
 
 # Set page config first
 st.set_page_config(
@@ -23,16 +27,30 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Generate and display premium access key
+def generate_premium_key():
+    """Generate a secure premium access key"""
+    # Generate a cryptographically secure random key
+    key = secrets.token_urlsafe(16)
+    # Add prefix to make it identifiable
+    premium_key = f"BG-PREMIUM-{key.upper()}"
+    return premium_key
+
+# Display the premium key in the console (for admin use)
+premium_access_key = generate_premium_key()
+print(f"PREMIUM ACCESS KEY: {premium_access_key}")
+
 # Advanced CSS with enhanced UI components
 st.markdown("""
 <style>
     /* Base styles */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     .main {
         background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         color: #FFFFFF;
         font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
     }
     
     .stApp {
@@ -47,9 +65,34 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
+    /* Animated particles background */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+    
+    .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 20s infinite linear;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+    }
+    
     /* Premium header styling */
     .premium-header {
-        font-size: 3rem;
+        font-size: 3.5rem;
         font-weight: 800;
         text-align: center;
         margin: 20px 0;
@@ -57,6 +100,12 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3);
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+        from { text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3); }
+        to { text-shadow: 0px 2px 20px rgba(255, 106, 136, 0.6); }
     }
     
     .floating {
@@ -74,157 +123,248 @@ st.markdown("""
         color: #A5B4FC;
         text-align: center;
         margin-bottom: 40px;
+        animation: fadeIn 2s ease-in;
     }
     
-    /* Card styling */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Enhanced card styling */
     .metric-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 10px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        padding: 25px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        margin: 15px 0;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+    }
+    
+    .metric-card:hover::before {
+        transform: translateX(100%);
     }
     
     .metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.25);
     }
     
     .search-analysis-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        padding: 20px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 15px 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        padding: 25px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        margin: 20px 0;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .search-analysis-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
     }
     
     .search-result-card {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 12px;
-        padding: 15px;
-        margin: 10px 0;
-        border-left: 4px solid #6366F1;
-        transition: all 0.2s ease;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px 0;
+        border-left: 5px solid #6366F1;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .search-result-card:hover {
-        background: rgba(255, 255, 255, 0.07);
-        transform: translateX(5px);
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
     }
     
-    /* Threat indicators */
+    /* Enhanced threat indicators */
     .threat-indicator {
-        padding: 8px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        margin: 5px;
+        padding: 10px 16px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 8px;
         display: inline-block;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .threat-indicator:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     }
     
     .threat-high {
-        background: rgba(239, 68, 68, 0.2);
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.1));
         color: #EF4444;
-        border: 1px solid #EF4444;
+        border: 1px solid rgba(239, 68, 68, 0.5);
     }
     
     .threat-medium {
-        background: rgba(245, 158, 11, 0.2);
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(245, 158, 11, 0.1));
         color: #F59E0B;
-        border: 1px solid #F59E0B;
+        border: 1px solid rgba(245, 158, 11, 0.5);
     }
     
     .threat-low {
-        background: rgba(16, 185, 129, 0.2);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.1));
         color: #10B981;
-        border: 1px solid #10B981;
+        border: 1px solid rgba(16, 185, 129, 0.5);
     }
     
     /* Status indicators */
     .api-status-connected {
         color: #10B981;
-        font-weight: 600;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .api-status-connected::before {
+        content: '●';
+        margin-right: 5px;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
     }
     
     .api-status-disconnected {
         color: #EF4444;
-        font-weight: 600;
+        font-weight: 700;
     }
     
-    /* Button styling */
+    /* Enhanced button styling */
     .stButton > button {
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
         color: white;
-        transition: all 0.3s ease;
+        font-weight: 600;
+        padding: 12px 24px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .stButton > button:hover::before {
+        left: 100%;
     }
     
     .stButton > button:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
     
-    /* Tab styling */
+    /* Enhanced tab styling */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 12px;
+        margin-bottom: 20px;
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px 12px 0 0;
-        padding: 10px 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 15px 15px 0 0;
+        padding: 14px 20px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-bottom: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(255, 255, 255, 0.12);
     }
     
     .stTabs [aria-selected="true"] {
-        background: rgba(99, 102, 241, 0.2);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
         border: 1px solid rgba(99, 102, 241, 0.5);
         border-bottom: none;
+        box-shadow: 0 -4px 15px rgba(99, 102, 241, 0.3);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
-        font-size: 1.8rem;
+        font-size: 2.2rem;
+        font-weight: 800;
     }
     
     [data-testid="stMetricDelta"] {
-        font-size: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
     }
     
-    /* Custom selectbox */
-    .stSelectbox [data-baseweb="select"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
+    /* Enhanced input styling */
+    .stSelectbox [data-baseweb="select"], 
+    .stTextInput [data-baseweb="input"], 
+    .stTextArea [data-baseweb="textarea"],
+    .stNumberInput [data-baseweb="input"],
+    .stDateInput [data-baseweb="input"],
+    .stTimeInput [data-baseweb="input"] {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: white;
+        transition: all 0.3s ease;
     }
     
-    /* Custom text input */
-    .stTextInput [data-baseweb="input"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-    }
-    
-    /* Custom text area */
-    .stTextArea [data-baseweb="textarea"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
+    .stSelectbox [data-baseweb="select"]:hover, 
+    .stTextInput [data-baseweb="input"]:hover, 
+    .stTextArea [data-baseweb="textarea"]:hover,
+    .stNumberInput [data-baseweb="input"]:hover,
+    .stDateInput [data-baseweb="input"]:hover,
+    .stTimeInput [data-baseweb="input"]:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
     }
     
     /* Custom spinner */
     .stSpinner > div {
-        border: 3px solid rgba(255, 255, 255, 0.1);
+        border: 4px solid rgba(255, 255, 255, 0.1);
         border-radius: 50%;
-        border-top: 3px solid #6366F1;
-        width: 30px;
-        height: 30px;
+        border-top: 4px solid #6366F1;
+        width: 40px;
+        height: 40px;
         animation: spin 1s linear infinite;
         margin: 0 auto;
     }
@@ -236,93 +376,234 @@ st.markdown("""
     
     /* Custom expander */
     .streamlit-expanderHeader {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 8px;
-        padding: 10px 15px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 14px 18px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .streamlit-expanderHeader:hover {
+        background: rgba(255, 255, 255, 0.12);
     }
     
     /* Custom dataframes */
     .dataframe {
-        border-radius: 12px;
+        border-radius: 15px;
         overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
     
     /* Custom success/error boxes */
     .stAlert {
-        border-radius: 12px;
+        border-radius: 15px;
+        padding: 16px 20px;
+        font-weight: 600;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     }
     
     /* Custom sidebar */
     .css-1d391kg {
         background: linear-gradient(180deg, #0f0c29 0%, #302b63 100%);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     /* Custom chart elements */
     .stChart {
-        border-radius: 16px;
+        border-radius: 20px;
         overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 100%);
+        background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 15px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    /* Custom number input */
-    .stNumberInput [data-baseweb="input"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-    }
-    
-    /* Custom date input */
-    .stDateInput [data-baseweb="input"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
-    }
-    
-    /* Custom time input */
-    .stTimeInput [data-baseweb="input"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 18px;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: #6366F1;
+        background: linear-gradient(90deg, #6366F1, #8B5CF6);
+        border-radius: 10px;
+        height: 8px;
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    /* Premium badge */
+    .premium-badge {
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #1a1a1a;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-block;
+        margin-left: 10px;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: -200px; }
+        100% { background-position: calc(200px + 100%); }
+    }
+    
+    /* Security shield animation */
+    .security-shield {
+        display: inline-block;
+        animation: shieldPulse 2s infinite;
+    }
+    
+    @keyframes shieldPulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Login form enhancements */
+    .login-container {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    /* Animated background for login */
+    .login-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3), transparent 50%);
+        animation: bgMove 20s ease infinite;
+    }
+    
+    @keyframes bgMove {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(20px, -20px) rotate(120deg); }
+        66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+    
+    /* Premium access card */
+    .premium-access-card {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 20px 0;
+        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .premium-access-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+    
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Threat radar animation */
+    .threat-radar {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+    }
+    
+    .radar-circle {
+        position: absolute;
+        border: 2px solid rgba(99, 102, 241, 0.3);
+        border-radius: 50%;
+        animation: radarPulse 2s infinite;
+    }
+    
+    @keyframes radarPulse {
+        0% { transform: scale(0.8); opacity: 1; }
+        100% { transform: scale(1.2); opacity: 0; }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Security and Access Control
+# Add animated particles to the background
+def add_particles():
+    st.markdown("""
+    <div class="particles">
+        <div class="particle" style="width: 10px; height: 10px; left: 10%; animation-duration: 20s;"></div>
+        <div class="particle" style="width: 15px; height: 15px; left: 20%; animation-duration: 25s;"></div>
+        <div class="particle" style="width: 8px; height: 8px; left: 30%; animation-duration: 30s;"></div>
+        <div class="particle" style="width: 12px; height: 12px; left: 40%; animation-duration: 22s;"></div>
+        <div class="particle" style="width: 18px; height: 18px; left: 50%; animation-duration: 28s;"></div>
+        <div class="particle" style="width: 7px; height: 7px; left: 60%; animation-duration: 32s;"></div>
+        <div class="particle" style="width: 14px; height: 14px; left: 70%; animation-duration: 24s;"></div>
+        <div class="particle" style="width: 9px; height: 9px; left: 80%; animation-duration: 26s;"></div>
+        <div class="particle" style="width: 16px; height: 16px; left: 90%; animation-duration: 29s;"></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Enhanced Security Manager with Premium Access
 class SecurityManager:
     def __init__(self):
         self.valid_access_keys = {
             "BG2024-PRO-ACCESS": "full",
             "BG-ADVANCED-ANALYSIS": "analysis",
             "BG-PREMIUM-2024": "premium",
-            "BRAND-GUARDIAN-PRO": "pro"
+            "BRAND-GUARDIAN-PRO": "pro",
+            premium_access_key: "premium"  # Add the generated key
         }
         self.failed_attempts = {}
         self.lockout_time = timedelta(minutes=15)
         self.max_attempts = 5
+        self.session_timeout = timedelta(minutes=30)
+        self.encryption_key = Fernet.generate_key()
+        self.cipher_suite = Fernet(self.encryption_key)
+    
+    def encrypt_data(self, data):
+        """Encrypt sensitive data"""
+        if isinstance(data, str):
+            data = data.encode()
+        return self.cipher_suite.encrypt(data)
+    
+    def decrypt_data(self, encrypted_data):
+        """Decrypt sensitive data"""
+        return self.cipher_suite.decrypt(encrypted_data).decode()
     
     def validate_access_key(self, access_key):
-        """Validate the provided access key"""
+        """Validate the provided access key with enhanced security"""
         # Check if user is temporarily locked out
         user_ip = self.get_user_ip()
         if user_ip in self.failed_attempts:
@@ -336,6 +617,7 @@ class SecurityManager:
         
         access_key = access_key.strip().upper()
         
+        # Check if key exists
         if access_key in self.valid_access_keys:
             # Reset failed attempts on success
             if user_ip in self.failed_attempts:
@@ -375,6 +657,15 @@ class SecurityManager:
         if 'access_level' not in st.session_state:
             st.session_state.access_level = "none"
         
+        # Check session timeout
+        if 'login_time' in st.session_state:
+            login_time = datetime.fromisoformat(st.session_state.login_time)
+            if datetime.now() - login_time > self.session_timeout:
+                # Session expired
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                return False
+        
         return st.session_state.advanced_access
     
     def get_user_ip(self):
@@ -384,11 +675,15 @@ class SecurityManager:
             return str(hash(str(st.session_state.get('user_id', 'anonymous'))))
         except:
             return "unknown"
+    
+    def generate_secure_token(self):
+        """Generate a secure session token"""
+        return secrets.token_urlsafe(32)
 
 # Initialize security manager
 security_manager = SecurityManager()
 
-# Secure Encryption with Fernet
+# Enhanced Secure Encryption with Fernet
 class SecureEncryptor:
     def __init__(self):
         # Get encryption key from environment variable
@@ -462,6 +757,7 @@ class EnhancedAuthenticationSystem:
         self.failed_attempts = {}
         self.lockout_time = timedelta(minutes=15)
         self.max_attempts = 5
+        self.session_timeout = timedelta(minutes=30)
         self.load_users()
         
     def load_users(self):
@@ -481,7 +777,9 @@ class EnhancedAuthenticationSystem:
                         "created_at": datetime.now().isoformat(),
                         "last_login": None,
                         "failed_attempts": 0,
-                        "last_failed_attempt": None
+                        "last_failed_attempt": None,
+                        "session_token": None,
+                        "mfa_enabled": False
                     }
                 }
                 self.save_users()
@@ -533,13 +831,15 @@ class EnhancedAuthenticationSystem:
             "created_at": datetime.now().isoformat(),
             "last_login": None,
             "failed_attempts": 0,
-            "last_failed_attempt": None
+            "last_failed_attempt": None,
+            "session_token": None,
+            "mfa_enabled": False
         }
         self.save_users()
         return True, "User registered successfully"
     
     def authenticate(self, username, password):
-        """Authenticate a user"""
+        """Authenticate a user with enhanced security"""
         if username not in self.users:
             return False, "User not found"
         
@@ -557,6 +857,11 @@ class EnhancedAuthenticationSystem:
             # Reset failed attempts on successful login
             user_data['failed_attempts'] = 0
             user_data['last_login'] = datetime.now().isoformat()
+            
+            # Generate session token
+            session_token = security_manager.generate_secure_token()
+            user_data['session_token'] = session_token
+            
             self.save_users()
             return True, "Authentication successful"
         else:
@@ -845,8 +1150,8 @@ class AdvancedVisualizations:
             values += values[:1]
             
             # Plot the data
-            ax.plot(angles, values, color=self.colors['primary'], linewidth=2, linestyle='solid')
-            ax.fill(angles, values, color=self.colors['primary'], alpha=0.25)
+            ax.plot(angles, values, color=self.colors['primary'], linewidth=3, linestyle='solid')
+            ax.fill(angles, values, color=self.colors['primary'], alpha=0.3)
             
             # Add labels
             ax.set_thetagrids(np.degrees(angles[:-1]), labels)
@@ -855,7 +1160,7 @@ class AdvancedVisualizations:
             ax.set_ylim(0, max(data) * 1.1)
             
             # Add title
-            plt.title(title, size=14, fontweight='bold', pad=20)
+            plt.title(title, size=16, fontweight='bold', pad=20, color='white')
             
             # Style the plot
             ax.spines['polar'].set_color('white')
@@ -1028,11 +1333,12 @@ def show_user_management():
                 st.error("You cannot delete your own account")
 
 def show_login_form():
-    """Display login form"""
+    """Display login form with enhanced design"""
     st.markdown("""
+    <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <h1>🔒 BrandGuardian AI</h1>
-        <p>Advanced Brand Protection & Threat Intelligence Platform</p>
+        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
+        <p style="font-size: 1.2rem; color: #A5B4FC;">Advanced Brand Protection & Threat Intelligence Platform</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1040,11 +1346,11 @@ def show_login_form():
     col1, col2 = st.columns([1, 2])
     
     with col1:
-        st.image("https://img.icons8.com/fluency/240/security-checked.png", width=150)
         st.markdown("""
         <div style='text-align: center;'>
-            <h3>Secure Login</h3>
-            <p>Access your brand protection dashboard</p>
+            <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🛡️</div>
+            <h3 style="color: white;">Secure Login</h3>
+            <p style="color: #A5B4FC;">Access your brand protection dashboard</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1079,7 +1385,7 @@ def show_login_form():
         st.markdown("""
         - All credentials are encrypted using military-grade encryption
         - Multi-factor authentication ready
-        - Session timeout after 60 minutes of inactivity
+        - Session timeout after 30 minutes of inactivity
         - All login attempts are logged and monitored
         - Regular security audits conducted
         """)
@@ -1463,6 +1769,23 @@ def show_access_required():
             st.success("Demo access granted!")
             st.balloons()
             st.rerun()
+    
+    # Premium access card
+    st.markdown("""
+    <div class="premium-access-card">
+        <h3>🌟 Premium Access Features</h3>
+        <p>Unlock the full potential of BrandGuardian AI with our premium features:</p>
+        <ul style="text-align: left; display: inline-block;">
+            <li>Advanced threat detection algorithms</li>
+            <li>Real-time monitoring across all platforms</li>
+            <li>AI-powered sentiment analysis</li>
+            <li>Customizable threat alerts</li>
+            <li>Detailed threat intelligence reports</li>
+            <li>Priority customer support</li>
+        </ul>
+        <p>Contact your administrator to get your premium access key.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # API Management Tab
 def show_api_key_management():
@@ -1680,6 +2003,9 @@ def show_user_ai_dashboard():
                     st.write(f"**{key}:** {value}")
 
 def main():
+    # Add animated particles
+    add_particles()
+    
     # Check authentication first
     if not st.session_state.get('authenticated', False):
         show_login_form()
@@ -1722,6 +2048,7 @@ def main():
         st.subheader("🔐 Access Status")
         if st.session_state.advanced_access:
             st.success("✅ Premium Access")
+            st.markdown('<span class="premium-badge">PREMIUM</span>', unsafe_allow_html=True)
         else:
             st.warning("⚠️ Basic Access")
         
