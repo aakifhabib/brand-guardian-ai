@@ -32,16 +32,50 @@ except ImportError:
         @staticmethod
         def Figure(*args, **kwargs):
             return None
+        
+        class Scatter:
+            def __init__(self, *args, **kwargs):
+                pass
+        
+        class Scatterpolar:
+            def __init__(self, *args, **kwargs):
+                pass
+        
+        class Pie:
+            def __init__(self, *args, **kwargs):
+                pass
+        
+        class Heatmap:
+            def __init__(self, *args, **kwargs):
+                pass
+        
+        class Indicator:
+            def __init__(self, *args, **kwargs):
+                pass
+        
+        @staticmethod
+        def add_hline(*args, **kwargs):
+            pass
+        
+        @staticmethod
+        def add_trace(*args, **kwargs):
+            pass
+        
+        @staticmethod
+        def update_layout(*args, **kwargs):
+            pass
+    
     class px:
         @staticmethod
         def line(*args, **kwargs):
             return None
+    
     def make_subplots(*args, **kwargs):
         return None
 
 # Set page config first
 st.set_page_config(
-    page_title="Brand Guardian AI",  # Changed from "Virelo AI Pro"
+    page_title="Brand Guardian AI",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -51,7 +85,7 @@ st.set_page_config(
 def generate_premium_key():
     """Generate a secure premium access key"""
     key = secrets.token_urlsafe(16)
-    premium_key = f"BG-PREMIUM-{key.upper()}"  # Changed from "VR-PREMIUM-"
+    premium_key = f"BG-PREMIUM-{key.upper()}"
     return premium_key
 
 # Display the premium key in the console (for admin use)
@@ -1183,11 +1217,11 @@ ai_system = AIAnalysisSystem()
 class SecurityManager:
     def __init__(self):
         self.valid_access_keys = {
-            "BG2024-PRO-ACCESS": "full",  # Changed from "VR2024-PRO-ACCESS"
-            "BG-ADVANCED-ANALYSIS": "analysis",  # Changed from "VR-ADVANCED-ANALYSIS"
-            "BG-PREMIUM-2024": "premium",  # Changed from "VR-PREMIUM-2024"
-            "BRANDGUARDIAN-PRO": "pro",  # Changed from "VIRELO-PRO"
-            premium_access_key: "premium"  # Add the generated key
+            "BG2024-PRO-ACCESS": "full",
+            "BG-ADVANCED-ANALYSIS": "analysis",
+            "BG-PREMIUM-2024": "premium",
+            "BRANDGUARDIAN-PRO": "pro",
+            premium_access_key: "premium"
         }
         self.failed_attempts = {}
         self.lockout_time = timedelta(minutes=15)
@@ -1389,11 +1423,11 @@ class EnhancedAuthenticationSystem:
                 # Default admin user - should be changed after first login
                 self.users = {
                     "admin": {
-                        "password": self.hash_password("brandguardian2024"),  # Changed default password
+                        "password": self.hash_password("brandguardian2024"),
                         "access_level": "admin",
                         "subscription_tier": "premium",  # Admin gets premium for free
-                        "company": "Brand Guardian AI",  # Changed company name
-                        "email": "admin@brandguardian.com",  # Changed email
+                        "company": "Brand Guardian AI",
+                        "email": "admin@brandguardian.com",
                         "user_id": str(uuid.uuid4()),
                         "created_at": datetime.now().isoformat(),
                         "last_login": None,
@@ -2595,61 +2629,71 @@ def show_trend_analysis():
     low_threats = np.random.poisson(20, 30)
     
     # Create enhanced multi-line chart
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scatter(
-        x=dates, y=high_threats,
-        mode='lines+markers',
-        name='High Threats',
-        line=dict(color='#ff6b6b', width=3),
-        marker=dict(size=6, color='#ff6b6b')
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=dates, y=medium_threats,
-        mode='lines+markers',
-        name='Medium Threats',
-        line=dict(color='#ffa726', width=3),
-        marker=dict(size=6, color='#ffa726')
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=dates, y=low_threats,
-        mode='lines+markers',
-        name='Low Threats',
-        line=dict(color='#66bb6a', width=3),
-        marker=dict(size=6, color='#66bb6a')
-    ))
-    
-    fig.update_layout(
-        title='Threat Trends Over Time',
-        title_font=dict(size=18, color='#FFD700'),
-        xaxis_title='Date',
-        yaxis_title='Number of Threats',
-        paper_bgcolor='rgba(0, 0, 0, 0)',
-        plot_bgcolor='rgba(0, 0, 0, 0)',
-        font=dict(color='white'),
-        xaxis=dict(
-            gridcolor='rgba(255, 255, 255, 0.1)',
-            tickfont=dict(color='white')
-        ),
-        yaxis=dict(
-            gridcolor='rgba(255, 255, 255, 0.1)',
-            tickfont=dict(color='white')
-        ),
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=0.1,
-            xanchor="center",
-            x=0.5
-        )
-    )
-    
     if PLOTLY_AVAILABLE:
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scatter(
+            x=dates, y=high_threats,
+            mode='lines+markers',
+            name='High Threats',
+            line=dict(color='#ff6b6b', width=3),
+            marker=dict(size=6, color='#ff6b6b')
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=dates, y=medium_threats,
+            mode='lines+markers',
+            name='Medium Threats',
+            line=dict(color='#ffa726', width=3),
+            marker=dict(size=6, color='#ffa726')
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=dates, y=low_threats,
+            mode='lines+markers',
+            name='Low Threats',
+            line=dict(color='#66bb6a', width=3),
+            marker=dict(size=6, color='#66bb6a')
+        ))
+        
+        fig.update_layout(
+            title='Threat Trends Over Time',
+            title_font=dict(size=18, color='#FFD700'),
+            xaxis_title='Date',
+            yaxis_title='Number of Threats',
+            paper_bgcolor='rgba(0, 0, 0, 0)',
+            plot_bgcolor='rgba(0, 0, 0, 0)',
+            font=dict(color='white'),
+            xaxis=dict(
+                gridcolor='rgba(255, 255, 255, 0.1)',
+                tickfont=dict(color='white')
+            ),
+            yaxis=dict(
+                gridcolor='rgba(255, 255, 255, 0.1)',
+                tickfont=dict(color='white')
+            ),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=0.1,
+                xanchor="center",
+                x=0.5
+            )
+        )
+        
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.error("Plotly is not installed. Charts cannot be displayed.")
+        
+        # Display data in a table format as fallback
+        st.subheader("Threat Trends Data")
+        trend_data = {
+            'Date': dates,
+            'High Threats': high_threats,
+            'Medium Threats': medium_threats,
+            'Low Threats': low_threats
+        }
+        st.dataframe(pd.DataFrame(trend_data), use_container_width=True)
     
     # Platform distribution with enhanced radar chart
     st.subheader("🌐 Threat Distribution by Platform")
@@ -2668,6 +2712,12 @@ def show_trend_analysis():
         )
         if fig:
             st.plotly_chart(fig, use_container_width=True)
+        else:
+            # Display data in a bar chart as fallback
+            st.bar_chart(pd.DataFrame({
+                'Platform': platforms,
+                'Threat Count': threat_counts
+            }).set_index('Platform'))
     
     with col2:
         st.markdown("""
@@ -2687,45 +2737,53 @@ def show_trend_analysis():
     sentiment_dates = pd.date_range(end=datetime.now(), periods=14)
     sentiment_values = np.sin(np.linspace(0, 4*np.pi, 14)) * 0.5 + 0.5
     
-    fig = go.Figure()
-    
-    # Add area chart for sentiment
-    fig.add_trace(go.Scatter(
-        x=sentiment_dates,
-        y=sentiment_values,
-        fill='tozeroy',
-        fillcolor='rgba(255, 215, 0, 0.3)',
-        line=dict(color='#FFD700', width=3),
-        name='Sentiment Score'
-    ))
-    
-    # Add threshold lines
-    fig.add_hline(y=0.7, line_dash="dash", line_color="rgba(255, 0, 0, 0.5)", annotation_text="Positive Threshold")
-    fig.add_hline(y=0.3, line_dash="dash", line_color="rgba(255, 165, 0, 0.5)", annotation_text="Negative Threshold")
-    
-    fig.update_layout(
-        title='Sentiment Analysis Over Time',
-        title_font=dict(size=18, color='#FFD700'),
-        xaxis_title='Date',
-        yaxis_title='Sentiment Score',
-        paper_bgcolor='rgba(0, 0, 0, 0)',
-        plot_bgcolor='rgba(0, 0, 0, 0)',
-        font=dict(color='white'),
-        xaxis=dict(
-            gridcolor='rgba(255, 255, 255, 0.1)',
-            tickfont=dict(color='white')
-        ),
-        yaxis=dict(
-            gridcolor='rgba(255, 255, 255, 0.1)',
-            tickfont=dict(color='white'),
-            range=[0, 1]
-        )
-    )
-    
     if PLOTLY_AVAILABLE:
+        fig = go.Figure()
+        
+        # Add area chart for sentiment
+        fig.add_trace(go.Scatter(
+            x=sentiment_dates,
+            y=sentiment_values,
+            fill='tozeroy',
+            fillcolor='rgba(255, 215, 0, 0.3)',
+            line=dict(color='#FFD700', width=3),
+            name='Sentiment Score'
+        ))
+        
+        # Add threshold lines
+        fig.add_hline(y=0.7, line_dash="dash", line_color="rgba(255, 0, 0, 0.5)", annotation_text="Positive Threshold")
+        fig.add_hline(y=0.3, line_dash="dash", line_color="rgba(255, 165, 0, 0.5)", annotation_text="Negative Threshold")
+        
+        fig.update_layout(
+            title='Sentiment Analysis Over Time',
+            title_font=dict(size=18, color='#FFD700'),
+            xaxis_title='Date',
+            yaxis_title='Sentiment Score',
+            paper_bgcolor='rgba(0, 0, 0, 0)',
+            plot_bgcolor='rgba(0, 0, 0, 0)',
+            font=dict(color='white'),
+            xaxis=dict(
+                gridcolor='rgba(255, 255, 255, 0.1)',
+                tickfont=dict(color='white')
+            ),
+            yaxis=dict(
+                gridcolor='rgba(255, 255, 255, 0.1)',
+                tickfont=dict(color='white'),
+                range=[0, 1]
+            )
+        )
+        
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.error("Plotly is not installed. Charts cannot be displayed.")
+        
+        # Display data in a line chart as fallback
+        st.subheader("Sentiment Analysis Data")
+        sentiment_data = {
+            'Date': sentiment_dates,
+            'Sentiment Score': sentiment_values
+        }
+        st.line_chart(pd.DataFrame(sentiment_data).set_index('Date'))
     
     # Threat heatmap
     st.subheader("🔥 Threat Heatmap by Hour and Day")
@@ -2740,6 +2798,11 @@ def show_trend_analysis():
     fig = viz.create_threat_heatmap(heatmap_data, "Threat Intensity Heatmap")
     if fig:
         st.plotly_chart(fig, use_container_width=True)
+    else:
+        # Display data in a table format as fallback
+        st.subheader("Threat Heatmap Data")
+        heatmap_df = pd.DataFrame(heatmap_data, index=days, columns=hours)
+        st.dataframe(heatmap_df, use_container_width=True)
 
 def show_quick_actions():
     """Quick action buttons"""
@@ -2801,7 +2864,7 @@ def show_access_required():
                 st.error("Please enter an access key")
     
     with st.expander("🆓 Demo Access"):
-        st.info("Use demo key: BG2024-PRO-ACCESS")  # Changed from "VR2024-PRO-ACCESS"
+        st.info("Use demo key: BG2024-PRO-ACCESS")
         if st.button("Use Demo Key"):
             st.session_state.advanced_access = True
             st.session_state.access_level = "full"
