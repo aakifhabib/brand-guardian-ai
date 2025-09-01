@@ -19,63 +19,9 @@ from PIL import Image
 import io
 import requests
 
-# Fix for plotly import error
-try:
-    import plotly.graph_objects as go
-    import plotly.express as px
-    from plotly.subplots import make_subplots
-    PLOTLY_AVAILABLE = True
-except ImportError:
-    PLOTLY_AVAILABLE = False
-    # Create dummy classes to prevent errors if plotly isn't installed
-    class go:
-        @staticmethod
-        def Figure(*args, **kwargs):
-            return None
-        
-        class Scatter:
-            def __init__(self, *args, **kwargs):
-                pass
-        
-        class Scatterpolar:
-            def __init__(self, *args, **kwargs):
-                pass
-        
-        class Pie:
-            def __init__(self, *args, **kwargs):
-                pass
-        
-        class Heatmap:
-            def __init__(self, *args, **kwargs):
-                pass
-        
-        class Indicator:
-            def __init__(self, *args, **kwargs):
-                pass
-        
-        @staticmethod
-        def add_hline(*args, **kwargs):
-            pass
-        
-        @staticmethod
-        def add_trace(*args, **kwargs):
-            pass
-        
-        @staticmethod
-        def update_layout(*args, **kwargs):
-            pass
-    
-    class px:
-        @staticmethod
-        def line(*args, **kwargs):
-            return None
-    
-    def make_subplots(*args, **kwargs):
-        return None
-
 # Set page config first
 st.set_page_config(
-    page_title="Brand Guardian AI",
+    page_title="BrandGuardian AI Pro",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -84,7 +30,9 @@ st.set_page_config(
 # Generate and display premium access key
 def generate_premium_key():
     """Generate a secure premium access key"""
+    # Generate a cryptographically secure random key
     key = secrets.token_urlsafe(16)
+    # Add prefix to make it identifiable
     premium_key = f"BG-PREMIUM-{key.upper()}"
     return premium_key
 
@@ -92,77 +40,21 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Subscription tiers and pricing
-SUBSCRIPTION_TIERS = {
-    "basic": {
-        "name": "Basic",
-        "price": "$29/month",
-        "features": [
-            "Basic brand monitoring",
-            "5 social platforms",
-            "100 mentions/month",
-            "Email alerts",
-            "Basic reports"
-        ],
-        "api_calls": 1000,
-        "threat_keywords": 50,
-        "ai_analysis": False,
-        "privileges": ["basic_monitoring", "basic_reports"]
-    },
-    "advanced": {
-        "name": "Advanced",
-        "price": "$99/month",
-        "features": [
-            "Advanced brand monitoring",
-            "10 social platforms",
-            "1000 mentions/month",
-            "Email & SMS alerts",
-            "Advanced reports",
-            "AI-powered analysis",
-            "Competitor tracking"
-        ],
-        "api_calls": 10000,
-        "threat_keywords": 200,
-        "ai_analysis": True,
-        "privileges": ["basic_monitoring", "basic_reports", "ai_analysis", "competitor_tracking"]
-    },
-    "premium": {
-        "name": "Premium",
-        "price": "$299/month",
-        "features": [
-            "Premium brand monitoring",
-            "Unlimited platforms",
-            "Unlimited mentions",
-            "Multi-channel alerts",
-            "Custom reports",
-            "Advanced AI analysis",
-            "Competitor tracking",
-            "Crisis management",
-            "Dedicated support",
-            "API access"
-        ],
-        "api_calls": 100000,
-        "threat_keywords": 1000,
-        "ai_analysis": True,
-        "privileges": ["basic_monitoring", "basic_reports", "ai_analysis", "competitor_tracking", "crisis_management", "api_access"]
-    }
-}
-
-# Advanced CSS with Gold and Black theme
+# Advanced CSS with enhanced UI components
 st.markdown("""
 <style>
     /* Base styles */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
     .main {
-        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         color: #FFFFFF;
         font-family: 'Inter', sans-serif;
         overflow-x: hidden;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+        background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
         background-size: 400% 400%;
         animation: gradientBG 15s ease infinite;
     }
@@ -173,7 +65,7 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
-    /* Animated gold particles background */
+    /* Animated particles background */
     .particles {
         position: fixed;
         top: 0;
@@ -186,35 +78,34 @@ st.markdown("""
     
     .particle {
         position: absolute;
-        background: radial-gradient(circle, rgba(255, 215, 0, 0.8), rgba(255, 215, 0, 0));
+        background: rgba(255, 255, 255, 0.1);
         border-radius: 50%;
         animation: float 20s infinite linear;
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     }
     
     @keyframes float {
-        0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
         10% { opacity: 1; }
         90% { opacity: 1; }
-        100% { transform: translateY(-100vh) translateX(100px) rotate(360deg); opacity: 0; }
+        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
     }
     
     /* Premium header styling */
     .premium-header {
-        font-size: 4rem;
+        font-size: 3.5rem;
         font-weight: 800;
         text-align: center;
         margin: 20px 0;
-        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+        background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
-        animation: goldGlow 3s ease-in-out infinite alternate;
+        text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3);
+        animation: glow 2s ease-in-out infinite alternate;
     }
     
-    @keyframes goldGlow {
-        from { text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3); }
-        to { text-shadow: 0px 2px 20px rgba(255, 215, 0, 0.6), 0px 0px 30px rgba(255, 215, 0, 0.4); }
+    @keyframes glow {
+        from { text-shadow: 0px 2px 10px rgba(255, 106, 136, 0.3); }
+        to { text-shadow: 0px 2px 20px rgba(255, 106, 136, 0.6); }
     }
     
     .floating {
@@ -228,12 +119,11 @@ st.markdown("""
     }
     
     .accent-text {
-        font-size: 1.4rem;
-        color: #FFD700;
+        font-size: 1.2rem;
+        color: #A5B4FC;
         text-align: center;
         margin-bottom: 40px;
         animation: fadeIn 2s ease-in;
-        font-weight: 500;
     }
     
     @keyframes fadeIn {
@@ -241,15 +131,15 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Enhanced card styling with gold theme */
+    /* Enhanced card styling */
     .metric-card {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.8));
+        background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         margin: 15px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
@@ -262,7 +152,7 @@ st.markdown("""
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
         transform: translateX(-100%);
         transition: transform 0.6s;
     }
@@ -273,105 +163,39 @@ st.markdown("""
     
     .metric-card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 215, 0, 0.3);
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.25);
     }
     
     .search-analysis-card {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.8));
+        background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
     }
     
     .search-analysis-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 215, 0, 0.3);
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
     }
     
     .search-result-card {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(20, 20, 20, 0.7));
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 15px;
         padding: 20px;
         margin: 15px 0;
-        border-left: 5px solid #FFD700;
+        border-left: 5px solid #6366F1;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .search-result-card:hover {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(30, 30, 30, 0.8));
+        background: rgba(255, 255, 255, 0.1);
         transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-    }
-    
-    /* Subscription tier cards */
-    .tier-card {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.8));
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 30px;
-        margin: 20px 10px;
-        border: 2px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.2);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .tier-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 215, 0, 0.3);
-    }
-    
-    .tier-card.premium {
-        border-color: rgba(255, 215, 0, 0.6);
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(30, 30, 30, 0.9));
-        box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.3);
-    }
-    
-    .tier-card.premium::before {
-        content: 'MOST POPULAR';
-        position: absolute;
-        top: 15px;
-        right: -30px;
-        background: linear-gradient(90deg, #FFD700, #FFA500);
-        color: #000000;
-        padding: 5px 40px;
-        font-weight: 700;
-        font-size: 12px;
-        transform: rotate(45deg);
-    }
-    
-    .tier-price {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #FFD700;
-        margin: 10px 0;
-        text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.5);
-    }
-    
-    .tier-features {
-        list-style: none;
-        padding: 0;
-        margin: 20px 0;
-    }
-    
-    .tier-features li {
-        padding: 8px 0;
-        padding-left: 25px;
-        position: relative;
-    }
-    
-    .tier-features li::before {
-        content: '✓';
-        position: absolute;
-        left: 0;
-        color: #FFD700;
-        font-weight: bold;
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
     }
     
     /* Enhanced threat indicators */
@@ -383,43 +207,36 @@ st.markdown("""
         margin: 8px;
         display: inline-block;
         letter-spacing: 0.5px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
     }
     
     .threat-indicator:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     }
     
     .threat-high {
-        background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.1));
-        color: #ff6b6b;
-        border: 1px solid rgba(255, 0, 0, 0.5);
-        animation: threatPulse 2s infinite;
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.1));
+        color: #EF4444;
+        border: 1px solid rgba(239, 68, 68, 0.5);
     }
     
     .threat-medium {
-        background: linear-gradient(135deg, rgba(255, 165, 0, 0.3), rgba(255, 165, 0, 0.1));
-        color: #ffa726;
-        border: 1px solid rgba(255, 165, 0, 0.5);
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(245, 158, 11, 0.1));
+        color: #F59E0B;
+        border: 1px solid rgba(245, 158, 11, 0.5);
     }
     
     .threat-low {
-        background: linear-gradient(135deg, rgba(0, 255, 0, 0.3), rgba(0, 255, 0, 0.1));
-        color: #66bb6a;
-        border: 1px solid rgba(0, 255, 0, 0.5);
-    }
-    
-    @keyframes threatPulse {
-        0% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 0 0 rgba(255, 0, 0, 0.7); }
-        50% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 0 10px rgba(255, 0, 0, 0); }
-        100% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 0 0 rgba(255, 0, 0, 0.7); }
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.1));
+        color: #10B981;
+        border: 1px solid rgba(16, 185, 129, 0.5);
     }
     
     /* Status indicators */
     .api-status-connected {
-        color: #FFD700;
+        color: #10B981;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
@@ -438,22 +255,22 @@ st.markdown("""
     }
     
     .api-status-disconnected {
-        color: #ff6b6b;
+        color: #EF4444;
         font-weight: 700;
     }
     
     /* Enhanced button styling */
     .stButton > button {
         border-radius: 15px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.7));
-        color: #FFD700;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+        color: white;
         font-weight: 600;
         padding: 12px 24px;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
     
     .stButton > button::before {
@@ -463,7 +280,7 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         transition: left 0.5s;
     }
     
@@ -472,10 +289,10 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(40, 40, 40, 0.8));
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+        border: 1px solid rgba(255, 255, 255, 0.3);
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 215, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
     
     /* Enhanced tab styling */
@@ -485,32 +302,30 @@ st.markdown("""
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.7));
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 15px 15px 0 0;
         padding: 14px 20px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-bottom: none;
         font-weight: 600;
         transition: all 0.3s ease;
-        color: #FFD700;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(40, 40, 40, 0.8));
+        background: rgba(255, 255, 255, 0.12);
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(40, 40, 40, 0.8));
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+        border: 1px solid rgba(99, 102, 241, 0.5);
         border-bottom: none;
-        box-shadow: 0 -4px 15px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 -4px 15px rgba(99, 102, 241, 0.3);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
         font-size: 2.2rem;
         font-weight: 800;
-        color: #FFD700;
     }
     
     [data-testid="stMetricDelta"] {
@@ -525,11 +340,11 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"],
     .stDateInput [data-baseweb="input"],
     .stTimeInput [data-baseweb="input"] {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.7));
+        background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(10px);
         border-radius: 15px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        color: #FFD700;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: white;
         transition: all 0.3s ease;
     }
     
@@ -539,15 +354,15 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"]:hover,
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(40, 40, 40, 0.8));
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
     }
     
     /* Custom spinner */
     .stSpinner > div {
-        border: 4px solid rgba(255, 215, 0, 0.1);
+        border: 4px solid rgba(255, 255, 255, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #FFD700;
+        border-top: 4px solid #6366F1;
         width: 40px;
         height: 40px;
         animation: spin 1s linear infinite;
@@ -561,23 +376,23 @@ st.markdown("""
     
     /* Custom expander */
     .streamlit-expanderHeader {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.7));
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 12px;
         padding: 14px 18px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         font-weight: 600;
         transition: all 0.3s ease;
     }
     
     .streamlit-expanderHeader:hover {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(40, 40, 40, 0.8));
+        background: rgba(255, 255, 255, 0.12);
     }
     
     /* Custom dataframes */
     .dataframe {
         border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
     
     /* Custom success/error boxes */
@@ -585,55 +400,55 @@ st.markdown("""
         border-radius: 15px;
         padding: 16px 20px;
         font-weight: 600;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     }
     
     /* Custom sidebar */
     .css-1d391kg {
-        background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
-        border-right: 1px solid rgba(255, 215, 0, 0.2);
+        background: linear-gradient(180deg, #0f0c29 0%, #302b63 100%);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     /* Custom chart elements */
     .stChart {
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+        background: linear-gradient(90deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
         border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.7));
+        background: rgba(255, 255, 255, 0.08);
         padding: 18px;
         border-radius: 15px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: linear-gradient(90deg, #FFD700, #FFA500);
+        background: linear-gradient(90deg, #6366F1, #8B5CF6);
         border-radius: 10px;
         height: 8px;
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 30, 0.7));
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 8px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
     }
     
     /* Premium badge */
     .premium-badge {
         background: linear-gradient(135deg, #FFD700, #FFA500);
-        color: #000000;
+        color: #1a1a1a;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 12px;
@@ -663,12 +478,12 @@ st.markdown("""
     
     /* Login form enhancements */
     .login-container {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.8));
+        background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(20px);
         border-radius: 25px;
         padding: 40px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         max-width: 500px;
         margin: 0 auto;
     }
@@ -681,9 +496,9 @@ st.markdown("""
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1), transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.1), transparent 50%),
-                    radial-gradient(circle at 40% 80%, rgba(255, 215, 0, 0.1), transparent 50%);
+        background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3), transparent 50%);
         animation: bgMove 20s ease infinite;
     }
     
@@ -695,12 +510,12 @@ st.markdown("""
     
     /* Premium access card */
     .premium-access-card {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(20, 20, 20, 0.8));
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
         border: 2px solid rgba(255, 215, 0, 0.3);
         border-radius: 20px;
         padding: 30px;
         margin: 20px 0;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -732,7 +547,7 @@ st.markdown("""
     
     .radar-circle {
         position: absolute;
-        border: 2px solid rgba(255, 215, 0, 0.3);
+        border: 2px solid rgba(99, 102, 241, 0.3);
         border-radius: 50%;
         animation: radarPulse 2s infinite;
     }
@@ -740,294 +555,6 @@ st.markdown("""
     @keyframes radarPulse {
         0% { transform: scale(0.8); opacity: 1; }
         100% { transform: scale(1.2); opacity: 0; }
-    }
-    
-    /* User profile card */
-    .user-profile-card {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(20, 20, 20, 0.7));
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 25px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    .user-avatar {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #FFD700, #FFA500);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        margin: 0 auto 15px;
-        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-    }
-    
-    /* Activity log */
-    .activity-log {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(20, 20, 20, 0.5));
-        border-radius: 15px;
-        padding: 20px;
-        margin: 15px 0;
-        border-left: 4px solid #FFD700;
-    }
-    
-    .activity-time {
-        color: #FFD700;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-    
-    /* Admin panel */
-    .admin-panel {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(20, 20, 20, 0.7));
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 25px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        margin: 20px 0;
-    }
-    
-    .admin-stat {
-        text-align: center;
-        padding: 20px;
-        border-radius: 15px;
-        background: rgba(255, 215, 0, 0.1);
-        margin: 10px 0;
-        transition: all 0.3s ease;
-    }
-    
-    .admin-stat:hover {
-        background: rgba(255, 215, 0, 0.2);
-        transform: translateY(-5px);
-    }
-    
-    .admin-stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #FFD700;
-    }
-    
-    .admin-stat-label {
-        color: #ffffff;
-        font-weight: 600;
-    }
-    
-    /* AI Analysis Card */
-    .ai-analysis-card {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(20, 20, 20, 0.7));
-        border-radius: 20px;
-        padding: 25px;
-        margin: 20px 0;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-    
-    .ai-analysis-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    
-    .ai-icon {
-        font-size: 2rem;
-        margin-right: 10px;
-        animation: aiPulse 2s infinite;
-    }
-    
-    @keyframes aiPulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-    
-    .ai-confidence {
-        display: inline-block;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-left: 10px;
-    }
-    
-    .confidence-high {
-        background: rgba(0, 255, 0, 0.2);
-        color: #66bb6a;
-    }
-    
-    .confidence-medium {
-        background: rgba(255, 165, 0, 0.2);
-        color: #ffa726;
-    }
-    
-    .confidence-low {
-        background: rgba(255, 0, 0, 0.2);
-        color: #ff6b6b;
-    }
-    
-    /* AI Insights */
-    .ai-insight {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(20, 20, 20, 0.5));
-        border-radius: 15px;
-        padding: 15px;
-        margin: 10px 0;
-        border-left: 4px solid #FFD700;
-    }
-    
-    .ai-insight-title {
-        color: #FFD700;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-    
-    /* Subscription status */
-    .subscription-status {
-        display: inline-flex;
-        align-items: center;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-weight: 600;
-        margin: 5px 0;
-    }
-    
-    .status-basic {
-        background: rgba(156, 39, 176, 0.2);
-        color: #ce93d8;
-    }
-    
-    .status-advanced {
-        background: rgba(3, 169, 244, 0.2);
-        color: #4fc3f7;
-    }
-    
-    .status-premium {
-        background: rgba(255, 215, 0, 0.2);
-        color: #FFD700;
-    }
-    
-    /* Privilege management */
-    .privilege-card {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 20, 0.6));
-        border-radius: 15px;
-        padding: 20px;
-        margin: 15px 0;
-        border: 1px solid rgba(255, 215, 0, 0.2);
-    }
-    
-    .privilege-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    
-    .privilege-title {
-        color: #FFD700;
-        font-weight: 600;
-    }
-    
-    .privilege-toggle {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-    }
-    
-    .privilege-toggle input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-    
-    .privilege-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(255, 255, 255, 0.1);
-        transition: .4s;
-        border-radius: 24px;
-    }
-    
-    .privilege-slider:before {
-        position: absolute;
-        content: "";
-        height: 16px;
-        width: 16px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-    
-    input:checked + .privilege-slider {
-        background-color: #FFD700;
-    }
-    
-    input:checked + .privilege-slider:before {
-        transform: translateX(26px);
-    }
-    
-    /* Enhanced threat animation */
-    .threat-animation {
-        position: relative;
-        height: 200px;
-        margin: 20px 0;
-        border-radius: 15px;
-        overflow: hidden;
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(20, 20, 20, 0.5));
-        border: 1px solid rgba(255, 215, 0, 0.2);
-    }
-    
-    .threat-wave {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23FFD700'%3E%3C/path%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9-9.42,98.6-31.56,31.77-25.39,62.32-62,103.63-73,40.44-10.79,81.35-10.85,119.13,1.55,37.08,11.72,70.09,31.24,100.34,52.08,58.2,103.33,111.27,165.33,112.53C877.19,374.14,944.58,381.42,1012.67,367.3c36.15-7.1,72.09-21.69,104.45-40.59,36.19-19.15,69-44.14,98.85-72.54,30.46-29.3,60.74-58.49,91.69-87.53C1176.23,136.43,1200,82.54,1200,32.13V0Z' opacity='.5' fill='%23FFD700'%3E%3C/path%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23FFD700'%3E%3C/path%3E%3C/svg%3E");
-        background-size: 1200px 120px;
-        animation: wave 10s linear infinite;
-    }
-    
-    @keyframes wave {
-        0% { background-position-x: 0; }
-        100% { background-position-x: 1200px; }
-    }
-    
-    .threat-pulse {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255, 215, 0, 0.8), rgba(255, 215, 0, 0));
-        animation: threatPulseExpand 3s infinite;
-    }
-    
-    @keyframes threatPulseExpand {
-        0% { width: 100px; height: 100px; opacity: 0.8; }
-        100% { width: 300px; height: 300px; opacity: 0; }
-    }
-    
-    /* Enhanced chart container */
-    .chart-container {
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(20, 20, 20, 0.6));
-        border-radius: 20px;
-        padding: 20px;
-        margin: 20px 0;
-        border: 1px solid rgba(255, 215, 0, 0.2);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -1048,171 +575,6 @@ def add_particles():
     </div>
     """, unsafe_allow_html=True)
 
-# Enhanced AI Analysis System
-class AIAnalysisSystem:
-    def __init__(self):
-        self.openai_api_key = os.environ.get("OPENAI_API_KEY")
-        self.model = "gpt-3.5-turbo"
-        self.max_tokens = 500
-        
-    def analyze_threat(self, query, brand_name, subscription_tier):
-        """Analyze threat using AI based on subscription tier"""
-        if subscription_tier not in SUBSCRIPTION_TIERS:
-            subscription_tier = "basic"
-        
-        tier_info = SUBSCRIPTION_TIERS[subscription_tier]
-        
-        # Basic analysis for all tiers
-        basic_analysis = self._basic_threat_analysis(query, brand_name)
-        
-        # Enhanced analysis for advanced and premium tiers
-        if tier_info["ai_analysis"]:
-            enhanced_analysis = self._enhanced_threat_analysis(query, brand_name)
-            ai_insights = self._generate_ai_insights(query, brand_name, subscription_tier)
-            return {
-                **basic_analysis,
-                **enhanced_analysis,
-                "ai_insights": ai_insights,
-                "subscription_tier": subscription_tier
-            }
-        else:
-            return {
-                **basic_analysis,
-                "subscription_tier": subscription_tier
-            }
-    
-    def _basic_threat_analysis(self, query, brand_name):
-        """Basic threat analysis for all tiers"""
-        query_lower = query.lower()
-        brand_lower = brand_name.lower()
-        
-        # Detect threat level
-        threat_level = "low"
-        found_keywords = []
-        
-        threat_keywords = {
-            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
-            'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed'],
-            'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
-        }
-        
-        for level, keywords in threat_keywords.items():
-            for keyword in keywords:
-                if keyword in query_lower:
-                    threat_level = level
-                    found_keywords.append(keyword)
-        
-        return {
-            'query': query,
-            'brand': brand_name,
-            'threat_level': threat_level,
-            'keywords_found': found_keywords,
-            'timestamp': datetime.now().isoformat(),
-            'analysis': self._generate_analysis(threat_level, found_keywords),
-            'recommendations': self._generate_recommendations(threat_level)
-        }
-    
-    def _enhanced_threat_analysis(self, query, brand_name):
-        """Enhanced threat analysis for advanced and premium tiers"""
-        # Simulate enhanced analysis
-        sentiment_score = random.uniform(0, 1)
-        urgency_score = random.uniform(0, 1)
-        impact_score = random.uniform(0, 1)
-        
-        return {
-            'sentiment_score': sentiment_score,
-            'urgency_score': urgency_score,
-            'impact_score': impact_score,
-            'risk_assessment': self._assess_risk(sentiment_score, urgency_score, impact_score),
-            'predicted_trend': self._predict_trend(query, brand_name)
-        }
-    
-    def _generate_ai_insights(self, query, brand_name, subscription_tier):
-        """Generate AI-powered insights"""
-        insights = []
-        
-        # Contextual understanding
-        insights.append({
-            "type": "context",
-            "title": "Contextual Analysis",
-            "content": f"AI has identified that the query relates to {brand_name} in the context of potential brand reputation risks.",
-            "confidence": random.uniform(0.7, 0.95)
-        })
-        
-        # Pattern recognition
-        insights.append({
-            "type": "pattern",
-            "title": "Pattern Recognition",
-            "content": "Similar threat patterns have been detected in 3 other brands in your industry this month.",
-            "confidence": random.uniform(0.6, 0.85)
-        })
-        
-        # Predictive analysis (premium only)
-        if subscription_tier == "premium":
-            insights.append({
-                "type": "predictive",
-                "title": "Predictive Analysis",
-                "content": "Based on current trends, AI predicts a 15% increase in similar mentions over the next 7 days.",
-                "confidence": random.uniform(0.75, 0.9)
-            })
-        
-        return insights
-    
-    def _assess_risk(self, sentiment_score, urgency_score, impact_score):
-        """Assess overall risk based on scores"""
-        overall_score = (sentiment_score + urgency_score + impact_score) / 3
-        
-        if overall_score > 0.7:
-            return "High Risk"
-        elif overall_score > 0.4:
-            return "Medium Risk"
-        else:
-            return "Low Risk"
-    
-    def _predict_trend(self, query, brand_name):
-        """Predict trend based on query"""
-        trends = ["Increasing", "Stable", "Decreasing"]
-        weights = [0.3, 0.4, 0.3]
-        return random.choices(trends, weights=weights)[0]
-    
-    def _generate_analysis(self, threat_level, keywords):
-        """Generate analysis text based on threat level"""
-        analyses = {
-            'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
-            'medium': "⚠️ Medium threat level. Potential brand reputation issues detected. Monitor closely and consider proactive engagement.",
-            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended."
-        }
-        return analyses.get(threat_level, "Analysis completed.")
-    
-    def _generate_recommendations(self, threat_level):
-        """Generate recommendations based on threat level"""
-        recommendations = {
-            'high': [
-                "Immediate crisis management protocol activation",
-                "Legal team notification",
-                "Press statement preparation",
-                "Social media monitoring escalation",
-                "Executive team alert"
-            ],
-            'medium': [
-                "Enhanced monitoring of mentioned platforms",
-                "Customer service team notification",
-                "Response template preparation",
-                "Competitive analysis update",
-                "Weekly review scheduling"
-            ],
-            'low': [
-                "Continue standard monitoring",
-                "Track sentiment trends",
-                "Update brand health metrics",
-                "Monthly review scheduling"
-            ]
-        }
-        return recommendations.get(threat_level, [])
-
-# Initialize AI analysis system
-ai_system = AIAnalysisSystem()
-
 # Enhanced Security Manager with Premium Access
 class SecurityManager:
     def __init__(self):
@@ -1220,8 +582,8 @@ class SecurityManager:
             "BG2024-PRO-ACCESS": "full",
             "BG-ADVANCED-ANALYSIS": "analysis",
             "BG-PREMIUM-2024": "premium",
-            "BRANDGUARDIAN-PRO": "pro",
-            premium_access_key: "premium"
+            "BRAND-GUARDIAN-PRO": "pro",
+            premium_access_key: "premium"  # Add the generated key
         }
         self.failed_attempts = {}
         self.lockout_time = timedelta(minutes=15)
@@ -1229,7 +591,6 @@ class SecurityManager:
         self.session_timeout = timedelta(minutes=30)
         self.encryption_key = Fernet.generate_key()
         self.cipher_suite = Fernet(self.encryption_key)
-        self.activity_log = []
     
     def encrypt_data(self, data):
         """Encrypt sensitive data"""
@@ -1240,15 +601,6 @@ class SecurityManager:
     def decrypt_data(self, encrypted_data):
         """Decrypt sensitive data"""
         return self.cipher_suite.decrypt(encrypted_data).decode()
-    
-    def log_activity(self, user_id, action, details):
-        """Log user activity"""
-        self.activity_log.append({
-            'timestamp': datetime.now().isoformat(),
-            'user_id': user_id,
-            'action': action,
-            'details': details
-        })
     
     def validate_access_key(self, access_key):
         """Validate the provided access key with enhanced security"""
@@ -1327,12 +679,6 @@ class SecurityManager:
     def generate_secure_token(self):
         """Generate a secure session token"""
         return secrets.token_urlsafe(32)
-    
-    def get_activity_log(self, user_id=None):
-        """Get activity log, optionally filtered by user"""
-        if user_id:
-            return [log for log in self.activity_log if log['user_id'] == user_id]
-        return self.activity_log
 
 # Initialize security manager
 security_manager = SecurityManager()
@@ -1425,26 +771,15 @@ class EnhancedAuthenticationSystem:
                     "admin": {
                         "password": self.hash_password("brandguardian2024"),
                         "access_level": "admin",
-                        "subscription_tier": "premium",  # Admin gets premium for free
-                        "company": "Brand Guardian AI",
-                        "email": "admin@brandguardian.com",
+                        "company": "Default Company",
+                        "email": "admin@example.com",
                         "user_id": str(uuid.uuid4()),
                         "created_at": datetime.now().isoformat(),
                         "last_login": None,
                         "failed_attempts": 0,
                         "last_failed_attempt": None,
                         "session_token": None,
-                        "mfa_enabled": False,
-                        "profile": {
-                            "avatar": "👤",
-                            "bio": "System Administrator",
-                            "preferences": {
-                                "theme": "dark",
-                                "notifications": True,
-                                "language": "en"
-                            }
-                        },
-                        "privileges": SUBSCRIPTION_TIERS["premium"]["privileges"]  # Admin gets all privileges
+                        "mfa_enabled": False
                     }
                 }
                 self.save_users()
@@ -1470,7 +805,7 @@ class EnhancedAuthenticationSystem:
         pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         return pwdhash == stored_password
     
-    def register_user(self, username, password, company, email, access_level="client", subscription_tier="basic"):
+    def register_user(self, username, password, company, email, access_level="client"):
         """Register a new client user"""
         if username in self.users:
             return False, "Username already exists"
@@ -1490,7 +825,6 @@ class EnhancedAuthenticationSystem:
         self.users[username] = {
             "password": self.hash_password(password),
             "access_level": access_level,
-            "subscription_tier": subscription_tier,
             "company": company,
             "email": email,
             "user_id": str(uuid.uuid4()),
@@ -1499,17 +833,7 @@ class EnhancedAuthenticationSystem:
             "failed_attempts": 0,
             "last_failed_attempt": None,
             "session_token": None,
-            "mfa_enabled": False,
-            "profile": {
-                "avatar": "👤",
-                "bio": f"User at {company}",
-                "preferences": {
-                    "theme": "dark",
-                    "notifications": True,
-                    "language": "en"
-                }
-            },
-            "privileges": SUBSCRIPTION_TIERS[subscription_tier]["privileges"]  # Set privileges based on subscription
+            "mfa_enabled": False
         }
         self.save_users()
         return True, "User registered successfully"
@@ -1538,19 +862,12 @@ class EnhancedAuthenticationSystem:
             session_token = security_manager.generate_secure_token()
             user_data['session_token'] = session_token
             
-            # Log activity
-            security_manager.log_activity(user_data['user_id'], "login", f"User {username} logged in")
-            
             self.save_users()
             return True, "Authentication successful"
         else:
             # Increment failed attempts
             user_data['failed_attempts'] = user_data.get('failed_attempts', 0) + 1
             user_data['last_failed_attempt'] = datetime.now().isoformat()
-            
-            # Log failed attempt
-            security_manager.log_activity(user_data['user_id'], "failed_login", f"Failed login attempt for {username}")
-            
             self.save_users()
             
             remaining_attempts = self.max_attempts - user_data['failed_attempts']
@@ -1558,53 +875,6 @@ class EnhancedAuthenticationSystem:
                 return False, "Account locked. Please try again in 15 minutes."
             else:
                 return False, f"Invalid password. {remaining_attempts} attempts remaining."
-    
-    def update_user_subscription(self, username, subscription_tier):
-        """Update user subscription tier"""
-        if username in self.users:
-            self.users[username]['subscription_tier'] = subscription_tier
-            # Update privileges based on new subscription tier
-            self.users[username]['privileges'] = SUBSCRIPTION_TIERS[subscription_tier]["privileges"]
-            self.save_users()
-            security_manager.log_activity(self.users[username]['user_id'], "subscription_update", f"Subscription updated to {subscription_tier}")
-            return True
-        return False
-    
-    def get_user_subscription(self, username):
-        """Get user subscription tier"""
-        if username in self.users:
-            return self.users[username].get('subscription_tier', 'basic')
-        return 'basic'
-    
-    def update_user_privileges(self, username, privileges):
-        """Update user privileges"""
-        if username in self.users:
-            self.users[username]['privileges'] = privileges
-            self.save_users()
-            security_manager.log_activity(self.users[username]['user_id'], "privileges_update", f"Privileges updated for {username}")
-            return True
-        return False
-    
-    def get_user_privileges(self, username):
-        """Get user privileges"""
-        if username in self.users:
-            return self.users[username].get('privileges', [])
-        return []
-    
-    def update_user_profile(self, username, profile_data):
-        """Update user profile information"""
-        if username in self.users:
-            self.users[username]['profile'].update(profile_data)
-            self.save_users()
-            security_manager.log_activity(self.users[username]['user_id'], "profile_update", f"Profile updated for {username}")
-            return True
-        return False
-    
-    def get_user_profile(self, username):
-        """Get user profile information"""
-        if username in self.users:
-            return self.users[username].get('profile', {})
-        return {}
 
 # Enhanced API Key Manager with User Isolation
 class EnhancedAPIKeyManager:
@@ -1772,220 +1042,209 @@ class EnhancedAPIKeyManager:
 auth_system = EnhancedAuthenticationSystem()
 api_manager = EnhancedAPIKeyManager()
 
-# Advanced Data Visualization with Plotly
+# Search Analysis System
+class SearchAnalyzer:
+    def __init__(self):
+        self.threat_keywords = {
+            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
+            'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed'],
+            'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
+        }
+    
+    def analyze_search(self, query, brand_name):
+        """Analyze search query for threats"""
+        query_lower = query.lower()
+        brand_lower = brand_name.lower()
+        
+        # Detect threat level
+        threat_level = "low"
+        found_keywords = []
+        
+        for level, keywords in self.threat_keywords.items():
+            for keyword in keywords:
+                if keyword in query_lower:
+                    threat_level = level
+                    found_keywords.append(keyword)
+        
+        # Generate analysis results
+        results = {
+            'query': query,
+            'brand': brand_name,
+            'threat_level': threat_level,
+            'keywords_found': found_keywords,
+            'timestamp': datetime.now().isoformat(),
+            'analysis': self.generate_analysis(threat_level, found_keywords),
+            'recommendations': self.generate_recommendations(threat_level)
+        }
+        
+        return results
+    
+    def generate_analysis(self, threat_level, keywords):
+        """Generate analysis text based on threat level"""
+        analyses = {
+            'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
+            'medium': "⚠️ Medium threat level. Potential brand reputation issues detected. Monitor closely and consider proactive engagement.",
+            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended."
+        }
+        return analyses.get(threat_level, "Analysis completed.")
+    
+    def generate_recommendations(self, threat_level):
+        """Generate recommendations based on threat level"""
+        recommendations = {
+            'high': [
+                "Immediate crisis management protocol activation",
+                "Legal team notification",
+                "Press statement preparation",
+                "Social media monitoring escalation",
+                "Executive team alert"
+            ],
+            'medium': [
+                "Enhanced monitoring of mentioned platforms",
+                "Customer service team notification",
+                "Response template preparation",
+                "Competitive analysis update",
+                "Weekly review scheduling"
+            ],
+            'low': [
+                "Continue standard monitoring",
+                "Track sentiment trends",
+                "Update brand health metrics",
+                "Monthly review scheduling"
+            ]
+        }
+        return recommendations.get(threat_level, [])
+
+# Initialize search analyzer
+search_analyzer = SearchAnalyzer()
+
+# Advanced Data Visualization
 class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
-            'primary': '#FFD700',
-            'secondary': '#FFA500',
-            'success': '#66bb6a',
-            'warning': '#ffa726',
-            'danger': '#ff6b6b',
-            'info': '#29b6f6',
-            'dark': '#000000',
-            'light': '#FFD700'
+            'primary': '#6366F1',
+            'secondary': '#8B5CF6',
+            'success': '#10B981',
+            'warning': '#F59E0B',
+            'danger': '#EF4444',
+            'info': '#3B82F6',
+            'dark': '#1F2937',
+            'light': '#F3F4F6'
         }
     
-    def create_threat_radar_chart(self, data, labels, title):
-        """Create an enhanced radar chart using Plotly"""
-        if not PLOTLY_AVAILABLE:
-            st.error("Plotly is not installed. Charts cannot be displayed.")
-            return None
+    def create_radar_chart(self, data, labels, title):
+        """Create a radar chart using matplotlib and streamlit"""
+        try:
+            # Try to import matplotlib
+            import matplotlib.pyplot as plt
+            import matplotlib.patches as patches
             
-        fig = go.Figure()
-        
-        fig.add_trace(go.Scatterpolar(
-            r=data,
-            theta=labels,
-            fill='toself',
-            name='Threat Level',
-            line_color=self.colors['primary'],
-            fillcolor=f'rgba(255, 215, 0, 0.3)',
-            marker=dict(
-                size=8,
-                color=self.colors['primary'],
-                symbol='circle'
-            )
-        ))
-        
-        fig.update_layout(
-            polar=dict(
-                radialaxis=dict(
-                    visible=True,
-                    range=[0, max(data) * 1.1]
-                )
-            ),
-            title=title,
-            title_font=dict(size=18, color=self.colors['primary']),
-            paper_bgcolor='rgba(0, 0, 0, 0)',
-            plot_bgcolor='rgba(0, 0, 0, 0)',
-            font=dict(color='white')
-        )
-        
-        return fig
+            # Set up the figure
+            fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+            
+            # Calculate angles for each category
+            angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
+            angles += angles[:1]  # Close the circle
+            
+            # Close the data
+            values = data.tolist()
+            values += values[:1]
+            
+            # Plot the data
+            ax.plot(angles, values, color=self.colors['primary'], linewidth=3, linestyle='solid')
+            ax.fill(angles, values, color=self.colors['primary'], alpha=0.3)
+            
+            # Add labels
+            ax.set_thetagrids(np.degrees(angles[:-1]), labels)
+            
+            # Set ylim
+            ax.set_ylim(0, max(data) * 1.1)
+            
+            # Add title
+            plt.title(title, size=16, fontweight='bold', pad=20, color='white')
+            
+            # Style the plot
+            ax.spines['polar'].set_color('white')
+            ax.tick_params(colors='white')
+            ax.set_facecolor('none')
+            fig.patch.set_facecolor('none')
+            
+            # Display in Streamlit
+            st.pyplot(fig)
+            
+        except ImportError:
+            # If matplotlib is not available, use a fallback
+            st.warning("Matplotlib not available. Using simplified visualization.")
+            self.create_bar_chart(data, labels, title)
+        except Exception as e:
+            st.error(f"Error creating radar chart: {e}")
+            # Fallback to bar chart
+            self.create_bar_chart(data, labels, title)
+    
+    def create_bar_chart(self, data, labels, title):
+        """Create a bar chart using Streamlit's native bar chart"""
+        chart_data = pd.DataFrame({
+            'Category': labels,
+            'Value': data
+        })
+        st.bar_chart(chart_data.set_index('Category'), use_container_width=True)
     
     def create_sentiment_timeline(self, dates, values, title):
-        """Create an enhanced sentiment timeline using Plotly"""
-        if not PLOTLY_AVAILABLE:
-            st.error("Plotly is not installed. Charts cannot be displayed.")
-            return None
-            
-        fig = go.Figure()
+        """Create an advanced sentiment timeline"""
+        chart_data = pd.DataFrame({
+            'Date': dates,
+            'Sentiment': values
+        })
         
-        fig.add_trace(go.Scatter(
-            x=dates,
-            y=values,
-            mode='lines+markers',
-            name='Sentiment Score',
-            line=dict(
-                color=self.colors['primary'],
-                width=3
-            ),
-            marker=dict(
-                size=8,
-                color=self.colors['primary'],
-                symbol='circle'
-            )
-        ))
-        
-        # Add a trend line
-        z = np.polyfit(range(len(dates)), values, 1)
-        p = np.poly1d(z)
-        trend_line = p(range(len(dates)))
-        
-        fig.add_trace(go.Scatter(
-            x=dates,
-            y=trend_line,
-            mode='lines',
-            name='Trend',
-            line=dict(
-                color=self.colors['secondary'],
-                width=2,
-                dash='dash'
-            )
-        ))
-        
-        fig.update_layout(
-            title=title,
-            title_font=dict(size=18, color=self.colors['primary']),
-            xaxis_title='Date',
-            yaxis_title='Sentiment Score',
-            paper_bgcolor='rgba(0, 0, 0, 0)',
-            plot_bgcolor='rgba(0, 0, 0, 0)',
-            font=dict(color='white'),
-            xaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)',
-                tickfont=dict(color='white')
-            ),
-            yaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)',
-                tickfont=dict(color='white')
-            )
-        )
-        
-        return fig
+        # Create a line chart with streamlit
+        st.line_chart(chart_data.set_index('Date'), use_container_width=True)
     
     def create_threat_distribution(self, data, title):
-        """Create an enhanced donut chart for threat distribution using Plotly"""
-        if not PLOTLY_AVAILABLE:
-            st.error("Plotly is not installed. Charts cannot be displayed.")
-            return None
+        """Create a donut chart for threat distribution"""
+        try:
+            # Try to import matplotlib
+            import matplotlib.pyplot as plt
             
-        labels = list(data.keys())
-        values = list(data.values())
-        colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
-        
-        fig = go.Figure(data=[go.Pie(
-            labels=labels,
-            values=values,
-            hole=0.7,
-            marker_colors=colors,
-            textinfo='label+percent',
-            textfont=dict(color='white', size=12),
-            hoverinfo='label+value+percent'
-        )])
-        
-        fig.update_layout(
-            title=title,
-            title_font=dict(size=18, color=self.colors['primary']),
-            paper_bgcolor='rgba(0, 0, 0, 0)',
-            plot_bgcolor='rgba(0, 0, 0, 0)',
-            font=dict(color='white'),
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=0.1,
-                xanchor="center",
-                x=0.5
+            labels = list(data.keys())
+            values = list(data.values())
+            colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
+            
+            fig, ax = plt.subplots(figsize=(8, 8))
+            wedges, texts, autotexts = ax.pie(
+                values, labels=labels, autopct='%1.1f%%', 
+                colors=colors, startangle=90, wedgeprops=dict(width=0.3)
             )
-        )
-        
-        return fig
-    
-    def create_threat_heatmap(self, data, title):
-        """Create a threat heatmap using Plotly"""
-        if not PLOTLY_AVAILABLE:
-            st.error("Plotly is not installed. Charts cannot be displayed.")
-            return None
             
-        fig = go.Figure(data=go.Heatmap(
-            z=data,
-            colorscale='YlOrRd',
-            showscale=True
-        ))
-        
-        fig.update_layout(
-            title=title,
-            title_font=dict(size=18, color=self.colors['primary']),
-            paper_bgcolor='rgba(0, 0, 0, 0)',
-            plot_bgcolor='rgba(0, 0, 0, 0)',
-            font=dict(color='white'),
-            xaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)',
-                tickfont=dict(color='white')
-            ),
-            yaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)',
-                tickfont=dict(color='white')
-            )
-        )
-        
-        return fig
-    
-    def create_threat_gauge(self, value, title, min_val=0, max_val=100):
-        """Create a threat gauge using Plotly"""
-        if not PLOTLY_AVAILABLE:
-            st.error("Plotly is not installed. Charts cannot be displayed.")
-            return None
+            # Style the text
+            for autotext in autotexts:
+                autotext.set_color('white')
+                autotext.set_fontweight('bold')
             
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number+delta",
-            value=value,
-            domain={'x': [0, 1], 'y': [0, 1]},
-            title={'text': title},
-            delta={'reference': 50},
-            gauge={
-                'axis': {'range': [None, max_val]},
-                'bar': {'color': self.colors['primary']},
-                'steps': [
-                    {'range': [0, max_val * 0.33], 'color': self.colors['success']},
-                    {'range': [max_val * 0.33, max_val * 0.66], 'color': self.colors['warning']},
-                    {'range': [max_val * 0.66, max_val], 'color': self.colors['danger']}
-                ],
-                'threshold': {
-                    'line': {'color': "red", 'width': 4},
-                    'thickness': 0.75,
-                    'value': max_val * 0.8
-                }
-            }
-        ))
-        
-        fig.update_layout(
-            paper_bgcolor='rgba(0, 0, 0, 0)',
-            font=dict(color='white')
-        )
-        
-        return fig
+            for text in texts:
+                text.set_color('white')
+                text.set_fontsize(12)
+            
+            # Add center circle to make it a donut
+            centre_circle = plt.Circle((0, 0), 0.70, fc='none')
+            ax.add_artist(centre_circle)
+            
+            # Add title
+            plt.title(title, color='white', fontsize=16, fontweight='bold', pad=20)
+            
+            # Style the plot
+            ax.set_facecolor('none')
+            fig.patch.set_facecolor('none')
+            
+            # Display in Streamlit
+            st.pyplot(fig)
+            
+        except ImportError:
+            # If matplotlib is not available, use a fallback
+            st.warning("Matplotlib not available. Using simplified visualization.")
+            self.create_bar_chart(np.array(list(data.values())), list(data.keys()), title)
+        except Exception as e:
+            st.error(f"Error creating donut chart: {e}")
+            # Fallback to bar chart
+            self.create_bar_chart(np.array(list(data.values())), list(data.keys()), title)
 
 # Initialize visualizations
 viz = AdvancedVisualizations()
@@ -2000,8 +1259,6 @@ def show_user_registration():
         with col1:
             username = st.text_input("Username", help="Choose a username for the client")
             company = st.text_input("Company Name", help="Client's company name")
-            subscription_tier = st.selectbox("Subscription Tier", ["basic", "advanced", "premium"], 
-                                         format_func=lambda x: f"{x.title()} - {SUBSCRIPTION_TIERS[x]['price']}")
         
         with col2:
             password = st.text_input("Password", type="password", help="Set a secure password (min 8 chars, upper/lowercase, number, special char)")
@@ -2011,7 +1268,7 @@ def show_user_registration():
         
         if submitted:
             if all([username, password, company, email]):
-                success, message = auth_system.register_user(username, password, company, email, "client", subscription_tier)
+                success, message = auth_system.register_user(username, password, company, email)
                 if success:
                     st.success(f"✅ {message}")
                     st.balloons()
@@ -2019,32 +1276,6 @@ def show_user_registration():
                     st.error(f"❌ {message}")
             else:
                 st.error("Please fill all fields")
-
-def show_subscription_plans():
-    """Display subscription plans"""
-    st.subheader("💳 Subscription Plans")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    tiers = ["basic", "advanced", "premium"]
-    
-    for i, tier in enumerate(tiers):
-        tier_info = SUBSCRIPTION_TIERS[tier]
-        
-        with [col1, col2, col3][i]:
-            st.markdown(f"""
-            <div class="tier-card {'premium' if tier == 'premium' else ''}">
-                <h3>{tier_info['name']}</h3>
-                <div class="tier-price">{tier_info['price']}</div>
-                <ul class="tier-features">
-                    {''.join([f'<li>{feature}</li>' for feature in tier_info['features']])}
-                </ul>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            if st.button(f"Choose {tier_info['name']}", key=f"choose_{tier}"):
-                # In a real application, this would process payment
-                st.success(f"Redirecting to {tier_info['name']} plan checkout...")
 
 def show_user_management():
     st.subheader("👥 User Management")
@@ -2055,44 +1286,6 @@ def show_user_management():
         st.info("Only administrators can access user management features.")
         return
     
-    # Admin statistics
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown("""
-        <div class="admin-stat">
-            <div class="admin-stat-value">{}</div>
-            <div class="admin-stat-label">Total Users</div>
-        </div>
-        """.format(len(auth_system.users)), unsafe_allow_html=True)
-    
-    with col2:
-        active_users = sum(1 for user in auth_system.users.values() if user.get('last_login'))
-        st.markdown("""
-        <div class="admin-stat">
-            <div class="admin-stat-value">{}</div>
-            <div class="admin-stat-label">Active Users</div>
-        </div>
-        """.format(active_users), unsafe_allow_html=True)
-    
-    with col3:
-        premium_users = sum(1 for user in auth_system.users.values() if user.get('subscription_tier') == 'premium')
-        st.markdown("""
-        <div class="admin-stat">
-            <div class="admin-stat-value">{}</div>
-            <div class="admin-stat-label">Premium Users</div>
-        </div>
-        """.format(premium_users), unsafe_allow_html=True)
-    
-    with col4:
-        failed_logins = len([log for log in security_manager.activity_log if log['action'] == 'failed_login'])
-        st.markdown("""
-        <div class="admin-stat">
-            <div class="admin-stat-value">{}</div>
-            <div class="admin-stat-label">Failed Logins</div>
-        </div>
-        """.format(failed_logins), unsafe_allow_html=True)
-    
     # Show existing users
     st.write("### Existing Users")
     users_data = []
@@ -2102,10 +1295,8 @@ def show_user_management():
             "Company": user_info.get("company", "N/A"),
             "Email": user_info.get("email", "N/A"),
             "Access Level": user_info.get("access_level", "client"),
-            "Subscription": user_info.get("subscription_tier", "basic").title(),
             "Last Login": user_info.get("last_login", "Never"),
-            "Created": user_info.get("created_at", "N/A")[:10] if user_info.get("created_at") else "N/A",
-            "Status": "Active" if user_info.get('failed_attempts', 0) < 5 else "Locked"
+            "Created": user_info.get("created_at", "N/A")[:10] if user_info.get("created_at") else "N/A"
         })
     
     if users_data:
@@ -2113,83 +1304,14 @@ def show_user_management():
     else:
         st.info("No users registered yet")
     
-    # User subscription management
-    st.markdown("---")
-    st.subheader("💳 User Subscription Management")
-    
-    user_to_manage = st.selectbox("Select User", list(auth_system.users.keys()))
-    
-    if user_to_manage:
-        current_subscription = auth_system.get_user_subscription(user_to_manage)
-        new_subscription = st.selectbox(
-            "New Subscription Tier",
-            ["basic", "advanced", "premium"],
-            index=["basic", "advanced", "premium"].index(current_subscription)
-        )
-        
-        if st.button("Update Subscription", use_container_width=True):
-            if new_subscription != current_subscription:
-                auth_system.update_user_subscription(user_to_manage, new_subscription)
-                st.success(f"✅ Subscription updated to {new_subscription.title()}")
-                st.rerun()
-            else:
-                st.info("No changes made")
-    
-    # User privilege management
-    st.markdown("---")
-    st.subheader("🔑 User Privilege Management")
-    
-    user_to_manage = st.selectbox("Select User for Privilege Management", list(auth_system.users.keys()))
-    
-    if user_to_manage:
-        current_privileges = auth_system.get_user_privileges(user_to_manage)
-        
-        st.write(f"### Current Privileges for {user_to_manage}")
-        
-        # Create privilege toggles
-        all_privileges = [
-            "basic_monitoring", "basic_reports", "ai_analysis", 
-            "competitor_tracking", "crisis_management", "api_access"
-        ]
-        
-        new_privileges = []
-        
-        for privilege in all_privileges:
-            is_enabled = privilege in current_privileges
-            col1, col2 = st.columns([3, 1])
-            
-            with col1:
-                st.write(f"**{privilege.replace('_', ' ').title()}**")
-            
-            with col2:
-                # Custom toggle switch
-                toggle_key = f"toggle_{user_to_manage}_{privilege}"
-                toggle_value = st.checkbox(
-                    "", 
-                    value=is_enabled,
-                    key=toggle_key
-                )
-                
-                if toggle_value:
-                    new_privileges.append(privilege)
-        
-        if st.button("Update Privileges", use_container_width=True):
-            if new_privileges != current_privileges:
-                auth_system.update_user_privileges(user_to_manage, new_privileges)
-                st.success(f"✅ Privileges updated for {user_to_manage}")
-                st.rerun()
-            else:
-                st.info("No changes made")
-    
     # Registration form
-    st.markdown("---")
     show_user_registration()
     
     # User actions (delete, reset password)
     st.markdown("---")
     st.subheader("User Actions")
     
-    user_to_manage = st.selectbox("Select User for Actions", list(auth_system.users.keys()))
+    user_to_manage = st.selectbox("Select User", list(auth_system.users.keys()))
     
     col1, col2 = st.columns(2)
     
@@ -2198,7 +1320,6 @@ def show_user_management():
             if user_to_manage:
                 # In a real application, you would send a password reset email
                 st.info(f"Password reset initiated for {user_to_manage}. An email has been sent with instructions.")
-                security_manager.log_activity(auth_system.users[user_to_manage]['user_id'], "password_reset", f"Password reset for {user_to_manage}")
     
     with col2:
         if st.button("Delete User", use_container_width=True, type="secondary"):
@@ -2206,34 +1327,18 @@ def show_user_management():
                 if st.checkbox(f"Confirm deletion of {user_to_manage}"):
                     del auth_system.users[user_to_manage]
                     auth_system.save_users()
-                    security_manager.log_activity(auth_system.users[user_to_manage]['user_id'], "user_deleted", f"User {user_to_manage} deleted")
                     st.success(f"User {user_to_manage} deleted")
                     st.rerun()
             elif user_to_manage == st.session_state.username:
                 st.error("You cannot delete your own account")
-    
-    # Activity log
-    st.markdown("---")
-    st.subheader("📋 Recent Activity Log")
-    
-    activity_logs = security_manager.get_activity_log()[-10:]  # Get last 10 activities
-    for log in reversed(activity_logs):
-        st.markdown(f"""
-        <div class="activity-log">
-            <div class="activity-time">{datetime.fromisoformat(log['timestamp']).strftime('%Y-%m-%d %H:%M:%S')}</div>
-            <div><strong>Action:</strong> {log['action']}</div>
-            <div><strong>User ID:</strong> {log['user_id']}</div>
-            <div><strong>Details:</strong> {log['details']}</div>
-        </div>
-        """, unsafe_allow_html=True)
 
 def show_login_form():
     """Display login form with enhanced design"""
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FF8C00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 Brand Guardian AI</h1>
-        <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence Platform</p>
+        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
+        <p style="font-size: 1.2rem; color: #A5B4FC;">Advanced Brand Protection & Threat Intelligence Platform</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -2245,14 +1350,14 @@ def show_login_form():
         <div style='text-align: center;'>
             <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🛡️</div>
             <h3 style="color: white;">Secure Login</h3>
-            <p style="color: #FFD700;">Access your brand protection dashboard</p>
+            <p style="color: #A5B4FC;">Access your brand protection dashboard</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         with st.form("login_form"):
-            username = st.text_input("👤 Username")
-            password = st.text_input("🔒 Password", type="password")
+            username = st.text_input("👤 Username", placeholder="Enter your username")
+            password = st.text_input("🔒 Password", type="password", placeholder="Enter your password")
             
             # Remember me checkbox
             remember_me = st.checkbox("Remember me")
@@ -2265,7 +1370,6 @@ def show_login_form():
                     st.session_state.authenticated = True
                     st.session_state.username = username
                     st.session_state.user_access_level = auth_system.users[username]["access_level"]
-                    st.session_state.subscription_tier = auth_system.users[username]["subscription_tier"]
                     st.session_state.user_id = auth_system.users[username]["user_id"]
                     st.session_state.login_time = datetime.now().isoformat()
                     st.session_state.remember_me = remember_me
@@ -2289,7 +1393,7 @@ def show_login_form():
     # Forgot password link
     st.markdown("""
     <div style='text-align: center; margin-top: 20px;'>
-        <a href='#' style='color: #FFD700; text-decoration: none;'>Forgot your password?</a>
+        <a href='#' style='color: #8B5CF6; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2323,16 +1427,8 @@ def show_advanced_threat_analysis():
         show_quick_actions()
 
 def show_threat_dashboard():
-    """Threat monitoring dashboard with enhanced animations"""
+    """Threat monitoring dashboard"""
     st.subheader("🛡️ Real-time Threat Dashboard")
-    
-    # Enhanced threat animation
-    st.markdown("""
-    <div class="threat-animation">
-        <div class="threat-wave"></div>
-        <div class="threat-pulse"></div>
-    </div>
-    """, unsafe_allow_html=True)
     
     # Create metrics with custom styling
     col1, col2, col3, col4 = st.columns(4)
@@ -2342,7 +1438,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Active Threats</h3>
             <h1>18</h1>
-            <p style="color: #ff6b6b;">+5 from yesterday</p>
+            <p style="color: #EF4444;">+5 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2351,7 +1447,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>High</h1>
-            <p style="color: #ff6b6b;">Elevated risk</p>
+            <p style="color: #EF4444;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2360,7 +1456,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Response Time</h3>
             <h1>2.1s</h1>
-            <p style="color: #66bb6a;">-0.4s improvement</p>
+            <p style="color: #10B981;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2369,32 +1465,28 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Protected Assets</h3>
             <h1>24</h1>
-            <p style="color: #66bb6a;">Fully secured</p>
+            <p style="color: #10B981;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
     
-    # Threat timeline with enhanced visualization
+    # Threat timeline with advanced visualization
     st.subheader("📈 Threat Timeline (7 Days)")
     
     # Generate sample data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=7)
     threats = [8, 12, 5, 18, 10, 7, 14]
     
-    # Create an enhanced chart
-    fig = viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
-    if fig:
-        st.plotly_chart(fig, use_container_width=True)
+    # Create an advanced chart
+    viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
     
-    # Threat distribution with enhanced visualization
+    # Threat distribution
     st.subheader("🌡️ Threat Distribution")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         threat_data = {'High': 8, 'Medium': 5, 'Low': 5}
-        fig = viz.create_threat_distribution(threat_data, "Threat Severity Distribution")
-        if fig:
-            st.plotly_chart(fig, use_container_width=True)
+        viz.create_threat_distribution(threat_data, "Threat Severity Distribution")
     
     with col2:
         st.markdown("""
@@ -2407,26 +1499,6 @@ def show_threat_dashboard():
             <p>Peak time: 14:00-16:00</p>
         </div>
         """, unsafe_allow_html=True)
-    
-    # Threat gauge visualization
-    st.subheader("🎯 Threat Intensity Gauge")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        fig = viz.create_threat_gauge(75, "Overall Threat Level")
-        if fig:
-            st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        fig = viz.create_threat_gauge(60, "Response Urgency")
-        if fig:
-            st.plotly_chart(fig, use_container_width=True)
-    
-    with col3:
-        fig = viz.create_threat_gauge(85, "Impact Assessment")
-        if fig:
-            st.plotly_chart(fig, use_container_width=True)
     
     # Recent threats table
     st.subheader("🚨 Recent Threat Alerts")
@@ -2476,9 +1548,7 @@ def show_search_analysis():
             if search_query and brand_name:
                 with st.spinner("🔍 Analyzing threats..."):
                     time.sleep(2)
-                    # Get user subscription tier
-                    subscription_tier = st.session_state.get('subscription_tier', 'basic')
-                    results = ai_system.analyze_threat(search_query, brand_name, subscription_tier)
+                    results = search_analyzer.analyze_search(search_query, brand_name)
                     st.session_state.search_results = results
                     st.success("Analysis complete!")
             else:
@@ -2512,14 +1582,6 @@ def show_search_analysis():
         st.markdown("---")
         st.subheader("📋 Analysis Results")
         
-        # Subscription tier indicator
-        subscription_tier = results.get('subscription_tier', 'basic')
-        st.markdown(f"""
-        <div class="subscription-status status-{subscription_tier}">
-            {subscription_tier.title()} Plan
-        </div>
-        """, unsafe_allow_html=True)
-        
         # Threat level indicator
         threat_class = f"threat-{results['threat_level']}"
         st.markdown(f"""
@@ -2550,51 +1612,6 @@ def show_search_analysis():
             </div>
             """, unsafe_allow_html=True)
         
-        # AI Analysis (for advanced and premium tiers)
-        if 'ai_insights' in results:
-            st.subheader("🤖 AI-Powered Analysis")
-            
-            for insight in results['ai_insights']:
-                confidence_class = f"confidence-{('high' if insight['confidence'] > 0.7 else 'medium' if insight['confidence'] > 0.5 else 'low')}"
-                
-                st.markdown(f"""
-                <div class="ai-analysis-card">
-                    <div class="ai-analysis-header">
-                        <span class="ai-icon">🤖</span>
-                        <h4>{insight['title']}</h4>
-                        <span class="ai-confidence {confidence_class}">{int(insight['confidence'] * 100)}% confidence</span>
-                    </div>
-                    <p>{insight['content']}</p>
-                </div>
-                """, unsafe_allow_html=True)
-        
-        # Enhanced metrics (for advanced and premium tiers)
-        if 'sentiment_score' in results:
-            st.subheader("📊 Enhanced Metrics")
-            
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                st.metric("Sentiment Score", f"{results['sentiment_score']:.2f}", 
-                         delta="Neutral" if 0.4 <= results['sentiment_score'] <= 0.6 else 
-                              ("Positive" if results['sentiment_score'] > 0.6 else "Negative"))
-            
-            with col2:
-                st.metric("Urgency Score", f"{results['urgency_score']:.2f}",
-                         delta="High" if results['urgency_score'] > 0.7 else "Medium" if results['urgency_score'] > 0.4 else "Low")
-            
-            with col3:
-                st.metric("Impact Score", f"{results['impact_score']:.2f}",
-                         delta="High" if results['impact_score'] > 0.7 else "Medium" if results['impact_score'] > 0.4 else "Low")
-            
-            st.markdown(f"""
-            <div class="search-analysis-card">
-                <h4>🎯 Risk Assessment</h4>
-                <p><strong>Overall Risk:</strong> {results['risk_assessment']}</p>
-                <p><strong>Predicted Trend:</strong> {results['predicted_trend']}</p>
-            </div>
-            """, unsafe_allow_html=True)
-        
         # Similar threat examples
         st.subheader("🔍 Similar Threat Patterns")
         similar_threats = generate_similar_threats(results)
@@ -2619,7 +1636,7 @@ def generate_similar_threats(results):
     return threats
 
 def show_trend_analysis():
-    """Trend analysis functionality with enhanced graphs"""
+    """Trend analysis functionality"""
     st.subheader("📈 Threat Trend Analysis")
     
     # Generate trend data with valid dates
@@ -2628,74 +1645,21 @@ def show_trend_analysis():
     medium_threats = np.random.poisson(10, 30)
     low_threats = np.random.poisson(20, 30)
     
-    # Create enhanced multi-line chart
-    if PLOTLY_AVAILABLE:
-        fig = go.Figure()
-        
-        fig.add_trace(go.Scatter(
-            x=dates, y=high_threats,
-            mode='lines+markers',
-            name='High Threats',
-            line=dict(color='#ff6b6b', width=3),
-            marker=dict(size=6, color='#ff6b6b')
-        ))
-        
-        fig.add_trace(go.Scatter(
-            x=dates, y=medium_threats,
-            mode='lines+markers',
-            name='Medium Threats',
-            line=dict(color='#ffa726', width=3),
-            marker=dict(size=6, color='#ffa726')
-        ))
-        
-        fig.add_trace(go.Scatter(
-            x=dates, y=low_threats,
-            mode='lines+markers',
-            name='Low Threats',
-            line=dict(color='#66bb6a', width=3),
-            marker=dict(size=6, color='#66bb6a')
-        ))
-        
-        fig.update_layout(
-            title='Threat Trends Over Time',
-            title_font=dict(size=18, color='#FFD700'),
-            xaxis_title='Date',
-            yaxis_title='Number of Threats',
-            paper_bgcolor='rgba(0, 0, 0, 0)',
-            plot_bgcolor='rgba(0, 0, 0, 0)',
-            font=dict(color='white'),
-            xaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)',
-                tickfont=dict(color='white')
-            ),
-            yaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)',
-                tickfont=dict(color='white')
-            ),
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=0.1,
-                xanchor="center",
-                x=0.5
-            )
-        )
-        
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.error("Plotly is not installed. Charts cannot be displayed.")
-        
-        # Display data in a table format as fallback
-        st.subheader("Threat Trends Data")
-        trend_data = {
-            'Date': dates,
-            'High Threats': high_threats,
-            'Medium Threats': medium_threats,
-            'Low Threats': low_threats
-        }
-        st.dataframe(pd.DataFrame(trend_data), use_container_width=True)
+    trend_data = pd.DataFrame({
+        'Date': dates,
+        'High Threats': high_threats,
+        'Medium Threats': medium_threats,
+        'Low Threats': low_threats
+    })
     
-    # Platform distribution with enhanced radar chart
+    # Create an advanced multi-line chart
+    st.line_chart(
+        trend_data.set_index('Date'),
+        use_container_width=True,
+        color=['#EF4444', '#F59E0B', '#10B981']
+    )
+    
+    # Platform distribution with radar chart
     st.subheader("🌐 Threat Distribution by Platform")
     
     col1, col2 = st.columns([2, 1])
@@ -2705,19 +1669,11 @@ def show_trend_analysis():
         threat_counts = [45, 32, 28, 19, 12]
         
         # Create radar chart
-        fig = viz.create_threat_radar_chart(
+        viz.create_radar_chart(
             np.array(threat_counts),
             platforms,
             "Threat Distribution Across Platforms"
         )
-        if fig:
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            # Display data in a bar chart as fallback
-            st.bar_chart(pd.DataFrame({
-                'Platform': platforms,
-                'Threat Count': threat_counts
-            }).set_index('Platform'))
     
     with col2:
         st.markdown("""
@@ -2731,78 +1687,18 @@ def show_trend_analysis():
         </div>
         """, unsafe_allow_html=True)
     
-    # Sentiment analysis over time with enhanced visualization
+    # Sentiment analysis over time
     st.subheader("📊 Sentiment Analysis")
     
     sentiment_dates = pd.date_range(end=datetime.now(), periods=14)
     sentiment_values = np.sin(np.linspace(0, 4*np.pi, 14)) * 0.5 + 0.5
     
-    if PLOTLY_AVAILABLE:
-        fig = go.Figure()
-        
-        # Add area chart for sentiment
-        fig.add_trace(go.Scatter(
-            x=sentiment_dates,
-            y=sentiment_values,
-            fill='tozeroy',
-            fillcolor='rgba(255, 215, 0, 0.3)',
-            line=dict(color='#FFD700', width=3),
-            name='Sentiment Score'
-        ))
-        
-        # Add threshold lines
-        fig.add_hline(y=0.7, line_dash="dash", line_color="rgba(255, 0, 0, 0.5)", annotation_text="Positive Threshold")
-        fig.add_hline(y=0.3, line_dash="dash", line_color="rgba(255, 165, 0, 0.5)", annotation_text="Negative Threshold")
-        
-        fig.update_layout(
-            title='Sentiment Analysis Over Time',
-            title_font=dict(size=18, color='#FFD700'),
-            xaxis_title='Date',
-            yaxis_title='Sentiment Score',
-            paper_bgcolor='rgba(0, 0, 0, 0)',
-            plot_bgcolor='rgba(0, 0, 0, 0)',
-            font=dict(color='white'),
-            xaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)',
-                tickfont=dict(color='white')
-            ),
-            yaxis=dict(
-                gridcolor='rgba(255, 255, 255, 0.1)',
-                tickfont=dict(color='white'),
-                range=[0, 1]
-            )
-        )
-        
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.error("Plotly is not installed. Charts cannot be displayed.")
-        
-        # Display data in a line chart as fallback
-        st.subheader("Sentiment Analysis Data")
-        sentiment_data = {
-            'Date': sentiment_dates,
-            'Sentiment Score': sentiment_values
-        }
-        st.line_chart(pd.DataFrame(sentiment_data).set_index('Date'))
+    sentiment_data = pd.DataFrame({
+        'Date': sentiment_dates,
+        'Sentiment Score': sentiment_values
+    })
     
-    # Threat heatmap
-    st.subheader("🔥 Threat Heatmap by Hour and Day")
-    
-    # Generate sample heatmap data
-    hours = list(range(24))
-    days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    
-    # Create random data for the heatmap
-    heatmap_data = np.random.rand(7, 24) * 100
-    
-    fig = viz.create_threat_heatmap(heatmap_data, "Threat Intensity Heatmap")
-    if fig:
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        # Display data in a table format as fallback
-        st.subheader("Threat Heatmap Data")
-        heatmap_df = pd.DataFrame(heatmap_data, index=days, columns=hours)
-        st.dataframe(heatmap_df, use_container_width=True)
+    st.area_chart(sentiment_data.set_index('Date'), use_container_width=True)
 
 def show_quick_actions():
     """Quick action buttons"""
@@ -2843,7 +1739,9 @@ def show_access_required():
     with col1:
         access_key = st.text_input(
             "Enter Access Key:",
-            type="password"
+            type="password",
+            placeholder="BG2024-PRO-ACCESS",
+            help="Enter your premium access key"
         )
     
     with col2:
@@ -2872,14 +1770,11 @@ def show_access_required():
             st.balloons()
             st.rerun()
     
-    # Show subscription plans
-    show_subscription_plans()
-    
     # Premium access card
     st.markdown("""
     <div class="premium-access-card">
         <h3>🌟 Premium Access Features</h3>
-        <p>Unlock the full potential of Brand Guardian AI with our premium features:</p>
+        <p>Unlock the full potential of BrandGuardian AI with our premium features:</p>
         <ul style="text-align: left; display: inline-block;">
             <li>Advanced threat detection algorithms</li>
             <li>Real-time monitoring across all platforms</li>
@@ -2901,17 +1796,6 @@ def show_api_key_management():
     if not user_id:
         st.error("User not authenticated")
         return
-    
-    # Get user subscription tier
-    subscription_tier = st.session_state.get('subscription_tier', 'basic')
-    tier_info = SUBSCRIPTION_TIERS[subscription_tier]
-    
-    # Display subscription info
-    st.markdown(f"""
-    <div class="subscription-status status-{subscription_tier}">
-        Current Plan: {tier_info['name']} - {tier_info['price']}
-    </div>
-    """, unsafe_allow_html=True)
     
     # Display current connections
     st.subheader("🌐 Connected Platforms")
@@ -2959,6 +1843,7 @@ def show_api_key_management():
     api_key = st.text_input(
         f"{platform_info['field_name']}*",
         type="password",
+        placeholder=f"Paste your {platform_info['field_name']} here...",
         help=platform_info['field_help']
     )
     
@@ -3010,28 +1895,22 @@ class EnhancedSocialMediaMonitor:
     def __init__(self):
         self.api_manager = api_manager
     
-    def simulate_monitoring_with_api(self, brand_name, sector, subscription_tier):
+    def simulate_monitoring_with_api(self, brand_name, sector):
         posts = []
         user_id = st.session_state.get('user_id')
         if not user_id:
             return posts
             
-        tier_info = SUBSCRIPTION_TIERS[subscription_tier]
-        max_platforms = 5 if subscription_tier == "basic" else 10 if subscription_tier == "advanced" else 20
-        max_posts = 3 if subscription_tier == "basic" else 8 if subscription_tier == "advanced" else 15
-        
         connected_platforms = list(api_manager.load_api_keys(user_id).keys()) or ['twitter', 'facebook', 'instagram']
-        connected_platforms = connected_platforms[:max_platforms]
         
         for platform in connected_platforms:
-            for _ in range(random.randint(1, max_posts)):
+            for _ in range(random.randint(3, 8)):
                 posts.append({
                     'platform': platform.capitalize(),
                     'content': self.generate_business_post(brand_name, sector),
                     'author': f"user_{random.randint(1000, 9999)}",
                     'engagement': random.randint(50, 5000),
-                    'api_connected': platform in api_manager.load_api_keys(user_id),
-                    'ai_analyzed': tier_info['ai_analysis']
+                    'api_connected': platform in api_manager.load_api_keys(user_id)
                 })
         return posts
     
@@ -3048,30 +1927,11 @@ enhanced_monitor = EnhancedSocialMediaMonitor()
 
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
-    st.header("🤖 Brand Guardian AI Dashboard")
+    st.header("🤖 BrandGuardian AI Dashboard")
     
     # Welcome message with user's brand name
     brand_name = st.session_state.get('brand_name', 'Your Brand')
     st.success(f"Welcome to your brand protection dashboard, {brand_name}!")
-    
-    # Get user subscription tier
-    subscription_tier = st.session_state.get('subscription_tier', 'basic')
-    tier_info = SUBSCRIPTION_TIERS[subscription_tier]
-    
-    # User profile section
-    user_profile = auth_system.get_user_profile(st.session_state.username)
-    
-    st.markdown(f"""
-    <div class="user-profile-card">
-        <div class="user-avatar">{user_profile.get('avatar', '👤')}</div>
-        <h3>{st.session_state.username}</h3>
-        <p>{user_profile.get('bio', 'Brand Protection Specialist')}</p>
-        <p><strong>Company:</strong> {auth_system.users[st.session_state.username]['company']}</p>
-        <div class="subscription-status status-{subscription_tier}">
-            {tier_info['name']} Plan - {tier_info['price']}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
     
     # Quick stats
     col1, col2, col3 = st.columns(3)
@@ -3081,7 +1941,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Brand Mentions</h3>
             <h1>142</h1>
-            <p style="color: #66bb6a;">+12 from last week</p>
+            <p style="color: #10B981;">+12 from last week</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -3090,7 +1950,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>Low</h1>
-            <p style="color: #66bb6a;">Stable</p>
+            <p style="color: #10B981;">Stable</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -3099,7 +1959,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Response Rate</h3>
             <h1>92%</h1>
-            <p style="color: #66bb6a;">Excellent</p>
+            <p style="color: #10B981;">Excellent</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -3113,13 +1973,11 @@ def show_user_ai_dashboard():
     
     with tab2:
         st.header("Social Monitoring")
-        posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector, subscription_tier)
+        posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector)
         for post in posts[:5]:
             with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                 st.write(post['content'])
                 st.caption(f"Engagement: {post['engagement']}")
-                if post.get('ai_analyzed'):
-                    st.markdown('<span class="ai-confidence confidence-high">AI Analyzed</span>', unsafe_allow_html=True)
     
     with tab3:
         st.header("📊 Brand Reports")
@@ -3163,26 +2021,19 @@ def main():
     
     # Header
     st.markdown("""
-    <h1 class="premium-header floating">Brand Guardian AI</h1>
-    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Brand Protection & Threat Intelligence Platform</div>
+    <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
+    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
     # Sidebar with user info and logout button
     with st.sidebar:
-        # User profile card
-        user_profile = auth_system.get_user_profile(st.session_state.username)
-        subscription_tier = st.session_state.get('subscription_tier', 'basic')
-        tier_info = SUBSCRIPTION_TIERS[subscription_tier]
-        
+        # User info
         st.markdown(f"""
-        <div class="user-profile-card">
-            <div class="user-avatar">{user_profile.get('avatar', '👤')}</div>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 3rem;">👤</div>
             <h3>{st.session_state.username}</h3>
-            <p>{user_profile.get('bio', 'Brand Protection Specialist')}</p>
-            <p><strong>Company:</strong> {auth_system.users[st.session_state.username]['company']}</p>
-            <div class="subscription-status status-{subscription_tier}">
-                {tier_info['name']} Plan
-            </div>
+            <p>{st.session_state.get('user_access_level', 'user').title()} Access</p>
+            <p>{auth_system.users[st.session_state.username]['company']}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -3207,16 +2058,6 @@ def main():
         st.subheader("🔑 API Status")
         st.info(f"{len(api_keys)} platform(s) connected")
         
-        # User activity log
-        st.subheader("📋 Recent Activity")
-        user_activity = security_manager.get_activity_log(user_id)[-5:]  # Last 5 activities
-        for activity in reversed(user_activity):
-            st.markdown(f"""
-            <div style="font-size: 0.8rem; margin-bottom: 5px;">
-                <span style="color: #FFD700;">{datetime.fromisoformat(activity['timestamp']).strftime('%H:%M')}</span> - {activity['action']}
-            </div>
-            """, unsafe_allow_html=True)
-        
         # User management for admin only
         if st.session_state.get('user_access_level') == 'admin':
             st.markdown("---")
@@ -3225,7 +2066,6 @@ def main():
         
         st.markdown("---")
         if st.button("🚪 Logout", use_container_width=True):
-            security_manager.log_activity(user_id, "logout", f"User {st.session_state.username} logged out")
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
@@ -3261,7 +2101,7 @@ def main():
         
         with tab3:
             st.header("Social Monitoring")
-            posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector, "premium")
+            posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector)
             for post in posts[:5]:
                 with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                     st.write(post['content'])
