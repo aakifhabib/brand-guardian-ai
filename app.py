@@ -738,6 +738,12 @@ st.markdown("""
         background: linear-gradient(90deg, #FFD700, #FFA500);
         border-radius: 4px;
         transition: width 0.3s ease;
+        animation: progressFill 3.5s ease-in-out forwards;
+    }
+    
+    @keyframes progressFill {
+        0% { width: 0%; }
+        100% { width: 100%; }
     }
     
     .analysis-phases {
@@ -767,6 +773,28 @@ st.markdown("""
     .phase-text {
         font-size: 0.8rem;
         color: #FFD700;
+    }
+    
+    .phase:nth-child(1) {
+        animation: phaseActivate 3.5s ease-in-out forwards;
+    }
+    
+    .phase:nth-child(2) {
+        animation: phaseActivate 3.5s ease-in-out 0.875s forwards;
+    }
+    
+    .phase:nth-child(3) {
+        animation: phaseActivate 3.5s ease-in-out 1.75s forwards;
+    }
+    
+    .phase:nth-child(4) {
+        animation: phaseActivate 3.5s ease-in-out 2.625s forwards;
+    }
+    
+    @keyframes phaseActivate {
+        0% { opacity: 0.5; }
+        25% { opacity: 1; }
+        100% { opacity: 1; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -800,98 +828,36 @@ def show_threat_analysis_animation():
                 <div class="radar-grid"></div>
                 <div class="radar-sweep"></div>
                 <div class="threat-dots">
-                    <div class="threat-dot" style="top: 30%; left: 40%;"></div>
-                    <div class="threat-dot" style="top: 60%; left: 70%;"></div>
-                    <div class="threat-dot" style="top: 20%; left: 60%;"></div>
-                    <div class="threat-dot" style="top: 70%; left: 30%;"></div>
-                    <div class="threat-dot" style="top: 50%; left: 80%;"></div>
+                    <div class="threat-dot active" style="top: 30%; left: 40%; animation-delay: 0.5s;"></div>
+                    <div class="threat-dot active" style="top: 60%; left: 70%; animation-delay: 1.0s;"></div>
+                    <div class="threat-dot active" style="top: 20%; left: 60%; animation-delay: 1.5s;"></div>
+                    <div class="threat-dot active" style="top: 70%; left: 30%; animation-delay: 2.0s;"></div>
+                    <div class="threat-dot active" style="top: 50%; left: 80%; animation-delay: 2.5s;"></div>
                 </div>
             </div>
             <div class="analysis-status">Scanning for threats...</div>
             <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-bar"></div>
             </div>
             <div class="analysis-phases">
-                <div class="phase" id="phase1">
+                <div class="phase">
                     <div class="phase-icon">🔍</div>
                     <div class="phase-text">Scanning</div>
                 </div>
-                <div class="phase" id="phase2">
+                <div class="phase">
                     <div class="phase-icon">🧠</div>
                     <div class="phase-text">Processing</div>
                 </div>
-                <div class="phase" id="phase3">
+                <div class="phase">
                     <div class="phase-icon">📊</div>
                     <div class="phase-text">Analyzing</div>
                 </div>
-                <div class="phase" id="phase4">
+                <div class="phase">
                     <div class="phase-icon">✅</div>
                     <div class="phase-text">Complete</div>
                 </div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
-        
-        # JavaScript to animate the progress and phases
-        st.markdown("""
-        <script>
-        // Get elements
-        const progressBar = document.getElementById('progressBar');
-        const phases = [
-            document.getElementById('phase1'),
-            document.getElementById('phase2'),
-            document.getElementById('phase3'),
-            document.getElementById('phase4')
-        ];
-        const threatDots = document.querySelectorAll('.threat-dot');
-        
-        // Animation sequence
-        let progress = 0;
-        let currentPhase = 0;
-        let activeThreats = 0;
-        
-        // Update progress bar
-        function updateProgress() {
-            progress += 2;
-            if (progress > 100) progress = 100;
-            progressBar.style.width = progress + '%';
-            
-            // Update phases
-            if (progress >= 25 && currentPhase === 0) {
-                phases[0].classList.add('active');
-                currentPhase = 1;
-            }
-            if (progress >= 50 && currentPhase === 1) {
-                phases[1].classList.add('active');
-                currentPhase = 2;
-            }
-            if (progress >= 75 && currentPhase === 2) {
-                phases[2].classList.add('active');
-                currentPhase = 3;
-            }
-            if (progress >= 100 && currentPhase === 3) {
-                phases[3].classList.add('active');
-                currentPhase = 4;
-            }
-            
-            // Activate threat dots randomly
-            if (Math.random() < 0.1 && activeThreats < threatDots.length) {
-                const randomIndex = Math.floor(Math.random() * threatDots.length);
-                if (!threatDots[randomIndex].classList.contains('active')) {
-                    threatDots[randomIndex].classList.add('active');
-                    activeThreats++;
-                }
-            }
-            
-            // Continue animation or stop
-            if (progress < 100) {
-                setTimeout(updateProgress, 50);
-            }
-        }
-        
-        // Start animation
-        updateProgress();
-        </script>
         """, unsafe_allow_html=True)
     
     return placeholder
@@ -2043,6 +2009,18 @@ def show_threat_dashboard():
         }
     )
 
+def generate_similar_threats(results):
+    """Generate similar threat examples"""
+    threats = []
+    for i in range(3):
+        threats.append({
+            'platform': random.choice(['Twitter', 'Reddit', 'Facebook', 'Instagram']),
+            'content': f"Similar {results['threat_level']} threat pattern detected",
+            'severity': results['threat_level'],
+            'date': (datetime.now() - timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
+        })
+    return threats
+
 def show_search_analysis():
     """Search analysis functionality"""
     st.subheader("🔍 Advanced Search Analysis")
@@ -2146,18 +2124,6 @@ def show_search_analysis():
                 <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
             </div>
             """, unsafe_allow_html=True)
-
-def generate_similar_threats(results):
-    """Generate similar threat examples"""
-    threats = []
-    for i in range(3):
-        threats.append({
-            'platform': random.choice(['Twitter', 'Reddit', 'Facebook', 'Instagram']),
-            'content': f"Similar {results['threat_level']} threat pattern detected",
-            'severity': results['threat_level'],
-            'date': (datetime.now() - timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
-        })
-    return threats
 
 def show_trend_analysis():
     """Trend analysis functionality"""
