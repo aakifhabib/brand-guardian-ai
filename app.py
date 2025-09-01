@@ -18,6 +18,12 @@ import secrets
 from PIL import Image
 import io
 import requests
+import plotly.graph_objects as go
+import plotly.express as px
+from plotly.subplots import make_subplots
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 
 # Set page config first
 st.set_page_config(
@@ -30,9 +36,7 @@ st.set_page_config(
 # Generate and display premium access key
 def generate_premium_key():
     """Generate a secure premium access key"""
-    # Generate a cryptographically secure random key
     key = secrets.token_urlsafe(16)
-    # Add prefix to make it identifiable
     premium_key = f"BG-PREMIUM-{key.upper()}"
     return premium_key
 
@@ -40,21 +44,21 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Advanced CSS with enhanced UI components - New Theme
+# Advanced CSS with enhanced black and gold theme and animations
 st.markdown("""
 <style>
     /* Base styles */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
     
     .main {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
         color: #FFFFFF;
         font-family: 'Inter', sans-serif;
         overflow-x: hidden;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
         background-size: 400% 400%;
         animation: gradientBG 15s ease infinite;
     }
@@ -78,7 +82,7 @@ st.markdown("""
     
     .particle {
         position: absolute;
-        background: rgba(100, 255, 218, 0.1);
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0) 70%);
         border-radius: 50%;
         animation: float 20s infinite linear;
     }
@@ -92,20 +96,28 @@ st.markdown("""
     
     /* Premium header styling */
     .premium-header {
-        font-size: 3.5rem;
-        font-weight: 800;
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
+        font-weight: 900;
         text-align: center;
         margin: 20px 0;
-        background: linear-gradient(90deg, #64ffda 0%, #00bcd4 55%, #03a9f4 100%);
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0px 2px 10px rgba(100, 255, 218, 0.3);
-        animation: glow 2s ease-in-out infinite alternate;
+        text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
+        animation: goldGlow 3s ease-in-out infinite alternate;
+        position: relative;
     }
     
-    @keyframes glow {
-        from { text-shadow: 0px 2px 10px rgba(100, 255, 218, 0.3); }
-        to { text-shadow: 0px 2px 20px rgba(100, 255, 218, 0.6); }
+    @keyframes goldGlow {
+        from { 
+            text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
+            transform: scale(1);
+        }
+        to { 
+            text-shadow: 0px 2px 20px rgba(255, 215, 0, 0.6);
+            transform: scale(1.02);
+        }
     }
     
     .floating {
@@ -120,7 +132,7 @@ st.markdown("""
     
     .accent-text {
         font-size: 1.2rem;
-        color: #64ffda;
+        color: #FFD700;
         text-align: center;
         margin-bottom: 40px;
         animation: fadeIn 2s ease-in;
@@ -133,13 +145,13 @@ st.markdown("""
     
     /* Enhanced card styling */
     .metric-card {
-        background: rgba(26, 26, 46, 0.7);
+        background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         margin: 15px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
@@ -152,7 +164,7 @@ st.markdown("""
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(100, 255, 218, 0.1), transparent);
+        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
         transform: translateX(-100%);
         transition: transform 0.6s;
     }
@@ -163,39 +175,39 @@ st.markdown("""
     
     .metric-card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(100, 255, 218, 0.3);
+        box-shadow: 0 15px 50px rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     .search-analysis-card {
-        background: rgba(26, 26, 46, 0.7);
+        background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         transition: all 0.3s ease;
     }
     
     .search-analysis-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.3);
     }
     
     .search-result-card {
-        background: rgba(26, 26, 46, 0.5);
+        background: rgba(0, 0, 0, 0.6);
         border-radius: 15px;
         padding: 20px;
         margin: 15px 0;
-        border-left: 5px solid #00bcd4;
+        border-left: 5px solid #FFD700;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .search-result-card:hover {
-        background: rgba(26, 26, 46, 0.7);
+        background: rgba(0, 0, 0, 0.8);
         transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(0, 188, 212, 0.2);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
     }
     
     /* Enhanced threat indicators */
@@ -217,26 +229,26 @@ st.markdown("""
     }
     
     .threat-high {
-        background: linear-gradient(135deg, rgba(244, 67, 54, 0.3), rgba(244, 67, 54, 0.1));
-        color: #ff6b6b;
-        border: 1px solid rgba(244, 67, 54, 0.5);
+        background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.1));
+        color: #FF0000;
+        border: 1px solid rgba(255, 0, 0, 0.5);
     }
     
     .threat-medium {
-        background: linear-gradient(135deg, rgba(255, 152, 0, 0.3), rgba(255, 152, 0, 0.1));
-        color: #ffa726;
-        border: 1px solid rgba(255, 152, 0, 0.5);
+        background: linear-gradient(135deg, rgba(255, 165, 0, 0.3), rgba(255, 165, 0, 0.1));
+        color: #FFA500;
+        border: 1px solid rgba(255, 165, 0, 0.5);
     }
     
     .threat-low {
-        background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(76, 175, 80, 0.1));
-        color: #66bb6a;
-        border: 1px solid rgba(76, 175, 80, 0.5);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+        color: #FFD700;
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     /* Status indicators */
     .api-status-connected {
-        color: #66bb6a;
+        color: #FFD700;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
@@ -255,17 +267,17 @@ st.markdown("""
     }
     
     .api-status-disconnected {
-        color: #ff6b6b;
+        color: #FF0000;
         font-weight: 700;
     }
     
     /* Enhanced button styling */
     .stButton > button {
         border-radius: 15px;
-        border: 1px solid rgba(100, 255, 218, 0.3);
-        background: linear-gradient(135deg, rgba(0, 188, 212, 0.2), rgba(3, 169, 244, 0.2));
-        color: white;
-        font-weight: 600;
+        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+        color: #FFD700;
+        font-weight: 700;
         padding: 12px 24px;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
@@ -280,7 +292,7 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
         transition: left 0.5s;
     }
     
@@ -289,10 +301,10 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(0, 188, 212, 0.3), rgba(3, 169, 244, 0.3));
-        border: 1px solid rgba(100, 255, 218, 0.5);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 1px solid rgba(255, 215, 0, 0.8);
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
     }
     
     /* Enhanced tab styling */
@@ -302,30 +314,31 @@ st.markdown("""
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(26, 26, 46, 0.7);
+        background: rgba(0, 0, 0, 0.7);
         border-radius: 15px 15px 0 0;
         padding: 14px 20px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         border-bottom: none;
         font-weight: 600;
         transition: all 0.3s ease;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(26, 26, 46, 0.9);
+        background: rgba(0, 0, 0, 0.8);
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(0, 188, 212, 0.3), rgba(3, 169, 244, 0.3));
-        border: 1px solid rgba(100, 255, 218, 0.5);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 1px solid rgba(255, 215, 0, 0.5);
         border-bottom: none;
-        box-shadow: 0 -4px 15px rgba(0, 188, 212, 0.3);
+        box-shadow: 0 -4px 15px rgba(255, 215, 0, 0.2);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
         font-size: 2.2rem;
         font-weight: 800;
+        color: #FFD700;
     }
     
     [data-testid="stMetricDelta"] {
@@ -340,10 +353,10 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"],
     .stDateInput [data-baseweb="input"],
     .stTimeInput [data-baseweb="input"] {
-        background: rgba(26, 26, 46, 0.7);
+        background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(10px);
         border-radius: 15px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         color: white;
         transition: all 0.3s ease;
     }
@@ -354,15 +367,15 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"]:hover,
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
-        background: rgba(26, 26, 46, 0.9);
-        border: 1px solid rgba(100, 255, 218, 0.4);
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     /* Custom spinner */
     .stSpinner > div {
-        border: 4px solid rgba(100, 255, 218, 0.1);
+        border: 4px solid rgba(0, 0, 0, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #00bcd4;
+        border-top: 4px solid #FFD700;
         width: 40px;
         height: 40px;
         animation: spin 1s linear infinite;
@@ -376,23 +389,23 @@ st.markdown("""
     
     /* Custom expander */
     .streamlit-expanderHeader {
-        background: rgba(26, 26, 46, 0.7);
+        background: rgba(0, 0, 0, 0.7);
         border-radius: 12px;
         padding: 14px 18px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         font-weight: 600;
         transition: all 0.3s ease;
     }
     
     .streamlit-expanderHeader:hover {
-        background: rgba(26, 26, 46, 0.9);
+        background: rgba(0, 0, 0, 0.8);
     }
     
     /* Custom dataframes */
     .dataframe {
         border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     
     /* Custom success/error boxes */
@@ -405,57 +418,57 @@ st.markdown("""
     
     /* Custom sidebar */
     .css-1d391kg {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-        border-right: 1px solid rgba(100, 255, 218, 0.1);
+        background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+        border-right: 1px solid rgba(255, 215, 0, 0.2);
     }
     
     /* Custom chart elements */
     .stChart {
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #00bcd4 0%, #03a9f4 50%, #64ffda 100%);
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
         border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: rgba(26, 26, 46, 0.7);
+        background: rgba(0, 0, 0, 0.7);
         padding: 18px;
         border-radius: 15px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: linear-gradient(90deg, #00bcd4, #03a9f4);
+        background: linear-gradient(90deg, #FFD700, #FFA500);
         border-radius: 10px;
         height: 8px;
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: rgba(26, 26, 46, 0.7);
+        background: rgba(0, 0, 0, 0.7);
         border-radius: 8px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
     }
     
     /* Premium badge */
     .premium-badge {
-        background: linear-gradient(135deg, #00bcd4, #64ffda);
-        color: #1a1a2e;
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #000000;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 12px;
         font-weight: 700;
         display: inline-block;
         margin-left: 10px;
-        box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
         animation: shimmer 2s infinite;
     }
     
@@ -478,12 +491,12 @@ st.markdown("""
     
     /* Login form enhancements */
     .login-container {
-        background: rgba(26, 26, 46, 0.8);
+        background: rgba(0, 0, 0, 0.8);
         backdrop-filter: blur(20px);
         border-radius: 25px;
         padding: 40px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         max-width: 500px;
         margin: 0 auto;
     }
@@ -496,9 +509,9 @@ st.markdown("""
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: radial-gradient(circle at 20% 50%, rgba(0, 188, 212, 0.2), transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(100, 255, 218, 0.2), transparent 50%),
-                    radial-gradient(circle at 40% 80%, rgba(3, 169, 244, 0.2), transparent 50%);
+        background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(255, 140, 0, 0.1), transparent 50%);
         animation: bgMove 20s ease infinite;
     }
     
@@ -510,12 +523,12 @@ st.markdown("""
     
     /* Premium access card */
     .premium-access-card {
-        background: linear-gradient(135deg, rgba(0, 188, 212, 0.1), rgba(100, 255, 218, 0.1));
-        border: 2px solid rgba(100, 255, 218, 0.3);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+        border: 2px solid rgba(255, 215, 0, 0.3);
         border-radius: 20px;
         padding: 30px;
         margin: 20px 0;
-        box-shadow: 0 15px 40px rgba(0, 188, 212, 0.2);
+        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -528,7 +541,7 @@ st.markdown("""
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(100, 255, 218, 0.1) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
         animation: rotate 20s linear infinite;
     }
     
@@ -547,7 +560,7 @@ st.markdown("""
     
     .radar-circle {
         position: absolute;
-        border: 2px solid rgba(0, 188, 212, 0.3);
+        border: 2px solid rgba(255, 215, 0, 0.3);
         border-radius: 50%;
         animation: radarPulse 2s infinite;
     }
@@ -557,80 +570,38 @@ st.markdown("""
         100% { transform: scale(1.2); opacity: 0; }
     }
     
-    /* User profile card */
-    .user-profile-card {
-        background: rgba(26, 26, 46, 0.7);
-        backdrop-filter: blur(15px);
+    /* Enhanced AI visualization */
+    .ai-visualization {
+        background: rgba(0, 0, 0, 0.7);
         border-radius: 20px;
-        padding: 25px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    .user-avatar {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #00bcd4, #64ffda);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        margin: 0 auto 15px;
-        box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
-    }
-    
-    /* Activity log */
-    .activity-log {
-        background: rgba(26, 26, 46, 0.5);
-        border-radius: 15px;
         padding: 20px;
-        margin: 15px 0;
-        border-left: 4px solid #00bcd4;
-    }
-    
-    .activity-time {
-        color: #64ffda;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-    
-    /* Admin panel */
-    .admin-panel {
-        background: rgba(26, 26, 46, 0.7);
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 25px;
-        border: 1px solid rgba(100, 255, 218, 0.2);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         margin: 20px 0;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     
-    .admin-stat {
-        text-align: center;
-        padding: 20px;
-        border-radius: 15px;
-        background: rgba(0, 188, 212, 0.1);
-        margin: 10px 0;
-        transition: all 0.3s ease;
+    /* AI pulse animation */
+    .ai-pulse {
+        position: relative;
+        display: inline-block;
     }
     
-    .admin-stat:hover {
-        background: rgba(0, 188, 212, 0.2);
-        transform: translateY(-5px);
+    .ai-pulse::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba(255, 215, 0, 0.3);
+        animation: aiPulse 2s infinite;
     }
     
-    .admin-stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #64ffda;
-    }
-    
-    .admin-stat-label {
-        color: #ffffff;
-        font-weight: 600;
+    @keyframes aiPulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.2); opacity: 0.3; }
+        100% { transform: scale(1); opacity: 0.7; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -667,7 +638,6 @@ class SecurityManager:
         self.session_timeout = timedelta(minutes=30)
         self.encryption_key = Fernet.generate_key()
         self.cipher_suite = Fernet(self.encryption_key)
-        self.activity_log = []
     
     def encrypt_data(self, data):
         """Encrypt sensitive data"""
@@ -678,15 +648,6 @@ class SecurityManager:
     def decrypt_data(self, encrypted_data):
         """Decrypt sensitive data"""
         return self.cipher_suite.decrypt(encrypted_data).decode()
-    
-    def log_activity(self, user_id, action, details):
-        """Log user activity"""
-        self.activity_log.append({
-            'timestamp': datetime.now().isoformat(),
-            'user_id': user_id,
-            'action': action,
-            'details': details
-        })
     
     def validate_access_key(self, access_key):
         """Validate the provided access key with enhanced security"""
@@ -722,7 +683,7 @@ class SecurityManager:
                 last_attempt, attempts = self.failed_attempts[user_ip]
                 self.failed_attempts[user_ip] = (datetime.now(), attempts + 1)
                 
-            remaining_attempts = self.max_attempts - self.failed_attempts[user_id][1]
+            remaining_attempts = self.max_attempts - self.failed_attempts[user_ip][1]
             if remaining_attempts <= 0:
                 return {
                     "valid": False,
@@ -765,12 +726,6 @@ class SecurityManager:
     def generate_secure_token(self):
         """Generate a secure session token"""
         return secrets.token_urlsafe(32)
-    
-    def get_activity_log(self, user_id=None):
-        """Get activity log, optionally filtered by user"""
-        if user_id:
-            return [log for log in self.activity_log if log['user_id'] == user_id]
-        return self.activity_log
 
 # Initialize security manager
 security_manager = SecurityManager()
@@ -871,16 +826,7 @@ class EnhancedAuthenticationSystem:
                         "failed_attempts": 0,
                         "last_failed_attempt": None,
                         "session_token": None,
-                        "mfa_enabled": False,
-                        "profile": {
-                            "avatar": "👤",
-                            "bio": "System Administrator",
-                            "preferences": {
-                                "theme": "dark",
-                                "notifications": True,
-                                "language": "en"
-                            }
-                        }
+                        "mfa_enabled": False
                     }
                 }
                 self.save_users()
@@ -934,16 +880,7 @@ class EnhancedAuthenticationSystem:
             "failed_attempts": 0,
             "last_failed_attempt": None,
             "session_token": None,
-            "mfa_enabled": False,
-            "profile": {
-                "avatar": "👤",
-                "bio": f"User at {company}",
-                "preferences": {
-                    "theme": "dark",
-                    "notifications": True,
-                    "language": "en"
-                }
-            }
+            "mfa_enabled": False
         }
         self.save_users()
         return True, "User registered successfully"
@@ -972,19 +909,12 @@ class EnhancedAuthenticationSystem:
             session_token = security_manager.generate_secure_token()
             user_data['session_token'] = session_token
             
-            # Log activity
-            security_manager.log_activity(user_data['user_id'], "login", f"User {username} logged in")
-            
             self.save_users()
             return True, "Authentication successful"
         else:
             # Increment failed attempts
             user_data['failed_attempts'] = user_data.get('failed_attempts', 0) + 1
             user_data['last_failed_attempt'] = datetime.now().isoformat()
-            
-            # Log failed attempt
-            security_manager.log_activity(user_data['user_id'], "failed_login", f"Failed login attempt for {username}")
-            
             self.save_users()
             
             remaining_attempts = self.max_attempts - user_data['failed_attempts']
@@ -992,21 +922,6 @@ class EnhancedAuthenticationSystem:
                 return False, "Account locked. Please try again in 15 minutes."
             else:
                 return False, f"Invalid password. {remaining_attempts} attempts remaining."
-    
-    def update_user_profile(self, username, profile_data):
-        """Update user profile information"""
-        if username in self.users:
-            self.users[username]['profile'].update(profile_data)
-            self.save_users()
-            security_manager.log_activity(self.users[username]['user_id'], "profile_update", f"Profile updated for {username}")
-            return True
-        return False
-    
-    def get_user_profile(self, username):
-        """Get user profile information"""
-        if username in self.users:
-            return self.users[username].get('profile', {})
-        return {}
 
 # Enhanced API Key Manager with User Isolation
 class EnhancedAPIKeyManager:
@@ -1174,6 +1089,169 @@ class EnhancedAPIKeyManager:
 auth_system = EnhancedAuthenticationSystem()
 api_manager = EnhancedAPIKeyManager()
 
+# Enhanced AI Analysis Engine
+class AIAnalysisEngine:
+    def __init__(self):
+        self.threat_keywords = {
+            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime', 'phishing', 'counterfeit'],
+            'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed', 'poor', 'broken'],
+            'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience', 'question', 'info']
+        }
+    
+    def analyze_sentiment(self, text):
+        """Analyze sentiment of text"""
+        # Simulate sentiment analysis
+        words = text.lower().split()
+        positive_words = ['good', 'great', 'excellent', 'amazing', 'wonderful', 'fantastic', 'love', 'like', 'best']
+        negative_words = ['bad', 'terrible', 'awful', 'hate', 'worst', 'disappointing', 'poor', 'broken']
+        
+        positive_count = sum(1 for word in words if word in positive_words)
+        negative_count = sum(1 for word in words if word in negative_words)
+        
+        if positive_count > negative_count:
+            return "positive", min(1.0, positive_count / len(words))
+        elif negative_count > positive_count:
+            return "negative", min(1.0, negative_count / len(words))
+        else:
+            return "neutral", 0.5
+    
+    def detect_threats(self, text, brand_name):
+        """Detect threats in text"""
+        text_lower = text.lower()
+        brand_lower = brand_name.lower()
+        
+        # Check if brand is mentioned
+        brand_mentioned = brand_lower in text_lower
+        
+        # Detect threat level
+        threat_level = "low"
+        found_keywords = []
+        threat_score = 0.0
+        
+        for level, keywords in self.threat_keywords.items():
+            for keyword in keywords:
+                if keyword in text_lower:
+                    if level == "high":
+                        threat_score += 0.3
+                    elif level == "medium":
+                        threat_score += 0.2
+                    else:
+                        threat_score += 0.1
+                    found_keywords.append(keyword)
+        
+        # Determine threat level based on score
+        if threat_score >= 0.3:
+            threat_level = "high"
+        elif threat_score >= 0.1:
+            threat_level = "medium"
+        
+        # Generate analysis results
+        results = {
+            'text': text,
+            'brand': brand_name,
+            'brand_mentioned': brand_mentioned,
+            'threat_level': threat_level,
+            'threat_score': min(1.0, threat_score),
+            'keywords_found': found_keywords,
+            'timestamp': datetime.now().isoformat(),
+            'sentiment': self.analyze_sentiment(text)
+        }
+        
+        return results
+    
+    def generate_threat_report(self, analyses):
+        """Generate comprehensive threat report"""
+        # Count threat levels
+        threat_counts = {
+            'high': sum(1 for a in analyses if a['threat_level'] == 'high'),
+            'medium': sum(1 for a in analyses if a['threat_level'] == 'medium'),
+            'low': sum(1 for a in analyses if a['threat_level'] == 'low')
+        }
+        
+        # Calculate average sentiment
+        sentiment_scores = [a['sentiment'][1] for a in analyses]
+        avg_sentiment = sum(sentiment_scores) / len(sentiment_scores) if sentiment_scores else 0
+        
+        # Generate recommendations
+        recommendations = []
+        
+        if threat_counts['high'] > 0:
+            recommendations.append("Immediate action required for high-level threats")
+            recommendations.append("Activate crisis management protocol")
+            recommendations.append("Notify legal team")
+        
+        if threat_counts['medium'] > 0:
+            recommendations.append("Monitor medium-level threats closely")
+            recommendations.append("Prepare response templates")
+        
+        if avg_sentiment < 0.3:
+            recommendations.append("Address negative sentiment with PR campaign")
+        
+        if not recommendations:
+            recommendations.append("Continue standard monitoring")
+        
+        # Create report
+        report = {
+            'total_analyses': len(analyses),
+            'threat_counts': threat_counts,
+            'average_sentiment': avg_sentiment,
+            'recommendations': recommendations,
+            'generated_at': datetime.now().isoformat()
+        }
+        
+        return report
+    
+    def create_keyword_frequency(self, texts):
+        """Create keyword frequency analysis"""
+        # Combine all texts and count word frequencies
+        all_text = ' '.join(texts).lower()
+        words = re.findall(r'\b\w+\b', all_text)
+        
+        # Filter out common stop words
+        stop_words = {'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those', 'a', 'an'}
+        
+        word_counts = {}
+        for word in words:
+            if word not in stop_words and len(word) > 2:
+                word_counts[word] = word_counts.get(word, 0) + 1
+        
+        # Sort by frequency and return top 20
+        sorted_words = sorted(word_counts.items(), key=lambda x: x[1], reverse=True)[:20]
+        return dict(sorted_words)
+    
+    def create_threat_patterns(self, analyses):
+        """Create threat pattern analysis"""
+        patterns = {
+            'high_threat_keywords': Counter(),
+            'medium_threat_keywords': Counter(),
+            'low_threat_keywords': Counter(),
+            'platform_distribution': Counter(),
+            'time_distribution': Counter()
+        }
+        
+        for analysis in analyses:
+            # Count keywords by threat level
+            for keyword in analysis['keywords_found']:
+                if analysis['threat_level'] == 'high':
+                    patterns['high_threat_keywords'][keyword] += 1
+                elif analysis['threat_level'] == 'medium':
+                    patterns['medium_threat_keywords'][keyword] += 1
+                else:
+                    patterns['low_threat_keywords'][keyword] += 1
+            
+            # Simulate platform distribution
+            platform = random.choice(['Twitter', 'Facebook', 'Instagram', 'Reddit', 'YouTube'])
+            patterns['platform_distribution'][platform] += 1
+            
+            # Simulate time distribution
+            hour = datetime.now().hour
+            patterns['time_distribution'][f"{hour:02d}:00"] += 1
+        
+        return patterns
+
+# Initialize AI analysis engine
+ai_engine = AIAnalysisEngine()
+
 # Search Analysis System
 class SearchAnalyzer:
     def __init__(self):
@@ -1253,130 +1331,160 @@ search_analyzer = SearchAnalyzer()
 class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
-            'primary': '#00bcd4',
-            'secondary': '#03a9f4',
-            'success': '#66bb6a',
-            'warning': '#ffa726',
-            'danger': '#ff6b6b',
-            'info': '#29b6f6',
-            'dark': '#1a1a2e',
-            'light': '#64ffda'
+            'primary': '#FFD700',
+            'secondary': '#FFA500',
+            'success': '#10B981',
+            'warning': '#F59E0B',
+            'danger': '#EF4444',
+            'info': '#3B82F6',
+            'dark': '#000000',
+            'light': '#F3F4F6'
         }
     
     def create_radar_chart(self, data, labels, title):
-        """Create a radar chart using matplotlib and streamlit"""
-        try:
-            # Try to import matplotlib
-            import matplotlib.pyplot as plt
-            import matplotlib.patches as patches
-            
-            # Set up the figure
-            fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-            
-            # Calculate angles for each category
-            angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False).tolist()
-            angles += angles[:1]  # Close the circle
-            
-            # Close the data
-            values = data.tolist()
-            values += values[:1]
-            
-            # Plot the data
-            ax.plot(angles, values, color=self.colors['primary'], linewidth=3, linestyle='solid')
-            ax.fill(angles, values, color=self.colors['primary'], alpha=0.3)
-            
-            # Add labels
-            ax.set_thetagrids(np.degrees(angles[:-1]), labels)
-            
-            # Set ylim
-            ax.set_ylim(0, max(data) * 1.1)
-            
-            # Add title
-            plt.title(title, size=16, fontweight='bold', pad=20, color='white')
-            
-            # Style the plot
-            ax.spines['polar'].set_color('white')
-            ax.tick_params(colors='white')
-            ax.set_facecolor('none')
-            fig.patch.set_facecolor('none')
-            
-            # Display in Streamlit
-            st.pyplot(fig)
-            
-        except ImportError:
-            # If matplotlib is not available, use a fallback
-            st.warning("Matplotlib not available. Using simplified visualization.")
-            self.create_bar_chart(data, labels, title)
-        except Exception as e:
-            st.error(f"Error creating radar chart: {e}")
-            # Fallback to bar chart
-            self.create_bar_chart(data, labels, title)
-    
-    def create_bar_chart(self, data, labels, title):
-        """Create a bar chart using Streamlit's native bar chart"""
-        chart_data = pd.DataFrame({
-            'Category': labels,
-            'Value': data
-        })
-        st.bar_chart(chart_data.set_index('Category'), use_container_width=True)
+        """Create a radar chart using plotly"""
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scatterpolar(
+            r=data,
+            theta=labels,
+            fill='toself',
+            name='Threat Level',
+            line_color=self.colors['primary'],
+            fillcolor=f'rgba(255, 215, 0, 0.3)'
+        ))
+        
+        fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, max(data) * 1.1]
+                )),
+            showlegend=False,
+            title=title,
+            title_x=0.5,
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        return fig
     
     def create_sentiment_timeline(self, dates, values, title):
         """Create an advanced sentiment timeline"""
-        chart_data = pd.DataFrame({
-            'Date': dates,
-            'Sentiment': values
-        })
+        fig = go.Figure()
         
-        # Create a line chart with streamlit
-        st.line_chart(chart_data.set_index('Date'), use_container_width=True)
+        fig.add_trace(go.Scatter(
+            x=dates,
+            y=values,
+            mode='lines+markers',
+            name='Sentiment',
+            line=dict(color=self.colors['primary'], width=3),
+            marker=dict(size=8, color=self.colors['primary'])
+        ))
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            xaxis_title='Date',
+            yaxis_title='Sentiment Score',
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+            yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
+        )
+        
+        return fig
     
     def create_threat_distribution(self, data, title):
         """Create a donut chart for threat distribution"""
-        try:
-            # Try to import matplotlib
-            import matplotlib.pyplot as plt
-            
-            labels = list(data.keys())
-            values = list(data.values())
-            colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
-            
-            fig, ax = plt.subplots(figsize=(8, 8))
-            wedges, texts, autotexts = ax.pie(
-                values, labels=labels, autopct='%1.1f%%', 
-                colors=colors, startangle=90, wedgeprops=dict(width=0.3)
-            )
-            
-            # Style the text
-            for autotext in autotexts:
-                autotext.set_color('white')
-                autotext.set_fontweight('bold')
-            
-            for text in texts:
-                text.set_color('white')
-                text.set_fontsize(12)
-            
-            # Add center circle to make it a donut
-            centre_circle = plt.Circle((0, 0), 0.70, fc='none')
-            ax.add_artist(centre_circle)
-            
-            # Add title
-            plt.title(title, color='white', fontsize=16, fontweight='bold', pad=20)
-            
-            # Style the plot
-            ax.set_facecolor('none')
-            fig.patch.set_facecolor('none')
-            
-            # Display in Streamlit
-            st.pyplot(fig)
-            
-        except ImportError:
-            # If matplotlib is not available, use a fallback
-            st.warning("Matplotlib not available. Using simplified visualization.")
-            self.create_bar_chart(np.array(list(data.values())), list(data.keys()), title)
-        except Exception as e:
-            st.error(f"Error creating donut chart: {e}")
-            # Fallback to bar chart
-            self.create_bar_chart(np.array(list(data.values())), list(data.keys()), title)
+        labels = list(data.keys())
+        values = list(data.values())
+        colors = [self.colors['danger'], self.colors['warning'], self.colors['success']]
+        
+        fig = go.Figure(data=[go.Pie(
+            labels=labels,
+            values=values,
+            hole=0.5,
+            marker_colors=colors,
+            textinfo='label+percent',
+            textposition='auto'
+        )])
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        return fig
+    
+    def create_keyword_bar_chart(self, keyword_data, title):
+        """Create a bar chart for keyword frequency"""
+        fig = go.Figure(data=[go.Bar(
+            x=list(keyword_data.keys()),
+            y=list(keyword_data.values()),
+            marker_color=self.colors['primary']
+        )])
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            xaxis_title='Keywords',
+            yaxis_title='Frequency',
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+            yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
+        )
+        
+        return fig
+    
+    def create_pattern_heatmap(self, pattern_data, title):
+        """Create a heatmap for threat patterns"""
+        # Convert pattern data to DataFrame format
+        platforms = list(pattern_data['platform_distribution'].keys())
+        threat_levels = ['high', 'medium', 'low']
+        
+        # Create matrix data
+        z_data = []
+        for level in threat_levels:
+            row = []
+            for platform in platforms:
+                # Simulate data based on actual distribution
+                if level == 'high':
+                    value = pattern_data['high_threat_keywords'].total() * 0.3
+                elif level == 'medium':
+                    value = pattern_data['medium_threat_keywords'].total() * 0.5
+                else:
+                    value = pattern_data['low_threat_keywords'].total() * 0.2
+                
+                # Adjust by platform distribution
+                platform_factor = pattern_data['platform_distribution'][platform] / sum(pattern_data['platform_distribution'].values())
+                row.append(value * platform_factor)
+            z_data.append(row)
+        
+        fig = go.Figure(data=go.Heatmap(
+            z=z_data,
+            x=platforms,
+            y=threat_levels,
+            colorscale='YlOrRd',
+            showscale=True
+        ))
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        return fig
 
 # Initialize visualizations
 viz = AdvancedVisualizations()
@@ -1418,44 +1526,6 @@ def show_user_management():
         st.info("Only administrators can access user management features.")
         return
     
-    # Admin statistics
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown("""
-        <div class="admin-stat">
-            <div class="admin-stat-value">{}</div>
-            <div class="admin-stat-label">Total Users</div>
-        </div>
-        """.format(len(auth_system.users)), unsafe_allow_html=True)
-    
-    with col2:
-        active_users = sum(1 for user in auth_system.users.values() if user.get('last_login'))
-        st.markdown("""
-        <div class="admin-stat">
-            <div class="admin-stat-value">{}</div>
-            <div class="admin-stat-label">Active Users</div>
-        </div>
-        """.format(active_users), unsafe_allow_html=True)
-    
-    with col3:
-        premium_users = sum(1 for user in auth_system.users.values() if user.get('access_level') == 'premium')
-        st.markdown("""
-        <div class="admin-stat">
-            <div class="admin-stat-value">{}</div>
-            <div class="admin-stat-label">Premium Users</div>
-        </div>
-        """.format(premium_users), unsafe_allow_html=True)
-    
-    with col4:
-        failed_logins = len([log for log in security_manager.activity_log if log['action'] == 'failed_login'])
-        st.markdown("""
-        <div class="admin-stat">
-            <div class="admin-stat-value">{}</div>
-            <div class="admin-stat-label">Failed Logins</div>
-        </div>
-        """.format(failed_logins), unsafe_allow_html=True)
-    
     # Show existing users
     st.write("### Existing Users")
     users_data = []
@@ -1466,8 +1536,7 @@ def show_user_management():
             "Email": user_info.get("email", "N/A"),
             "Access Level": user_info.get("access_level", "client"),
             "Last Login": user_info.get("last_login", "Never"),
-            "Created": user_info.get("created_at", "N/A")[:10] if user_info.get("created_at") else "N/A",
-            "Status": "Active" if user_info.get('failed_attempts', 0) < 5 else "Locked"
+            "Created": user_info.get("created_at", "N/A")[:10] if user_info.get("created_at") else "N/A"
         })
     
     if users_data:
@@ -1491,7 +1560,6 @@ def show_user_management():
             if user_to_manage:
                 # In a real application, you would send a password reset email
                 st.info(f"Password reset initiated for {user_to_manage}. An email has been sent with instructions.")
-                security_manager.log_activity(auth_system.users[user_to_manage]['user_id'], "password_reset", f"Password reset for {user_to_manage}")
     
     with col2:
         if st.button("Delete User", use_container_width=True, type="secondary"):
@@ -1499,34 +1567,18 @@ def show_user_management():
                 if st.checkbox(f"Confirm deletion of {user_to_manage}"):
                     del auth_system.users[user_to_manage]
                     auth_system.save_users()
-                    security_manager.log_activity(auth_system.users[user_to_manage]['user_id'], "user_deleted", f"User {user_to_manage} deleted")
                     st.success(f"User {user_to_manage} deleted")
                     st.rerun()
             elif user_to_manage == st.session_state.username:
                 st.error("You cannot delete your own account")
-    
-    # Activity log
-    st.markdown("---")
-    st.subheader("📋 Recent Activity Log")
-    
-    activity_logs = security_manager.get_activity_log()[-10:]  # Get last 10 activities
-    for log in reversed(activity_logs):
-        st.markdown(f"""
-        <div class="activity-log">
-            <div class="activity-time">{datetime.fromisoformat(log['timestamp']).strftime('%Y-%m-%d %H:%M:%S')}</div>
-            <div><strong>Action:</strong> {log['action']}</div>
-            <div><strong>User ID:</strong> {log['user_id']}</div>
-            <div><strong>Details:</strong> {log['details']}</div>
-        </div>
-        """, unsafe_allow_html=True)
 
 def show_login_form():
     """Display login form with enhanced design"""
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #64ffda 0%, #00bcd4 55%, #03a9f4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
-        <p style="font-size: 1.2rem; color: #64ffda;">Advanced Brand Protection & Threat Intelligence Platform</p>
+        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
+        <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence Platform</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1537,15 +1589,15 @@ def show_login_form():
         st.markdown("""
         <div style='text-align: center;'>
             <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🛡️</div>
-            <h3 style="color: white;">Secure Login</h3>
-            <p style="color: #64ffda;">Access your brand protection dashboard</p>
+            <h3 style="color: #FFD700;">Secure Login</h3>
+            <p style="color: #FFD700;">Access your brand protection dashboard</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         with st.form("login_form"):
-            username = st.text_input("👤 Username")
-            password = st.text_input("🔒 Password", type="password")
+            username = st.text_input("👤 Username", placeholder="Enter your username")
+            password = st.text_input("🔒 Password", type="password", placeholder="Enter your password")
             
             # Remember me checkbox
             remember_me = st.checkbox("Remember me")
@@ -1581,7 +1633,7 @@ def show_login_form():
     # Forgot password link
     st.markdown("""
     <div style='text-align: center; margin-top: 20px;'>
-        <a href='#' style='color: #64ffda; text-decoration: none;'>Forgot your password?</a>
+        <a href='#' style='color: #FFD700; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1626,7 +1678,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Active Threats</h3>
             <h1>18</h1>
-            <p style="color: #ff6b6b;">+5 from yesterday</p>
+            <p style="color: #FF0000;">+5 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1635,7 +1687,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>High</h1>
-            <p style="color: #ff6b6b;">Elevated risk</p>
+            <p style="color: #FF0000;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1644,7 +1696,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Response Time</h3>
             <h1>2.1s</h1>
-            <p style="color: #66bb6a;">-0.4s improvement</p>
+            <p style="color: #FFD700;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1653,7 +1705,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Protected Assets</h3>
             <h1>24</h1>
-            <p style="color: #66bb6a;">Fully secured</p>
+            <p style="color: #FFD700;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -1665,7 +1717,8 @@ def show_threat_dashboard():
     threats = [8, 12, 5, 18, 10, 7, 14]
     
     # Create an advanced chart
-    viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
+    fig = viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
+    st.plotly_chart(fig, use_container_width=True)
     
     # Threat distribution
     st.subheader("🌡️ Threat Distribution")
@@ -1674,7 +1727,8 @@ def show_threat_dashboard():
     
     with col1:
         threat_data = {'High': 8, 'Medium': 5, 'Low': 5}
-        viz.create_threat_distribution(threat_data, "Threat Severity Distribution")
+        fig = viz.create_threat_distribution(threat_data, "Threat Severity Distribution")
+        st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown("""
@@ -1841,11 +1895,48 @@ def show_trend_analysis():
     })
     
     # Create an advanced multi-line chart
-    st.line_chart(
-        trend_data.set_index('Date'),
-        use_container_width=True,
-        color=['#ff6b6b', '#ffa726', '#66bb6a']
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=trend_data['Date'],
+        y=trend_data['High Threats'],
+        mode='lines+markers',
+        name='High Threats',
+        line=dict(color='#EF4444', width=3),
+        marker=dict(size=6)
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=trend_data['Date'],
+        y=trend_data['Medium Threats'],
+        mode='lines+markers',
+        name='Medium Threats',
+        line=dict(color='#F59E0B', width=3),
+        marker=dict(size=6)
+    ))
+    
+    fig.add_trace(go.Scatter(
+        x=trend_data['Date'],
+        y=trend_data['Low Threats'],
+        mode='lines+markers',
+        name='Low Threats',
+        line=dict(color='#10B981', width=3),
+        marker=dict(size=6)
+    ))
+    
+    fig.update_layout(
+        title="Threat Trends Over Time",
+        title_x=0.5,
+        xaxis_title='Date',
+        yaxis_title='Number of Threats',
+        font=dict(color='white'),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+        yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
     )
+    
+    st.plotly_chart(fig, use_container_width=True)
     
     # Platform distribution with radar chart
     st.subheader("🌐 Threat Distribution by Platform")
@@ -1857,11 +1948,12 @@ def show_trend_analysis():
         threat_counts = [45, 32, 28, 19, 12]
         
         # Create radar chart
-        viz.create_radar_chart(
+        fig = viz.create_radar_chart(
             np.array(threat_counts),
             platforms,
             "Threat Distribution Across Platforms"
         )
+        st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown("""
@@ -1886,7 +1978,32 @@ def show_trend_analysis():
         'Sentiment Score': sentiment_values
     })
     
-    st.area_chart(sentiment_data.set_index('Date'), use_container_width=True)
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=sentiment_data['Date'],
+        y=sentiment_data['Sentiment Score'],
+        mode='lines+markers',
+        name='Sentiment',
+        line=dict(color='#FFD700', width=3),
+        marker=dict(size=8),
+        fill='tozeroy',
+        fillcolor='rgba(255, 215, 0, 0.2)'
+    ))
+    
+    fig.update_layout(
+        title="Sentiment Analysis Over Time",
+        title_x=0.5,
+        xaxis_title='Date',
+        yaxis_title='Sentiment Score',
+        font=dict(color='white'),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+        yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
 
 def show_quick_actions():
     """Quick action buttons"""
@@ -1927,7 +2044,9 @@ def show_access_required():
     with col1:
         access_key = st.text_input(
             "Enter Access Key:",
-            type="password"
+            type="password",
+            placeholder="BG2024-PRO-ACCESS",
+            help="Enter your premium access key"
         )
     
     with col2:
@@ -2029,6 +2148,7 @@ def show_api_key_management():
     api_key = st.text_input(
         f"{platform_info['field_name']}*",
         type="password",
+        placeholder=f"Paste your {platform_info['field_name']} here...",
         help=platform_info['field_help']
     )
     
@@ -2079,6 +2199,7 @@ def show_api_key_management():
 class EnhancedSocialMediaMonitor:
     def __init__(self):
         self.api_manager = api_manager
+        self.ai_engine = ai_engine
     
     def simulate_monitoring_with_api(self, brand_name, sector):
         posts = []
@@ -2090,13 +2211,21 @@ class EnhancedSocialMediaMonitor:
         
         for platform in connected_platforms:
             for _ in range(random.randint(3, 8)):
-                posts.append({
+                content = self.generate_business_post(brand_name, sector)
+                post = {
                     'platform': platform.capitalize(),
-                    'content': self.generate_business_post(brand_name, sector),
+                    'content': content,
                     'author': f"user_{random.randint(1000, 9999)}",
                     'engagement': random.randint(50, 5000),
                     'api_connected': platform in api_manager.load_api_keys(user_id)
-                })
+                }
+                
+                # Add AI analysis
+                analysis = self.ai_engine.detect_threats(content, brand_name)
+                post['threat_level'] = analysis['threat_level']
+                post['sentiment'] = analysis['sentiment'][0]
+                
+                posts.append(post)
         return posts
     
     def generate_business_post(self, brand_name, sector):
@@ -2118,18 +2247,6 @@ def show_user_ai_dashboard():
     brand_name = st.session_state.get('brand_name', 'Your Brand')
     st.success(f"Welcome to your brand protection dashboard, {brand_name}!")
     
-    # User profile section
-    user_profile = auth_system.get_user_profile(st.session_state.username)
-    
-    st.markdown(f"""
-    <div class="user-profile-card">
-        <div class="user-avatar">{user_profile.get('avatar', '👤')}</div>
-        <h3>{st.session_state.username}</h3>
-        <p>{user_profile.get('bio', 'Brand Protection Specialist')}</p>
-        <p><strong>Company:</strong> {auth_system.users[st.session_state.username]['company']}</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
     # Quick stats
     col1, col2, col3 = st.columns(3)
     
@@ -2138,7 +2255,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Brand Mentions</h3>
             <h1>142</h1>
-            <p style="color: #66bb6a;">+12 from last week</p>
+            <p style="color: #FFD700;">+12 from last week</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2147,7 +2264,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>Low</h1>
-            <p style="color: #66bb6a;">Stable</p>
+            <p style="color: #FFD700;">Stable</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2156,14 +2273,14 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Response Rate</h3>
             <h1>92%</h1>
-            <p style="color: #66bb6a;">Excellent</p>
+            <p style="color: #FFD700;">Excellent</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Main AI functionality for users
     st.subheader("🔍 Brand Threat Analysis")
     
-    tab1, tab2, tab3 = st.tabs(["Search Analysis", "Social Monitoring", "Reports"])
+    tab1, tab2, tab3 = st.tabs(["Search Analysis", "Social Monitoring", "AI Insights"])
     
     with tab1:
         show_search_analysis()
@@ -2171,33 +2288,110 @@ def show_user_ai_dashboard():
     with tab2:
         st.header("Social Monitoring")
         posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector)
+        
+        # Display posts with AI analysis
         for post in posts[:5]:
+            threat_class = f"threat-{post['threat_level']}"
+            sentiment_color = "#FF0000" if post['sentiment'] == 'negative' else "#FFD700" if post['sentiment'] == 'positive' else "#FFFFFF"
+            
             with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                 st.write(post['content'])
                 st.caption(f"Engagement: {post['engagement']}")
+                st.markdown(f"""
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <span class="{threat_class}">Threat: {post['threat_level'].upper()}</span>
+                    <span style="color: {sentiment_color}; font-weight: 600;">Sentiment: {post['sentiment'].upper()}</span>
+                </div>
+                """, unsafe_allow_html=True)
     
     with tab3:
-        st.header("📊 Brand Reports")
-        st.info("Your brand reports will be generated here")
+        st.header("🧠 AI-Powered Insights")
         
-        if st.button("Generate Weekly Report", use_container_width=True):
-            with st.spinner("Generating report..."):
-                time.sleep(2)
-                st.success("Report generated successfully!")
-                
-                # Sample report data
-                report_data = {
-                    "Period": "Last 7 days",
-                    "Total Mentions": "142",
-                    "Positive Sentiment": "68%",
-                    "Negative Sentiment": "12%",
-                    "Neutral Sentiment": "20%",
-                    "Top Platforms": "Twitter, Instagram, Facebook",
-                    "Recommendations": "Continue current strategy, focus on customer engagement"
-                }
-                
-                for key, value in report_data.items():
-                    st.write(f"**{key}:** {value}")
+        # AI analysis section
+        st.subheader("Threat Intelligence")
+        
+        # Generate sample analyses
+        analyses = []
+        for i in range(10):
+            text = f"Sample text {i} about {brand_name} with {'high' if i < 3 else 'medium' if i < 6 else 'low'} threat level"
+            analysis = ai_engine.detect_threats(text, brand_name)
+            analyses.append(analysis)
+        
+        # Generate report
+        report = ai_engine.generate_threat_report(analyses)
+        
+        # Display report
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            <div class="ai-visualization">
+                <h4>📊 Threat Summary</h4>
+                <p>Total Analyses: {}</p>
+                <p>High Threats: {}</p>
+                <p>Medium Threats: {}</p>
+                <p>Low Threats: {}</p>
+                <p>Average Sentiment: {:.2f}</p>
+            </div>
+            """.format(
+                report['total_analyses'],
+                report['threat_counts']['high'],
+                report['threat_counts']['medium'],
+                report['threat_counts']['low'],
+                report['average_sentiment']
+            ), unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div class="ai-visualization">
+                <h4>✅ AI Recommendations</h4>
+                {}
+            </div>
+            """.format(
+                ''.join([f'<p>• {rec}</p>' for rec in report['recommendations']])
+            ), unsafe_allow_html=True)
+        
+        # Keyword frequency analysis
+        st.subheader("🔤 Keyword Frequency Analysis")
+        
+        texts = [a['text'] for a in analyses]
+        keyword_freq = ai_engine.create_keyword_frequency(texts)
+        
+        # Create bar chart
+        fig = viz.create_keyword_bar_chart(keyword_freq, "Top Keywords in Threat Analysis")
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Threat patterns
+        st.subheader("🔍 Threat Pattern Analysis")
+        
+        patterns = ai_engine.create_threat_patterns(analyses)
+        
+        # Create heatmap
+        fig = viz.create_pattern_heatmap(patterns, "Threat Patterns by Platform and Level")
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Pattern details
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("""
+            <div class="ai-visualization">
+                <h4>🎯 Top Threat Keywords</h4>
+                {}
+            </div>
+            """.format(
+                ''.join([f'<p>• {word}: {count}</p>' for word, count in list(patterns['high_threat_keywords'].most_common(5))])
+            ), unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+            <div class="ai-visualization">
+                <h4>📱 Platform Distribution</h4>
+                {}
+            </div>
+            """.format(
+                ''.join([f'<p>• {platform}: {count}</p>' for platform, count in patterns['platform_distribution'].most_common()])
+            ), unsafe_allow_html=True)
 
 def main():
     # Add animated particles
@@ -2224,16 +2418,13 @@ def main():
     
     # Sidebar with user info and logout button
     with st.sidebar:
-        # User profile card
-        user_profile = auth_system.get_user_profile(st.session_state.username)
-        
+        # User info
         st.markdown(f"""
-        <div class="user-profile-card">
-            <div class="user-avatar">{user_profile.get('avatar', '👤')}</div>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 3rem;">👤</div>
             <h3>{st.session_state.username}</h3>
-            <p>{user_profile.get('bio', 'Brand Protection Specialist')}</p>
-            <p><strong>Company:</strong> {auth_system.users[st.session_state.username]['company']}</p>
-            <p><strong>Access Level:</strong> {st.session_state.get('user_access_level', 'user').title()}</p>
+            <p>{st.session_state.get('user_access_level', 'user').title()} Access</p>
+            <p>{auth_system.users[st.session_state.username]['company']}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -2258,16 +2449,6 @@ def main():
         st.subheader("🔑 API Status")
         st.info(f"{len(api_keys)} platform(s) connected")
         
-        # User activity log
-        st.subheader("📋 Recent Activity")
-        user_activity = security_manager.get_activity_log(user_id)[-5:]  # Last 5 activities
-        for activity in reversed(user_activity):
-            st.markdown(f"""
-            <div style="font-size: 0.8rem; margin-bottom: 5px;">
-                <span style="color: #64ffda;">{datetime.fromisoformat(activity['timestamp']).strftime('%H:%M')}</span> - {activity['action']}
-            </div>
-            """, unsafe_allow_html=True)
-        
         # User management for admin only
         if st.session_state.get('user_access_level') == 'admin':
             st.markdown("---")
@@ -2276,7 +2457,6 @@ def main():
         
         st.markdown("---")
         if st.button("🚪 Logout", use_container_width=True):
-            security_manager.log_activity(user_id, "logout", f"User {st.session_state.username} logged out")
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
