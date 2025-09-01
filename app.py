@@ -604,11 +604,11 @@ st.markdown("""
         100% { transform: scale(1); opacity: 0.7; }
     }
     
-    /* Enhanced AI Analysis Animation */
-    .ai-analysis-container {
+    /* New Threat Analysis Animation */
+    .threat-analysis-container {
         position: relative;
         width: 100%;
-        height: 200px;
+        height: 250px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -616,151 +616,157 @@ st.markdown("""
         margin: 20px 0;
     }
     
-    .ai-brain {
+    .radar-scanner {
         position: relative;
-        width: 120px;
-        height: 120px;
+        width: 180px;
+        height: 180px;
         margin-bottom: 20px;
     }
     
-    .brain-icon {
-        font-size: 80px;
+    .radar-background {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 2;
-        animation: brainPulse 2s infinite ease-in-out;
-    }
-    
-    @keyframes brainPulse {
-        0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
-        100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    }
-    
-    .brain-ring {
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 100%;
         height: 100%;
-        border: 3px solid rgba(255, 215, 0, 0.7);
         border-radius: 50%;
-        animation: ringRotate 3s linear infinite;
+        background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        overflow: hidden;
     }
     
-    @keyframes ringRotate {
+    .radar-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+    
+    .radar-grid::before,
+    .radar-grid::after {
+        content: '';
+        position: absolute;
+        background: rgba(255, 215, 0, 0.2);
+    }
+    
+    .radar-grid::before {
+        width: 2px;
+        height: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .radar-grid::after {
+        width: 100%;
+        height: 2px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .radar-sweep {
+        position: absolute;
+        width: 50%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent);
+        top: 50%;
+        left: 50%;
+        transform-origin: left center;
+        animation: radarSweep 3s linear infinite;
+    }
+    
+    @keyframes radarSweep {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
     
-    .brain-ring:nth-child(2) {
-        width: 90%;
-        height: 90%;
-        top: 5%;
-        left: 5%;
-        border-color: rgba(255, 165, 0, 0.5);
-        animation-duration: 4s;
-        animation-direction: reverse;
-    }
-    
-    .brain-ring:nth-child(3) {
-        width: 80%;
-        height: 80%;
-        top: 10%;
-        left: 10%;
-        border-color: rgba(255, 140, 0, 0.3);
-        animation-duration: 5s;
-    }
-    
-    .scan-line {
+    .radar-sweep::before {
+        content: '';
         position: absolute;
-        top: 0;
-        left: -100%;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 215, 0, 0.8);
+        border-radius: 50%;
+        right: 0;
+        top: -4px;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+    
+    .threat-dots {
+        position: absolute;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.6), transparent);
-        animation: scanLine 2s linear infinite;
-        z-index: 1;
+        border-radius: 50%;
     }
     
-    @keyframes scanLine {
-        0% { left: -100%; }
-        100% { left: 100%; }
+    .threat-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: rgba(255, 215, 0, 0.8);
+        border-radius: 50%;
+        opacity: 0;
+        animation: threatPulse 2s infinite;
     }
     
-    .analysis-text {
+    .threat-dot.active {
+        opacity: 1;
+    }
+    
+    @keyframes threatPulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.5); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    .analysis-status {
         font-size: 1.2rem;
         font-weight: 600;
         color: #FFD700;
         text-align: center;
-        animation: textBlink 1.5s infinite;
+        margin-bottom: 15px;
     }
     
-    @keyframes textBlink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
+    .progress-container {
+        width: 80%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
     }
     
-    .analysis-steps {
-        display: flex;
-        justify-content: center;
-        margin-top: 15px;
-        width: 100%;
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #FFD700, #FFA500);
+        border-radius: 4px;
+        transition: width 0.3s ease;
     }
     
-    .analysis-step {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 0 10px;
-        opacity: 0.3;
-        transition: opacity 0.5s;
-    }
-    
-    .analysis-step.active {
-        opacity: 1;
-    }
-    
-    .step-icon {
-        font-size: 1.5rem;
-        margin-bottom: 5px;
-    }
-    
-    .step-text {
-        font-size: 0.8rem;
-        color: #FFD700;
-    }
-    
-    .threat-level-indicator {
+    .analysis-phases {
         display: flex;
         justify-content: space-between;
         width: 80%;
         margin-top: 15px;
-        height: 10px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 5px;
-        overflow: hidden;
     }
     
-    .threat-level {
-        height: 100%;
-        width: 0%;
-        border-radius: 5px;
-        transition: width 1s, background-color 1s;
+    .phase {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0.5;
+        transition: opacity 0.3s;
     }
     
-    .threat-level.low {
-        background: linear-gradient(90deg, #10B981, #34D399);
+    .phase.active {
+        opacity: 1;
     }
     
-    .threat-level.medium {
-        background: linear-gradient(90deg, #F59E0B, #FBBF24);
+    .phase-icon {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
     }
     
-    .threat-level.high {
-        background: linear-gradient(90deg, #EF4444, #F87171);
+    .phase-text {
+        font-size: 0.8rem;
+        color: #FFD700;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -783,93 +789,108 @@ def add_particles():
 
 # Add the new animation function
 def show_threat_analysis_animation():
-    """Display an enhanced threat analysis animation"""
+    """Display a radar scanning animation for threat analysis"""
     placeholder = st.empty()
     
     with placeholder.container():
         st.markdown("""
-        <div class="ai-analysis-container">
-            <div class="ai-brain">
-                <div class="brain-icon">🧠</div>
-                <div class="brain-ring"></div>
-                <div class="brain-ring"></div>
-                <div class="brain-ring"></div>
-                <div class="scan-line"></div>
-            </div>
-            <div class="analysis-text">AI Analyzing Threats...</div>
-            
-            <div class="analysis-steps">
-                <div class="analysis-step active" id="step1">
-                    <div class="step-icon">🔍</div>
-                    <div class="step-text">Scanning</div>
-                </div>
-                <div class="analysis-step" id="step2">
-                    <div class="step-icon">🧠</div>
-                    <div class="step-text">Processing</div>
-                </div>
-                <div class="analysis-step" id="step3">
-                    <div class="step-icon">📊</div>
-                    <div class="step-text">Analyzing</div>
-                </div>
-                <div class="analysis-step" id="step4">
-                    <div class="step-icon">✅</div>
-                    <div class="step-text">Complete</div>
+        <div class="threat-analysis-container">
+            <div class="radar-scanner">
+                <div class="radar-background"></div>
+                <div class="radar-grid"></div>
+                <div class="radar-sweep"></div>
+                <div class="threat-dots">
+                    <div class="threat-dot" style="top: 30%; left: 40%;"></div>
+                    <div class="threat-dot" style="top: 60%; left: 70%;"></div>
+                    <div class="threat-dot" style="top: 20%; left: 60%;"></div>
+                    <div class="threat-dot" style="top: 70%; left: 30%;"></div>
+                    <div class="threat-dot" style="top: 50%; left: 80%;"></div>
                 </div>
             </div>
-            
-            <div class="threat-level-indicator">
-                <div class="threat-level" id="threatBar"></div>
+            <div class="analysis-status">Scanning for threats...</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="analysis-phases">
+                <div class="phase" id="phase1">
+                    <div class="phase-icon">🔍</div>
+                    <div class="phase-text">Scanning</div>
+                </div>
+                <div class="phase" id="phase2">
+                    <div class="phase-icon">🧠</div>
+                    <div class="phase-text">Processing</div>
+                </div>
+                <div class="phase" id="phase3">
+                    <div class="phase-icon">📊</div>
+                    <div class="phase-text">Analyzing</div>
+                </div>
+                <div class="phase" id="phase4">
+                    <div class="phase-icon">✅</div>
+                    <div class="phase-text">Complete</div>
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # JavaScript to animate the steps and threat level
+        # JavaScript to animate the progress and phases
         st.markdown("""
         <script>
-        // Animate analysis steps
-        const steps = document.querySelectorAll('.analysis-step');
-        const threatBar = document.getElementById('threatBar');
-        
-        // Function to update active step
-        function updateActiveStep(index) {
-            steps.forEach((step, i) => {
-                if (i <= index) {
-                    step.classList.add('active');
-                } else {
-                    step.classList.remove('active');
-                }
-            });
-        }
-        
-        // Function to update threat level
-        function updateThreatLevel(level) {
-            threatBar.style.width = level + '%';
-            
-            if (level < 33) {
-                threatBar.className = 'threat-level low';
-            } else if (level < 66) {
-                threatBar.className = 'threat-level medium';
-            } else {
-                threatBar.className = 'threat-level high';
-            }
-        }
+        // Get elements
+        const progressBar = document.getElementById('progressBar');
+        const phases = [
+            document.getElementById('phase1'),
+            document.getElementById('phase2'),
+            document.getElementById('phase3'),
+            document.getElementById('phase4')
+        ];
+        const threatDots = document.querySelectorAll('.threat-dot');
         
         // Animation sequence
-        let stepIndex = 0;
-        let threatLevel = 0;
+        let progress = 0;
+        let currentPhase = 0;
+        let activeThreats = 0;
         
-        const stepInterval = setInterval(() => {
-            if (stepIndex < steps.length - 1) {
-                updateActiveStep(stepIndex);
-                threatLevel = Math.min(threatLevel + 25, 100);
-                updateThreatLevel(threatLevel);
-                stepIndex++;
-            } else {
-                clearInterval(stepInterval);
-                updateActiveStep(steps.length - 1);
-                updateThreatLevel(75); // Final threat level
+        // Update progress bar
+        function updateProgress() {
+            progress += 2;
+            if (progress > 100) progress = 100;
+            progressBar.style.width = progress + '%';
+            
+            // Update phases
+            if (progress >= 25 && currentPhase === 0) {
+                phases[0].classList.add('active');
+                currentPhase = 1;
             }
-        }, 800);
+            if (progress >= 50 && currentPhase === 1) {
+                phases[1].classList.add('active');
+                currentPhase = 2;
+            }
+            if (progress >= 75 && currentPhase === 2) {
+                phases[2].classList.add('active');
+                currentPhase = 3;
+            }
+            if (progress >= 100 && currentPhase === 3) {
+                phases[3].classList.add('active');
+                currentPhase = 4;
+            }
+            
+            // Activate threat dots randomly
+            if (Math.random() < 0.1 && activeThreats < threatDots.length) {
+                const randomIndex = Math.floor(Math.random() * threatDots.length);
+                if (!threatDots[randomIndex].classList.contains('active')) {
+                    threatDots[randomIndex].classList.add('active');
+                    activeThreats++;
+                }
+            }
+            
+            // Continue animation or stop
+            if (progress < 100) {
+                setTimeout(updateProgress, 50);
+            }
+        }
+        
+        // Start animation
+        updateProgress();
         </script>
         """, unsafe_allow_html=True)
     
