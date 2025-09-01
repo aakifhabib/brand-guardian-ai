@@ -210,120 +210,6 @@ st.markdown("""
         box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
     }
     
-    /* Subscription cards */
-    .subscription-card {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 30px;
-        margin: 20px 0;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        text-align: center;
-    }
-    
-    .subscription-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.3);
-    }
-    
-    .subscription-card.premium {
-        border: 2px solid rgba(255, 215, 0, 0.5);
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
-    }
-    
-    .subscription-card.premium::before {
-        content: 'MOST POPULAR';
-        position: absolute;
-        top: 15px;
-        right: -30px;
-        background: linear-gradient(90deg, #FFD700, #FFA500);
-        color: #000;
-        padding: 5px 30px;
-        font-size: 12px;
-        font-weight: 700;
-        transform: rotate(45deg);
-    }
-    
-    .price {
-        font-size: 3rem;
-        font-weight: 800;
-        color: #FFD700;
-        margin: 10px 0;
-    }
-    
-    .price-period {
-        font-size: 1rem;
-        color: #A5B4FC;
-    }
-    
-    /* AI Analysis Animation */
-    .ai-analysis-container {
-        position: relative;
-        padding: 20px;
-        border-radius: 15px;
-        background: rgba(0, 0, 0, 0.5);
-        margin: 20px 0;
-        overflow: hidden;
-    }
-    
-    .ai-analysis-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-        animation: scan 3s infinite;
-    }
-    
-    @keyframes scan {
-        0% { left: -100%; }
-        100% { left: 100%; }
-    }
-    
-    .ai-pulse-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #FFD700;
-        margin-right: 8px;
-        animation: pulse 1.5s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.5); opacity: 0.5; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-    
-    .ai-progress-bar {
-        width: 100%;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-        overflow: hidden;
-        margin: 15px 0;
-    }
-    
-    .ai-progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #FFD700, #FFA500);
-        border-radius: 3px;
-        animation: progress 2s ease-in-out infinite;
-    }
-    
-    @keyframes progress {
-        0% { width: 0%; }
-        50% { width: 100%; }
-        100% { width: 0%; }
-    }
-    
     /* Enhanced threat indicators */
     .threat-indicator {
         padding: 10px 16px;
@@ -736,49 +622,6 @@ def add_particles():
     </div>
     """, unsafe_allow_html=True)
 
-# Subscription Plans
-SUBSCRIPTION_PLANS = {
-    "basic": {
-        "name": "Basic",
-        "price": 29,
-        "features": [
-            "Basic threat detection",
-            "5 brand mentions/day",
-            "Email alerts",
-            "Standard reports",
-            "1 platform integration"
-        ],
-        "color": "#10B981"
-    },
-    "advanced": {
-        "name": "Advanced",
-        "price": 79,
-        "features": [
-            "Advanced threat detection",
-            "50 brand mentions/day",
-            "Real-time alerts",
-            "Advanced analytics",
-            "5 platform integrations",
-            "API access"
-        ],
-        "color": "#3B82F6"
-    },
-    "premium": {
-        "name": "Premium",
-        "price": 149,
-        "features": [
-            "AI-powered threat detection",
-            "Unlimited brand mentions",
-            "Priority alerts",
-            "Custom reports",
-            "Unlimited platforms",
-            "Dedicated support",
-            "White-label options"
-        ],
-        "color": "#FFD700"
-    }
-}
-
 # Enhanced Security Manager with Premium Access
 class SecurityManager:
     def __init__(self):
@@ -975,7 +818,6 @@ class EnhancedAuthenticationSystem:
                     "admin": {
                         "password": self.hash_password("brandguardian2024"),
                         "access_level": "admin",
-                        "subscription": "premium",
                         "company": "Default Company",
                         "email": "admin@example.com",
                         "user_id": str(uuid.uuid4()),
@@ -1030,7 +872,6 @@ class EnhancedAuthenticationSystem:
         self.users[username] = {
             "password": self.hash_password(password),
             "access_level": access_level,
-            "subscription": "basic",
             "company": company,
             "email": email,
             "user_id": str(uuid.uuid4()),
@@ -1081,14 +922,6 @@ class EnhancedAuthenticationSystem:
                 return False, "Account locked. Please try again in 15 minutes."
             else:
                 return False, f"Invalid password. {remaining_attempts} attempts remaining."
-    
-    def upgrade_subscription(self, username, new_subscription):
-        """Upgrade user subscription"""
-        if username in self.users:
-            self.users[username]["subscription"] = new_subscription
-            self.save_users()
-            return True, f"Subscription upgraded to {new_subscription.title()}"
-        return False, "User not found"
 
 # Enhanced API Key Manager with User Isolation
 class EnhancedAPIKeyManager:
@@ -1652,101 +1485,9 @@ class AdvancedVisualizations:
         )
         
         return fig
-    
-    def create_animated_analysis_chart(self, data, title):
-        """Create an animated chart for analysis visualization"""
-        frames = []
-        for i in range(len(data)):
-            frame = go.Frame(
-                data=[go.Bar(
-                    x=list(data[i].keys()),
-                    y=list(data[i].values()),
-                    marker_color=self.colors['primary']
-                )],
-                name=f"frame_{i}"
-            )
-            frames.append(frame)
-        
-        fig = go.Figure(
-            data=[go.Bar(
-                x=list(data[0].keys()),
-                y=list(data[0].values()),
-                marker_color=self.colors['primary']
-            )],
-            frames=frames
-        )
-        
-        fig.update_layout(
-            title=title,
-            title_x=0.5,
-            updatemenus=[{
-                "type": "buttons",
-                "buttons": [
-                    {
-                        "label": "Play",
-                        "method": "animate",
-                        "args": [None, {"frame": {"duration": 500, "redraw": True}, "fromcurrent": True}]
-                    },
-                    {
-                        "label": "Pause",
-                        "method": "animate",
-                        "args": [[None], {"frame": {"duration": 0, "redraw": False}, "mode": "immediate"}]
-                    }
-                ]
-            }],
-            font=dict(color='white'),
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
-            yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
-        )
-        
-        return fig
 
 # Initialize visualizations
 viz = AdvancedVisualizations()
-
-# Subscription Management
-def show_subscription_plans():
-    st.header("💎 Choose Your Plan")
-    st.write("Select the perfect plan for your brand protection needs")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    plans = ["basic", "advanced", "premium"]
-    
-    for i, plan_type in enumerate(plans):
-        plan = SUBSCRIPTION_PLANS[plan_type]
-        
-        with [col1, col2, col3][i]:
-            st.markdown(f"""
-            <div class="subscription-card {'premium' if plan_type == 'premium' else ''}">
-                <h3>{plan['name']}</h3>
-                <div class="price">${plan['price']}<span class="price-period">/month</span></div>
-                <div style="margin: 20px 0;">
-                    {''.join([f'<p>✓ {feature}</p>' for feature in plan['features']])}
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            if st.button(f"Choose {plan['name']}", key=f"choose_{plan_type}", use_container_width=True):
-                process_subscription_upgrade(plan_type)
-
-def process_subscription_upgrade(plan_type):
-    """Process subscription upgrade"""
-    username = st.session_state.get('username')
-    if username:
-        success, message = auth_system.upgrade_subscription(username, plan_type)
-        if success:
-            st.success(f"✅ {message}")
-            st.balloons()
-            # Update session state
-            st.session_state.subscription = plan_type
-            st.rerun()
-        else:
-            st.error(f"❌ {message}")
-    else:
-        st.error("Please log in first")
 
 # User registration and management functions
 def show_user_registration():
@@ -1794,7 +1535,6 @@ def show_user_management():
             "Company": user_info.get("company", "N/A"),
             "Email": user_info.get("email", "N/A"),
             "Access Level": user_info.get("access_level", "client"),
-            "Subscription": user_info.get("subscription", "basic").title(),
             "Last Login": user_info.get("last_login", "Never"),
             "Created": user_info.get("created_at", "N/A")[:10] if user_info.get("created_at") else "N/A"
         })
@@ -1870,7 +1610,6 @@ def show_login_form():
                     st.session_state.authenticated = True
                     st.session_state.username = username
                     st.session_state.user_access_level = auth_system.users[username]["access_level"]
-                    st.session_state.subscription = auth_system.users[username]["subscription"]
                     st.session_state.user_id = auth_system.users[username]["user_id"]
                     st.session_state.login_time = datetime.now().isoformat()
                     st.session_state.remember_me = remember_me
@@ -2568,7 +2307,7 @@ def show_user_ai_dashboard():
     with tab3:
         st.header("🧠 AI-Powered Insights")
         
-        # AI analysis section with animations
+        # AI analysis section
         st.subheader("Threat Intelligence")
         
         # Generate sample analyses
@@ -2580,22 +2319,6 @@ def show_user_ai_dashboard():
         
         # Generate report
         report = ai_engine.generate_threat_report(analyses)
-        
-        # Display animated analysis container
-        st.markdown("""
-        <div class="ai-analysis-container">
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <div class="ai-pulse-dot"></div>
-                <h4>AI Analysis in Progress...</h4>
-            </div>
-            <div class="ai-progress-bar">
-                <div class="ai-progress-fill"></div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Simulate analysis delay
-        time.sleep(2)
         
         # Display report
         col1, col2 = st.columns(2)
@@ -2628,21 +2351,14 @@ def show_user_ai_dashboard():
                 ''.join([f'<p>• {rec}</p>' for rec in report['recommendations']])
             ), unsafe_allow_html=True)
         
-        # Keyword frequency analysis with animation
+        # Keyword frequency analysis
         st.subheader("🔤 Keyword Frequency Analysis")
         
         texts = [a['text'] for a in analyses]
         keyword_freq = ai_engine.create_keyword_frequency(texts)
         
-        # Create animated data
-        animated_data = []
-        for i in range(5):
-            # Create frames with increasing data
-            frame_data = dict(list(keyword_freq.items())[:i+1])
-            animated_data.append(frame_data)
-        
-        # Create animated chart
-        fig = viz.create_animated_analysis_chart(animated_data, "Top Keywords in Threat Analysis")
+        # Create bar chart
+        fig = viz.create_keyword_bar_chart(keyword_freq, "Top Keywords in Threat Analysis")
         st.plotly_chart(fig, use_container_width=True)
         
         # Threat patterns
@@ -2693,8 +2409,6 @@ def main():
         st.session_state.advanced_access = False
     if "brand_name" not in st.session_state:
         st.session_state.brand_name = "Your Brand"
-    if "subscription" not in st.session_state:
-        st.session_state.subscription = auth_system.users[st.session_state.username]["subscription"]
     
     # Header
     st.markdown("""
@@ -2711,7 +2425,6 @@ def main():
             <h3>{st.session_state.username}</h3>
             <p>{st.session_state.get('user_access_level', 'user').title()} Access</p>
             <p>{auth_system.users[st.session_state.username]['company']}</p>
-            <p>Subscription: <span style="color: {SUBSCRIPTION_PLANS[st.session_state.subscription]['color']}; font-weight: 600;">{st.session_state.subscription.title()}</span></p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -2736,15 +2449,6 @@ def main():
         st.subheader("🔑 API Status")
         st.info(f"{len(api_keys)} platform(s) connected")
         
-        # Subscription upgrade option
-        st.markdown("---")
-        st.subheader("💎 Upgrade Subscription")
-        current_plan = st.session_state.subscription
-        st.info(f"Current Plan: {current_plan.title()}")
-        
-        if st.button("Upgrade Plan", use_container_width=True):
-            st.session_state.show_subscription_plans = True
-        
         # User management for admin only
         if st.session_state.get('user_access_level') == 'admin':
             st.markdown("---")
@@ -2756,14 +2460,6 @@ def main():
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
-    
-    # Show subscription plans if requested
-    if st.session_state.get('show_subscription_plans', False):
-        show_subscription_plans()
-        if st.button("Back to Dashboard", use_container_width=True):
-            st.session_state.show_subscription_plans = False
-            st.rerun()
-        return
     
     # Show user management if admin clicked the button
     if st.session_state.get('show_user_management', False):
