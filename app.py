@@ -949,6 +949,7 @@ st.markdown("""
         height: 100%;
         pointer-events: none;
         overflow: hidden;
+        z-index: 10;
     }
     
     .logo-particle {
@@ -2131,13 +2132,13 @@ def show_login_form():
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <div class="logo-container">
+        <div class="logo-container" style="position: relative; display: inline-block; margin-bottom: 20px;">
             """ + get_advanced_logo() + """
-            <div class="logo-particles">
-                <div class="logo-particle" style="left: 20%; animation-delay: 0s;"></div>
-                <div class="logo-particle" style="left: 50%; animation-delay: 1s;"></div>
-                <div class="logo-particle" style="left: 80%; animation-delay: 2s;"></div>
-            </div>
+        </div>
+        <div class="logo-particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 10;">
+            <div class="logo-particle" style="left: 20%; animation-delay: 0s;"></div>
+            <div class="logo-particle" style="left: 50%; animation-delay: 1s;"></div>
+            <div class="logo-particle" style="left: 80%; animation-delay: 2s;"></div>
         </div>
         <h1 style="font-size: 2.5rem; font-weight: 800; margin-top: 20px; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
         <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence Platform</p>
