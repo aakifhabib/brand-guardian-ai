@@ -2133,7 +2133,12 @@ def show_login_form():
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
         <div class="logo-container" style="position: relative; display: inline-block; margin-bottom: 20px;">
-            """ + get_advanced_logo() + """
+    """, unsafe_allow_html=True)
+    
+    # Display the SVG logo properly
+    st.markdown(get_advanced_logo(), unsafe_allow_html=True)
+    
+    st.markdown("""
         </div>
         <div class="logo-particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 10;">
             <div class="logo-particle" style="left: 20%; animation-delay: 0s;"></div>
@@ -3073,10 +3078,15 @@ def main():
         st.session_state.user_subscription = auth_system.get_user_subscription(username)
     
     # Advanced header with logo
-    st.markdown(f"""
+    st.markdown("""
     <div style='text-align: center; margin-bottom: 30px;'>
         <div class="logo-container" style="display: inline-block;">
-            """ + get_advanced_logo() + """
+    """, unsafe_allow_html=True)
+    
+    # Display the SVG logo properly
+    st.markdown(get_advanced_logo(), unsafe_allow_html=True)
+    
+    st.markdown("""
             <div class="logo-particles">
                 <div class="logo-particle" style="left: 20%; animation-delay: 0s;"></div>
                 <div class="logo-particle" style="left: 50%; animation-delay: 1s;"></div>
@@ -3090,9 +3100,14 @@ def main():
     # Sidebar with user info and logout button
     with st.sidebar:
         # Advanced logo in sidebar
-        st.markdown(f"""
+        st.markdown("""
         <div class="advanced-logo">
-            """ + get_advanced_logo() + """
+        """, unsafe_allow_html=True)
+        
+        # Display the SVG logo properly
+        st.markdown(get_advanced_logo(), unsafe_allow_html=True)
+        
+        st.markdown("""
         </div>
         """, unsafe_allow_html=True)
         
@@ -3178,7 +3193,7 @@ def main():
         
         with tab3:
             st.header("Social Monitoring")
-            posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector)
+            posts = enhanced_monitor.simulate_monitoring_with_api(st.session_state.brand_name, st.session_state.sector)
             for post in posts[:5]:
                 with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                     st.write(post['content'])
