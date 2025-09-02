@@ -24,7 +24,6 @@ from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
-
 # Set page config first
 st.set_page_config(
     page_title="BrandGuardian AI Pro",
@@ -48,7 +47,7 @@ print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 st.markdown("""
 <style>
     /* Base styles */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&family=Orbitron:wght@400;700;900&display=swap');
     
     .main {
         background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
@@ -94,19 +93,99 @@ st.markdown("""
         100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
     }
     
-    /* Premium header styling */
-    .premium-header {
-        font-family: 'Playfair Display', serif;
-        font-size: 4rem;
+    /* Premium header styling with new generation logo design */
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .logo-shield {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin-right: 20px;
+        animation: shieldPulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes shieldPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .shield-base {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    }
+    
+    .shield-inner {
+        position: absolute;
+        width: 85%;
+        height: 85%;
+        top: 7.5%;
+        left: 7.5%;
+        background: #000;
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .shield-icon {
+        font-size: 3.5rem;
+        color: #FFD700;
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+    
+    .shield-ring {
+        position: absolute;
+        width: 110%;
+        height: 110%;
+        top: -5%;
+        left: -5%;
+        border: 2px solid rgba(255, 215, 0, 0.7);
+        border-radius: 50%;
+        animation: ringRotate 10s linear infinite;
+    }
+    
+    @keyframes ringRotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .logo-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .logo-main {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 3.5rem;
         font-weight: 900;
-        text-align: center;
-        margin: 20px 0;
+        letter-spacing: 2px;
         background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
         animation: goldGlow 3s ease-in-out infinite alternate;
-        position: relative;
+        margin-bottom: 5px;
+    }
+    
+    .logo-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #FFD700;
+        letter-spacing: 4px;
+        opacity: 0.9;
     }
     
     @keyframes goldGlow {
@@ -2893,9 +2972,24 @@ def main():
     if username and "user_subscription" not in st.session_state:
         st.session_state.user_subscription = auth_system.get_user_subscription(username)
     
-    # Header
+    # Header with new generation logo design
     st.markdown("""
-    <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
+    <div class="logo-container">
+        <div class="logo-shield">
+            <div class="shield-base"></div>
+            <div class="shield-inner">
+                <div class="shield-icon">🛡️</div>
+            </div>
+            <div class="shield-ring"></div>
+        </div>
+        <div class="logo-text">
+            <div class="logo-main">BRANDGUARDIAN</div>
+            <div class="logo-subtitle">AI PRO</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
     <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
