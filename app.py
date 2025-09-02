@@ -3218,6 +3218,7 @@ def show_trend_analysis():
         yaxis_title='Sentiment Score',
         font=dict(color='white'),
         paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
         yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
     )
