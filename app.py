@@ -44,97 +44,6 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Advanced Logo Design Functions
-def get_advanced_logo():
-    """Create an advanced SVG logo with security and AI elements"""
-    logo_svg = """
-    <svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <!-- Gold gradient -->
-            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-                <stop offset="50%" style="stop-color:#FFA500;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:1" />
-            </linearGradient>
-            
-            <!-- Dark gradient -->
-            <linearGradient id="darkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
-            </linearGradient>
-            
-            <!-- Glow effect -->
-            <filter id="glow">
-                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-            </filter>
-        </defs>
-        
-        <!-- Shield background -->
-        <path d="M15,10 L15,45 Q15,50 20,50 L35,50 Q40,50 40,45 L40,15 Q40,10 35,10 L20,10 Q15,10 15,15 Z" 
-              fill="url(#darkGradient)" stroke="url(#goldGradient)" stroke-width="2" filter="url(#glow)"/>
-        
-        <!-- Shield lock icon -->
-        <rect x="22" y="25" width="6" height="8" rx="1" fill="url(#goldGradient)"/>
-        <path d="M24,25 Q24,22 27,22 Q30,22 30,25" fill="none" stroke="url(#goldGradient)" stroke-width="1.5"/>
-        
-        <!-- Brain/AI circuit pattern -->
-        <g transform="translate(50, 15)">
-            <!-- Central brain node -->
-            <circle cx="15" cy="15" r="8" fill="url(#goldGradient)" opacity="0.8"/>
-            
-            <!-- Circuit lines -->
-            <path d="M15,7 L15,0 M15,23 L15,30 M7,15 L0,15 M23,15 L30,15" 
-                  stroke="url(#goldGradient)" stroke-width="2" opacity="0.7"/>
-            
-            <!-- Circuit nodes -->
-            <circle cx="15" cy="0" r="2" fill="url(#goldGradient)"/>
-            <circle cx="15" cy="30" r="2" fill="url(#goldGradient)"/>
-            <circle cx="0" cy="15" r="2" fill="url(#goldGradient)"/>
-            <circle cx="30" cy="15" r="2" fill="url(#goldGradient)"/>
-            
-            <!-- Inner circuit -->
-            <path d="M10,10 L20,20 M20,10 L10,20" stroke="url(#goldGradient)" stroke-width="1" opacity="0.5"/>
-        </g>
-        
-        <!-- Brand text -->
-        <text x="100" y="25" font-family="Inter, sans-serif" font-size="18" font-weight="800" fill="url(#goldGradient)">
-            BrandGuardian
-        </text>
-        <text x="100" y="42" font-family="Inter, sans-serif" font-size="12" font-weight="400" fill="#FFD700" opacity="0.8">
-            AI PRO
-        </text>
-        
-        <!-- Security badge -->
-        <g transform="translate(170, 10)">
-            <circle cx="10" cy="10" r="8" fill="url(#goldGradient)" opacity="0.2"/>
-            <path d="M10,5 L10,15 M5,10 L15,10" stroke="url(#goldGradient)" stroke-width="2" stroke-linecap="round"/>
-        </g>
-    </svg>
-    """
-    return logo_svg
-
-def get_favicon_logo():
-    """Create a small favicon version of the logo"""
-    favicon_svg = """
-    <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <linearGradient id="faviconGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
-            </linearGradient>
-        </defs>
-        <circle cx="16" cy="16" r="14" fill="url(#faviconGold)" opacity="0.2"/>
-        <path d="M8,8 L8,24 Q8,26 10,26 L22,26 Q24,26 24,24 L24,10 Q24,8 22,8 L10,8 Q8,8 8,10 Z" 
-              fill="none" stroke="url(#faviconGold)" stroke-width="2"/>
-        <circle cx="16" cy="16" r="4" fill="url(#faviconGold)"/>
-    </svg>
-    """
-    return favicon_svg
-
 # Advanced CSS with enhanced black and gold theme and animations
 st.markdown("""
 <style>
@@ -886,86 +795,6 @@ st.markdown("""
         0% { opacity: 0.5; }
         25% { opacity: 1; }
         100% { opacity: 1; }
-    }
-    
-    /* Advanced logo styling */
-    .advanced-logo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 20px 0;
-        transition: all 0.3s ease;
-    }
-    
-    .advanced-logo:hover {
-        transform: scale(1.05);
-        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
-    }
-    
-    .logo-container {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .logo-container::after {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(45deg, #FFD700, #FFA500, #FF8C00, #FFD700);
-        border-radius: 8px;
-        z-index: -1;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    
-    .logo-container:hover::after {
-        opacity: 0.7;
-        animation: logoGlow 2s ease-in-out infinite;
-    }
-    
-    @keyframes logoGlow {
-        0% { opacity: 0.7; }
-        50% { opacity: 1; }
-        100% { opacity: 0.7; }
-    }
-    
-    /* Favicon styling */
-    .favicon {
-        width: 32px;
-        height: 32px;
-        margin-right: 10px;
-        vertical-align: middle;
-    }
-    
-    /* Animated logo particles */
-    .logo-particles {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        overflow: hidden;
-        z-index: 10;
-    }
-    
-    .logo-particle {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0) 70%);
-        border-radius: 50%;
-        animation: logoParticleFloat 3s infinite linear;
-    }
-    
-    @keyframes logoParticleFloat {
-        0% { transform: translateY(0) translateX(0); opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { transform: translateY(-30px) translateX(10px); opacity: 0; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -2128,24 +1957,11 @@ def show_user_management():
                 st.error("You cannot delete your own account")
 
 def show_login_form():
-    """Display login form with enhanced design and advanced logo"""
+    """Display login form with enhanced design"""
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <div class="logo-container" style="position: relative; display: inline-block; margin-bottom: 20px;">
-    """, unsafe_allow_html=True)
-    
-    # Display the SVG logo properly
-    st.markdown(get_advanced_logo(), unsafe_allow_html=True)
-    
-    st.markdown("""
-        </div>
-        <div class="logo-particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 10;">
-            <div class="logo-particle" style="left: 20%; animation-delay: 0s;"></div>
-            <div class="logo-particle" style="left: 50%; animation-delay: 1s;"></div>
-            <div class="logo-particle" style="left: 80%; animation-delay: 2s;"></div>
-        </div>
-        <h1 style="font-size: 2.5rem; font-weight: 800; margin-top: 20px; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
+        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
         <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence Platform</p>
     </div>
     """, unsafe_allow_html=True)
@@ -3077,40 +2893,14 @@ def main():
     if username and "user_subscription" not in st.session_state:
         st.session_state.user_subscription = auth_system.get_user_subscription(username)
     
-    # Advanced header with logo
+    # Header
     st.markdown("""
-    <div style='text-align: center; margin-bottom: 30px;'>
-        <div class="logo-container" style="display: inline-block;">
-    """, unsafe_allow_html=True)
-    
-    # Display the SVG logo properly
-    st.markdown(get_advanced_logo(), unsafe_allow_html=True)
-    
-    st.markdown("""
-            <div class="logo-particles">
-                <div class="logo-particle" style="left: 20%; animation-delay: 0s;"></div>
-                <div class="logo-particle" style="left: 50%; animation-delay: 1s;"></div>
-                <div class="logo-particle" style="left: 80%; animation-delay: 2s;"></div>
-            </div>
-        </div>
-        <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
-    </div>
+    <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
+    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
     # Sidebar with user info and logout button
     with st.sidebar:
-        # Advanced logo in sidebar
-        st.markdown("""
-        <div class="advanced-logo">
-        """, unsafe_allow_html=True)
-        
-        # Display the SVG logo properly
-        st.markdown(get_advanced_logo(), unsafe_allow_html=True)
-        
-        st.markdown("""
-        </div>
-        """, unsafe_allow_html=True)
-        
         # User info
         subscription_info = auth_system.subscription_plans[st.session_state.user_subscription]
         st.markdown(f"""
@@ -3193,7 +2983,7 @@ def main():
         
         with tab3:
             st.header("Social Monitoring")
-            posts = enhanced_monitor.simulate_monitoring_with_api(st.session_state.brand_name, st.session_state.sector)
+            posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector)
             for post in posts[:5]:
                 with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                     st.write(post['content'])
