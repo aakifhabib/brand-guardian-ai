@@ -24,6 +24,7 @@ from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
+
 # Set page config first
 st.set_page_config(
     page_title="BrandGuardian AI Pro",
@@ -875,6 +876,264 @@ st.markdown("""
         25% { opacity: 1; }
         100% { opacity: 1; }
     }
+    
+    /* Advanced AI Features Styling */
+    .ai-feature-card {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        padding: 25px;
+        margin: 20px 0;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ai-feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+    }
+    
+    .ai-feature-card:hover::before {
+        transform: translateX(100%);
+    }
+    
+    .ai-feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.5);
+    }
+    
+    .prediction-meter {
+        width: 100%;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 10px 0;
+    }
+    
+    .prediction-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 1s ease-in-out;
+    }
+    
+    .prediction-high {
+        background: linear-gradient(90deg, #FF0000, #FF4500);
+        width: 85%;
+    }
+    
+    .prediction-medium {
+        background: linear-gradient(90deg, #FFA500, #FFD700);
+        width: 60%;
+    }
+    
+    .prediction-low {
+        background: linear-gradient(90deg, #10B981, #34D399);
+        width: 30%;
+    }
+    
+    .network-node {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #FFD700;
+        position: absolute;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+    
+    .network-connection {
+        position: absolute;
+        height: 2px;
+        background: rgba(255, 215, 0, 0.5);
+        transform-origin: left center;
+    }
+    
+    .network-container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        margin: 20px 0;
+    }
+    
+    .insight-tag {
+        display: inline-block;
+        background: rgba(255, 215, 0, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.5);
+        border-radius: 15px;
+        padding: 5px 12px;
+        margin: 5px;
+        font-size: 0.9rem;
+        color: #FFD700;
+    }
+    
+    .timeline-event {
+        position: relative;
+        padding-left: 30px;
+        margin-bottom: 20px;
+    }
+    
+    .timeline-event::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: #FFD700;
+    }
+    
+    .timeline-event::after {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 20px;
+        width: 2px;
+        height: calc(100% + 10px);
+        background: rgba(255, 215, 0, 0.3);
+    }
+    
+    .timeline-event:last-child::after {
+        display: none;
+    }
+    
+    .sentiment-arc {
+        stroke-width: 3;
+        fill: none;
+    }
+    
+    .sentiment-positive {
+        stroke: #10B981;
+    }
+    
+    .sentiment-neutral {
+        stroke: #FFD700;
+    }
+    
+    .sentiment-negative {
+        stroke: #EF4444;
+    }
+    
+    .competitor-bar {
+        height: 30px;
+        border-radius: 15px;
+        margin: 10px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .competitor-fill {
+        height: 100%;
+        border-radius: 15px;
+        transition: width 1s ease-in-out;
+    }
+    
+    .competitor-label {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+        font-weight: 600;
+        z-index: 1;
+    }
+    
+    .influencer-card {
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 15px;
+        padding: 15px;
+        margin: 10px 0;
+        border-left: 3px solid #FFD700;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    
+    .influencer-card:hover {
+        transform: translateX(5px);
+        background: rgba(0, 0, 0, 0.8);
+    }
+    
+    .influencer-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.5rem;
+    }
+    
+    .influencer-info {
+        flex: 1;
+    }
+    
+    .influencer-name {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    
+    .influencer-stats {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .health-metric {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+    }
+    
+    .health-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 215, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.2rem;
+    }
+    
+    .health-bar {
+        flex: 1;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    
+    .health-fill {
+        height: 100%;
+        border-radius: 5px;
+        transition: width 1s ease-in-out;
+    }
+    
+    .health-good {
+        background: linear-gradient(90deg, #10B981, #34D399);
+    }
+    
+    .health-warning {
+        background: linear-gradient(90deg, #F59E0B, #FCD34D);
+    }
+    
+    .health-critical {
+        background: linear-gradient(90deg, #EF4444, #F87171);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -1483,7 +1742,7 @@ class EnhancedAPIKeyManager:
 # Initialize enhanced authentication and API manager
 api_manager = EnhancedAPIKeyManager()
 
-# Enhanced AI Analysis Engine
+# Enhanced AI Analysis Engine with Advanced Features
 class AIAnalysisEngine:
     def __init__(self):
         self.threat_keywords = {
@@ -1491,37 +1750,65 @@ class AIAnalysisEngine:
             'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed', 'poor', 'broken'],
             'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience', 'question', 'info']
         }
+        
+        # Advanced sentiment lexicons
+        self.positive_words = ['good', 'great', 'excellent', 'amazing', 'wonderful', 'fantastic', 'love', 'like', 'best', 'awesome', 'outstanding', 'superb', 'brilliant', 'perfect', 'impressive']
+        self.negative_words = ['bad', 'terrible', 'awful', 'hate', 'worst', 'disappointing', 'poor', 'broken', 'horrible', 'disgusting', 'annoying', 'frustrating', 'useless', 'waste']
+        
+        # Competitor keywords
+        self.competitor_keywords = {
+            'technology': ['apple', 'microsoft', 'google', 'amazon', 'samsung', 'sony', 'intel', 'dell', 'hp'],
+            'finance': ['jpmorgan', 'goldman', 'bankofamerica', 'wellsfargo', 'citigroup', 'morganstanley', 'amex', 'visa', 'mastercard'],
+            'retail': ['walmart', 'target', 'amazon', 'costco', 'kohl', 'macy', 'nordstrom', 'home depot', 'lowes']
+        }
+        
+        # Influencer categories
+        self.influencer_categories = {
+            'technology': ['tech reviewer', 'gadget expert', 'software developer', 'it consultant'],
+            'finance': ['financial advisor', 'investment analyst', 'economist', 'accountant'],
+            'retail': ['fashion blogger', 'lifestyle influencer', 'product reviewer', 'shopping expert']
+        }
     
     def analyze_sentiment(self, text):
-        """Analyze sentiment of text"""
-        # Simulate sentiment analysis
+        """Enhanced sentiment analysis with context awareness"""
         words = text.lower().split()
-        positive_words = ['good', 'great', 'excellent', 'amazing', 'wonderful', 'fantastic', 'love', 'like', 'best']
-        negative_words = ['bad', 'terrible', 'awful', 'hate', 'worst', 'disappointing', 'poor', 'broken']
         
-        positive_count = sum(1 for word in words if word in positive_words)
-        negative_count = sum(1 for word in words if word in negative_words)
+        # Count positive and negative words
+        positive_count = sum(1 for word in words if word in self.positive_words)
+        negative_count = sum(1 for word in words if word in self.negative_words)
         
-        if positive_count > negative_count:
-            return "positive", min(1.0, positive_count / len(words))
-        elif negative_count > positive_count:
-            return "negative", min(1.0, negative_count / len(words))
-        else:
+        # Calculate sentiment score
+        total_words = len(words)
+        if total_words == 0:
             return "neutral", 0.5
+        
+        sentiment_score = (positive_count - negative_count) / max(total_words, 1)
+        
+        # Normalize to 0-1 range
+        normalized_score = (sentiment_score + 1) / 2
+        
+        # Determine sentiment category
+        if normalized_score > 0.65:
+            return "positive", normalized_score
+        elif normalized_score < 0.35:
+            return "negative", normalized_score
+        else:
+            return "neutral", normalized_score
     
     def detect_threats(self, text, brand_name):
-        """Detect threats in text"""
+        """Enhanced threat detection with contextual analysis"""
         text_lower = text.lower()
         brand_lower = brand_name.lower()
         
         # Check if brand is mentioned
         brand_mentioned = brand_lower in text_lower
         
-        # Detect threat level
+        # Detect threat level with weighted scoring
         threat_level = "low"
         found_keywords = []
         threat_score = 0.0
         
+        # Weighted keyword detection
         for level, keywords in self.threat_keywords.items():
             for keyword in keywords:
                 if keyword in text_lower:
@@ -1532,6 +1819,14 @@ class AIAnalysisEngine:
                     else:
                         threat_score += 0.1
                     found_keywords.append(keyword)
+        
+        # Contextual analysis - check for competitor mentions
+        sector = st.session_state.get('sector', 'technology')
+        if sector in self.competitor_keywords:
+            for competitor in self.competitor_keywords[sector]:
+                if competitor in text_lower:
+                    threat_score += 0.15  # Competitor mentions increase threat level
+                    found_keywords.append(f"competitor:{competitor}")
         
         # Determine threat level based on score
         if threat_score >= 0.3:
@@ -1548,13 +1843,91 @@ class AIAnalysisEngine:
             'threat_score': min(1.0, threat_score),
             'keywords_found': found_keywords,
             'timestamp': datetime.now().isoformat(),
-            'sentiment': self.analyze_sentiment(text)
+            'sentiment': self.analyze_sentiment(text),
+            'context_analysis': self.analyze_context(text, brand_name, sector)
         }
         
         return results
     
+    def analyze_context(self, text, brand_name, sector):
+        """Advanced contextual analysis"""
+        text_lower = text.lower()
+        brand_lower = brand_name.lower()
+        
+        context = {
+            'urgency': 'low',
+            'reach_potential': 'low',
+            'influencer_involved': False,
+            'competitor_mentioned': False,
+            'product_service_mentioned': False
+        }
+        
+        # Check for urgency indicators
+        urgency_words = ['urgent', 'immediately', 'asap', 'emergency', 'critical', 'now']
+        if any(word in text_lower for word in urgency_words):
+            context['urgency'] = 'high'
+        
+        # Check for high-reach platforms
+        platform_indicators = ['viral', 'trending', 'million', 'thousand', 'everyone', 'everybody']
+        if any(word in text_lower for word in platform_indicators):
+            context['reach_potential'] = 'high'
+        
+        # Check for influencer indicators
+        influencer_indicators = ['influencer', 'blogger', 'celebrity', 'expert', 'analyst', 'journalist']
+        if any(word in text_lower for word in influencer_indicators):
+            context['influencer_involved'] = True
+        
+        # Check for competitor mentions
+        if sector in self.competitor_keywords:
+            for competitor in self.competitor_keywords[sector]:
+                if competitor in text_lower:
+                    context['competitor_mentioned'] = True
+                    break
+        
+        # Check for product/service mentions
+        product_indicators = ['product', 'service', 'feature', 'app', 'software', 'device', 'item']
+        if any(word in text_lower for word in product_indicators):
+            context['product_service_mentioned'] = True
+        
+        return context
+    
+    def predict_threat_evolution(self, analyses):
+        """Predict how threats might evolve over time"""
+        if not analyses:
+            return {"prediction": "insufficient_data", "confidence": 0}
+        
+        # Analyze threat patterns
+        high_threats = [a for a in analyses if a['threat_level'] == 'high']
+        medium_threats = [a for a in analyses if a['threat_level'] == 'medium']
+        
+        # Calculate trend indicators
+        sentiment_trend = np.mean([a['sentiment'][1] for a in analyses])
+        threat_score_trend = np.mean([a['threat_score'] for a in analyses])
+        
+        # Generate prediction
+        if threat_score_trend > 0.25:
+            prediction = "escalating"
+            confidence = min(0.9, threat_score_trend * 2)
+        elif threat_score_trend < 0.1:
+            prediction = "diminishing"
+            confidence = min(0.9, (0.25 - threat_score_trend) * 4)
+        else:
+            prediction = "stable"
+            confidence = 0.6
+        
+        return {
+            "prediction": prediction,
+            "confidence": confidence,
+            "factors": {
+                "sentiment_trend": sentiment_trend,
+                "threat_score_trend": threat_score_trend,
+                "high_threat_count": len(high_threats),
+                "medium_threat_count": len(medium_threats)
+            }
+        }
+    
     def generate_threat_report(self, analyses):
-        """Generate comprehensive threat report"""
+        """Generate comprehensive threat report with advanced insights"""
         # Count threat levels
         threat_counts = {
             'high': sum(1 for a in analyses if a['threat_level'] == 'high'),
@@ -1566,7 +1939,10 @@ class AIAnalysisEngine:
         sentiment_scores = [a['sentiment'][1] for a in analyses]
         avg_sentiment = sum(sentiment_scores) / len(sentiment_scores) if sentiment_scores else 0
         
-        # Generate recommendations
+        # Predict threat evolution
+        evolution_prediction = self.predict_threat_evolution(analyses)
+        
+        # Generate recommendations based on analysis
         recommendations = []
         
         if threat_counts['high'] > 0:
@@ -1581,6 +1957,13 @@ class AIAnalysisEngine:
         if avg_sentiment < 0.3:
             recommendations.append("Address negative sentiment with PR campaign")
         
+        # Add evolution-based recommendations
+        if evolution_prediction["prediction"] == "escalating":
+            recommendations.append("Threats are escalating - increase monitoring frequency")
+            recommendations.append("Prepare for potential crisis response")
+        elif evolution_prediction["prediction"] == "diminishing":
+            recommendations.append("Threats are diminishing - continue standard monitoring")
+        
         if not recommendations:
             recommendations.append("Continue standard monitoring")
         
@@ -1589,6 +1972,7 @@ class AIAnalysisEngine:
             'total_analyses': len(analyses),
             'threat_counts': threat_counts,
             'average_sentiment': avg_sentiment,
+            'evolution_prediction': evolution_prediction,
             'recommendations': recommendations,
             'generated_at': datetime.now().isoformat()
         }
@@ -1596,7 +1980,7 @@ class AIAnalysisEngine:
         return report
     
     def create_keyword_frequency(self, texts):
-        """Create keyword frequency analysis"""
+        """Create enhanced keyword frequency analysis"""
         # Combine all texts and count word frequencies
         all_text = ' '.join(texts).lower()
         words = re.findall(r'\b\w+\b', all_text)
@@ -1614,13 +1998,21 @@ class AIAnalysisEngine:
         return dict(sorted_words)
     
     def create_threat_patterns(self, analyses):
-        """Create threat pattern analysis"""
+        """Create enhanced threat pattern analysis"""
         patterns = {
             'high_threat_keywords': Counter(),
             'medium_threat_keywords': Counter(),
             'low_threat_keywords': Counter(),
             'platform_distribution': Counter(),
-            'time_distribution': Counter()
+            'time_distribution': Counter(),
+            'sentiment_distribution': {'positive': 0, 'neutral': 0, 'negative': 0},
+            'context_patterns': {
+                'high_urgency': 0,
+                'high_reach': 0,
+                'influencer_involved': 0,
+                'competitor_mentioned': 0,
+                'product_mentioned': 0
+            }
         }
         
         for analysis in analyses:
@@ -1633,6 +2025,23 @@ class AIAnalysisEngine:
                 else:
                     patterns['low_threat_keywords'][keyword] += 1
             
+            # Count sentiment distribution
+            patterns['sentiment_distribution'][analysis['sentiment'][0]] += 1
+            
+            # Count context patterns
+            if 'context_analysis' in analysis:
+                context = analysis['context_analysis']
+                if context['urgency'] == 'high':
+                    patterns['context_patterns']['high_urgency'] += 1
+                if context['reach_potential'] == 'high':
+                    patterns['context_patterns']['high_reach'] += 1
+                if context['influencer_involved']:
+                    patterns['context_patterns']['influencer_involved'] += 1
+                if context['competitor_mentioned']:
+                    patterns['context_patterns']['competitor_mentioned'] += 1
+                if context['product_service_mentioned']:
+                    patterns['context_patterns']['product_mentioned'] += 1
+            
             # Simulate platform distribution
             platform = random.choice(['Twitter', 'Facebook', 'Instagram', 'Reddit', 'YouTube'])
             patterns['platform_distribution'][platform] += 1
@@ -1642,11 +2051,81 @@ class AIAnalysisEngine:
             patterns['time_distribution'][f"{hour:02d}:00"] += 1
         
         return patterns
+    
+    def identify_influencers(self, texts, brand_name, sector):
+        """Identify potential influencers mentioning the brand"""
+        influencers = []
+        
+        for text in texts:
+            # Simple influencer detection based on follower counts and engagement
+            if any(word in text.lower() for word in ['influencer', 'blogger', 'expert', 'analyst']):
+                # Simulate influencer data
+                influencer = {
+                    'name': f"Influencer_{random.randint(1000, 9999)}",
+                    'followers': random.randint(10000, 1000000),
+                    'engagement_rate': round(random.uniform(2.5, 15.0), 1),
+                    'category': random.choice(self.influencer_categories.get(sector, ['general'])),
+                    'sentiment': self.analyze_sentiment(text)[0],
+                    'last_mention': datetime.now().isoformat()
+                }
+                influencers.append(influencer)
+        
+        # Sort by engagement rate
+        influencers.sort(key=lambda x: x['engagement_rate'], reverse=True)
+        
+        return influencers[:10]  # Return top 10 influencers
+    
+    def analyze_competitive_landscape(self, texts, brand_name, sector):
+        """Analyze competitive landscape and brand positioning"""
+        competitive_data = {
+            'brand_mentions': 0,
+            'competitor_mentions': {},
+            'sentiment_comparison': {},
+            'market_position': 'unknown'
+        }
+        
+        # Count brand mentions
+        for text in texts:
+            if brand_name.lower() in text.lower():
+                competitive_data['brand_mentions'] += 1
+        
+        # Count competitor mentions
+        if sector in self.competitor_keywords:
+            for competitor in self.competitor_keywords[sector]:
+                count = sum(1 for text in texts if competitor.lower() in text.lower())
+                if count > 0:
+                    competitive_data['competitor_mentions'][competitor] = count
+                    
+                    # Analyze sentiment for competitor mentions
+                    competitor_texts = [text for text in texts if competitor.lower() in text.lower()]
+                    if competitor_texts:
+                        sentiment_scores = [self.analyze_sentiment(text)[1] for text in competitor_texts]
+                        avg_sentiment = sum(sentiment_scores) / len(sentiment_scores)
+                        competitive_data['sentiment_comparison'][competitor] = avg_sentiment
+        
+        # Determine market position
+        if competitive_data['brand_mentions'] > 0:
+            total_competitor_mentions = sum(competitive_data['competitor_mentions'].values())
+            if total_competitor_mentions > 0:
+                brand_share = competitive_data['brand_mentions'] / (competitive_data['brand_mentions'] + total_competitor_mentions)
+                
+                if brand_share > 0.5:
+                    competitive_data['market_position'] = 'leader'
+                elif brand_share > 0.3:
+                    competitive_data['market_position'] = 'strong'
+                elif brand_share > 0.15:
+                    competitive_data['market_position'] = 'moderate'
+                else:
+                    competitive_data['market_position'] = 'weak'
+            else:
+                competitive_data['market_position'] = 'dominant'
+        
+        return competitive_data
 
 # Initialize AI analysis engine
 ai_engine = AIAnalysisEngine()
 
-# Search Analysis System
+# Search Analysis System with Advanced Features
 class SearchAnalyzer:
     def __init__(self):
         self.threat_keywords = {
@@ -1656,7 +2135,7 @@ class SearchAnalyzer:
         }
     
     def analyze_search(self, query, brand_name):
-        """Analyze search query for threats"""
+        """Enhanced search analysis with contextual understanding"""
         query_lower = query.lower()
         brand_lower = brand_name.lower()
         
@@ -1678,7 +2157,9 @@ class SearchAnalyzer:
             'keywords_found': found_keywords,
             'timestamp': datetime.now().isoformat(),
             'analysis': self.generate_analysis(threat_level, found_keywords),
-            'recommendations': self.generate_recommendations(threat_level)
+            'recommendations': self.generate_recommendations(threat_level),
+            'search_intent': self.analyze_search_intent(query),
+            'related_queries': self.generate_related_queries(query, brand_name)
         }
         
         return results
@@ -1717,6 +2198,47 @@ class SearchAnalyzer:
             ]
         }
         return recommendations.get(threat_level, [])
+    
+    def analyze_search_intent(self, query):
+        """Analyze the intent behind the search query"""
+        query_lower = query.lower()
+        
+        intent_indicators = {
+            'informational': ['how', 'what', 'why', 'when', 'where', 'who', 'guide', 'tutorial', 'learn'],
+            'commercial': ['buy', 'price', 'cost', 'cheap', 'expensive', 'deal', 'discount', 'purchase'],
+            'navigational': ['website', 'official', 'login', 'sign in', 'contact', 'support'],
+            'transactional': ['order', 'book', 'reserve', 'subscribe', 'download', 'install'],
+            'investigational': ['scam', 'fraud', 'review', 'complaint', 'alternative', 'vs', 'compare']
+        }
+        
+        detected_intents = []
+        for intent, indicators in intent_indicators.items():
+            if any(indicator in query_lower for indicator in indicators):
+                detected_intents.append(intent)
+        
+        return detected_intents if detected_intents else ['general']
+    
+    def generate_related_queries(self, query, brand_name):
+        """Generate related search queries for deeper analysis"""
+        related_queries = []
+        
+        # Add brand-specific variations
+        related_queries.append(f"{brand_name} customer service")
+        related_queries.append(f"{brand_name} reviews")
+        related_queries.append(f"{brand_name} complaints")
+        related_queries.append(f"{brand_name} alternatives")
+        related_queries.append(f"{brand_name} vs competitors")
+        
+        # Add query-specific variations
+        if 'scam' in query.lower():
+            related_queries.append(f"is {brand_name} legitimate")
+            related_queries.append(f"{brand_name} fraud reports")
+        
+        if 'review' in query.lower():
+            related_queries.append(f"{brand_name} product reviews")
+            related_queries.append(f"{brand_name} service reviews")
+        
+        return related_queries[:5]  # Return top 5 related queries
 
 # Initialize search analyzer
 search_analyzer = SearchAnalyzer()
@@ -1876,6 +2398,213 @@ class AdvancedVisualizations:
             font=dict(color='white'),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        return fig
+    
+    def create_threat_prediction_chart(self, prediction_data, title):
+        """Create a chart showing threat evolution prediction"""
+        fig = go.Figure()
+        
+        # Create prediction timeline
+        days = list(range(1, 8))  # 7 days prediction
+        base_score = prediction_data['factors']['threat_score_trend']
+        
+        # Generate prediction line based on prediction type
+        if prediction_data['prediction'] == 'escalating':
+            prediction_scores = [base_score * (1 + 0.1 * i) for i in range(7)]
+        elif prediction_data['prediction'] == 'diminishing':
+            prediction_scores = [base_score * (1 - 0.1 * i) for i in range(7)]
+        else:  # stable
+            prediction_scores = [base_score for _ in range(7)]
+        
+        fig.add_trace(go.Scatter(
+            x=days,
+            y=prediction_scores,
+            mode='lines+markers',
+            name='Threat Prediction',
+            line=dict(color=self.colors['danger'], width=3),
+            marker=dict(size=8)
+        ))
+        
+        # Add confidence interval
+        confidence = prediction_data['confidence']
+        upper_bound = [min(1.0, score * (1 + (1 - confidence) * 0.5)) for score in prediction_scores]
+        lower_bound = [max(0.0, score * (1 - (1 - confidence) * 0.5)) for score in prediction_scores]
+        
+        fig.add_trace(go.Scatter(
+            x=days,
+            y=upper_bound,
+            mode='lines',
+            line=dict(width=0),
+            showlegend=False
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=days,
+            y=lower_bound,
+            mode='lines',
+            line=dict(width=0),
+            fillcolor='rgba(239, 68, 68, 0.2)',
+            fill='tonexty',
+            name='Confidence Interval',
+            showlegend=True
+        ))
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            xaxis_title='Days Ahead',
+            yaxis_title='Predicted Threat Score',
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+            yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
+        )
+        
+        return fig
+    
+    def create_influencer_network_chart(self, influencers, title):
+        """Create a network chart showing influencer relationships"""
+        fig = go.Figure()
+        
+        # Create nodes for influencers
+        node_x = []
+        node_y = []
+        node_text = []
+        node_size = []
+        node_color = []
+        
+        # Central brand node
+        node_x.append(0)
+        node_y.append(0)
+        node_text.append("Brand")
+        node_size.append(30)
+        node_color.append(self.colors['primary'])
+        
+        # Add influencer nodes in a circular pattern
+        for i, influencer in enumerate(influencers):
+            angle = 2 * math.pi * i / len(influencers)
+            radius = 1.5
+            x = radius * math.cos(angle)
+            y = radius * math.sin(angle)
+            
+            node_x.append(x)
+            node_y.append(y)
+            node_text.append(influencer['name'])
+            node_size.append(15 + influencer['engagement_rate'])
+            
+            # Color based on sentiment
+            if influencer['sentiment'] == 'positive':
+                node_color.append(self.colors['success'])
+            elif influencer['sentiment'] == 'negative':
+                node_color.append(self.colors['danger'])
+            else:
+                node_color.append(self.colors['warning'])
+        
+        # Create edges (connections from brand to influencers)
+        edge_x = []
+        edge_y = []
+        
+        for i in range(1, len(node_x)):
+            edge_x.extend([0, node_x[i], None])
+            edge_y.extend([0, node_y[i], None])
+        
+        # Add edges to the plot
+        fig.add_trace(go.Scatter(
+            x=edge_x,
+            y=edge_y,
+            mode='lines',
+            line=dict(width=1, color='rgba(255, 255, 255, 0.3)'),
+            showlegend=False
+        ))
+        
+        # Add nodes to the plot
+        fig.add_trace(go.Scatter(
+            x=node_x,
+            y=node_y,
+            mode='markers+text',
+            text=node_text,
+            textposition="middle center",
+            marker=dict(
+                size=node_size,
+                color=node_color,
+                line=dict(width=1, color='white')
+            ),
+            showlegend=False
+        ))
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+            showlegend=False
+        )
+        
+        return fig
+    
+    def create_competitive_analysis_chart(self, competitive_data, title):
+        """Create a competitive analysis chart"""
+        fig = go.Figure()
+        
+        # Extract brand and competitor data
+        brands = [st.session_state.get('brand_name', 'Your Brand')]
+        mentions = [competitive_data['brand_mentions']]
+        sentiments = [0.7]  # Default positive sentiment for brand
+        
+        # Add competitor data
+        for competitor, data in competitive_data['competitor_mentions'].items():
+            brands.append(competitor.capitalize())
+            mentions.append(data)
+            sentiments.append(competitive_data['sentiment_comparison'].get(competitor, 0.5))
+        
+        # Create bar chart for mentions
+        fig.add_trace(go.Bar(
+            x=brands,
+            y=mentions,
+            name='Mentions',
+            marker_color=self.colors['primary']
+        ))
+        
+        # Create line chart for sentiment
+        fig.add_trace(go.Scatter(
+            x=brands,
+            y=sentiments,
+            mode='lines+markers',
+            name='Sentiment Score',
+            yaxis='y2',
+            line=dict(color=self.colors['success'], width=3),
+            marker=dict(size=8)
+        ))
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            xaxis_title='Brands',
+            yaxis=dict(
+                title='Mentions',
+                titlefont=dict(color=self.colors['primary']),
+                tickfont=dict(color=self.colors['primary'])
+            ),
+            yaxis2=dict(
+                title='Sentiment Score',
+                titlefont=dict(color=self.colors['success']),
+                tickfont=dict(color=self.colors['success']),
+                anchor='x',
+                overlaying='y',
+                side='right'
+            ),
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+            yaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+            yaxis2=dict(gridcolor='rgba(255,255,255,0.1)')
         )
         
         return fig
@@ -2130,7 +2859,7 @@ def show_advanced_threat_analysis():
         show_quick_actions()
 
 def show_threat_dashboard():
-    """Threat monitoring dashboard"""
+    """Threat monitoring dashboard with advanced features"""
     st.subheader("🛡️ Real-time Threat Dashboard")
     
     # Create metrics with custom styling
@@ -2245,7 +2974,7 @@ def generate_similar_threats(results):
     return threats
 
 def show_search_analysis():
-    """Search analysis functionality"""
+    """Search analysis functionality with advanced features"""
     st.subheader("🔍 Advanced Search Analysis")
     
     col1, col2 = st.columns([2, 1])
@@ -2337,6 +3066,26 @@ def show_search_analysis():
             </div>
             """, unsafe_allow_html=True)
         
+        # Advanced features - Search Intent
+        st.subheader("🎯 Search Intent Analysis")
+        st.markdown(f"""
+        <div class="ai-feature-card">
+            <h4>Detected Intent(s)</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                {''.join([f'<span class="insight-tag">{intent}</span>' for intent in results['search_intent']])}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Related queries
+        st.subheader("🔗 Related Search Queries")
+        for query in results['related_queries']:
+            st.markdown(f"""
+            <div class="search-result-card">
+                <p>{query}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        
         # Similar threat examples
         st.subheader("🔍 Similar Threat Patterns")
         similar_threats = generate_similar_threats(results)
@@ -2349,7 +3098,7 @@ def show_search_analysis():
             """, unsafe_allow_html=True)
 
 def show_trend_analysis():
-    """Trend analysis functionality"""
+    """Trend analysis functionality with advanced features"""
     st.subheader("📈 Threat Trend Analysis")
     
     # Generate trend data with valid dates
@@ -2469,7 +3218,6 @@ def show_trend_analysis():
         yaxis_title='Sentiment Score',
         font=dict(color='white'),
         paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
         yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
     )
@@ -2952,6 +3700,241 @@ def show_ai_insights():
             ''.join([f'<p>• {platform}: {count}</p>' for platform, count in patterns['platform_distribution'].most_common()])
         ), unsafe_allow_html=True)
 
+# New advanced features functions
+def show_crisis_prediction():
+    """Crisis prediction functionality"""
+    st.header("🛡️ Crisis Prediction System")
+    
+    # Generate sample prediction data
+    prediction_data = {
+        "prediction": "escalating",
+        "confidence": 0.75,
+        "factors": {
+            "sentiment_trend": 0.25,
+            "threat_score_trend": 0.3,
+            "high_threat_count": 8,
+            "medium_threat_count": 5
+        }
+    }
+    
+    # Display prediction
+    st.subheader("🔮 Threat Evolution Prediction")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown(f"""
+        <div class="ai-feature-card">
+            <h4>Prediction</h4>
+            <div style="font-size: 2rem; margin: 10px 0;">
+                {prediction_data["prediction"].upper()}
+            </div>
+            <p>Confidence: {prediction_data["confidence"]*100:.1f}%</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown(f"""
+        <div class="ai-feature-card">
+            <h4>Key Factors</h4>
+            <p>Sentiment Trend: {prediction_data["factors"]["sentiment_trend"]:.2f}</p>
+            <p>Threat Score Trend: {prediction_data["factors"]["threat_score_trend"]:.2f}</p>
+            <p>High Threats: {prediction_data["factors"]["high_threat_count"]}</p>
+            <p>Medium Threats: {prediction_data["factors"]["medium_threat_count"]}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Create prediction chart
+    fig = viz.create_threat_prediction_chart(prediction_data, "7-Day Threat Evolution Prediction")
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Prediction explanation
+    st.subheader("📝 Prediction Analysis")
+    
+    if prediction_data["prediction"] == "escalating":
+        st.warning("⚠️ Threats are predicted to escalate over the next 7 days")
+        st.info("Recommended actions: Increase monitoring frequency, prepare crisis response team")
+    elif prediction_data["prediction"] == "diminishing":
+        st.success("✅ Threats are predicted to diminish over the next 7 days")
+        st.info("Recommended actions: Continue standard monitoring, document lessons learned")
+    else:
+        st.info("ℹ️ Threats are predicted to remain stable over the next 7 days")
+        st.info("Recommended actions: Maintain current monitoring level")
+
+def show_influencer_network():
+    """Influencer network analysis"""
+    st.header("🌟 Influencer Network Analysis")
+    
+    # Generate sample influencer data
+    brand_name = st.session_state.get('brand_name', 'Your Brand')
+    sector = st.session_state.get('sector', 'technology')
+    
+    texts = [
+        f"Influencer review of {brand_name} product",
+        f"Tech expert discusses {brand_name} vs competitors",
+        f"Blogger shares experience with {brand_name} service"
+    ]
+    
+    influencers = ai_engine.identify_influencers(texts, brand_name, sector)
+    
+    # Display influencer network chart
+    st.subheader("🕸️ Influencer Network Visualization")
+    
+    fig = viz.create_influencer_network_chart(influencers, "Brand Influencer Network")
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Display influencer details
+    st.subheader("👥 Key Influencers")
+    
+    for influencer in influencers:
+        sentiment_color = "#10B981" if influencer['sentiment'] == 'positive' else "#EF4444" if influencer['sentiment'] == 'negative' else "#F59E0B"
+        
+        st.markdown(f"""
+        <div class="influencer-card">
+            <div class="influencer-avatar">👤</div>
+            <div class="influencer-info">
+                <div class="influencer-name">{influencer['name']}</div>
+                <div class="influencer-stats">
+                    {influencer['followers']:,} followers • {influencer['engagement_rate']}% engagement • {influencer['category']}
+                </div>
+                <div style="color: {sentiment_color}; font-weight: 600; margin-top: 5px;">
+                    Sentiment: {influencer['sentiment'].upper()}
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+def show_competitive_intelligence():
+    """Competitive intelligence analysis"""
+    st.header("🥊 Competitive Intelligence")
+    
+    # Generate sample competitive data
+    brand_name = st.session_state.get('brand_name', 'Your Brand')
+    sector = st.session_state.get('sector', 'technology')
+    
+    texts = [
+        f"{brand_name} vs competitor comparison",
+        f"Customer review comparing {brand_name} to alternatives",
+        f"Market analysis of {brand_name} position"
+    ]
+    
+    competitive_data = ai_engine.analyze_competitive_landscape(texts, brand_name, sector)
+    
+    # Display competitive analysis chart
+    st.subheader("📊 Competitive Landscape")
+    
+    fig = viz.create_competitive_analysis_chart(competitive_data, "Brand vs Competitors")
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Display competitive insights
+    st.subheader("🧠 Competitive Insights")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown(f"""
+        <div class="ai-feature-card">
+            <h4>Market Position</h4>
+            <div style="font-size: 1.5rem; margin: 10px 0; font-weight: bold; color: #FFD700;">
+                {competitive_data['market_position'].upper()}
+            </div>
+            <p>Brand Mentions: {competitive_data['brand_mentions']}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown(f"""
+        <div class="ai-feature-card">
+            <h4>Competitor Activity</h4>
+            {''.join([f'<p>• {comp}: {count} mentions</p>' for comp, count in competitive_data['competitor_mentions'].items()])}
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Competitor sentiment comparison
+    st.subheader("😊 Sentiment Comparison")
+    
+    for competitor, sentiment in competitive_data['sentiment_comparison'].items():
+        sentiment_color = "#10B981" if sentiment > 0.6 else "#EF4444" if sentiment < 0.4 else "#F59E0B"
+        
+        st.markdown(f"""
+        <div class="competitor-bar">
+            <div class="competitor-fill" style="width: {sentiment*100}%; background: linear-gradient(90deg, {sentiment_color}, {sentiment_color}dd);"></div>
+            <div class="competitor-label">{competitor.capitalize()}: {sentiment*100:.0f}% positive</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+def show_brand_health():
+    """Brand health monitoring"""
+    st.header("❤️ Brand Health Monitor")
+    
+    # Generate brand health metrics
+    health_metrics = [
+        {"name": "Brand Awareness", "value": 78, "status": "good"},
+        {"name": "Customer Sentiment", "value": 65, "status": "warning"},
+        {"name": "Market Share", "value": 42, "status": "warning"},
+        {"name": "Social Engagement", "value": 85, "status": "good"},
+        {"name": "Crisis Resilience", "value": 92, "status": "good"}
+    ]
+    
+    # Display health metrics
+    st.subheader("📊 Health Metrics")
+    
+    for metric in health_metrics:
+        status_class = f"health-{metric['status']}"
+        
+        st.markdown(f"""
+        <div class="health-metric">
+            <div class="health-icon">📊</div>
+            <div style="flex: 1;">
+                <div style="font-weight: 600; margin-bottom: 5px;">{metric['name']}</div>
+                <div class="health-bar">
+                    <div class="health-fill {status_class}" style="width: {metric['value']}%;"></div>
+                </div>
+                <div style="margin-top: 5px; font-size: 0.9rem;">
+                    Score: {metric['value']}/100
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Overall health assessment
+    st.subheader("🏥 Overall Health Assessment")
+    
+    average_score = sum(m['value'] for m in health_metrics) / len(health_metrics)
+    
+    if average_score > 75:
+        health_status = "Excellent"
+        status_color = "#10B981"
+        recommendations = ["Maintain current strategies", "Continue monitoring key metrics"]
+    elif average_score > 60:
+        health_status = "Good"
+        status_color = "#F59E0B"
+        recommendations = ["Focus on improving weaker metrics", "Consider targeted campaigns"]
+    else:
+        health_status = "Needs Attention"
+        status_color = "#EF4444"
+        recommendations = ["Immediate action required", "Develop comprehensive improvement plan"]
+    
+    st.markdown(f"""
+    <div class="ai-feature-card">
+        <h4>Overall Brand Health</h4>
+        <div style="font-size: 2rem; margin: 10px 0; font-weight: bold; color: {status_color};">
+            {health_status}
+        </div>
+        <p>Average Score: {average_score:.1f}/100</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Recommendations
+    st.subheader("💡 Recommendations")
+    
+    for rec in recommendations:
+        st.markdown(f"""
+        <div class="search-result-card">
+            <p>• {rec}</p>
+        </div>
+        """, unsafe_allow_html=True)
+
 def main():
     # Add animated particles
     add_particles()
@@ -3056,7 +4039,7 @@ def main():
     
     # Different navigation based on user role
     if st.session_state.get('user_access_level') == 'admin':
-        # Admin navigation
+        # Admin navigation with advanced features
         tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
             "📊 Executive Dashboard", 
             "🔍 Advanced Threat Analysis",
@@ -3083,12 +4066,17 @@ def main():
                     st.write(post['content'])
                     st.caption(f"Engagement: {post['engagement']}")
         
-        # Other tabs
-        for tab, title in [(tab4, "Competitive Intelligence"), (tab5, "Influencer Network"), 
-                          (tab6, "Crisis Prediction"), (tab7, "Brand Health")]:
-            with tab:
-                st.header(title)
-                st.write(f"{title} content...")
+        with tab4:
+            show_competitive_intelligence()
+        
+        with tab5:
+            show_influencer_network()
+        
+        with tab6:
+            show_crisis_prediction()
+        
+        with tab7:
+            show_brand_health()
         
         with tab8:
             show_api_key_management()
