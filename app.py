@@ -228,6 +228,12 @@ st.markdown("""
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
     
+    .threat-critical {
+        background: linear-gradient(135deg, rgba(139, 0, 0, 0.5), rgba(139, 0, 0, 0.2));
+        color: #FF0000;
+        border: 1px solid rgba(255, 0, 0, 0.7);
+    }
+    
     .threat-high {
         background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.1));
         color: #FF0000;
@@ -1564,85 +1570,281 @@ class AIAnalysisEngine:
         
         return patterns
 
-# Initialize AI analysis engine
-ai_engine = AIAnalysisEngine()
-
-# Search Analysis System
-class SearchAnalyzer:
+# Enhanced AI Analysis Engine Extensions
+class EnhancedAIAnalysisEngine(AIAnalysisEngine):
     def __init__(self):
-        self.threat_keywords = {
-            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
-            'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed'],
-            'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
+        super().__init__()
+        # Extended threat categories
+        self.extended_threat_keywords = {
+            'critical': ['data breach', 'security flaw', 'vulnerability', 'exploit', 'hack', 'cyberattack'],
+            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime', 'phishing', 'counterfeit'],
+            'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed', 'poor', 'broken'],
+            'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience', 'question', 'info'],
+            'positive': ['excellent', 'amazing', 'love', 'best', 'perfect', 'outstanding', 'recommend']
+        }
+        
+        # Brand-specific patterns
+        self.brand_patterns = {
+            'impersonation': ['fake', 'scam', 'not real', 'imposter', 'phishing'],
+            'product_issues': ['defective', 'broken', 'malfunction', 'faulty', 'poor quality'],
+            'service_complaints': ['rude', 'unhelpful', 'slow', 'delayed', 'cancelled'],
+            'pricing_issues': ['overpriced', 'ripoff', 'expensive', 'not worth', 'waste of money'],
+            'legal_concerns': ['lawsuit', 'sue', 'legal action', 'court', 'attorney']
+        }
+        
+        # Contextual sentiment indicators
+        self.contextual_sentiment = {
+            'negation_words': ['not', 'no', 'never', 'none', 'nothing', 'nobody', 'nowhere', 'neither', 'nor'],
+            'intensifiers': ['very', 'extremely', 'really', 'absolutely', 'completely', 'totally', 'utterly'],
+            'diminishers': ['slightly', 'somewhat', 'a bit', 'little', 'barely', 'hardly']
         }
     
-    def analyze_search(self, query, brand_name):
-        """Analyze search query for threats"""
-        query_lower = query.lower()
+    def advanced_sentiment_analysis(self, text):
+        """Enhanced sentiment analysis with contextual understanding"""
+        # Basic sentiment analysis
+        sentiment, score = self.analyze_sentiment(text)
+        
+        # Contextual analysis
+        words = text.lower().split()
+        negation_detected = any(word in self.contextual_sentiment['negation_words'] for word in words)
+        intensifier_detected = any(word in self.contextual_sentiment['intensifiers'] for word in words)
+        diminisher_detected = any(word in self.contextual_sentiment['diminishers'] for word in words)
+        
+        # Adjust score based on context
+        if negation_detected:
+            score = 1.0 - score  # Flip sentiment
+            sentiment = 'negative' if sentiment == 'positive' else 'positive' if sentiment == 'negative' else 'neutral'
+        
+        if intensifier_detected:
+            score = min(1.0, score * 1.3)  # Increase intensity
+        
+        if diminisher_detected:
+            score = max(0.0, score * 0.7)  # Decrease intensity
+        
+        # Emotion detection
+        emotions = self.detect_emotions(text)
+        
+        return {
+            'sentiment': sentiment,
+            'score': score,
+            'confidence': min(1.0, abs(score - 0.5) * 2),
+            'emotions': emotions,
+            'contextual_factors': {
+                'negation': negation_detected,
+                'intensified': intensifier_detected,
+                'diminished': diminisher_detected
+            }
+        }
+    
+    def detect_emotions(self, text):
+        """Detect emotions in text"""
+        emotion_keywords = {
+            'anger': ['angry', 'furious', 'mad', 'irate', 'outraged', 'annoyed', 'frustrated'],
+            'fear': ['afraid', 'scared', 'terrified', 'worried', 'anxious', 'nervous'],
+            'joy': ['happy', 'excited', 'delighted', 'pleased', 'thrilled', 'ecstatic'],
+            'sadness': ['sad', 'unhappy', 'depressed', 'disappointed', 'upset', 'miserable'],
+            'surprise': ['surprised', 'shocked', 'amazed', 'astonished', 'stunned'],
+            'disgust': ['disgusted', 'revolted', 'sickened', 'repulsed', 'appalled']
+        }
+        
+        text_lower = text.lower()
+        detected_emotions = {}
+        
+        for emotion, keywords in emotion_keywords.items():
+            count = sum(1 for keyword in keywords if keyword in text_lower)
+            if count > 0:
+                detected_emotions[emotion] = min(1.0, count / 2)  # Normalize to 0-1
+        
+        return detected_emotions
+    
+    def enhanced_threat_detection(self, text, brand_name):
+        """Enhanced threat detection with pattern recognition"""
+        text_lower = text.lower()
         brand_lower = brand_name.lower()
         
-        # Detect threat level
-        threat_level = "low"
-        found_keywords = []
+        # Basic threat detection
+        basic_result = self.detect_threats(text, brand_name)
         
-        for level, keywords in self.threat_keywords.items():
+        # Extended threat level detection
+        extended_threat_level = "low"
+        extended_threat_score = 0.0
+        extended_keywords = []
+        
+        for level, keywords in self.extended_threat_keywords.items():
             for keyword in keywords:
-                if keyword in query_lower:
-                    threat_level = level
-                    found_keywords.append(keyword)
+                if keyword in text_lower:
+                    if level == "critical":
+                        extended_threat_score += 0.5
+                    elif level == "high":
+                        extended_threat_score += 0.3
+                    elif level == "medium":
+                        extended_threat_score += 0.2
+                    elif level == "low":
+                        extended_threat_score += 0.1
+                    elif level == "positive":
+                        extended_threat_score -= 0.1  # Positive keywords reduce threat
+                    extended_keywords.append(keyword)
         
-        # Generate analysis results
-        results = {
-            'query': query,
-            'brand': brand_name,
-            'threat_level': threat_level,
-            'keywords_found': found_keywords,
-            'timestamp': datetime.now().isoformat(),
-            'analysis': self.generate_analysis(threat_level, found_keywords),
-            'recommendations': self.generate_recommendations(threat_level)
+        # Brand pattern detection
+        detected_patterns = {}
+        for pattern, keywords in self.brand_patterns.items():
+            pattern_count = sum(1 for keyword in keywords if keyword in text_lower)
+            if pattern_count > 0:
+                detected_patterns[pattern] = pattern_count
+                # Adjust threat score based on pattern
+                if pattern in ['impersonation', 'legal_concerns']:
+                    extended_threat_score += 0.2
+                elif pattern in ['product_issues', 'service_complaints']:
+                    extended_threat_score += 0.15
+                elif pattern == 'pricing_issues':
+                    extended_threat_score += 0.1
+        
+        # Determine final threat level
+        if extended_threat_score >= 0.5:
+            extended_threat_level = "critical"
+        elif extended_threat_score >= 0.3:
+            extended_threat_level = "high"
+        elif extended_threat_score >= 0.1:
+            extended_threat_level = "medium"
+        
+        # Combine with basic analysis
+        threat_level_priority = {"critical": 5, "high": 4, "medium": 3, "low": 2}
+        final_threat_level = max(
+            basic_result['threat_level'], 
+            extended_threat_level, 
+            key=lambda x: threat_level_priority[x]
+        )
+        
+        # Advanced sentiment analysis
+        sentiment_analysis = self.advanced_sentiment_analysis(text)
+        
+        # Generate enhanced results
+        enhanced_result = {
+            **basic_result,
+            'extended_threat_level': extended_threat_level,
+            'extended_threat_score': min(1.0, extended_threat_score),
+            'extended_keywords': extended_keywords,
+            'detected_patterns': detected_patterns,
+            'final_threat_level': final_threat_level,
+            'sentiment_analysis': sentiment_analysis,
+            'risk_score': self.calculate_risk_score(extended_threat_score, sentiment_analysis['score']),
+            'urgency_level': self.calculate_urgency(final_threat_level, detected_patterns),
+            'recommended_actions': self.generate_action_recommendations(final_threat_level, detected_patterns)
         }
         
-        return results
+        return enhanced_result
     
-    def generate_analysis(self, threat_level, keywords):
-        """Generate analysis text based on threat level"""
-        analyses = {
-            'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
-            'medium': "⚠️ Medium threat level. Potential brand reputation issues detected. Monitor closely and consider proactive engagement.",
-            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended."
-        }
-        return analyses.get(threat_level, "Analysis completed.")
+    def calculate_risk_score(self, threat_score, sentiment_score):
+        """Calculate overall risk score (0-1)"""
+        # Risk is higher when threat is high and sentiment is negative
+        sentiment_risk = 1.0 - sentiment_score if sentiment_score < 0.5 else 0
+        combined_risk = (threat_score * 0.7) + (sentiment_risk * 0.3)
+        return min(1.0, combined_risk)
     
-    def generate_recommendations(self, threat_level):
-        """Generate recommendations based on threat level"""
-        recommendations = {
-            'high': [
-                "Immediate crisis management protocol activation",
-                "Legal team notification",
-                "Press statement preparation",
-                "Social media monitoring escalation",
-                "Executive team alert"
-            ],
-            'medium': [
-                "Enhanced monitoring of mentioned platforms",
-                "Customer service team notification",
-                "Response template preparation",
-                "Competitive analysis update",
-                "Weekly review scheduling"
-            ],
-            'low': [
-                "Continue standard monitoring",
-                "Track sentiment trends",
-                "Update brand health metrics",
-                "Monthly review scheduling"
-            ]
+    def calculate_urgency(self, threat_level, patterns):
+        """Calculate urgency level (1-5)"""
+        urgency_map = {
+            "critical": 5,
+            "high": 4,
+            "medium": 3,
+            "low": 2
         }
-        return recommendations.get(threat_level, [])
+        
+        base_urgency = urgency_map.get(threat_level, 1)
+        
+        # Increase urgency for certain patterns
+        if any(pattern in patterns for pattern in ['impersonation', 'legal_concerns']):
+            base_urgency = min(5, base_urgency + 1)
+        
+        return base_urgency
+    
+    def generate_action_recommendations(self, threat_level, patterns):
+        """Generate specific action recommendations"""
+        recommendations = []
+        
+        # Base recommendations by threat level
+        if threat_level == "critical":
+            recommendations.extend([
+                "IMMEDIATE: Activate crisis response team",
+                "IMMEDIATE: Legal team notification required",
+                "IMMEDIATE: Prepare public statement",
+                "HIGH: Monitor all channels 24/7",
+                "HIGH: Executive team briefing"
+            ])
+        elif threat_level == "high":
+            recommendations.extend([
+                "HIGH: Escalate to senior management",
+                "HIGH: Prepare response within 2 hours",
+                "MEDIUM: Increase monitoring frequency",
+                "MEDIUM: Customer service team alert"
+            ])
+        elif threat_level == "medium":
+            recommendations.extend([
+                "MEDIUM: Standard response protocol",
+                "MEDIUM: Track for escalation",
+                "LOW: Weekly review inclusion"
+            ])
+        
+        # Pattern-specific recommendations
+        if "impersonation" in patterns:
+            recommendations.append("HIGH: Report impersonation to platform")
+            recommendations.append("MEDIUM: Issue customer warning")
+        
+        if "legal_concerns" in patterns:
+            recommendations.append("HIGH: Legal department consultation")
+            recommendations.append("MEDIUM: Preserve all evidence")
+        
+        if "product_issues" in patterns:
+            recommendations.append("MEDIUM: Product team notification")
+            recommendations.append("LOW: Quality assurance review")
+        
+        return recommendations[:5]  # Return top 5 recommendations
+    
+    def predict_threat_trend(self, historical_data):
+        """Predict threat trends based on historical data"""
+        if len(historical_data) < 3:
+            return {"trend": "insufficient_data", "confidence": 0}
+        
+        # Simple trend analysis
+        recent_threats = historical_data[-7:]  # Last 7 days
+        older_threats = historical_data[-14:-7]  # Previous 7 days
+        
+        recent_avg = sum(recent_threats) / len(recent_threats)
+        older_avg = sum(older_threats) / len(older_threats)
+        
+        change_percent = ((recent_avg - older_avg) / older_avg) * 100 if older_avg > 0 else 0
+        
+        if change_percent > 20:
+            trend = "increasing"
+            confidence = min(0.9, abs(change_percent) / 50)
+        elif change_percent < -20:
+            trend = "decreasing"
+            confidence = min(0.9, abs(change_percent) / 50)
+        else:
+            trend = "stable"
+            confidence = 0.7
+        
+        # Predict next week
+        if trend == "increasing":
+            predicted_next = recent_avg * (1 + (change_percent / 100))
+        elif trend == "decreasing":
+            predicted_next = recent_avg * (1 - (abs(change_percent) / 100))
+        else:
+            predicted_next = recent_avg
+        
+        return {
+            "trend": trend,
+            "confidence": confidence,
+            "change_percent": change_percent,
+            "current_average": recent_avg,
+            "predicted_next_week": max(0, predicted_next)
+        }
 
-# Initialize search analyzer
-search_analyzer = SearchAnalyzer()
+# Initialize AI analysis engines
+ai_engine = AIAnalysisEngine()
+enhanced_ai_engine = EnhancedAIAnalysisEngine()
 
-# Advanced Data Visualization
+# Enhanced Visualizations
 class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
@@ -1801,8 +2003,131 @@ class AdvancedVisualizations:
         
         return fig
 
+# Enhanced Visualizations
+class EnhancedVisualizations(AdvancedVisualizations):
+    def __init__(self):
+        super().__init__()
+    
+    def create_emotion_heatmap(self, emotion_data, title):
+        """Create emotion heatmap"""
+        emotions = list(emotion_data.keys())
+        values = list(emotion_data.values())
+        
+        fig = go.Figure(data=go.Heatmap(
+            z=[values],
+            x=emotions,
+            y=['Emotion Intensity'],
+            colorscale='RdYlBu_r',
+            showscale=True
+        ))
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        return fig
+    
+    def create_risk_gauge(self, risk_score, title):
+        """Create risk gauge chart"""
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number+delta",
+            value=risk_score * 100,
+            domain={'x': [0, 1], 'y': [0, 1]},
+            title={'text': title},
+            delta={'reference': 50},
+            gauge={
+                'axis': {'range': [None, 100]},
+                'bar': {'color': "#FFD700"},
+                'steps': [
+                    {'range': [0, 30], 'color': "#10B981"},
+                    {'range': [30, 70], 'color': "#F59E0B"},
+                    {'range': [70, 100], 'color': "#EF4444"}
+                ],
+                'threshold': {
+                    'line': {'color': "red", 'width': 4},
+                    'thickness': 0.75,
+                    'value': 90
+                }
+            }
+        ))
+        
+        fig.update_layout(
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)'
+        )
+        
+        return fig
+    
+    def create_prediction_chart(self, historical_data, prediction, title):
+        """Create trend prediction chart"""
+        dates = pd.date_range(end=datetime.now(), periods=len(historical_data))
+        future_dates = pd.date_range(start=datetime.now(), periods=8)[1:]  # Next 7 days
+        
+        fig = go.Figure()
+        
+        # Historical data
+        fig.add_trace(go.Scatter(
+            x=dates,
+            y=historical_data,
+            mode='lines+markers',
+            name='Historical',
+            line=dict(color=self.colors['primary'], width=3),
+            marker=dict(size=8)
+        ))
+        
+        # Prediction
+        fig.add_trace(go.Scatter(
+            x=future_dates,
+            y=[prediction['predicted_next_week']] * 7,
+            mode='lines',
+            name='Prediction',
+            line=dict(color=self.colors['warning'], width=3, dash='dash')
+        ))
+        
+        # Confidence interval
+        confidence_upper = prediction['predicted_next_week'] * (1 + (1 - prediction['confidence']))
+        confidence_lower = prediction['predicted_next_week'] * (1 - (1 - prediction['confidence']))
+        
+        fig.add_trace(go.Scatter(
+            x=future_dates,
+            y=[confidence_upper] * 7,
+            mode='lines',
+            line=dict(width=0),
+            showlegend=False
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=future_dates,
+            y=[confidence_lower] * 7,
+            mode='lines',
+            line=dict(width=0),
+            fillcolor='rgba(245, 158, 11, 0.2)',
+            fill='tonexty',
+            name='Confidence Interval'
+        ))
+        
+        fig.update_layout(
+            title=title,
+            title_x=0.5,
+            xaxis_title='Date',
+            yaxis_title='Threat Count',
+            font=dict(color='white'),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+            yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
+        )
+        
+        return fig
+
 # Initialize visualizations
 viz = AdvancedVisualizations()
+enhanced_viz = EnhancedVisualizations()
 
 # User registration and management functions
 def show_user_registration():
@@ -2631,6 +2956,81 @@ class EnhancedSocialMediaMonitor:
 # Initialize
 enhanced_monitor = EnhancedSocialMediaMonitor()
 
+# Search Analysis System
+class SearchAnalyzer:
+    def __init__(self):
+        self.threat_keywords = {
+            'high': ['scam', 'fraud', 'lawsuit', 'bankruptcy', 'fake', 'illegal', 'sue', 'crime'],
+            'medium': ['complaint', 'problem', 'issue', 'bad', 'terrible', 'awful', 'disappointed'],
+            'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
+        }
+    
+    def analyze_search(self, query, brand_name):
+        """Analyze search query for threats"""
+        query_lower = query.lower()
+        brand_lower = brand_name.lower()
+        
+        # Detect threat level
+        threat_level = "low"
+        found_keywords = []
+        
+        for level, keywords in self.threat_keywords.items():
+            for keyword in keywords:
+                if keyword in query_lower:
+                    threat_level = level
+                    found_keywords.append(keyword)
+        
+        # Generate analysis results
+        results = {
+            'query': query,
+            'brand': brand_name,
+            'threat_level': threat_level,
+            'keywords_found': found_keywords,
+            'timestamp': datetime.now().isoformat(),
+            'analysis': self.generate_analysis(threat_level, found_keywords),
+            'recommendations': self.generate_recommendations(threat_level)
+        }
+        
+        return results
+    
+    def generate_analysis(self, threat_level, keywords):
+        """Generate analysis text based on threat level"""
+        analyses = {
+            'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
+            'medium': "⚠️ Medium threat level. Potential brand reputation issues detected. Monitor closely and consider proactive engagement.",
+            'low': "✅ Low threat level. General brand mentions detected. Standard monitoring recommended."
+        }
+        return analyses.get(threat_level, "Analysis completed.")
+    
+    def generate_recommendations(self, threat_level):
+        """Generate recommendations based on threat level"""
+        recommendations = {
+            'high': [
+                "Immediate crisis management protocol activation",
+                "Legal team notification",
+                "Press statement preparation",
+                "Social media monitoring escalation",
+                "Executive team alert"
+            ],
+            'medium': [
+                "Enhanced monitoring of mentioned platforms",
+                "Customer service team notification",
+                "Response template preparation",
+                "Competitive analysis update",
+                "Weekly review scheduling"
+            ],
+            'low': [
+                "Continue standard monitoring",
+                "Track sentiment trends",
+                "Update brand health metrics",
+                "Monthly review scheduling"
+            ]
+        }
+        return recommendations.get(threat_level, [])
+
+# Initialize search analyzer
+search_analyzer = SearchAnalyzer()
+
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
     st.header("🤖 BrandGuardian AI Dashboard")
@@ -2696,7 +3096,8 @@ def show_user_ai_dashboard():
         available_tabs.append("AI Insights")
     
     if auth_system.check_subscription_feature(username, "real_time_monitoring"):
-        available_tabs.append("Advanced Threat Analysis")
+        available_tabs.append("Enhanced AI Analysis")
+        available_tabs.append("Predictive Analytics")
     
     # Create the tab navigation
     tabs = st.tabs([f"🔍 {tab}" for tab in available_tabs])
@@ -2710,8 +3111,10 @@ def show_user_ai_dashboard():
                 show_social_monitoring()
             elif tab_name == "AI Insights":
                 show_ai_insights()
-            elif tab_name == "Advanced Threat Analysis":
-                show_advanced_threat_analysis()
+            elif tab_name == "Enhanced AI Analysis":
+                show_enhanced_threat_analysis()
+            elif tab_name == "Predictive Analytics":
+                show_predictive_analytics()
     
     # Subscription upgrade section
     st.markdown("---")
@@ -2873,6 +3276,307 @@ def show_ai_insights():
             ''.join([f'<p>• {platform}: {count}</p>' for platform, count in patterns['platform_distribution'].most_common()])
         ), unsafe_allow_html=True)
 
+# Add enhanced threat analysis function
+def show_enhanced_threat_analysis():
+    """Show enhanced threat analysis with new features"""
+    st.header("🧠 Enhanced AI Threat Analysis")
+    
+    # Input section
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        text_to_analyze = st.text_area(
+            "Enter text to analyze:",
+            height=150,
+            placeholder="Enter social media posts, reviews, comments, or any text related to your brand...",
+            help="The AI will analyze this text for threats, sentiment, emotions, and patterns"
+        )
+        
+        brand_name = st.text_input(
+            "Brand Name:",
+            value=st.session_state.get('brand_name', 'Your Brand'),
+            help="Enter your brand name for accurate analysis"
+        )
+    
+    with col2:
+        st.markdown("""
+        <div class="search-analysis-card">
+            <h4>🔍 Analysis Features</h4>
+            <p>• Advanced threat detection</p>
+            <p>• Contextual sentiment</p>
+            <p>• Emotion recognition</p>
+            <p>• Pattern identification</p>
+            <p>• Risk scoring</p>
+            <p>• Action recommendations</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    if st.button("🚀 Analyze with Enhanced AI", use_container_width=True):
+        if text_to_analyze and brand_name:
+            # Show analysis animation
+            with st.spinner("Performing enhanced AI analysis..."):
+                # Perform enhanced analysis
+                result = enhanced_ai_engine.enhanced_threat_detection(text_to_analyze, brand_name)
+                st.session_state.enhanced_analysis_result = result
+                
+                # Show success message with key insights
+                st.success(f"Analysis complete! Threat level: {result['final_threat_level'].upper()}")
+        else:
+            st.error("Please enter both text and brand name")
+    
+    # Display results if available
+    if 'enhanced_analysis_result' in st.session_state:
+        result = st.session_state.enhanced_analysis_result
+        
+        # Main results overview
+        st.markdown("---")
+        st.subheader("📊 Analysis Results")
+        
+        # Key metrics in columns
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            threat_class = f"threat-{result['final_threat_level']}"
+            st.markdown(f"""
+            <div class="metric-card">
+                <h4>Threat Level</h4>
+                <h2><span class="{threat_class}">{result['final_threat_level'].upper()}</span></h2>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            risk_color = "#EF4444" if result['risk_score'] > 0.7 else "#F59E0B" if result['risk_score'] > 0.4 else "#10B981"
+            st.markdown(f"""
+            <div class="metric-card">
+                <h4>Risk Score</h4>
+                <h2 style="color: {risk_color};">{result['risk_score']:.2f}</h2>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col3:
+            urgency_color = "#EF4444" if result['urgency_level'] >= 4 else "#F59E0B" if result['urgency_level'] >= 3 else "#10B981"
+            st.markdown(f"""
+            <div class="metric-card">
+                <h4>Urgency</h4>
+                <h2 style="color: {urgency_color};">{result['urgency_level']}/5</h2>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col4:
+            sentiment_color = "#EF4444" if result['sentiment_analysis']['sentiment'] == 'negative' else "#10B981" if result['sentiment_analysis']['sentiment'] == 'positive' else "#F59E0B"
+            st.markdown(f"""
+            <div class="metric-card">
+                <h4>Sentiment</h4>
+                <h2 style="color: {sentiment_color};">{result['sentiment_analysis']['sentiment'].upper()}</h2>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # Detailed analysis tabs
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "📝 Detailed Analysis",
+            "😢 Emotion Analysis",
+            "🎯 Pattern Detection",
+            "⚡ Recommended Actions"
+        ])
+        
+        with tab1:
+            st.subheader("Detailed Threat Analysis")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.markdown("""
+                <div class="search-analysis-card">
+                    <h4>🔍 Threat Keywords Found</h4>
+                    {}
+                </div>
+                """.format(
+                    ', '.join(result['extended_keywords']) if result['extended_keywords'] else 'No significant threat keywords detected'
+                ), unsafe_allow_html=True)
+                
+                st.markdown("""
+                <div class="search-analysis-card">
+                    <h4>📊 Sentiment Details</h4>
+                    <p><strong>Primary Sentiment:</strong> {}</p>
+                    <p><strong>Sentiment Score:</strong> {:.2f}</p>
+                    <p><strong>Confidence:</strong> {:.2f}</p>
+                    <p><strong>Negation Detected:</strong> {}</p>
+                    <p><strong>Intensified:</strong> {}</p>
+                </div>
+                """.format(
+                    result['sentiment_analysis']['sentiment'].title(),
+                    result['sentiment_analysis']['score'],
+                    result['sentiment_analysis']['confidence'],
+                    "Yes" if result['sentiment_analysis']['contextual_factors']['negation'] else "No",
+                    "Yes" if result['sentiment_analysis']['contextual_factors']['intensified'] else "No"
+                ), unsafe_allow_html=True)
+            
+            with col2:
+                # Risk gauge
+                fig = enhanced_viz.create_risk_gauge(
+                    result['risk_score'],
+                    "Overall Risk Assessment"
+                )
+                st.plotly_chart(fig, use_container_width=True)
+        
+        with tab2:
+            st.subheader("Emotion Analysis")
+            
+            if result['sentiment_analysis']['emotions']:
+                # Emotion heatmap
+                fig = enhanced_viz.create_emotion_heatmap(
+                    result['sentiment_analysis']['emotions'],
+                    "Detected Emotions"
+                )
+                st.plotly_chart(fig, use_container_width=True)
+                
+                # Emotion details
+                emotions = result['sentiment_analysis']['emotions']
+                sorted_emotions = sorted(emotions.items(), key=lambda x: x[1], reverse=True)
+                
+                st.markdown("""
+                <div class="search-analysis-card">
+                    <h4>😊 Emotion Breakdown</h4>
+                    {}
+                </div>
+                """.format(
+                    ''.join([f'<p><strong>{emotion.title()}:</strong> {intensity:.2f}</p>' for emotion, intensity in sorted_emotions])
+                ), unsafe_allow_html=True)
+            else:
+                st.info("No significant emotions detected in the text")
+        
+        with tab3:
+            st.subheader("Pattern Detection")
+            
+            if result['detected_patterns']:
+                st.markdown("""
+                <div class="search-analysis-card">
+                    <h4>🎯 Detected Patterns</h4>
+                    {}
+                </div>
+                """.format(
+                    ''.join([f'<p><strong>{pattern.replace("_", " ").title()}:</strong> {count} indicator(s)</p>' 
+                            for pattern, count in result['detected_patterns'].items()])
+                ), unsafe_allow_html=True)
+                
+                # Pattern visualization
+                patterns = list(result['detected_patterns'].keys())
+                counts = list(result['detected_patterns'].values())
+                
+                fig = go.Figure(data=[go.Bar(
+                    x=[p.replace('_', ' ').title() for p in patterns],
+                    y=counts,
+                    marker_color='#FFD700'
+                )])
+                
+                fig.update_layout(
+                    title="Pattern Frequency",
+                    title_x=0.5,
+                    xaxis_title='Pattern Type',
+                    yaxis_title='Frequency',
+                    font=dict(color='white'),
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
+                    yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("No specific patterns detected in the text")
+        
+        with tab4:
+            st.subheader("Recommended Actions")
+            
+            st.markdown("""
+            <div class="search-analysis-card">
+                <h4>⚡ Priority Actions</h4>
+                {}
+            </div>
+            """.format(
+                ''.join([f'<p><strong>{action}</strong></p>' for action in result['recommended_actions']])
+            ), unsafe_allow_html=True)
+            
+            # Action timeline
+            if result['urgency_level'] >= 4:
+                st.error("🚨 CRITICAL: Immediate action required within 1 hour")
+            elif result['urgency_level'] >= 3:
+                st.warning("⚠️ HIGH: Action required within 24 hours")
+            else:
+                st.info("ℹ️ STANDARD: Action required within 3-5 days")
+
+# Add predictive analytics function
+def show_predictive_analytics():
+    """Show predictive analytics dashboard"""
+    st.header("🔮 Predictive Analytics")
+    
+    # Generate sample historical data
+    np.random.seed(42)
+    historical_data = np.random.poisson(15, 30)  # 30 days of data
+    
+    # Perform trend prediction
+    prediction = enhanced_ai_engine.predict_threat_trend(historical_data)
+    
+    # Display prediction
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        # Create prediction chart
+        fig = enhanced_viz.create_prediction_chart(
+            historical_data,
+            prediction,
+            "Threat Trend Prediction"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="search-analysis-card">
+            <h4>📈 Trend Analysis</h4>
+            <p><strong>Current Trend:</strong> {}</p>
+            <p><strong>Confidence:</strong> {:.1f}%</p>
+            <p><strong>Change:</strong> {:.1f}%</p>
+            <p><strong>Predicted Next Week:</strong> {:.1f} threats</p>
+        </div>
+        """.format(
+            prediction['trend'].title(),
+            prediction['confidence'] * 100,
+            prediction['change_percent'],
+            prediction['predicted_next_week']
+        ), unsafe_allow_html=True)
+        
+        # Recommendations based on trend
+        if prediction['trend'] == "increasing":
+            st.error("""
+            <div class="search-analysis-card">
+                <h4>⚠️ Alert</h4>
+                <p>Threats are increasing! Consider:</p>
+                <p>• Increasing monitoring frequency</p>
+                <p>• Preparing response templates</p>
+                <p>• Alerting team members</p>
+            </div>
+            """, unsafe_allow_html=True)
+        elif prediction['trend'] == "decreasing":
+            st.success("""
+            <div class="search-analysis-card">
+                <h4>✅ Positive Trend</h4>
+                <p>Threats are decreasing! Maintain:</p>
+                <p>• Current monitoring levels</p>
+                <p>• Response protocols</p>
+                <p>• Team readiness</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.info("""
+            <div class="search-analysis-card">
+                <h4>ℹ️ Stable Trend</h4>
+                <p>Threat levels are stable. Continue:</p>
+                <p>• Standard monitoring</p>
+                <p>• Regular reviews</p>
+                <p>• Team training</p>
+            </div>
+            """, unsafe_allow_html=True)
+
 def main():
     # Add animated particles
     add_particles()
@@ -2963,9 +3667,11 @@ def main():
     # Different navigation based on user role
     if st.session_state.get('user_access_level') == 'admin':
         # Admin navigation
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
             "📊 Executive Dashboard", 
             "🔍 Advanced Threat Analysis",
+            "🧠 Enhanced AI Analysis",
+            "🔮 Predictive Analytics",
             "📱 Social Monitoring",
             "🥊 Competitive Intelligence",
             "🌟 Influencer Network",
@@ -2982,6 +3688,12 @@ def main():
             show_advanced_threat_analysis()
         
         with tab3:
+            show_enhanced_threat_analysis()
+        
+        with tab4:
+            show_predictive_analytics()
+        
+        with tab5:
             st.header("Social Monitoring")
             posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector)
             for post in posts[:5]:
@@ -2990,13 +3702,13 @@ def main():
                     st.caption(f"Engagement: {post['engagement']}")
         
         # Other tabs
-        for tab, title in [(tab4, "Competitive Intelligence"), (tab5, "Influencer Network"), 
-                          (tab6, "Crisis Prediction"), (tab7, "Brand Health")]:
+        for tab, title in [(tab6, "Competitive Intelligence"), (tab7, "Influencer Network"), 
+                          (tab8, "Crisis Prediction"), (tab9, "Brand Health")]:
             with tab:
                 st.header(title)
                 st.write(f"{title} content...")
         
-        with tab8:
+        with tab10:
             show_api_key_management()
     else:
         # Regular user navigation
