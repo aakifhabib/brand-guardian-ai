@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 # Set page config first
 st.set_page_config(
     page_title="BrandGuardian AI Pro",
-    page_icon="🧠",
+    page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -110,7 +110,7 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Advanced CSS with enhanced AI theme and animations
+# Advanced CSS with enhanced black and gold theme
 st.markdown("""
 <style>
     /* Base styles */
@@ -135,106 +135,93 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
-    /* Neural network background */
-    .neural-network {
+    /* Elegant golden particles background */
+    .golden-particles {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         z-index: -1;
-        opacity: 0.15;
+        overflow: hidden;
     }
     
-    .neuron {
+    .golden-particle {
         position: absolute;
-        width: 4px;
-        height: 4px;
-        background: radial-gradient(circle, #00d4ff 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0) 70%);
         border-radius: 50%;
-        animation: pulse 3s infinite;
+        animation: float 20s infinite linear;
     }
     
-    .connection {
-        position: absolute;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #7b2ff7, transparent);
-        transform-origin: left center;
-        animation: connectionPulse 5s infinite;
+    @keyframes float {
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
     }
     
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 0.7; }
-        50% { transform: scale(1.5); opacity: 1; }
-        100% { transform: scale(1); opacity: 0.7; }
-    }
-    
-    @keyframes connectionPulse {
-        0% { opacity: 0.2; }
-        50% { opacity: 0.6; }
-        100% { opacity: 0.2; }
-    }
-    
-    /* AI circuit patterns */
-    .circuit-pattern {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: 
-            linear-gradient(90deg, rgba(123, 47, 247, 0.1) 1px, transparent 1px),
-            linear-gradient(0deg, rgba(123, 47, 247, 0.1) 1px, transparent 1px);
-        background-size: 40px 40px;
-        z-index: -2;
-        animation: circuitMove 20s linear infinite;
-    }
-    
-    @keyframes circuitMove {
-        0% { transform: translate(0, 0); }
-        100% { transform: translate(40px, 40px); }
-    }
-    
-    /* AI-themed header styling */
-    .ai-header {
+    /* Premium header styling */
+    .premium-header {
         font-family: 'Playfair Display', serif;
         font-size: 4rem;
         font-weight: 900;
         text-align: center;
         margin: 20px 0;
-        background: linear-gradient(90deg, #00d4ff 0%, #7b2ff7 25%, #ff00ff 50%, #00d4ff 75%, #7b2ff7 100%);
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0px 2px 15px rgba(123, 47, 247, 0.5);
-        animation: aiGlow 4s ease-in-out infinite alternate;
+        text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
+        animation: goldGlow 3s ease-in-out infinite alternate;
         position: relative;
     }
     
-    @keyframes aiGlow {
+    @keyframes goldGlow {
         from { 
-            text-shadow: 0px 2px 15px rgba(123, 47, 247, 0.5);
+            text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
             transform: scale(1);
         }
         to { 
-            text-shadow: 0px 2px 25px rgba(0, 212, 255, 0.8);
+            text-shadow: 0px 2px 20px rgba(255, 215, 0, 0.6);
             transform: scale(1.02);
         }
     }
     
-    /* AI brain logo animation */
-    .ai-logo {
+    /* New BrandGuardian logo - Shield with digital circuit pattern */
+    .brandguardian-logo {
         display: inline-block;
         font-size: 5rem;
-        animation: brainPulse 3s infinite;
-        filter: drop-shadow(0 0 10px rgba(123, 47, 247, 0.7));
+        position: relative;
+        animation: logoPulse 4s infinite;
+        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
     }
     
-    @keyframes brainPulse {
-        0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 10px rgba(123, 47, 247, 0.7)); }
-        25% { transform: scale(1.1) rotate(-5deg); filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.8)); }
-        50% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.6)); }
-        75% { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.8)); }
-        100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 10px rgba(123, 47, 247, 0.7)); }
+    @keyframes logoPulse {
+        0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
+        25% { transform: scale(1.05) rotate(-2deg); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7)); }
+        50% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6)); }
+        75% { transform: scale(1.05) rotate(2deg); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7)); }
+        100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
+    }
+    
+    /* Digital circuit pattern overlay */
+    .circuit-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(90deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px),
+            linear-gradient(0deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px);
+        background-size: 30px 30px;
+        z-index: -1;
+        opacity: 0.5;
+        animation: circuitMove 30s linear infinite;
+    }
+    
+    @keyframes circuitMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(30px, 30px); }
     }
     
     .floating {
@@ -249,7 +236,7 @@ st.markdown("""
     
     .accent-text {
         font-size: 1.2rem;
-        color: #00d4ff;
+        color: #FFD700;
         text-align: center;
         margin-bottom: 40px;
         animation: fadeIn 2s ease-in;
@@ -266,7 +253,7 @@ st.markdown("""
         backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         margin: 15px 0;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -281,7 +268,7 @@ st.markdown("""
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(123, 47, 247, 0.1), transparent);
+        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
         transform: translateX(-100%);
         transition: transform 0.6s;
     }
@@ -292,8 +279,8 @@ st.markdown("""
     
     .metric-card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(123, 47, 247, 0.3);
-        border: 1px solid rgba(123, 47, 247, 0.5);
+        box-shadow: 0 15px 50px rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     .search-analysis-card {
@@ -301,7 +288,7 @@ st.markdown("""
         backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         margin: 20px 0;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         transition: all 0.3s ease;
@@ -309,7 +296,7 @@ st.markdown("""
     
     .search-analysis-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 45px rgba(123, 47, 247, 0.3);
+        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.3);
     }
     
     .search-result-card {
@@ -317,14 +304,14 @@ st.markdown("""
         border-radius: 15px;
         padding: 20px;
         margin: 15px 0;
-        border-left: 5px solid #7b2ff7;
+        border-left: 5px solid #FFD700;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .search-result-card:hover {
         background: rgba(0, 0, 0, 0.8);
         transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(123, 47, 247, 0.2);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
     }
     
     /* Enhanced threat indicators */
@@ -358,14 +345,14 @@ st.markdown("""
     }
     
     .threat-low {
-        background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 212, 255, 0.1));
-        color: #00d4ff;
-        border: 1px solid rgba(0, 212, 255, 0.5);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+        color: #FFD700;
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     /* Status indicators */
     .api-status-connected {
-        color: #00d4ff;
+        color: #FFD700;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
@@ -385,9 +372,9 @@ st.markdown("""
     /* Enhanced button styling */
     .stButton > button {
         border-radius: 15px;
-        border: 1px solid rgba(123, 47, 247, 0.5);
+        border: 1px solid rgba(255, 215, 0, 0.5);
         background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
-        color: #7b2ff7;
+        color: #FFD700;
         font-weight: 700;
         padding: 12px 24px;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -403,7 +390,7 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(123, 47, 247, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
         transition: left 0.5s;
     }
     
@@ -412,10 +399,10 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(123, 47, 247, 0.2), rgba(123, 47, 247, 0.1));
-        border: 1px solid rgba(123, 47, 247, 0.8);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 1px solid rgba(255, 215, 0, 0.8);
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(123, 47, 247, 0.3);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
     }
     
     /* Enhanced tab styling */
@@ -428,7 +415,7 @@ st.markdown("""
         background: rgba(0, 0, 0, 0.7);
         border-radius: 15px 15px 0 0;
         padding: 14px 20px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         border-bottom: none;
         font-weight: 600;
         transition: all 0.3s ease;
@@ -439,17 +426,17 @@ st.markdown("""
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(123, 47, 247, 0.2), rgba(123, 47, 247, 0.1));
-        border: 1px solid rgba(123, 47, 247, 0.5);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 1px solid rgba(255, 215, 0, 0.5);
         border-bottom: none;
-        box-shadow: 0 -4px 15px rgba(123, 47, 247, 0.2);
+        box-shadow: 0 -4px 15px rgba(255, 215, 0, 0.2);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
         font-size: 2.2rem;
         font-weight: 800;
-        color: #7b2ff7;
+        color: #FFD700;
     }
     
     [data-testid="stMetricDelta"] {
@@ -467,7 +454,7 @@ st.markdown("""
         background: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(10px);
         border-radius: 15px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         color: white;
         transition: all 0.3s ease;
     }
@@ -479,14 +466,14 @@ st.markdown("""
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
         background: rgba(0, 0, 0, 0.8);
-        border: 1px solid rgba(123, 47, 247, 0.5);
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     /* Custom spinner */
     .stSpinner > div {
         border: 4px solid rgba(0, 0, 0, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #7b2ff7;
+        border-top: 4px solid #FFD700;
         width: 40px;
         height: 40px;
         animation: spin 1s linear infinite;
@@ -503,7 +490,7 @@ st.markdown("""
         background: rgba(0, 0, 0, 0.7);
         border-radius: 12px;
         padding: 14px 18px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         font-weight: 600;
         transition: all 0.3s ease;
     }
@@ -530,7 +517,7 @@ st.markdown("""
     /* Custom sidebar */
     .css-1d391kg {
         background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
-        border-right: 1px solid rgba(123, 47, 247, 0.2);
+        border-right: 1px solid rgba(255, 215, 0, 0.2);
     }
     
     /* Custom chart elements */
@@ -542,9 +529,9 @@ st.markdown("""
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #7b2ff7, #00d4ff);
+        background: linear-gradient(90deg, #FFD700, #FFA500);
         border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(123, 47, 247, 0.4);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
     }
     
     /* Custom radio buttons */
@@ -552,12 +539,12 @@ st.markdown("""
         background: rgba(0, 0, 0, 0.7);
         padding: 18px;
         border-radius: 15px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: linear-gradient(90deg, #7b2ff7, #00d4ff);
+        background: linear-gradient(90deg, #FFD700, #FFA500);
         border-radius: 10px;
         height: 8px;
     }
@@ -566,12 +553,12 @@ st.markdown("""
     .stCheckbox [data-baseweb="checkbox"] {
         background: rgba(0, 0, 0, 0.7);
         border-radius: 8px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
     }
     
     /* Premium badge */
     .premium-badge {
-        background: linear-gradient(135deg, #7b2ff7, #00d4ff);
+        background: linear-gradient(135deg, #FFD700, #FFA500);
         color: #000000;
         padding: 4px 12px;
         border-radius: 20px;
@@ -579,7 +566,7 @@ st.markdown("""
         font-weight: 700;
         display: inline-block;
         margin-left: 10px;
-        box-shadow: 0 4px 15px rgba(123, 47, 247, 0.4);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
         animation: shimmer 2s infinite;
     }
     
@@ -606,7 +593,7 @@ st.markdown("""
         backdrop-filter: blur(20px);
         border-radius: 25px;
         padding: 40px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         max-width: 500px;
         margin: 0 auto;
@@ -620,9 +607,9 @@ st.markdown("""
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: radial-gradient(circle at 20% 50%, rgba(123, 47, 247, 0.1), transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1), transparent 50%),
-                    radial-gradient(circle at 40% 80%, rgba(255, 0, 255, 0.1), transparent 50%);
+        background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(255, 140, 0, 0.1), transparent 50%);
         animation: bgMove 20s ease infinite;
     }
     
@@ -634,12 +621,12 @@ st.markdown("""
     
     /* Premium access card */
     .premium-access-card {
-        background: linear-gradient(135deg, rgba(123, 47, 247, 0.1), rgba(0, 212, 255, 0.1));
-        border: 2px solid rgba(123, 47, 247, 0.3);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+        border: 2px solid rgba(255, 215, 0, 0.3);
         border-radius: 20px;
         padding: 30px;
         margin: 20px 0;
-        box-shadow: 0 15px 40px rgba(123, 47, 247, 0.2);
+        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -652,7 +639,7 @@ st.markdown("""
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(123, 47, 247, 0.1) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
         animation: rotate 20s linear infinite;
     }
     
@@ -671,7 +658,7 @@ st.markdown("""
     
     .radar-circle {
         position: absolute;
-        border: 2px solid rgba(123, 47, 247, 0.3);
+        border: 2px solid rgba(255, 215, 0, 0.3);
         border-radius: 50%;
         animation: radarPulse 2s infinite;
     }
@@ -687,7 +674,7 @@ st.markdown("""
         border-radius: 20px;
         padding: 20px;
         margin: 20px 0;
-        border: 1px solid rgba(123, 47, 247, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     
@@ -705,75 +692,13 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: rgba(123, 47, 247, 0.3);
+        background: rgba(255, 215, 0, 0.3);
         animation: aiPulse 2s infinite;
     }
     
     @keyframes aiPulse {
         0% { transform: scale(1); opacity: 0.7; }
         50% { transform: scale(1.2); opacity: 0.3; }
-        100% { transform: scale(1); opacity: 0.7; }
-    }
-    
-    /* AI visualization card */
-    .ai-visualization-card {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(15px);
-        padding: 25px;
-        border-radius: 20px;
-        border: 1px solid rgba(123, 47, 247, 0.3);
-        margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .ai-visualization-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(123, 47, 247, 0.1), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.6s;
-    }
-    
-    .ai-visualization-card:hover::before {
-        transform: translateX(100%);
-    }
-    
-    /* AI processing animation */
-    .ai-processing {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 20px 0;
-    }
-    
-    .ai-node {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: #7b2ff7;
-        margin: 0 6px;
-        animation: nodePulse 1.5s infinite;
-    }
-    
-    .ai-node:nth-child(2) {
-        animation-delay: 0.2s;
-        background: #00d4ff;
-    }
-    
-    .ai-node:nth-child(3) {
-        animation-delay: 0.4s;
-        background: #ff00ff;
-    }
-    
-    @keyframes nodePulse {
-        0% { transform: scale(1); opacity: 0.7; }
-        50% { transform: scale(1.5); opacity: 1; }
         100% { transform: scale(1); opacity: 0.7; }
     }
     
@@ -802,7 +727,7 @@ st.markdown("""
         height: 100%;
         border-radius: 50%;
         background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
-        border: 2px solid rgba(123, 47, 247, 0.3);
+        border: 2px solid rgba(255, 215, 0, 0.3);
         overflow: hidden;
     }
     
@@ -817,7 +742,7 @@ st.markdown("""
     .radar-grid::after {
         content: '';
         position: absolute;
-        background: rgba(123, 47, 247, 0.2);
+        background: rgba(255, 215, 0, 0.2);
     }
     
     .radar-grid::before {
@@ -838,7 +763,7 @@ st.markdown("""
         position: absolute;
         width: 50%;
         height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(123, 47, 247, 0.8), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent);
         top: 50%;
         left: 50%;
         transform-origin: left center;
@@ -855,11 +780,11 @@ st.markdown("""
         position: absolute;
         width: 10px;
         height: 10px;
-        background: rgba(123, 47, 247, 0.8);
+        background: rgba(255, 215, 0, 0.8);
         border-radius: 50%;
         right: 0;
         top: -4px;
-        box-shadow: 0 0 10px rgba(123, 47, 247, 0.8);
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
     }
     
     .threat-dots {
@@ -873,7 +798,7 @@ st.markdown("""
         position: absolute;
         width: 8px;
         height: 8px;
-        background: rgba(123, 47, 247, 0.8);
+        background: rgba(255, 215, 0, 0.8);
         border-radius: 50%;
         opacity: 0;
         animation: threatPulse 2s infinite;
@@ -892,7 +817,7 @@ st.markdown("""
     .analysis-status {
         font-size: 1.2rem;
         font-weight: 600;
-        color: #7b2ff7;
+        color: #FFD700;
         text-align: center;
         margin-bottom: 15px;
     }
@@ -908,7 +833,7 @@ st.markdown("""
     .progress-bar {
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, #7b2ff7, #00d4ff);
+        background: linear-gradient(90deg, #FFD700, #FFA500);
         border-radius: 4px;
         transition: width 0.3s ease;
         animation: progressFill 3.5s ease-in-out forwards;
@@ -945,7 +870,7 @@ st.markdown("""
     
     .phase-text {
         font-size: 0.8rem;
-        color: #7b2ff7;
+        color: #FFD700;
     }
     
     .phase:nth-child(1) {
@@ -972,45 +897,21 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Add neural network background
-def add_neural_network():
+# Add golden particles to the background
+def add_golden_particles():
     st.markdown("""
-    <div class="neural-network">
-        <!-- Neurons -->
-        <div class="neuron" style="top: 15%; left: 10%;"></div>
-        <div class="neuron" style="top: 25%; left: 30%;"></div>
-        <div class="neuron" style="top: 35%; left: 20%;"></div>
-        <div class="neuron" style="top: 45%; left: 40%;"></div>
-        <div class="neuron" style="top: 55%; left: 15%;"></div>
-        <div class="neuron" style="top: 65%; left: 35%;"></div>
-        <div class="neuron" style="top: 75%; left: 25%;"></div>
-        <div class="neuron" style="top: 85%; left: 45%;"></div>
-        
-        <div class="neuron" style="top: 15%; left: 60%;"></div>
-        <div class="neuron" style="top: 25%; left: 80%;"></div>
-        <div class="neuron" style="top: 35%; left: 70%;"></div>
-        <div class="neuron" style="top: 45%; left: 90%;"></div>
-        <div class="neuron" style="top: 55%; left: 65%;"></div>
-        <div class="neuron" style="top: 65%; left: 85%;"></div>
-        <div class="neuron" style="top: 75%; left: 75%;"></div>
-        <div class="neuron" style="top: 85%; left: 95%;"></div>
-        
-        <!-- Connections -->
-        <div class="connection" style="top: 15%; left: 10%; width: 20%; transform: rotate(15deg);"></div>
-        <div class="connection" style="top: 25%; left: 30%; width: 15%; transform: rotate(-10deg);"></div>
-        <div class="connection" style="top: 35%; left: 20%; width: 25%; transform: rotate(20deg);"></div>
-        <div class="connection" style="top: 45%; left: 40%; width: 20%; transform: rotate(-15deg);"></div>
-        <div class="connection" style="top: 55%; left: 15%; width: 25%; transform: rotate(25deg);"></div>
-        <div class="connection" style="top: 65%; left: 35%; width: 15%; transform: rotate(-20deg);"></div>
-        
-        <div class="connection" style="top: 15%; left: 60%; width: 20%; transform: rotate(15deg);"></div>
-        <div class="connection" style="top: 25%; left: 80%; width: 15%; transform: rotate(-10deg);"></div>
-        <div class="connection" style="top: 35%; left: 70%; width: 25%; transform: rotate(20deg);"></div>
-        <div class="connection" style="top: 45%; left: 90%; width: 20%; transform: rotate(-15deg);"></div>
-        <div class="connection" style="top: 55%; left: 65%; width: 25%; transform: rotate(25deg);"></div>
-        <div class="connection" style="top: 65%; left: 85%; width: 15%; transform: rotate(-20deg);"></div>
+    <div class="golden-particles">
+        <div class="golden-particle" style="width: 10px; height: 10px; left: 10%; animation-duration: 20s;"></div>
+        <div class="golden-particle" style="width: 15px; height: 15px; left: 20%; animation-duration: 25s;"></div>
+        <div class="golden-particle" style="width: 8px; height: 8px; left: 30%; animation-duration: 30s;"></div>
+        <div class="golden-particle" style="width: 12px; height: 12px; left: 40%; animation-duration: 22s;"></div>
+        <div class="golden-particle" style="width: 18px; height: 18px; left: 50%; animation-duration: 28s;"></div>
+        <div class="golden-particle" style="width: 7px; height: 7px; left: 60%; animation-duration: 32s;"></div>
+        <div class="golden-particle" style="width: 14px; height: 14px; left: 70%; animation-duration: 24s;"></div>
+        <div class="golden-particle" style="width: 9px; height: 9px; left: 80%; animation-duration: 26s;"></div>
+        <div class="golden-particle" style="width: 16px; height: 16px; left: 90%; animation-duration: 29s;"></div>
     </div>
-    <div class="circuit-pattern"></div>
+    <div class="circuit-overlay"></div>
     """, unsafe_allow_html=True)
 
 # Add the new animation function
@@ -1280,7 +1181,7 @@ class EnhancedAuthenticationSystem:
                     "Dedicated account manager",
                     "Custom integrations"
                 ],
-                "color": "#7b2ff7"
+                "color": "#FFD700"
             }
         }
         self.load_users()
@@ -1844,8 +1745,8 @@ search_analyzer = SearchAnalyzer()
 class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
-            'primary': '#7b2ff7',
-            'secondary': '#00d4ff',
+            'primary': '#FFD700',
+            'secondary': '#FFA500',
             'success': '#10B981',
             'warning': '#F59E0B',
             'danger': '#EF4444',
@@ -1864,7 +1765,7 @@ class AdvancedVisualizations:
             fill='toself',
             name='Threat Level',
             line_color=self.colors['primary'],
-            fillcolor=f'rgba(123, 47, 247, 0.3)'
+            fillcolor=f'rgba(255, 215, 0, 0.3)'
         ))
         
         fig.update_layout(
@@ -1985,7 +1886,7 @@ class AdvancedVisualizations:
             z=z_data,
             x=platforms,
             y=threat_levels,
-            colorscale='Viridis',
+            colorscale='YlOrRd',
             showscale=True
         ))
         
@@ -2199,13 +2100,13 @@ def show_user_management():
                 st.error("You cannot delete your own account")
 
 def show_login_form():
-    """Display login form with enhanced AI design"""
+    """Display login form with enhanced design"""
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <div class="ai-logo" style="font-size: 8rem;">🧠</div>
-        <h1 style="font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #00d4ff 0%, #7b2ff7 50%, #ff00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
-        <p style="font-size: 1.2rem; color: #00d4ff;">Neural Intelligence for Brand Protection</p>
+        <div class="brandguardian-logo">🛡️</div>
+        <h1 style="font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
+        <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -2215,9 +2116,9 @@ def show_login_form():
     with col1:
         st.markdown("""
         <div style='text-align: center;'>
-            <div style="font-size: 6rem; margin-bottom: 20px;" class="ai-logo">🤖</div>
-            <h3 style="color: #7b2ff7;">AI-Powered Security</h3>
-            <p style="color: #00d4ff;">Neural authentication system</p>
+            <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🔒</div>
+            <h3 style="color: #FFD700;">Secure Login</h3>
+            <p style="color: #FFD700;">Access your brand protection dashboard</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2247,23 +2148,20 @@ def show_login_form():
                 else:
                     st.error(f"❌ {message}")
     
-    # AI Security information
-    with st.expander("🔐 AI Security Features"):
+    # Security information
+    with st.expander("🔒 Security Information"):
         st.markdown("""
-        - Neural network authentication
-        - Biometric security integration
-        - Behavioral pattern analysis
+        - All credentials are encrypted using military-grade encryption
         - Multi-factor authentication ready
         - Session timeout after 30 minutes of inactivity
-        - All login attempts analyzed by AI
-        - Real-time threat detection
-        - Advanced encryption protocols
+        - All login attempts are logged and monitored
+        - Regular security audits conducted
         """)
     
     # Forgot password link
     st.markdown("""
     <div style='text-align: center; margin-top: 20px;'>
-        <a href='#' style='color: #7b2ff7; text-decoration: none;'>Forgot your password?</a>
+        <a href='#' style='color: #FFD700; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2326,7 +2224,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Response Time</h3>
             <h1>2.1s</h1>
-            <p style="color: #00d4ff;">-0.4s improvement</p>
+            <p style="color: #FFD700;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2335,7 +2233,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Protected Assets</h3>
             <h1>24</h1>
-            <p style="color: #00d4ff;">Fully secured</p>
+            <p style="color: #FFD700;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2623,10 +2521,10 @@ def show_trend_analysis():
         y=sentiment_data['Sentiment Score'],
         mode='lines+markers',
         name='Sentiment',
-        line=dict(color='#7b2ff7', width=3),
+        line=dict(color='#FFD700', width=3),
         marker=dict(size=8),
         fill='tozeroy',
-        fillcolor='rgba(123, 47, 247, 0.2)'
+        fillcolor='rgba(255, 215, 0, 0.2)'
     ))
     
     fig.update_layout(
@@ -2855,7 +2753,7 @@ def show_user_ai_dashboard():
             </span>
         </div>
         <div>
-            <a href="#upgrade" style="color: #7b2ff7; text-decoration: none;">Upgrade Plan →</a>
+            <a href="#upgrade" style="color: #FFD700; text-decoration: none;">Upgrade Plan →</a>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -2868,7 +2766,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Brand Mentions</h3>
             <h1>142</h1>
-            <p style="color: #00d4ff;">+12 from last week</p>
+            <p style="color: #FFD700;">+12 from last week</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2877,7 +2775,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>Low</h1>
-            <p style="color: #00d4ff;">Stable</p>
+            <p style="color: #FFD700;">Stable</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2886,7 +2784,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Response Rate</h3>
             <h1>92%</h1>
-            <p style="color: #00d4ff;">Excellent</p>
+            <p style="color: #FFD700;">Excellent</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2966,7 +2864,7 @@ def show_social_monitoring():
     # Display posts with AI analysis
     for post in posts[:5]:
         threat_class = f"threat-{post['threat_level']}"
-        sentiment_color = "#FF0000" if post['sentiment'] == 'negative' else "#00d4ff" if post['sentiment'] == 'positive' else "#FFFFFF"
+        sentiment_color = "#FF0000" if post['sentiment'] == 'negative' else "#FFD700" if post['sentiment'] == 'positive' else "#FFFFFF"
         
         with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
             st.write(post['content'])
@@ -2979,8 +2877,8 @@ def show_social_monitoring():
             """, unsafe_allow_html=True)
 
 def show_ai_insights():
-    """AI insights functionality with enhanced visualization"""
-    st.header("🧠 Neural Intelligence Insights")
+    """AI insights functionality - requires Advanced subscription"""
+    st.header("🧠 AI-Powered Insights")
     
     # Get user's subscription
     username = st.session_state.get('username')
@@ -2992,15 +2890,6 @@ def show_ai_insights():
     
     brand_name = st.session_state.get('brand_name', 'Your Brand')
     
-    # AI Processing Animation
-    st.markdown("""
-    <div class="ai-processing">
-        <div class="ai-node"></div>
-        <div class="ai-node"></div>
-        <div class="ai-node"></div>
-    </div>
-    """, unsafe_allow_html=True)
-    
     # Generate sample analyses
     analyses = []
     for i in range(10):
@@ -3011,13 +2900,13 @@ def show_ai_insights():
     # Generate report
     report = ai_engine.generate_threat_report(analyses)
     
-    # Display report in AI-themed cards
+    # Display report
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown("""
-        <div class="ai-visualization-card">
-            <h4>📊 Neural Threat Analysis</h4>
+        <div class="ai-visualization">
+            <h4>📊 Threat Summary</h4>
             <p>Total Analyses: {}</p>
             <p>High Threats: {}</p>
             <p>Medium Threats: {}</p>
@@ -3034,7 +2923,7 @@ def show_ai_insights():
     
     with col2:
         st.markdown("""
-        <div class="ai-visualization-card">
+        <div class="ai-visualization">
             <h4>✅ AI Recommendations</h4>
             {}
         </div>
@@ -3043,22 +2932,22 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
     
     # Keyword frequency analysis
-    st.subheader("🔤 Neural Keyword Analysis")
+    st.subheader("🔤 Keyword Frequency Analysis")
     
     texts = [a['text'] for a in analyses]
     keyword_freq = ai_engine.create_keyword_frequency(texts)
     
-    # Create bar chart with AI theme
-    fig = viz.create_keyword_bar_chart(keyword_freq, "Neural Keyword Frequency Analysis")
+    # Create bar chart
+    fig = viz.create_keyword_bar_chart(keyword_freq, "Top Keywords in Threat Analysis")
     st.plotly_chart(fig, use_container_width=True)
     
     # Threat patterns
-    st.subheader("🔍 Neural Pattern Recognition")
+    st.subheader("🔍 Threat Pattern Analysis")
     
     patterns = ai_engine.create_threat_patterns(analyses)
     
-    # Create heatmap with AI theme
-    fig = viz.create_pattern_heatmap(patterns, "Neural Threat Pattern Analysis")
+    # Create heatmap
+    fig = viz.create_pattern_heatmap(patterns, "Threat Patterns by Platform and Level")
     st.plotly_chart(fig, use_container_width=True)
     
     # Pattern details
@@ -3066,7 +2955,7 @@ def show_ai_insights():
     
     with col1:
         st.markdown("""
-        <div class="ai-visualization-card">
+        <div class="ai-visualization">
             <h4>🎯 Top Threat Keywords</h4>
             {}
         </div>
@@ -3076,7 +2965,7 @@ def show_ai_insights():
     
     with col2:
         st.markdown("""
-        <div class="ai-visualization-card">
+        <div class="ai-visualization">
             <h4>📱 Platform Distribution</h4>
             {}
         </div>
@@ -3085,8 +2974,8 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
 
 def main():
-    # Add neural network background
-    add_neural_network()
+    # Add golden particles background
+    add_golden_particles()
     
     # Check authentication first
     if not st.session_state.get('authenticated', False):
@@ -3104,12 +2993,12 @@ def main():
     if username and "user_subscription" not in st.session_state:
         st.session_state.user_subscription = auth_system.get_user_subscription(username)
     
-    # Header with AI theme
+    # Header with shield logo
     st.markdown("""
     <div style="text-align: center; margin-bottom: 20px;">
-        <div class="ai-logo">🧠</div>
-        <h1 class="ai-header">BrandGuardian AI Pro</h1>
-        <div style="text-align: center; margin-top: 10px;" class="accent-text">Advanced Neural Intelligence for Brand Protection</div>
+        <div class="brandguardian-logo">🛡️</div>
+        <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
+        <div style="text-align: center; margin-top: 10px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     </div>
     """, unsafe_allow_html=True)
     
