@@ -24,16 +24,6 @@ from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
-from typing import Dict, List, Tuple, Optional, Any
-import logging
-from functools import lru_cache
-import sqlite3
-import threading
-from streamlit.components.v1 import html
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 # Set page config first
 st.set_page_config(
@@ -42,62 +32,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-# Database setup
-def init_db():
-    """Initialize the SQLite database for storing user data and settings"""
-    conn = sqlite3.connect('brandguardian.db')
-    c = conn.cursor()
-    
-    # Create tables if they don't exist
-    c.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
-        company TEXT,
-        email TEXT,
-        access_level TEXT DEFAULT 'client',
-        subscription TEXT DEFAULT 'basic',
-        created_at TEXT,
-        last_login TEXT,
-        failed_attempts INTEGER DEFAULT 0,
-        last_failed_attempt TEXT,
-        session_token TEXT,
-        mfa_enabled INTEGER DEFAULT 0
-    )
-    ''')
-    
-    c.execute('''
-    CREATE TABLE IF NOT EXISTS api_keys (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        platform TEXT NOT NULL,
-        encrypted_key TEXT NOT NULL,
-        created_at TEXT,
-        FOREIGN KEY (user_id) REFERENCES users (id)
-    )
-    ''')
-    
-    c.execute('''
-    CREATE TABLE IF NOT EXISTS threat_reports (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        brand_name TEXT,
-        threat_level TEXT,
-        platform TEXT,
-        content TEXT,
-        sentiment TEXT,
-        timestamp TEXT,
-        FOREIGN KEY (user_id) REFERENCES users (id)
-    )
-    ''')
-    
-    conn.commit()
-    conn.close()
-
-# Initialize database on startup
-init_db()
 
 # Generate and display premium access key
 def generate_premium_key():
@@ -110,35 +44,33 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Next-Generation CSS with Futuristic Theme and Animations
+# Advanced CSS with enhanced black and gold theme and animations
 st.markdown("""
 <style>
-    /* Import futuristic fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700;800&family=Rajdhani:wght@300;400;500;600;700&display=swap');
-    
     /* Base styles */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
+    
     .main {
-        background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0d1117 100%);
-        color: #e0e6ed;
-        font-family: 'Exo 2', sans-serif;
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        color: #FFFFFF;
+        font-family: 'Inter', sans-serif;
         overflow-x: hidden;
-        position: relative;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0d1117 100%);
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
         background-size: 400% 400%;
-        animation: gradientShift 15s ease infinite;
+        animation: gradientBG 15s ease infinite;
     }
     
-    @keyframes gradientShift {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50% }
+        50% { background-position: 100% 50% }
+        100% { background-position: 0% 50% }
     }
     
-    /* Holographic background particles */
-    .holographic-particles {
+    /* Animated particles background */
+    .particles {
         position: fixed;
         top: 0;
         left: 0;
@@ -150,130 +82,42 @@ st.markdown("""
     
     .particle {
         position: absolute;
-        background: radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, rgba(0, 255, 255, 0) 70%);
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0) 70%);
         border-radius: 50%;
-        pointer-events: none;
-        animation: floatParticle 20s infinite linear;
+        animation: float 20s infinite linear;
     }
     
-    @keyframes floatParticle {
-        0% {
-            transform: translateY(100vh) translateX(0) scale(0);
-            opacity: 0;
-        }
-        10% {
-            opacity: 1;
-        }
-        90% {
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(-100vh) translateX(100px) scale(1.5);
-            opacity: 0;
-        }
+    @keyframes float {
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
     }
     
-    /* Circuit board background */
-    .circuit-board {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -2;
-        background-image: 
-            linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-            linear-gradient(0deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-            radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 25%),
-            radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.1) 0%, transparent 25%);
-        background-size: 50px 50px, 50px 50px, 300px 300px, 300px 300px;
-        animation: circuitPulse 20s linear infinite;
-    }
-    
-    @keyframes circuitPulse {
-        0% { background-position: 0 0, 0 0, 0 0, 0 0; }
-        100% { background-position: 50px 50px, 50px 50px, 300px 300px, 300px 300px; }
-    }
-    
-    /* Futuristic header styling */
-    .futuristic-header {
-        font-family: 'Orbitron', monospace;
-        font-size: 4.5rem;
+    /* Premium header styling */
+    .premium-header {
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
         font-weight: 900;
         text-align: center;
         margin: 20px 0;
-        background: linear-gradient(90deg, #00ffff 0%, #ff00ff 25%, #ffff00 50%, #00ffff 75%, #ff00ff 100%);
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0px 0px 30px rgba(0, 255, 255, 0.5);
-        animation: holographicGlow 4s ease-in-out infinite alternate;
+        text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
+        animation: goldGlow 3s ease-in-out infinite alternate;
         position: relative;
-        letter-spacing: 2px;
     }
     
-    @keyframes holographicGlow {
+    @keyframes goldGlow {
         from { 
-            text-shadow: 0px 0px 30px rgba(0, 255, 255, 0.5);
+            text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
             transform: scale(1);
         }
         to { 
-            text-shadow: 0px 0px 40px rgba(255, 0, 255, 0.8);
+            text-shadow: 0px 2px 20px rgba(255, 215, 0, 0.6);
             transform: scale(1.02);
         }
-    }
-    
-    /* Enhanced AI logo */
-    .ai-logo-container {
-        position: relative;
-        display: inline-block;
-        margin-bottom: 20px;
-    }
-    
-    .ai-logo {
-        display: inline-block;
-        font-size: 6rem;
-        position: relative;
-        z-index: 2;
-        animation: logoPulse 3s infinite;
-        filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7));
-    }
-    
-    @keyframes logoPulse {
-        0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7)); }
-        25% { transform: scale(1.1) rotate(-5deg); filter: drop-shadow(0 0 25px rgba(255, 0, 255, 0.8)); }
-        50% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 30px rgba(255, 255, 0, 0.6)); }
-        75% { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 0 25px rgba(255, 0, 255, 0.8)); }
-        100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7)); }
-    }
-    
-    .logo-ring {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 120px;
-        height: 120px;
-        border: 3px solid rgba(0, 255, 255, 0.3);
-        border-radius: 50%;
-        animation: ringRotate 8s linear infinite;
-        z-index: 1;
-    }
-    
-    .logo-ring::before {
-        content: '';
-        position: absolute;
-        top: -10px;
-        left: -10px;
-        right: -10px;
-        bottom: -10px;
-        border: 2px solid rgba(255, 0, 255, 0.2);
-        border-radius: 50%;
-        animation: ringRotate 12s linear infinite reverse;
-    }
-    
-    @keyframes ringRotate {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
     
     .floating {
@@ -282,18 +126,15 @@ st.markdown("""
     
     @keyframes float {
         0% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
+        50% { transform: translateY(-10px); }
         100% { transform: translateY(0px); }
     }
     
     .accent-text {
-        font-size: 1.4rem;
-        color: #00ffff;
+        font-size: 1.2rem;
+        color: #FFD700;
         text-align: center;
         margin-bottom: 40px;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: 500;
-        letter-spacing: 1px;
         animation: fadeIn 2s ease-in;
     }
     
@@ -302,17 +143,15 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Enhanced card styling with glassmorphism */
+    /* Enhanced card styling */
     .metric-card {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        padding: 30px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(15px);
+        padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(0, 255, 255, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         margin: 15px 0;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
@@ -325,7 +164,7 @@ st.markdown("""
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
         transform: translateX(-100%);
         transition: transform 0.6s;
     }
@@ -335,120 +174,115 @@ st.markdown("""
     }
     
     .metric-card:hover {
-        transform: translateY(-10px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(0, 255, 255, 0.4);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     .search-analysis-card {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(15px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(0, 255, 255, 0.2);
+        border: 1px solid rgba(255, 215, 0, 0.3);
         margin: 20px 0;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         transition: all 0.3s ease;
     }
     
     .search-analysis-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.3);
     }
     
     .search-result-card {
-        background: rgba(15, 20, 35, 0.6);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
+        background: rgba(0, 0, 0, 0.6);
         border-radius: 15px;
         padding: 20px;
         margin: 15px 0;
-        border-left: 5px solid #00ffff;
+        border-left: 5px solid #FFD700;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .search-result-card:hover {
-        background: rgba(20, 25, 40, 0.8);
-        transform: translateX(15px);
-        box-shadow: 0 15px 30px rgba(0, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.8);
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
     }
     
     /* Enhanced threat indicators */
     .threat-indicator {
-        padding: 12px 20px;
-        border-radius: 30px;
-        font-size: 14px;
+        padding: 10px 16px;
+        border-radius: 25px;
+        font-size: 13px;
         font-weight: 700;
         margin: 8px;
         display: inline-block;
-        letter-spacing: 1px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         transition: all 0.3s ease;
-        font-family: 'Orbitron', monospace;
     }
     
     .threat-indicator:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
     
     .threat-high {
         background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.1));
-        color: #ff4d4d;
+        color: #FF0000;
         border: 1px solid rgba(255, 0, 0, 0.5);
     }
     
     .threat-medium {
         background: linear-gradient(135deg, rgba(255, 165, 0, 0.3), rgba(255, 165, 0, 0.1));
-        color: #ffcc00;
+        color: #FFA500;
         border: 1px solid rgba(255, 165, 0, 0.5);
     }
     
     .threat-low {
-        background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 255, 255, 0.1));
-        color: #00ffff;
-        border: 1px solid rgba(0, 255, 255, 0.5);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+        color: #FFD700;
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     /* Status indicators */
     .api-status-connected {
-        color: #00ffff;
+        color: #FFD700;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
-        font-family: 'Orbitron', monospace;
     }
     
     .api-status-connected::before {
         content: '●';
-        margin-right: 8px;
+        margin-right: 5px;
         animation: pulse 2s infinite;
     }
     
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
     .api-status-disconnected {
-        color: #ff4d4d;
+        color: #FF0000;
         font-weight: 700;
     }
     
     /* Enhanced button styling */
     .stButton > button {
-        border-radius: 20px;
-        border: 1px solid rgba(0, 255, 255, 0.5);
-        background: linear-gradient(135deg, rgba(15, 20, 35, 0.8), rgba(25, 30, 45, 0.6));
-        color: #00ffff;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+        color: #FFD700;
         font-weight: 700;
-        padding: 14px 28px;
+        padding: 12px 24px;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        font-family: 'Orbitron', monospace;
-        letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
     .stButton > button::before {
@@ -458,7 +292,7 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
         transition: left 0.5s;
     }
     
@@ -467,55 +301,48 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.1));
-        border: 1px solid rgba(0, 255, 255, 0.8);
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 255, 255, 0.3),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        color: #ffffff;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 1px solid rgba(255, 215, 0, 0.8);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
     }
     
     /* Enhanced tab styling */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 15px;
-        margin-bottom: 25px;
+        gap: 12px;
+        margin-bottom: 20px;
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 20px 20px 0 0;
-        padding: 16px 24px;
-        border: 1px solid rgba(0, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 15px 15px 0 0;
+        padding: 14px 20px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
         border-bottom: none;
         font-weight: 600;
         transition: all 0.3s ease;
-        font-family: 'Rajdhani', sans-serif;
-        letter-spacing: 1px;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(25, 30, 45, 0.8);
+        background: rgba(0, 0, 0, 0.8);
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.1));
-        border: 1px solid rgba(0, 255, 255, 0.5);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 1px solid rgba(255, 215, 0, 0.5);
         border-bottom: none;
-        box-shadow: 0 -8px 25px rgba(0, 255, 255, 0.2);
+        box-shadow: 0 -4px 15px rgba(255, 215, 0, 0.2);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         font-weight: 800;
-        color: #00ffff;
-        font-family: 'Orbitron', monospace;
+        color: #FFD700;
     }
     
     [data-testid="stMetricDelta"] {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 600;
     }
     
@@ -526,12 +353,11 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"],
     .stDateInput [data-baseweb="input"],
     .stTimeInput [data-baseweb="input"] {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
         border-radius: 15px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        color: #e0e6ed;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        color: white;
         transition: all 0.3s ease;
     }
     
@@ -541,17 +367,17 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"]:hover,
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
-        background: rgba(25, 30, 45, 0.8);
-        border: 1px solid rgba(0, 255, 255, 0.5);
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
     /* Custom spinner */
     .stSpinner > div {
         border: 4px solid rgba(0, 0, 0, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #00ffff;
-        width: 50px;
-        height: 50px;
+        border-top: 4px solid #FFD700;
+        width: 40px;
+        height: 40px;
         animation: spin 1s linear infinite;
         margin: 0 auto;
     }
@@ -563,106 +389,87 @@ st.markdown("""
     
     /* Custom expander */
     .streamlit-expanderHeader {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 15px;
-        padding: 16px 20px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 12px;
+        padding: 14px 18px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
         font-weight: 600;
         transition: all 0.3s ease;
     }
     
     .streamlit-expanderHeader:hover {
-        background: rgba(25, 30, 45, 0.8);
+        background: rgba(0, 0, 0, 0.8);
     }
     
     /* Custom dataframes */
     .dataframe {
-        border-radius: 20px;
+        border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-        background: rgba(20, 25, 40, 0.5);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     
     /* Custom success/error boxes */
     .stAlert {
-        border-radius: 20px;
-        padding: 20px 25px;
+        border-radius: 15px;
+        padding: 16px 20px;
         font-weight: 600;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
     
     /* Custom sidebar */
     .css-1d391kg {
-        background: linear-gradient(180deg, #0a0e27 0%, #1a1f3a 100%);
-        border-right: 1px solid rgba(0, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+        border-right: 1px solid rgba(255, 215, 0, 0.2);
     }
     
     /* Custom chart elements */
     .stChart {
-        border-radius: 25px;
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-        background: rgba(20, 25, 40, 0.3);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 255, 255, 0.2);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #00ffff, #ff00ff);
-        border-radius: 15px;
-        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        padding: 20px;
-        border-radius: 20px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.7);
+        padding: 18px;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: linear-gradient(90deg, #00ffff, #ff00ff);
-        border-radius: 15px;
-        height: 10px;
+        background: linear-gradient(90deg, #FFD700, #FFA500);
+        border-radius: 10px;
+        height: 8px;
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 10px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
     }
     
     /* Premium badge */
     .premium-badge {
-        background: linear-gradient(135deg, #00ffff, #ff00ff);
-        color: #0a0e27;
-        padding: 6px 16px;
-        border-radius: 25px;
-        font-size: 14px;
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #000000;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
         font-weight: 700;
         display: inline-block;
-        margin-left: 12px;
-        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+        margin-left: 10px;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
         animation: shimmer 2s infinite;
-        font-family: 'Orbitron', monospace;
-        letter-spacing: 1px;
     }
     
     @keyframes shimmer {
@@ -684,15 +491,13 @@ st.markdown("""
     
     /* Login form enhancements */
     .login-container {
-        background: rgba(15, 20, 35, 0.8);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border-radius: 30px;
-        padding: 50px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        max-width: 600px;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 40px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        max-width: 500px;
         margin: 0 auto;
     }
     
@@ -704,9 +509,9 @@ st.markdown("""
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1), transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1), transparent 50%),
-                    radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.1), transparent 50%);
+        background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(255, 140, 0, 0.1), transparent 50%);
         animation: bgMove 20s ease infinite;
     }
     
@@ -718,13 +523,12 @@ st.markdown("""
     
     /* Premium access card */
     .premium-access-card {
-        background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
-        border: 2px solid rgba(0, 255, 255, 0.3);
-        border-radius: 25px;
-        padding: 40px;
-        margin: 25px 0;
-        box-shadow: 0 20px 50px rgba(0, 255, 255, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 20px 0;
+        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -737,7 +541,7 @@ st.markdown("""
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
         animation: rotate 20s linear infinite;
     }
     
@@ -749,14 +553,14 @@ st.markdown("""
     /* Threat radar animation */
     .threat-radar {
         position: relative;
-        width: 250px;
-        height: 250px;
+        width: 200px;
+        height: 200px;
         margin: 0 auto;
     }
     
     .radar-circle {
         position: absolute;
-        border: 2px solid rgba(0, 255, 255, 0.3);
+        border: 2px solid rgba(255, 215, 0, 0.3);
         border-radius: 50%;
         animation: radarPulse 2s infinite;
     }
@@ -768,15 +572,12 @@ st.markdown("""
     
     /* Enhanced AI visualization */
     .ai-visualization {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 25px;
-        padding: 25px;
-        margin: 25px 0;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 20px 0;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     
     /* AI pulse animation */
@@ -793,7 +594,7 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: rgba(0, 255, 255, 0.3);
+        background: rgba(255, 215, 0, 0.3);
         animation: aiPulse 2s infinite;
     }
     
@@ -803,87 +604,23 @@ st.markdown("""
         100% { transform: scale(1); opacity: 0.7; }
     }
     
-    /* AI visualization card */
-    .ai-visualization-card {
-        background: rgba(20, 25, 40, 0.7);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        padding: 30px;
-        border-radius: 25px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        margin: 25px 0;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .ai-visualization-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
-        transform: translateX(-100%);
-        transition: transform 0.6s;
-    }
-    
-    .ai-visualization-card:hover::before {
-        transform: translateX(100%);
-    }
-    
-    /* AI processing animation */
-    .ai-processing {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 25px 0;
-    }
-    
-    .ai-node {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: #00ffff;
-        margin: 0 8px;
-        animation: nodePulse 1.5s infinite;
-    }
-    
-    .ai-node:nth-child(2) {
-        animation-delay: 0.2s;
-        background: #ff00ff;
-    }
-    
-    .ai-node:nth-child(3) {
-        animation-delay: 0.4s;
-        background: #ffff00;
-    }
-    
-    @keyframes nodePulse {
-        0% { transform: scale(1); opacity: 0.7; }
-        50% { transform: scale(1.5); opacity: 1; }
-        100% { transform: scale(1); opacity: 0.7; }
-    }
-    
     /* New Threat Analysis Animation */
     .threat-analysis-container {
         position: relative;
         width: 100%;
-        height: 300px;
+        height: 250px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: 25px 0;
+        margin: 20px 0;
     }
     
     .radar-scanner {
         position: relative;
-        width: 220px;
-        height: 220px;
-        margin-bottom: 25px;
+        width: 180px;
+        height: 180px;
+        margin-bottom: 20px;
     }
     
     .radar-background {
@@ -891,8 +628,8 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(15, 20, 35, 0.9) 0%, rgba(15, 20, 35, 0.6) 70%, transparent 100%);
-        border: 2px solid rgba(0, 255, 255, 0.3);
+        background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+        border: 2px solid rgba(255, 215, 0, 0.3);
         overflow: hidden;
     }
     
@@ -907,7 +644,7 @@ st.markdown("""
     .radar-grid::after {
         content: '';
         position: absolute;
-        background: rgba(0, 255, 255, 0.2);
+        background: rgba(255, 215, 0, 0.2);
     }
     
     .radar-grid::before {
@@ -928,7 +665,7 @@ st.markdown("""
         position: absolute;
         width: 50%;
         height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.8), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent);
         top: 50%;
         left: 50%;
         transform-origin: left center;
@@ -943,13 +680,13 @@ st.markdown("""
     .radar-sweep::before {
         content: '';
         position: absolute;
-        width: 12px;
-        height: 12px;
-        background: rgba(0, 255, 255, 0.8);
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 215, 0, 0.8);
         border-radius: 50%;
         right: 0;
-        top: -5px;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        top: -4px;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
     }
     
     .threat-dots {
@@ -961,9 +698,9 @@ st.markdown("""
     
     .threat-dot {
         position: absolute;
-        width: 10px;
-        height: 10px;
-        background: rgba(0, 255, 255, 0.8);
+        width: 8px;
+        height: 8px;
+        background: rgba(255, 215, 0, 0.8);
         border-radius: 50%;
         opacity: 0;
         animation: threatPulse 2s infinite;
@@ -980,27 +717,26 @@ st.markdown("""
     }
     
     .analysis-status {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: 600;
-        color: #00ffff;
+        color: #FFD700;
         text-align: center;
-        margin-bottom: 20px;
-        font-family: 'Orbitron', monospace;
+        margin-bottom: 15px;
     }
     
     .progress-container {
         width: 80%;
-        height: 10px;
+        height: 8px;
         background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
+        border-radius: 4px;
         overflow: hidden;
     }
     
     .progress-bar {
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, #00ffff, #ff00ff);
-        border-radius: 8px;
+        background: linear-gradient(90deg, #FFD700, #FFA500);
+        border-radius: 4px;
         transition: width 0.3s ease;
         animation: progressFill 3.5s ease-in-out forwards;
     }
@@ -1014,7 +750,7 @@ st.markdown("""
         display: flex;
         justify-content: space-between;
         width: 80%;
-        margin-top: 20px;
+        margin-top: 15px;
     }
     
     .phase {
@@ -1030,14 +766,13 @@ st.markdown("""
     }
     
     .phase-icon {
-        font-size: 1.8rem;
-        margin-bottom: 8px;
+        font-size: 1.5rem;
+        margin-bottom: 5px;
     }
     
     .phase-text {
-        font-size: 0.9rem;
-        color: #00ffff;
-        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.8rem;
+        color: #FFD700;
     }
     
     .phase:nth-child(1) {
@@ -1064,42 +799,20 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Add holographic particles background
-def add_holographic_particles():
+# Add animated particles to the background
+def add_particles():
     st.markdown("""
-    <div class="holographic-particles">
-        <!-- Generate particles dynamically with JavaScript -->
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const container = document.querySelector('.holographic-particles');
-                const particleCount = 30;
-                
-                for (let i = 0; i < particleCount; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    
-                    // Random size
-                    const size = Math.random() * 10 + 5;
-                    particle.style.width = `${size}px`;
-                    particle.style.height = `${size}px`;
-                    
-                    // Random position
-                    particle.style.left = `${Math.random() * 100}%`;
-                    particle.style.top = `${Math.random() * 100}%`;
-                    
-                    // Random animation duration
-                    const duration = Math.random() * 20 + 10;
-                    particle.style.animationDuration = `${duration}s`;
-                    
-                    // Random delay
-                    particle.style.animationDelay = `${Math.random() * 5}s`;
-                    
-                    container.appendChild(particle);
-                }
-            });
-        </script>
+    <div class="particles">
+        <div class="particle" style="width: 10px; height: 10px; left: 10%; animation-duration: 20s;"></div>
+        <div class="particle" style="width: 15px; height: 15px; left: 20%; animation-duration: 25s;"></div>
+        <div class="particle" style="width: 8px; height: 8px; left: 30%; animation-duration: 30s;"></div>
+        <div class="particle" style="width: 12px; height: 12px; left: 40%; animation-duration: 22s;"></div>
+        <div class="particle" style="width: 18px; height: 18px; left: 50%; animation-duration: 28s;"></div>
+        <div class="particle" style="width: 7px; height: 7px; left: 60%; animation-duration: 32s;"></div>
+        <div class="particle" style="width: 14px; height: 14px; left: 70%; animation-duration: 24s;"></div>
+        <div class="particle" style="width: 9px; height: 9px; left: 80%; animation-duration: 26s;"></div>
+        <div class="particle" style="width: 16px; height: 16px; left: 90%; animation-duration: 29s;"></div>
     </div>
-    <div class="circuit-board"></div>
     """, unsafe_allow_html=True)
 
 # Add the new animation function
@@ -1165,7 +878,7 @@ class SecurityManager:
         self.session_timeout = timedelta(minutes=30)
         self.encryption_key = Fernet.generate_key()
         self.cipher_suite = Fernet(self.encryption_key)
-        
+    
     def encrypt_data(self, data):
         """Encrypt sensitive data"""
         if isinstance(data, str):
@@ -1369,7 +1082,7 @@ class EnhancedAuthenticationSystem:
                     "Dedicated account manager",
                     "Custom integrations"
                 ],
-                "color": "#00ffff"
+                "color": "#FFD700"
             }
         }
         self.load_users()
@@ -1891,7 +1604,7 @@ class SearchAnalyzer:
         
         return results
     
-    def generate_analysis(self, threat_level, found_keywords):
+    def generate_analysis(self, threat_level, keywords):
         """Generate analysis text based on threat level"""
         analyses = {
             'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
@@ -1933,13 +1646,13 @@ search_analyzer = SearchAnalyzer()
 class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
-            'primary': '#00ffff',
-            'secondary': '#ff00ff',
+            'primary': '#FFD700',
+            'secondary': '#FFA500',
             'success': '#10B981',
             'warning': '#F59E0B',
             'danger': '#EF4444',
             'info': '#3B82F6',
-            'dark': '#0a0e27',
+            'dark': '#000000',
             'light': '#F3F4F6'
         }
     
@@ -1953,7 +1666,7 @@ class AdvancedVisualizations:
             fill='toself',
             name='Threat Level',
             line_color=self.colors['primary'],
-            fillcolor=f'rgba(0, 255, 255, 0.3)'
+            fillcolor=f'rgba(255, 215, 0, 0.3)'
         ))
         
         fig.update_layout(
@@ -2074,7 +1787,7 @@ class AdvancedVisualizations:
             z=z_data,
             x=platforms,
             y=threat_levels,
-            colorscale='Viridis',
+            colorscale='YlOrRd',
             showscale=True
         ))
         
@@ -2090,50 +1803,6 @@ class AdvancedVisualizations:
 
 # Initialize visualizations
 viz = AdvancedVisualizations()
-
-# Enhanced monitoring class
-class EnhancedSocialMediaMonitor:
-    def __init__(self):
-        self.api_manager = api_manager
-        self.ai_engine = ai_engine
-    
-    def simulate_monitoring_with_api(self, brand_name, sector):
-        posts = []
-        user_id = st.session_state.get('user_id')
-        if not user_id:
-            return posts
-            
-        connected_platforms = list(api_manager.load_api_keys(user_id).keys()) or ['twitter', 'facebook', 'instagram']
-        
-        for platform in connected_platforms:
-            for _ in range(random.randint(3, 8)):
-                content = self.generate_business_post(brand_name, sector)
-                post = {
-                    'platform': platform.capitalize(),
-                    'content': content,
-                    'author': f"user_{random.randint(1000, 9999)}",
-                    'engagement': random.randint(50, 5000),
-                    'api_connected': platform in api_manager.load_api_keys(user_id)
-                }
-                
-                # Add AI analysis
-                analysis = self.ai_engine.detect_threats(content, brand_name)
-                post['threat_level'] = analysis['threat_level']
-                post['sentiment'] = analysis['sentiment'][0]
-                
-                posts.append(post)
-        return posts
-    
-    def generate_business_post(self, brand_name, sector):
-        templates = {
-            'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
-            'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
-            'retail': [f"{brand_name} product quality", f"{brand_name} store experience"]
-        }
-        return random.choice(templates.get(sector, templates['technology']))
-
-# Initialize
-enhanced_monitor = EnhancedSocialMediaMonitor()
 
 # User registration and management functions
 def show_user_registration():
@@ -2288,16 +1957,12 @@ def show_user_management():
                 st.error("You cannot delete your own account")
 
 def show_login_form():
-    """Display login form with enhanced futuristic design"""
+    """Display login form with enhanced design"""
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <div class="ai-logo-container">
-            <div class="logo-ring"></div>
-            <div class="ai-logo">🛡️</div>
-        </div>
-        <h1 style="font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Orbitron', monospace; letter-spacing: 2px;">BrandGuardian AI</h1>
-        <p style="font-size: 1.4rem; color: #00ffff; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px;">Neural Intelligence for Brand Protection</p>
+        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
+        <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence Platform</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -2307,9 +1972,9 @@ def show_login_form():
     with col1:
         st.markdown("""
         <div style='text-align: center;'>
-            <div style="font-size: 8rem; margin-bottom: 20px;" class="ai-logo">🤖</div>
-            <h3 style="color: #00ffff; font-family: 'Orbitron', monospace;">AI-Powered Security</h3>
-            <p style="color: #ff00ff; font-family: 'Rajdhani', sans-serif;">Neural authentication system</p>
+            <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🛡️</div>
+            <h3 style="color: #FFD700;">Secure Login</h3>
+            <p style="color: #FFD700;">Access your brand protection dashboard</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2339,23 +2004,20 @@ def show_login_form():
                 else:
                     st.error(f"❌ {message}")
     
-    # AI Security information
-    with st.expander("🔐 AI Security Features"):
+    # Security information
+    with st.expander("🔒 Security Information"):
         st.markdown("""
-        - Neural network authentication
-        - Biometric security integration
-        - Behavioral pattern analysis
+        - All credentials are encrypted using military-grade encryption
         - Multi-factor authentication ready
         - Session timeout after 30 minutes of inactivity
-        - All login attempts analyzed by AI
-        - Real-time threat detection
-        - Advanced encryption protocols
+        - All login attempts are logged and monitored
+        - Regular security audits conducted
         """)
     
     # Forgot password link
     st.markdown("""
     <div style='text-align: center; margin-top: 20px;'>
-        <a href='#' style='color: #00ffff; text-decoration: none; font-family: 'Rajdhani', sans-serif;'>Forgot your password?</a>
+        <a href='#' style='color: #FFD700; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2400,7 +2062,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Active Threats</h3>
             <h1>18</h1>
-            <p style="color: #ff4d4d;">+5 from yesterday</p>
+            <p style="color: #FF0000;">+5 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2409,7 +2071,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>High</h1>
-            <p style="color: #ff4d4d;">Elevated risk</p>
+            <p style="color: #FF0000;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2418,7 +2080,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Response Time</h3>
             <h1>2.1s</h1>
-            <p style="color: #00ffff;">-0.4s improvement</p>
+            <p style="color: #FFD700;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2427,7 +2089,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Protected Assets</h3>
             <h1>24</h1>
-            <p style="color: #00ffff;">Fully secured</p>
+            <p style="color: #FFD700;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2715,10 +2377,10 @@ def show_trend_analysis():
         y=sentiment_data['Sentiment Score'],
         mode='lines+markers',
         name='Sentiment',
-        line=dict(color='#00ffff', width=3),
+        line=dict(color='#FFD700', width=3),
         marker=dict(size=8),
         fill='tozeroy',
-        fillcolor='rgba(0, 255, 255, 0.2)'
+        fillcolor='rgba(255, 215, 0, 0.2)'
     ))
     
     fig.update_layout(
@@ -2925,6 +2587,50 @@ def show_api_key_management():
     status_df = pd.DataFrame(status_data)
     st.dataframe(status_df, use_container_width=True, hide_index=True)
 
+# Enhanced monitoring class
+class EnhancedSocialMediaMonitor:
+    def __init__(self):
+        self.api_manager = api_manager
+        self.ai_engine = ai_engine
+    
+    def simulate_monitoring_with_api(self, brand_name, sector):
+        posts = []
+        user_id = st.session_state.get('user_id')
+        if not user_id:
+            return posts
+            
+        connected_platforms = list(api_manager.load_api_keys(user_id).keys()) or ['twitter', 'facebook', 'instagram']
+        
+        for platform in connected_platforms:
+            for _ in range(random.randint(3, 8)):
+                content = self.generate_business_post(brand_name, sector)
+                post = {
+                    'platform': platform.capitalize(),
+                    'content': content,
+                    'author': f"user_{random.randint(1000, 9999)}",
+                    'engagement': random.randint(50, 5000),
+                    'api_connected': platform in api_manager.load_api_keys(user_id)
+                }
+                
+                # Add AI analysis
+                analysis = self.ai_engine.detect_threats(content, brand_name)
+                post['threat_level'] = analysis['threat_level']
+                post['sentiment'] = analysis['sentiment'][0]
+                
+                posts.append(post)
+        return posts
+    
+    def generate_business_post(self, brand_name, sector):
+        templates = {
+            'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
+            'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
+            'retail': [f"{brand_name} product quality", f"{brand_name} store experience"]
+        }
+        return random.choice(templates.get(sector, templates['technology']))
+
+# Initialize
+enhanced_monitor = EnhancedSocialMediaMonitor()
+
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
     st.header("🤖 BrandGuardian AI Dashboard")
@@ -2942,12 +2648,12 @@ def show_user_ai_dashboard():
         <div style="background-color: {subscription_info['color']}20; 
                     border: 1px solid {subscription_info['color']}; 
                     border-radius: 20px; padding: 8px 16px; margin-right: 15px;">
-            <span style="color: {subscription_info['color']}; font-weight: bold; font-family: 'Orbitron', monospace;">
+            <span style="color: {subscription_info['color']}; font-weight: bold;">
                 {subscription_info['name']} Subscription
             </span>
         </div>
         <div>
-            <a href="#upgrade" style="color: #00ffff; text-decoration: none; font-family: 'Rajdhani', sans-serif;">Upgrade Plan →</a>
+            <a href="#upgrade" style="color: #FFD700; text-decoration: none;">Upgrade Plan →</a>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -2960,7 +2666,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Brand Mentions</h3>
             <h1>142</h1>
-            <p style="color: #00ffff;">+12 from last week</p>
+            <p style="color: #FFD700;">+12 from last week</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2969,7 +2675,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>Low</h1>
-            <p style="color: #00ffff;">Stable</p>
+            <p style="color: #FFD700;">Stable</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2978,7 +2684,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Response Rate</h3>
             <h1>92%</h1>
-            <p style="color: #00ffff;">Excellent</p>
+            <p style="color: #FFD700;">Excellent</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -3024,8 +2730,8 @@ def show_user_ai_dashboard():
             <div style="background-color: {plan_info['color']}20; 
                         border: 1px solid {plan_info['color']}; 
                         border-radius: 15px; padding: 20px; height: 100%;">
-                <h3 style="text-align: center; font-family: 'Orbitron', monospace;">{plan_info['name']}</h3>
-                <h4 style="text-align: center; font-family: 'Rajdhani', sans-serif;">{plan_info['price']}</h4>
+                <h3 style="text-align: center;">{plan_info['name']}</h3>
+                <h4 style="text-align: center;">{plan_info['price']}</h4>
                 <ul>
                     {"".join([f"<li>{feature}</li>" for feature in plan_info['features']])}
                 </ul>
@@ -3058,7 +2764,7 @@ def show_social_monitoring():
     # Display posts with AI analysis
     for post in posts[:5]:
         threat_class = f"threat-{post['threat_level']}"
-        sentiment_color = "#ff4d4d" if post['sentiment'] == 'negative' else "#00ffff" if post['sentiment'] == 'positive' else "#FFFFFF"
+        sentiment_color = "#FF0000" if post['sentiment'] == 'negative' else "#FFD700" if post['sentiment'] == 'positive' else "#FFFFFF"
         
         with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
             st.write(post['content'])
@@ -3066,13 +2772,13 @@ def show_social_monitoring():
             st.markdown(f"""
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <span class="{threat_class}">Threat: {post['threat_level'].upper()}</span>
-                <span style="color: {sentiment_color}; font-weight: 600; font-family: 'Orbitron', monospace;">Sentiment: {post['sentiment'].upper()}</span>
+                <span style="color: {sentiment_color}; font-weight: 600;">Sentiment: {post['sentiment'].upper()}</span>
             </div>
             """, unsafe_allow_html=True)
 
 def show_ai_insights():
-    """AI insights functionality with enhanced visualization"""
-    st.header("🧠 Neural Intelligence Insights")
+    """AI insights functionality - requires Advanced subscription"""
+    st.header("🧠 AI-Powered Insights")
     
     # Get user's subscription
     username = st.session_state.get('username')
@@ -3084,15 +2790,6 @@ def show_ai_insights():
     
     brand_name = st.session_state.get('brand_name', 'Your Brand')
     
-    # AI Processing Animation
-    st.markdown("""
-    <div class="ai-processing">
-        <div class="ai-node"></div>
-        <div class="ai-node"></div>
-        <div class="ai-node"></div>
-    </div>
-    """, unsafe_allow_html=True)
-    
     # Generate sample analyses
     analyses = []
     for i in range(10):
@@ -3103,13 +2800,13 @@ def show_ai_insights():
     # Generate report
     report = ai_engine.generate_threat_report(analyses)
     
-    # Display report in AI-themed cards
+    # Display report
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown("""
-        <div class="ai-visualization-card">
-            <h4>📊 Neural Threat Analysis</h4>
+        <div class="ai-visualization">
+            <h4>📊 Threat Summary</h4>
             <p>Total Analyses: {}</p>
             <p>High Threats: {}</p>
             <p>Medium Threats: {}</p>
@@ -3126,7 +2823,7 @@ def show_ai_insights():
     
     with col2:
         st.markdown("""
-        <div class="ai-visualization-card">
+        <div class="ai-visualization">
             <h4>✅ AI Recommendations</h4>
             {}
         </div>
@@ -3135,22 +2832,22 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
     
     # Keyword frequency analysis
-    st.subheader("🔤 Neural Keyword Analysis")
+    st.subheader("🔤 Keyword Frequency Analysis")
     
     texts = [a['text'] for a in analyses]
     keyword_freq = ai_engine.create_keyword_frequency(texts)
     
-    # Create bar chart with AI theme
-    fig = viz.create_keyword_bar_chart(keyword_freq, "Neural Keyword Frequency Analysis")
+    # Create bar chart
+    fig = viz.create_keyword_bar_chart(keyword_freq, "Top Keywords in Threat Analysis")
     st.plotly_chart(fig, use_container_width=True)
     
     # Threat patterns
-    st.subheader("🔍 Neural Pattern Recognition")
+    st.subheader("🔍 Threat Pattern Analysis")
     
     patterns = ai_engine.create_threat_patterns(analyses)
     
-    # Create heatmap with AI theme
-    fig = viz.create_pattern_heatmap(patterns, "Neural Threat Pattern Analysis")
+    # Create heatmap
+    fig = viz.create_pattern_heatmap(patterns, "Threat Patterns by Platform and Level")
     st.plotly_chart(fig, use_container_width=True)
     
     # Pattern details
@@ -3158,7 +2855,7 @@ def show_ai_insights():
     
     with col1:
         st.markdown("""
-        <div class="ai-visualization-card">
+        <div class="ai-visualization">
             <h4>🎯 Top Threat Keywords</h4>
             {}
         </div>
@@ -3168,7 +2865,7 @@ def show_ai_insights():
     
     with col2:
         st.markdown("""
-        <div class="ai-visualization-card">
+        <div class="ai-visualization">
             <h4>📱 Platform Distribution</h4>
             {}
         </div>
@@ -3177,8 +2874,8 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
 
 def main():
-    # Add holographic particles background
-    add_holographic_particles()
+    # Add animated particles
+    add_particles()
     
     # Check authentication first
     if not st.session_state.get('authenticated', False):
@@ -3196,16 +2893,10 @@ def main():
     if username and "user_subscription" not in st.session_state:
         st.session_state.user_subscription = auth_system.get_user_subscription(username)
     
-    # Header with futuristic theme
+    # Header
     st.markdown("""
-    <div style="text-align: center; margin-bottom: 30px;">
-        <div class="ai-logo-container">
-            <div class="logo-ring"></div>
-            <div class="ai-logo">🛡️</div>
-        </div>
-        <h1 class="futuristic-header">BrandGuardian AI Pro</h1>
-        <div style="text-align: center; margin-top: 15px;" class="accent-text">Advanced Neural Intelligence for Brand Protection</div>
-    </div>
+    <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
+    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
     # Sidebar with user info and logout button
@@ -3213,22 +2904,22 @@ def main():
         # User info
         subscription_info = auth_system.subscription_plans[st.session_state.user_subscription]
         st.markdown(f"""
-        <div style="text-align: center; margin-bottom: 25px;">
-            <div style="font-size: 3.5rem;">👤</div>
-            <h3 style="font-family: 'Orbitron', monospace;">{st.session_state.username}</h3>
-            <p style="font-family: 'Rajdhani', sans-serif;">{st.session_state.get('user_access_level', 'user').title()} Access</p>
-            <p style="font-family: 'Rajdhani', sans-serif;">{auth_system.users[st.session_state.username]['company']}</p>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 3rem;">👤</div>
+            <h3>{st.session_state.username}</h3>
+            <p>{st.session_state.get('user_access_level', 'user').title()} Access</p>
+            <p>{auth_system.users[st.session_state.username]['company']}</p>
             <div style="background-color: {subscription_info['color']}20; 
                         border: 1px solid {subscription_info['color']}; 
-                        border-radius: 20px; padding: 8px 16px; margin-top: 15px; display: inline-block;">
-                <span style="color: {subscription_info['color']}; font-weight: bold; font-family: 'Orbitron', monospace;">
+                        border-radius: 20px; padding: 8px 16px; margin-top: 10px; display: inline-block;">
+                <span style="color: {subscription_info['color']}; font-weight: bold;">
                     {subscription_info['name']} Subscription
                 </span>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        st.header("Business Configuration", font_family='Orbitron')
+        st.header("Business Configuration")
         brand_name = st.text_input("Brand Name", st.session_state.brand_name)
         st.session_state.brand_name = brand_name
         
@@ -3236,7 +2927,7 @@ def main():
         st.session_state.sector = sector
         
         st.markdown("---")
-        st.subheader("🔐 Access Status", font_family='Orbitron')
+        st.subheader("🔐 Access Status")
         if st.session_state.user_subscription == "premium":
             st.success("✅ Premium Access")
             st.markdown('<span class="premium-badge">PREMIUM</span>', unsafe_allow_html=True)
@@ -3246,7 +2937,7 @@ def main():
         st.markdown("---")
         user_id = st.session_state.get('user_id')
         api_keys = api_manager.load_api_keys(user_id) if user_id else {}
-        st.subheader("🔑 API Status", font_family='Orbitron')
+        st.subheader("🔑 API Status")
         st.info(f"{len(api_keys)} platform(s) connected")
         
         # User management for admin only
