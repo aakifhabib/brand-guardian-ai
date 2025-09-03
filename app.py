@@ -110,21 +110,21 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Advanced CSS with enhanced black and gold theme
+# Next-Generation CSS with Cyberpunk/Tech Theme
 st.markdown("""
 <style>
     /* Base styles */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
     
     .main {
-        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #0a0a0a 100%);
         color: #FFFFFF;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Exo 2', sans-serif;
         overflow-x: hidden;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #0a0a0a 100%);
         background-size: 400% 400%;
         animation: gradientBG 15s ease infinite;
     }
@@ -135,8 +135,8 @@ st.markdown("""
         100% { background-position: 0% 50% }
     }
     
-    /* Elegant golden particles background */
-    .golden-particles {
+    /* Futuristic holographic particles background */
+    .holographic-particles {
         position: fixed;
         top: 0;
         left: 0;
@@ -146,11 +146,12 @@ st.markdown("""
         overflow: hidden;
     }
     
-    .golden-particle {
+    .holographic-particle {
         position: absolute;
-        background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0) 70%);
+        background: radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, rgba(153, 51, 255, 0.8) 50%, rgba(255, 0, 255, 0) 70%);
         border-radius: 50%;
         animation: float 20s infinite linear;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
     }
     
     @keyframes float {
@@ -160,50 +161,51 @@ st.markdown("""
         100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
     }
     
-    /* Premium header styling */
+    /* Premium header styling with futuristic font */
     .premium-header {
-        font-family: 'Playfair Display', serif;
-        font-size: 4rem;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 4.5rem;
         font-weight: 900;
         text-align: center;
         margin: 20px 0;
-        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+        background: linear-gradient(90deg, #00ffff 0%, #9933ff 50%, #ff00ff 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
-        animation: goldGlow 3s ease-in-out infinite alternate;
+        text-shadow: 0px 2px 20px rgba(0, 255, 255, 0.5);
+        animation: neonGlow 3s ease-in-out infinite alternate;
         position: relative;
+        letter-spacing: 2px;
     }
     
-    @keyframes goldGlow {
+    @keyframes neonGlow {
         from { 
-            text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
+            text-shadow: 0px 2px 20px rgba(0, 255, 255, 0.5);
             transform: scale(1);
         }
         to { 
-            text-shadow: 0px 2px 20px rgba(255, 215, 0, 0.6);
+            text-shadow: 0px 2px 40px rgba(153, 51, 255, 0.8);
             transform: scale(1.02);
         }
     }
     
-    /* New BrandGuardian logo - Shield with digital circuit pattern */
+    /* New BrandGuardian logo - Tech Shield with Digital Circuit Pattern */
     .brandguardian-logo {
         display: inline-block;
-        font-size: 5rem;
+        font-size: 7rem;
         position: relative;
-        animation: logoPulse 4s infinite;
-        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+        animation: techPulse 4s infinite;
+        filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7));
     }
     
-    @keyframes logoPulse {
-        0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
-        25% { transform: scale(1.05) rotate(-2deg); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7)); }
-        50% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6)); }
-        75% { transform: scale(1.05) rotate(2deg); filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7)); }
-        100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5)); }
+    @keyframes techPulse {
+        0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7)); }
+        25% { transform: scale(1.05) rotate(-2deg); filter: drop-shadow(0 0 30px rgba(153, 51, 255, 0.8)); }
+        50% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 40px rgba(255, 0, 255, 0.7)); }
+        75% { transform: scale(1.05) rotate(2deg); filter: drop-shadow(0 0 30px rgba(153, 51, 255, 0.8)); }
+        100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7)); }
     }
     
-    /* Digital circuit pattern overlay */
+    /* Digital circuit pattern overlay with neon colors */
     .circuit-overlay {
         position: fixed;
         top: 0;
@@ -211,11 +213,11 @@ st.markdown("""
         width: 100%;
         height: 100%;
         background-image: 
-            linear-gradient(90deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px),
-            linear-gradient(0deg, rgba(255, 215, 0, 0.05) 1px, transparent 1px);
+            linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(0deg, rgba(153, 51, 255, 0.1) 1px, transparent 1px);
         background-size: 30px 30px;
         z-index: -1;
-        opacity: 0.5;
+        opacity: 0.7;
         animation: circuitMove 30s linear infinite;
     }
     
@@ -235,11 +237,14 @@ st.markdown("""
     }
     
     .accent-text {
-        font-size: 1.2rem;
-        color: #FFD700;
+        font-size: 1.4rem;
+        color: #00ffff;
         text-align: center;
         margin-bottom: 40px;
         animation: fadeIn 2s ease-in;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 500;
+        letter-spacing: 1px;
     }
     
     @keyframes fadeIn {
@@ -247,15 +252,15 @@ st.markdown("""
         to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Enhanced card styling */
+    /* Enhanced card styling with futuristic look */
     .metric-card {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(15px);
+        background: rgba(10, 10, 30, 0.8);
+        backdrop-filter: blur(20px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.3);
         margin: 15px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
@@ -268,7 +273,7 @@ st.markdown("""
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+        background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
         transform: translateX(-100%);
         transition: transform 0.6s;
     }
@@ -279,42 +284,42 @@ st.markdown("""
     
     .metric-card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(255, 215, 0, 0.3);
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        box-shadow: 0 15px 50px rgba(0, 255, 255, 0.4);
+        border: 1px solid rgba(153, 51, 255, 0.5);
     }
     
     .search-analysis-card {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(15px);
+        background: rgba(10, 10, 30, 0.8);
+        backdrop-filter: blur(20px);
         padding: 25px;
         border-radius: 20px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.3);
         margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
         transition: all 0.3s ease;
     }
     
     .search-analysis-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 15px 45px rgba(153, 51, 255, 0.4);
     }
     
     .search-result-card {
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(10, 10, 30, 0.6);
         border-radius: 15px;
         padding: 20px;
         margin: 15px 0;
-        border-left: 5px solid #FFD700;
+        border-left: 5px solid #00ffff;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .search-result-card:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(10, 10, 30, 0.9);
         transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
     }
     
-    /* Enhanced threat indicators */
+    /* Enhanced threat indicators with neon colors */
     .threat-indicator {
         padding: 10px 16px;
         border-radius: 25px;
@@ -323,19 +328,20 @@ st.markdown("""
         margin: 8px;
         display: inline-block;
         letter-spacing: 0.5px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         transition: all 0.3s ease;
+        font-family: 'Orbitron', sans-serif;
     }
     
     .threat-indicator:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
     }
     
     .threat-high {
-        background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.1));
-        color: #FF0000;
-        border: 1px solid rgba(255, 0, 0, 0.5);
+        background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(255, 0, 255, 0.1));
+        color: #ff00ff;
+        border: 1px solid rgba(255, 0, 255, 0.5);
     }
     
     .threat-medium {
@@ -345,14 +351,14 @@ st.markdown("""
     }
     
     .threat-low {
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
-        color: #FFD700;
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 255, 255, 0.1));
+        color: #00ffff;
+        border: 1px solid rgba(0, 255, 255, 0.5);
     }
     
     /* Status indicators */
     .api-status-connected {
-        color: #FFD700;
+        color: #00ffff;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
@@ -365,22 +371,24 @@ st.markdown("""
     }
     
     .api-status-disconnected {
-        color: #FF0000;
+        color: #ff00ff;
         font-weight: 700;
     }
     
-    /* Enhanced button styling */
+    /* Enhanced button styling with futuristic look */
     .stButton > button {
         border-radius: 15px;
-        border: 1px solid rgba(255, 215, 0, 0.5);
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
-        color: #FFD700;
+        border: 1px solid rgba(0, 255, 255, 0.5);
+        background: linear-gradient(135deg, rgba(10, 10, 30, 0.7), rgba(10, 10, 30, 0.5));
+        color: #00ffff;
         font-weight: 700;
         padding: 12px 24px;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
     }
     
     .stButton > button::before {
@@ -390,7 +398,7 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
         transition: left 0.5s;
     }
     
@@ -399,10 +407,10 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
-        border: 1px solid rgba(255, 215, 0, 0.8);
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(153, 51, 255, 0.1));
+        border: 1px solid rgba(153, 51, 255, 0.8);
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
     }
     
     /* Enhanced tab styling */
@@ -412,31 +420,33 @@ st.markdown("""
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(10, 10, 30, 0.7);
         border-radius: 15px 15px 0 0;
         padding: 14px 20px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.3);
         border-bottom: none;
         font-weight: 600;
         transition: all 0.3s ease;
+        font-family: 'Orbitron', sans-serif;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(10, 10, 30, 0.8);
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(153, 51, 255, 0.1));
+        border: 1px solid rgba(0, 255, 255, 0.5);
         border-bottom: none;
-        box-shadow: 0 -4px 15px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 -4px 15px rgba(0, 255, 255, 0.3);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
         font-size: 2.2rem;
         font-weight: 800;
-        color: #FFD700;
+        color: #00ffff;
+        font-family: 'Orbitron', sans-serif;
     }
     
     [data-testid="stMetricDelta"] {
@@ -451,10 +461,10 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"],
     .stDateInput [data-baseweb="input"],
     .stTimeInput [data-baseweb="input"] {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(10, 10, 30, 0.7);
         backdrop-filter: blur(10px);
         border-radius: 15px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.3);
         color: white;
         transition: all 0.3s ease;
     }
@@ -465,15 +475,15 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"]:hover,
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
-        background: rgba(0, 0, 0, 0.8);
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: rgba(10, 10, 30, 0.8);
+        border: 1px solid rgba(153, 51, 255, 0.5);
     }
     
     /* Custom spinner */
     .stSpinner > div {
         border: 4px solid rgba(0, 0, 0, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #FFD700;
+        border-top: 4px solid #00ffff;
         width: 40px;
         height: 40px;
         animation: spin 1s linear infinite;
@@ -487,23 +497,24 @@ st.markdown("""
     
     /* Custom expander */
     .streamlit-expanderHeader {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(10, 10, 30, 0.7);
         border-radius: 12px;
         padding: 14px 18px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.3);
         font-weight: 600;
         transition: all 0.3s ease;
+        font-family: 'Orbitron', sans-serif;
     }
     
     .streamlit-expanderHeader:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(10, 10, 30, 0.8);
     }
     
     /* Custom dataframes */
     .dataframe {
         border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
     }
     
     /* Custom success/error boxes */
@@ -511,54 +522,54 @@ st.markdown("""
         border-radius: 15px;
         padding: 16px 20px;
         font-weight: 600;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     }
     
     /* Custom sidebar */
     .css-1d391kg {
-        background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
-        border-right: 1px solid rgba(255, 215, 0, 0.2);
+        background: linear-gradient(180deg, #0a0a0a 0%, #1a0033 100%);
+        border-right: 1px solid rgba(0, 255, 255, 0.2);
     }
     
     /* Custom chart elements */
     .stChart {
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #FFD700, #FFA500);
+        background: linear-gradient(90deg, #00ffff, #9933ff);
         border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(10, 10, 30, 0.7);
         padding: 18px;
         border-radius: 15px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.3);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: linear-gradient(90deg, #FFD700, #FFA500);
+        background: linear-gradient(90deg, #00ffff, #9933ff);
         border-radius: 10px;
         height: 8px;
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(10, 10, 30, 0.7);
         border-radius: 8px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(0, 255, 255, 0.3);
     }
     
     /* Premium badge */
     .premium-badge {
-        background: linear-gradient(135deg, #FFD700, #FFA500);
+        background: linear-gradient(135deg, #00ffff, #9933ff);
         color: #000000;
         padding: 4px 12px;
         border-radius: 20px;
@@ -566,8 +577,9 @@ st.markdown("""
         font-weight: 700;
         display: inline-block;
         margin-left: 10px;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
         animation: shimmer 2s infinite;
+        font-family: 'Orbitron', sans-serif;
     }
     
     @keyframes shimmer {
@@ -589,12 +601,12 @@ st.markdown("""
     
     /* Login form enhancements */
     .login-container {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(10, 10, 30, 0.8);
         backdrop-filter: blur(20px);
         border-radius: 25px;
         padding: 40px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
         max-width: 500px;
         margin: 0 auto;
     }
@@ -607,9 +619,9 @@ st.markdown("""
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1), transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1), transparent 50%),
-                    radial-gradient(circle at 40% 80%, rgba(255, 140, 0, 0.1), transparent 50%);
+        background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(153, 51, 255, 0.1), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(255, 0, 255, 0.1), transparent 50%);
         animation: bgMove 20s ease infinite;
     }
     
@@ -621,12 +633,12 @@ st.markdown("""
     
     /* Premium access card */
     .premium-access-card {
-        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
-        border: 2px solid rgba(255, 215, 0, 0.3);
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(153, 51, 255, 0.1));
+        border: 2px solid rgba(0, 255, 255, 0.3);
         border-radius: 20px;
         padding: 30px;
         margin: 20px 0;
-        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -639,7 +651,7 @@ st.markdown("""
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
         animation: rotate 20s linear infinite;
     }
     
@@ -658,7 +670,7 @@ st.markdown("""
     
     .radar-circle {
         position: absolute;
-        border: 2px solid rgba(255, 215, 0, 0.3);
+        border: 2px solid rgba(0, 255, 255, 0.3);
         border-radius: 50%;
         animation: radarPulse 2s infinite;
     }
@@ -670,12 +682,12 @@ st.markdown("""
     
     /* Enhanced AI visualization */
     .ai-visualization {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(10, 10, 30, 0.7);
         border-radius: 20px;
         padding: 20px;
         margin: 20px 0;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
     }
     
     /* AI pulse animation */
@@ -692,7 +704,7 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: rgba(255, 215, 0, 0.3);
+        background: rgba(0, 255, 255, 0.3);
         animation: aiPulse 2s infinite;
     }
     
@@ -726,8 +738,8 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
-        border: 2px solid rgba(255, 215, 0, 0.3);
+        background: radial-gradient(circle, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 30, 0.5) 70%, transparent 100%);
+        border: 2px solid rgba(0, 255, 255, 0.3);
         overflow: hidden;
     }
     
@@ -742,7 +754,7 @@ st.markdown("""
     .radar-grid::after {
         content: '';
         position: absolute;
-        background: rgba(255, 215, 0, 0.2);
+        background: rgba(0, 255, 255, 0.2);
     }
     
     .radar-grid::before {
@@ -763,7 +775,7 @@ st.markdown("""
         position: absolute;
         width: 50%;
         height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent);
+        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.8), transparent);
         top: 50%;
         left: 50%;
         transform-origin: left center;
@@ -780,11 +792,11 @@ st.markdown("""
         position: absolute;
         width: 10px;
         height: 10px;
-        background: rgba(255, 215, 0, 0.8);
+        background: rgba(0, 255, 255, 0.8);
         border-radius: 50%;
         right: 0;
         top: -4px;
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
     }
     
     .threat-dots {
@@ -798,7 +810,7 @@ st.markdown("""
         position: absolute;
         width: 8px;
         height: 8px;
-        background: rgba(255, 215, 0, 0.8);
+        background: rgba(0, 255, 255, 0.8);
         border-radius: 50%;
         opacity: 0;
         animation: threatPulse 2s infinite;
@@ -817,9 +829,10 @@ st.markdown("""
     .analysis-status {
         font-size: 1.2rem;
         font-weight: 600;
-        color: #FFD700;
+        color: #00ffff;
         text-align: center;
         margin-bottom: 15px;
+        font-family: 'Orbitron', sans-serif;
     }
     
     .progress-container {
@@ -833,7 +846,7 @@ st.markdown("""
     .progress-bar {
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, #FFD700, #FFA500);
+        background: linear-gradient(90deg, #00ffff, #9933ff);
         border-radius: 4px;
         transition: width 0.3s ease;
         animation: progressFill 3.5s ease-in-out forwards;
@@ -870,7 +883,8 @@ st.markdown("""
     
     .phase-text {
         font-size: 0.8rem;
-        color: #FFD700;
+        color: #00ffff;
+        font-family: 'Orbitron', sans-serif;
     }
     
     .phase:nth-child(1) {
@@ -897,19 +911,19 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Add golden particles to the background
-def add_golden_particles():
+# Add holographic particles to the background
+def add_holographic_particles():
     st.markdown("""
-    <div class="golden-particles">
-        <div class="golden-particle" style="width: 10px; height: 10px; left: 10%; animation-duration: 20s;"></div>
-        <div class="golden-particle" style="width: 15px; height: 15px; left: 20%; animation-duration: 25s;"></div>
-        <div class="golden-particle" style="width: 8px; height: 8px; left: 30%; animation-duration: 30s;"></div>
-        <div class="golden-particle" style="width: 12px; height: 12px; left: 40%; animation-duration: 22s;"></div>
-        <div class="golden-particle" style="width: 18px; height: 18px; left: 50%; animation-duration: 28s;"></div>
-        <div class="golden-particle" style="width: 7px; height: 7px; left: 60%; animation-duration: 32s;"></div>
-        <div class="golden-particle" style="width: 14px; height: 14px; left: 70%; animation-duration: 24s;"></div>
-        <div class="golden-particle" style="width: 9px; height: 9px; left: 80%; animation-duration: 26s;"></div>
-        <div class="golden-particle" style="width: 16px; height: 16px; left: 90%; animation-duration: 29s;"></div>
+    <div class="holographic-particles">
+        <div class="holographic-particle" style="width: 10px; height: 10px; left: 10%; animation-duration: 20s;"></div>
+        <div class="holographic-particle" style="width: 15px; height: 15px; left: 20%; animation-duration: 25s;"></div>
+        <div class="holographic-particle" style="width: 8px; height: 8px; left: 30%; animation-duration: 30s;"></div>
+        <div class="holographic-particle" style="width: 12px; height: 12px; left: 40%; animation-duration: 22s;"></div>
+        <div class="holographic-particle" style="width: 18px; height: 18px; left: 50%; animation-duration: 28s;"></div>
+        <div class="holographic-particle" style="width: 7px; height: 7px; left: 60%; animation-duration: 32s;"></div>
+        <div class="holographic-particle" style="width: 14px; height: 14px; left: 70%; animation-duration: 24s;"></div>
+        <div class="holographic-particle" style="width: 9px; height: 9px; left: 80%; animation-duration: 26s;"></div>
+        <div class="holographic-particle" style="width: 16px; height: 16px; left: 90%; animation-duration: 29s;"></div>
     </div>
     <div class="circuit-overlay"></div>
     """, unsafe_allow_html=True)
@@ -1181,7 +1195,7 @@ class EnhancedAuthenticationSystem:
                     "Dedicated account manager",
                     "Custom integrations"
                 ],
-                "color": "#FFD700"
+                "color": "#00ffff"
             }
         }
         self.load_users()
@@ -1745,13 +1759,13 @@ search_analyzer = SearchAnalyzer()
 class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
-            'primary': '#FFD700',
-            'secondary': '#FFA500',
+            'primary': '#00ffff',
+            'secondary': '#9933ff',
             'success': '#10B981',
             'warning': '#F59E0B',
             'danger': '#EF4444',
             'info': '#3B82F6',
-            'dark': '#000000',
+            'dark': '#0a0a0a',
             'light': '#F3F4F6'
         }
     
@@ -1765,7 +1779,7 @@ class AdvancedVisualizations:
             fill='toself',
             name='Threat Level',
             line_color=self.colors['primary'],
-            fillcolor=f'rgba(255, 215, 0, 0.3)'
+            fillcolor=f'rgba(0, 255, 255, 0.3)'
         ))
         
         fig.update_layout(
@@ -2105,8 +2119,8 @@ def show_login_form():
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
         <div class="brandguardian-logo">🛡️</div>
-        <h1 style="font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
-        <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence</p>
+        <h1 style="font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #00ffff 0%, #9933ff 50%, #ff00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
+        <p style="font-size: 1.2rem; color: #00ffff;">Advanced Brand Protection & Threat Intelligence</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -2117,8 +2131,8 @@ def show_login_form():
         st.markdown("""
         <div style='text-align: center;'>
             <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🔒</div>
-            <h3 style="color: #FFD700;">Secure Login</h3>
-            <p style="color: #FFD700;">Access your brand protection dashboard</p>
+            <h3 style="color: #00ffff;">Secure Login</h3>
+            <p style="color: #00ffff;">Access your brand protection dashboard</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2161,7 +2175,7 @@ def show_login_form():
     # Forgot password link
     st.markdown("""
     <div style='text-align: center; margin-top: 20px;'>
-        <a href='#' style='color: #FFD700; text-decoration: none;'>Forgot your password?</a>
+        <a href='#' style='color: #00ffff; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2206,7 +2220,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Active Threats</h3>
             <h1>18</h1>
-            <p style="color: #FF0000;">+5 from yesterday</p>
+            <p style="color: #ff00ff;">+5 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2215,7 +2229,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>High</h1>
-            <p style="color: #FF0000;">Elevated risk</p>
+            <p style="color: #ff00ff;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2224,7 +2238,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Response Time</h3>
             <h1>2.1s</h1>
-            <p style="color: #FFD700;">-0.4s improvement</p>
+            <p style="color: #00ffff;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2233,7 +2247,7 @@ def show_threat_dashboard():
         <div class="metric-card">
             <h3>Protected Assets</h3>
             <h1>24</h1>
-            <p style="color: #FFD700;">Fully secured</p>
+            <p style="color: #00ffff;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2438,7 +2452,7 @@ def show_trend_analysis():
         y=trend_data['High Threats'],
         mode='lines+markers',
         name='High Threats',
-        line=dict(color='#EF4444', width=3),
+        line=dict(color='#ff00ff', width=3),
         marker=dict(size=6)
     ))
     
@@ -2521,10 +2535,10 @@ def show_trend_analysis():
         y=sentiment_data['Sentiment Score'],
         mode='lines+markers',
         name='Sentiment',
-        line=dict(color='#FFD700', width=3),
+        line=dict(color='#00ffff', width=3),
         marker=dict(size=8),
         fill='tozeroy',
-        fillcolor='rgba(255, 215, 0, 0.2)'
+        fillcolor='rgba(0, 255, 255, 0.2)'
     ))
     
     fig.update_layout(
@@ -2753,7 +2767,7 @@ def show_user_ai_dashboard():
             </span>
         </div>
         <div>
-            <a href="#upgrade" style="color: #FFD700; text-decoration: none;">Upgrade Plan →</a>
+            <a href="#upgrade" style="color: #00ffff; text-decoration: none;">Upgrade Plan →</a>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -2766,7 +2780,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Brand Mentions</h3>
             <h1>142</h1>
-            <p style="color: #FFD700;">+12 from last week</p>
+            <p style="color: #00ffff;">+12 from last week</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2775,7 +2789,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Threat Level</h3>
             <h1>Low</h1>
-            <p style="color: #FFD700;">Stable</p>
+            <p style="color: #00ffff;">Stable</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2784,7 +2798,7 @@ def show_user_ai_dashboard():
         <div class="metric-card">
             <h3>Response Rate</h3>
             <h1>92%</h1>
-            <p style="color: #FFD700;">Excellent</p>
+            <p style="color: #00ffff;">Excellent</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2864,7 +2878,7 @@ def show_social_monitoring():
     # Display posts with AI analysis
     for post in posts[:5]:
         threat_class = f"threat-{post['threat_level']}"
-        sentiment_color = "#FF0000" if post['sentiment'] == 'negative' else "#FFD700" if post['sentiment'] == 'positive' else "#FFFFFF"
+        sentiment_color = "#ff00ff" if post['sentiment'] == 'negative' else "#00ffff" if post['sentiment'] == 'positive' else "#FFFFFF"
         
         with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
             st.write(post['content'])
@@ -2974,8 +2988,8 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
 
 def main():
-    # Add golden particles background
-    add_golden_particles()
+    # Add holographic particles background
+    add_holographic_particles()
     
     # Check authentication first
     if not st.session_state.get('authenticated', False):
