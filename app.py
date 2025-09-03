@@ -110,33 +110,47 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Next-Generation CSS with Cyberpunk/Tech Theme
+# Next-Generation Quantum UI Theme
 st.markdown("""
 <style>
-    /* Base styles */
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+    /* Import futuristic fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Audiowide&display=swap');
     
+    /* Base styles with quantum-inspired background */
     .main {
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #0a0a0a 100%);
+        background: 
+            radial-gradient(ellipse at top, #0a0a1a 0%, #000511 50%, #000000 100%),
+            linear-gradient(135deg, #000000 0%, #0a0015 25%, #000511 50%, #0a0015 75%, #000000 100%);
+        background-size: 400% 400%, 100% 100%;
+        animation: quantumShift 20s ease infinite, gradientFlow 15s ease infinite;
         color: #FFFFFF;
         font-family: 'Exo 2', sans-serif;
         overflow-x: hidden;
+        position: relative;
+    }
+    
+    @keyframes quantumShift {
+        0% { background-position: 0% 50%, 0% 50%; }
+        50% { background-position: 100% 50%, 100% 50%; }
+        100% { background-position: 0% 50%, 0% 50%; }
+    }
+    
+    @keyframes gradientFlow {
+        0% { filter: hue-rotate(0deg); }
+        50% { filter: hue-rotate(30deg); }
+        100% { filter: hue-rotate(0deg); }
     }
     
     .stApp {
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #0a0a0a 100%);
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
+        background: 
+            radial-gradient(ellipse at top, #0a0a1a 0%, #000511 50%, #000000 100%),
+            linear-gradient(135deg, #000000 0%, #0a0015 25%, #000511 50%, #0a0015 75%, #000000 100%);
+        background-size: 400% 400%, 100% 100%;
+        animation: quantumShift 20s ease infinite, gradientFlow 15s ease infinite;
     }
     
-    @keyframes gradientBG {
-        0% { background-position: 0% 50% }
-        50% { background-position: 100% 50% }
-        100% { background-position: 0% 50% }
-    }
-    
-    /* Futuristic holographic particles background */
-    .holographic-particles {
+    /* Quantum particle system */
+    .quantum-particles {
         position: fixed;
         top: 0;
         left: 0;
@@ -144,251 +158,511 @@ st.markdown("""
         height: 100%;
         z-index: -1;
         overflow: hidden;
+        pointer-events: none;
     }
     
-    .holographic-particle {
+    .quantum-particle {
         position: absolute;
-        background: radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, rgba(153, 51, 255, 0.8) 50%, rgba(255, 0, 255, 0) 70%);
+        width: 4px;
+        height: 4px;
+        background: radial-gradient(circle, rgba(0, 255, 255, 0.9) 0%, rgba(138, 43, 226, 0.7) 50%, transparent 100%);
         border-radius: 50%;
-        animation: float 20s infinite linear;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+        box-shadow: 
+            0 0 10px rgba(0, 255, 255, 0.8),
+            0 0 20px rgba(138, 43, 226, 0.6),
+            0 0 30px rgba(255, 0, 255, 0.4);
+        animation: quantumFloat 25s infinite linear;
     }
     
-    @keyframes float {
-        0% { transform: translateY(0) translateX(0); opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
-    }
-    
-    /* Premium header styling with futuristic font */
-    .premium-header {
-        font-family: 'Orbitron', sans-serif;
-        font-size: 4.5rem;
-        font-weight: 900;
-        text-align: center;
-        margin: 20px 0;
-        background: linear-gradient(90deg, #00ffff 0%, #9933ff 50%, #ff00ff 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0px 2px 20px rgba(0, 255, 255, 0.5);
-        animation: neonGlow 3s ease-in-out infinite alternate;
-        position: relative;
-        letter-spacing: 2px;
-    }
-    
-    @keyframes neonGlow {
-        from { 
-            text-shadow: 0px 2px 20px rgba(0, 255, 255, 0.5);
-            transform: scale(1);
+    @keyframes quantumFloat {
+        0% { 
+            transform: translateY(100vh) translateX(0) scale(0);
+            opacity: 0;
         }
-        to { 
-            text-shadow: 0px 2px 40px rgba(153, 51, 255, 0.8);
-            transform: scale(1.02);
+        10% {
+            opacity: 1;
+            transform: translateY(90vh) translateX(10px) scale(1);
+        }
+        90% {
+            opacity: 1;
+            transform: translateY(10vh) translateX(-10px) scale(1);
+        }
+        100% { 
+            transform: translateY(0) translateX(0) scale(0);
+            opacity: 0;
         }
     }
     
-    /* New BrandGuardian logo - Tech Shield with Digital Circuit Pattern */
-    .brandguardian-logo {
-        display: inline-block;
-        font-size: 7rem;
-        position: relative;
-        animation: techPulse 4s infinite;
-        filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7));
-    }
-    
-    @keyframes techPulse {
-        0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7)); }
-        25% { transform: scale(1.05) rotate(-2deg); filter: drop-shadow(0 0 30px rgba(153, 51, 255, 0.8)); }
-        50% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 40px rgba(255, 0, 255, 0.7)); }
-        75% { transform: scale(1.05) rotate(2deg); filter: drop-shadow(0 0 30px rgba(153, 51, 255, 0.8)); }
-        100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7)); }
-    }
-    
-    /* Digital circuit pattern overlay with neon colors */
-    .circuit-overlay {
+    /* Neural network overlay */
+    .neural-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background-image: 
-            linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(0deg, rgba(153, 51, 255, 0.1) 1px, transparent 1px);
-        background-size: 30px 30px;
+            linear-gradient(90deg, transparent 98%, rgba(0, 255, 255, 0.1) 100%),
+            linear-gradient(0deg, transparent 98%, rgba(138, 43, 226, 0.1) 100%);
+        background-size: 50px 50px;
         z-index: -1;
-        opacity: 0.7;
-        animation: circuitMove 30s linear infinite;
+        opacity: 0.6;
+        animation: neuralPulse 10s ease-in-out infinite;
     }
     
-    @keyframes circuitMove {
-        0% { transform: translate(0, 0); }
-        100% { transform: translate(30px, 30px); }
+    @keyframes neuralPulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+    }
+    
+    /* Enhanced BrandGuardian logo - Quantum Shield */
+    .brandguardian-logo {
+        display: inline-block;
+        position: relative;
+        font-size: 8rem;
+        animation: quantumShield 4s infinite ease-in-out;
+        filter: 
+            drop-shadow(0 0 30px rgba(0, 255, 255, 0.8))
+            drop-shadow(0 0 60px rgba(138, 43, 226, 0.6))
+            drop-shadow(0 0 90px rgba(255, 0, 255, 0.4));
+    }
+    
+    .brandguardian-logo::before {
+        content: '';
+        position: absolute;
+        top: -20%;
+        left: -20%;
+        width: 140%;
+        height: 140%;
+        background: conic-gradient(
+            from 0deg,
+            transparent,
+            rgba(0, 255, 255, 0.3),
+            rgba(138, 43, 226, 0.3),
+            rgba(255, 0, 255, 0.3),
+            transparent
+        );
+        border-radius: 50%;
+        animation: quantumRotation 8s linear infinite;
+        z-index: -1;
+    }
+    
+    .brandguardian-logo::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120%;
+        height: 120%;
+        background: radial-gradient(
+            circle,
+            rgba(0, 255, 255, 0.4) 0%,
+            rgba(138, 43, 226, 0.2) 40%,
+            transparent 70%
+        );
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        animation: quantumPulse 3s ease-in-out infinite;
+        z-index: -2;
+    }
+    
+    @keyframes quantumShield {
+        0%, 100% { 
+            transform: scale(1) rotate(0deg) translateY(0);
+            filter: 
+                drop-shadow(0 0 30px rgba(0, 255, 255, 0.8))
+                drop-shadow(0 0 60px rgba(138, 43, 226, 0.6))
+                drop-shadow(0 0 90px rgba(255, 0, 255, 0.4));
+        }
+        25% { 
+            transform: scale(1.1) rotate(-5deg) translateY(-10px);
+            filter: 
+                drop-shadow(0 0 40px rgba(0, 255, 255, 0.9))
+                drop-shadow(0 0 80px rgba(138, 43, 226, 0.7))
+                drop-shadow(0 0 120px rgba(255, 0, 255, 0.5));
+        }
+        50% { 
+            transform: scale(1) rotate(0deg) translateY(0);
+            filter: 
+                drop-shadow(0 0 50px rgba(138, 43, 226, 0.8))
+                drop-shadow(0 0 100px rgba(255, 0, 255, 0.6))
+                drop-shadow(0 0 150px rgba(0, 255, 255, 0.4));
+        }
+        75% { 
+            transform: scale(1.1) rotate(5deg) translateY(-10px);
+            filter: 
+                drop-shadow(0 0 40px rgba(255, 0, 255, 0.9))
+                drop-shadow(0 0 80px rgba(0, 255, 255, 0.7))
+                drop-shadow(0 0 120px rgba(138, 43, 226, 0.5));
+        }
+    }
+    
+    @keyframes quantumRotation {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes quantumPulse {
+        0%, 100% { 
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.6;
+        }
+        50% { 
+            transform: translate(-50%, -50%) scale(1.3);
+            opacity: 0.9;
+        }
+    }
+    
+    /* Premium header with quantum effects */
+    .premium-header {
+        font-family: 'Audiowide', cursive;
+        font-size: 5rem;
+        font-weight: 900;
+        text-align: center;
+        margin: 20px 0;
+        background: 
+            linear-gradient(90deg, #00ffff 0%, #8a2be2 25%, #ff00ff 50%, #8a2be2 75%, #00ffff 100%);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 
+            0px 0px 30px rgba(0, 255, 255, 0.5),
+            0px 0px 60px rgba(138, 43, 226, 0.3);
+        animation: 
+            neonGlow 3s ease-in-out infinite alternate,
+            gradientShift 4s linear infinite;
+        position: relative;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+    
+    @keyframes neonGlow {
+        from { 
+            text-shadow: 
+                0px 0px 30px rgba(0, 255, 255, 0.5),
+                0px 0px 60px rgba(138, 43, 226, 0.3);
+            transform: scale(1);
+        }
+        to { 
+            text-shadow: 
+                0px 0px 50px rgba(138, 43, 226, 0.8),
+                0px 0px 100px rgba(255, 0, 255, 0.5);
+            transform: scale(1.02);
+        }
+    }
+    
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
     }
     
     .floating {
-        animation: float 6s ease-in-out infinite;
+        animation: quantumFloat 6s ease-in-out infinite;
     }
     
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0px); }
+    @keyframes quantumFloat {
+        0% { transform: translateY(0px) rotateX(0deg); }
+        25% { transform: translateY(-15px) rotateX(5deg); }
+        50% { transform: translateY(-10px) rotateX(0deg); }
+        75% { transform: translateY(-15px) rotateX(-5deg); }
+        100% { transform: translateY(0px) rotateX(0deg); }
     }
     
     .accent-text {
-        font-size: 1.4rem;
+        font-size: 1.6rem;
         color: #00ffff;
         text-align: center;
         margin-bottom: 40px;
         animation: fadeIn 2s ease-in;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: 500;
-        letter-spacing: 1px;
+        font-family: 'Share Tech Mono', monospace;
+        font-weight: 400;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        position: relative;
+    }
+    
+    .accent-text::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        animation: scanLine 3s linear infinite;
+    }
+    
+    @keyframes scanLine {
+        0% { transform: translateX(-100%) translateX(-50%); }
+        100% { transform: translateX(100%) translateX(-50%); }
     }
     
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+        from { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.9);
+            filter: blur(10px);
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
     }
     
-    /* Enhanced card styling with futuristic look */
+    /* Next-gen card styling with holographic effects */
     .metric-card {
-        background: rgba(10, 10, 30, 0.8);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%);
         backdrop-filter: blur(20px);
-        padding: 25px;
-        border-radius: 20px;
+        padding: 30px;
+        border-radius: 25px;
         border: 1px solid rgba(0, 255, 255, 0.3);
-        margin: 15px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        margin: 20px 0;
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.8),
+            inset 0 0 30px rgba(0, 255, 255, 0.1);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
+        transform-style: preserve-3d;
+        perspective: 1000px;
     }
     
     .metric-card::before {
         content: '';
         position: absolute;
         top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(0, 255, 255, 0.2), 
+            rgba(138, 43, 226, 0.2),
+            transparent
+        );
+        transform: skewX(-25deg);
+        transition: left 0.75s;
+    }
+    
+    .metric-card:hover::before {
+        left: 100%;
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-12px) rotateX(5deg);
+        box-shadow: 
+            0 30px 80px rgba(0, 255, 255, 0.3),
+            inset 0 0 40px rgba(138, 43, 226, 0.2);
+        border: 1px solid rgba(138, 43, 226, 0.5);
+    }
+    
+    .metric-card h3 {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        color: #00ffff;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .metric-card h1 {
+        font-family: 'Audiowide', cursive;
+        font-size: 3rem;
+        margin: 10px 0;
+        background: linear-gradient(90deg, #00ffff, #8a2be2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .search-analysis-card {
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%);
+        backdrop-filter: blur(20px);
+        padding: 30px;
+        border-radius: 25px;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        margin: 25px 0;
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.8),
+            inset 0 0 30px rgba(0, 255, 255, 0.1);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .search-analysis-card:hover {
+        transform: translateY(-8px) rotateX(3deg);
+        box-shadow: 
+            0 25px 70px rgba(138, 43, 226, 0.4),
+            inset 0 0 40px rgba(255, 0, 255, 0.2);
+    }
+    
+    .search-result-card {
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.8) 0%, rgba(0, 5, 17, 0.7) 100%);
+        border-radius: 20px;
+        padding: 25px;
+        margin: 20px 0;
+        border-left: 5px solid #00ffff;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .search-result-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+        background: linear-gradient(45deg, 
+            transparent 30%, 
+            rgba(0, 255, 255, 0.1) 50%, 
+            transparent 70%
+        );
         transform: translateX(-100%);
         transition: transform 0.6s;
     }
     
-    .metric-card:hover::before {
+    .search-result-card:hover::before {
         transform: translateX(100%);
     }
     
-    .metric-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(0, 255, 255, 0.4);
-        border: 1px solid rgba(153, 51, 255, 0.5);
-    }
-    
-    .search-analysis-card {
-        background: rgba(10, 10, 30, 0.8);
-        backdrop-filter: blur(20px);
-        padding: 25px;
-        border-radius: 20px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-        transition: all 0.3s ease;
-    }
-    
-    .search-analysis-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 45px rgba(153, 51, 255, 0.4);
-    }
-    
-    .search-result-card {
-        background: rgba(10, 10, 30, 0.6);
-        border-radius: 15px;
-        padding: 20px;
-        margin: 15px 0;
-        border-left: 5px solid #00ffff;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
     .search-result-card:hover {
-        background: rgba(10, 10, 30, 0.9);
-        transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.95) 0%, rgba(0, 5, 17, 0.9) 100%);
+        transform: translateX(15px) rotateY(5deg);
+        box-shadow: 
+            0 15px 40px rgba(0, 255, 255, 0.4),
+            inset 0 0 30px rgba(138, 43, 226, 0.2);
     }
     
-    /* Enhanced threat indicators with neon colors */
+    /* Enhanced threat indicators with quantum effects */
     .threat-indicator {
-        padding: 10px 16px;
-        border-radius: 25px;
-        font-size: 13px;
+        padding: 12px 20px;
+        border-radius: 30px;
+        font-size: 14px;
         font-weight: 700;
-        margin: 8px;
+        margin: 10px;
         display: inline-block;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        transition: all 0.3s ease;
+        letter-spacing: 1px;
+        box-shadow: 
+            0 8px 25px rgba(0, 0, 0, 0.6),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .threat-indicator::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .threat-indicator:hover::before {
+        left: 100%;
     }
     
     .threat-indicator:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 
+            0 12px 35px rgba(0, 0, 0, 0.8),
+            inset 0 0 25px rgba(255, 255, 255, 0.2);
     }
     
     .threat-high {
-        background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(255, 0, 255, 0.1));
+        background: 
+            linear-gradient(135deg, rgba(255, 0, 255, 0.3) 0%, rgba(255, 0, 255, 0.1) 100%),
+            linear-gradient(45deg, rgba(255, 0, 255, 0.2) 0%, transparent 100%);
         color: #ff00ff;
-        border: 1px solid rgba(255, 0, 255, 0.5);
+        border: 2px solid rgba(255, 0, 255, 0.5);
+        animation: threatPulse 2s ease-in-out infinite;
     }
     
     .threat-medium {
-        background: linear-gradient(135deg, rgba(255, 165, 0, 0.3), rgba(255, 165, 0, 0.1));
+        background: 
+            linear-gradient(135deg, rgba(255, 165, 0, 0.3) 0%, rgba(255, 165, 0, 0.1) 100%),
+            linear-gradient(45deg, rgba(255, 165, 0, 0.2) 0%, transparent 100%);
         color: #FFA500;
-        border: 1px solid rgba(255, 165, 0, 0.5);
+        border: 2px solid rgba(255, 165, 0, 0.5);
     }
     
     .threat-low {
-        background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 255, 255, 0.1));
+        background: 
+            linear-gradient(135deg, rgba(0, 255, 255, 0.3) 0%, rgba(0, 255, 255, 0.1) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.2) 0%, transparent 100%);
         color: #00ffff;
-        border: 1px solid rgba(0, 255, 255, 0.5);
+        border: 2px solid rgba(0, 255, 255, 0.5);
     }
     
-    /* Status indicators */
+    @keyframes threatPulse {
+        0%, 100% { 
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.6),
+                inset 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+        50% { 
+            box-shadow: 
+                0 8px 25px rgba(255, 0, 255, 0.6),
+                inset 0 0 25px rgba(255, 0, 255, 0.3);
+        }
+    }
+    
+    /* Status indicators with quantum effects */
     .api-status-connected {
         color: #00ffff;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
+        font-family: 'Share Tech Mono', monospace;
     }
     
     .api-status-connected::before {
         content: '●';
-        margin-right: 5px;
-        animation: pulse 2s infinite;
+        margin-right: 8px;
+        animation: quantumPulse 2s ease-in-out infinite;
+        font-size: 1.2em;
     }
     
     .api-status-disconnected {
         color: #ff00ff;
         font-weight: 700;
+        font-family: 'Share Tech Mono', monospace;
     }
     
-    /* Enhanced button styling with futuristic look */
+    /* Enhanced button styling with quantum effects */
     .stButton > button {
-        border-radius: 15px;
-        border: 1px solid rgba(0, 255, 255, 0.5);
-        background: linear-gradient(135deg, rgba(10, 10, 30, 0.7), rgba(10, 10, 30, 0.5));
+        border-radius: 20px;
+        border: 2px solid rgba(0, 255, 255, 0.5);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
         color: #00ffff;
         font-weight: 700;
-        padding: 12px 24px;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        padding: 15px 30px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        box-shadow: 
+            0 8px 25px rgba(0, 0, 0, 0.7),
+            inset 0 0 20px rgba(0, 255, 255, 0.1);
         font-family: 'Orbitron', sans-serif;
         letter-spacing: 1px;
+        text-transform: uppercase;
+        transform-style: preserve-3d;
     }
     
     .stButton > button::before {
@@ -398,8 +672,13 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(0, 255, 255, 0.3), 
+            rgba(138, 43, 226, 0.3),
+            transparent
+        );
+        transition: left 0.6s;
     }
     
     .stButton > button:hover::before {
@@ -407,66 +686,113 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(153, 51, 255, 0.1));
-        border: 1px solid rgba(153, 51, 255, 0.8);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 255, 255, 0.4);
+        background: 
+            linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(138, 43, 226, 0.1) 100%),
+            linear-gradient(45deg, rgba(138, 43, 226, 0.2) 0%, transparent 100%);
+        border: 2px solid rgba(138, 43, 226, 0.8);
+        transform: translateY(-5px) rotateX(5deg);
+        box-shadow: 
+            0 15px 40px rgba(0, 255, 255, 0.5),
+            inset 0 0 30px rgba(138, 43, 226, 0.2);
     }
     
-    /* Enhanced tab styling */
+    /* Enhanced tab styling with quantum effects */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 12px;
-        margin-bottom: 20px;
+        gap: 15px;
+        margin-bottom: 25px;
+        background: rgba(10, 10, 30, 0.3);
+        padding: 10px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(10, 10, 30, 0.7);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.8) 0%, rgba(0, 5, 17, 0.7) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%);
         border-radius: 15px 15px 0 0;
-        padding: 14px 20px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
+        padding: 18px 25px;
+        border: 2px solid rgba(0, 255, 255, 0.3);
         border-bottom: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
+        font-weight: 700;
+        transition: all 0.4s ease;
         font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stTabs [data-baseweb="tab"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, 
+            transparent 30%, 
+            rgba(0, 255, 255, 0.1) 50%, 
+            transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover::before {
+        opacity: 1;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(10, 10, 30, 0.8);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
+        transform: translateY(-3px);
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(153, 51, 255, 0.1));
-        border: 1px solid rgba(0, 255, 255, 0.5);
+        background: 
+            linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(138, 43, 226, 0.1) 100%),
+            linear-gradient(45deg, rgba(138, 43, 226, 0.2) 0%, transparent 100%);
+        border: 2px solid rgba(0, 255, 255, 0.5);
         border-bottom: none;
-        box-shadow: 0 -4px 15px rgba(0, 255, 255, 0.3);
+        box-shadow: 
+            0 -8px 25px rgba(0, 255, 255, 0.4),
+            inset 0 0 20px rgba(138, 43, 226, 0.2);
+        transform: translateY(-5px);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
         font-weight: 800;
         color: #00ffff;
-        font-family: 'Orbitron', sans-serif;
+        font-family: 'Audiowide', cursive;
     }
     
     [data-testid="stMetricDelta"] {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: 600;
+        font-family: 'Share Tech Mono', monospace;
     }
     
-    /* Enhanced input styling */
+    /* Enhanced input styling with quantum effects */
     .stSelectbox [data-baseweb="select"], 
     .stTextInput [data-baseweb="input"], 
     .stTextArea [data-baseweb="textarea"],
     .stNumberInput [data-baseweb="input"],
     .stDateInput [data-baseweb="input"],
     .stTimeInput [data-baseweb="input"] {
-        background: rgba(10, 10, 30, 0.7);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.8) 0%, rgba(0, 5, 17, 0.7) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 2px solid rgba(0, 255, 255, 0.3);
         color: white;
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
+        font-family: 'Share Tech Mono', monospace;
+        padding: 12px 20px;
     }
     
     .stSelectbox [data-baseweb="select"]:hover, 
@@ -475,111 +801,193 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"]:hover,
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
-        background: rgba(10, 10, 30, 0.8);
-        border: 1px solid rgba(153, 51, 255, 0.5);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%),
+            linear-gradient(45deg, rgba(138, 43, 226, 0.1) 0%, transparent 100%);
+        border: 2px solid rgba(138, 43, 226, 0.5);
+        transform: translateY(-2px);
     }
     
-    /* Custom spinner */
+    /* Custom spinner with quantum effect */
     .stSpinner > div {
         border: 4px solid rgba(0, 0, 0, 0.1);
         border-radius: 50%;
         border-top: 4px solid #00ffff;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
+        width: 50px;
+        height: 50px;
+        animation: quantumSpin 1s linear infinite;
         margin: 0 auto;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
     }
     
-    @keyframes spin {
+    @keyframes quantumSpin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
     
-    /* Custom expander */
+    /* Custom expander with quantum effects */
     .streamlit-expanderHeader {
-        background: rgba(10, 10, 30, 0.7);
-        border-radius: 12px;
-        padding: 14px 18px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        font-weight: 600;
-        transition: all 0.3s ease;
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.8) 0%, rgba(0, 5, 17, 0.7) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%);
+        border-radius: 20px;
+        padding: 20px 25px;
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        font-weight: 700;
+        transition: all 0.4s ease;
         font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .streamlit-expanderHeader::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, 
+            transparent 30%, 
+            rgba(0, 255, 255, 0.1) 50%, 
+            transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .streamlit-expanderHeader:hover::before {
+        opacity: 1;
     }
     
     .streamlit-expanderHeader:hover {
-        background: rgba(10, 10, 30, 0.8);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
+        transform: translateY(-3px);
+        border: 2px solid rgba(138, 43, 226, 0.5);
     }
     
     /* Custom dataframes */
     .dataframe {
-        border-radius: 15px;
+        border-radius: 25px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.8),
+            inset 0 0 30px rgba(0, 255, 255, 0.1);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%);
     }
     
     /* Custom success/error boxes */
     .stAlert {
-        border-radius: 15px;
-        padding: 16px 20px;
-        font-weight: 600;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        border-radius: 25px;
+        padding: 20px 25px;
+        font-weight: 700;
+        box-shadow: 
+            0 15px 45px rgba(0, 0, 0, 0.7),
+            inset 0 0 25px rgba(255, 255, 255, 0.1);
+        font-family: 'Share Tech Mono', monospace;
+        letter-spacing: 1px;
     }
     
     /* Custom sidebar */
     .css-1d391kg {
-        background: linear-gradient(180deg, #0a0a0a 0%, #1a0033 100%);
-        border-right: 1px solid rgba(0, 255, 255, 0.2);
+        background: 
+            linear-gradient(180deg, #0a0a1a 0%, #000511 100%),
+            linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%);
+        border-right: 2px solid rgba(0, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
     }
     
     /* Custom chart elements */
     .stChart {
-        border-radius: 20px;
+        border-radius: 25px;
         overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        box-shadow: 
+            0 25px 70px rgba(0, 0, 0, 0.8),
+            inset 0 0 40px rgba(0, 255, 255, 0.1);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: linear-gradient(90deg, #00ffff, #9933ff);
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+        background: 
+            linear-gradient(90deg, #00ffff, #8a2be2, #ff00ff);
+        background-size: 200% 100%;
+        border-radius: 15px;
+        box-shadow: 
+            0 8px 25px rgba(0, 255, 255, 0.6),
+            inset 0 0 20px rgba(255, 255, 255, 0.2);
+        animation: progressFlow 3s linear infinite;
+    }
+    
+    @keyframes progressFlow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: rgba(10, 10, 30, 0.7);
-        padding: 18px;
-        border-radius: 15px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.8) 0%, rgba(0, 5, 17, 0.7) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%);
+        padding: 25px;
+        border-radius: 20px;
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: linear-gradient(90deg, #00ffff, #9933ff);
-        border-radius: 10px;
-        height: 8px;
+        background: 
+            linear-gradient(90deg, #00ffff, #8a2be2, #ff00ff);
+        background-size: 200% 100%;
+        border-radius: 15px;
+        height: 12px;
+        animation: sliderFlow 4s linear infinite;
+        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
+    }
+    
+    @keyframes sliderFlow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: rgba(10, 10, 30, 0.7);
-        border-radius: 8px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.8) 0%, rgba(0, 5, 17, 0.7) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.05) 0%, transparent 100%);
+        border-radius: 15px;
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        padding: 15px;
     }
     
-    /* Premium badge */
+    /* Premium badge with quantum effects */
     .premium-badge {
-        background: linear-gradient(135deg, #00ffff, #9933ff);
+        background: 
+            linear-gradient(135deg, #00ffff, #8a2be2, #ff00ff);
+        background-size: 200% 100%;
         color: #000000;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
+        padding: 6px 16px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 800;
         display: inline-block;
-        margin-left: 10px;
-        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4);
-        animation: shimmer 2s infinite;
+        margin-left: 15px;
+        box-shadow: 
+            0 8px 25px rgba(0, 255, 255, 0.6),
+            inset 0 0 20px rgba(255, 255, 255, 0.3);
+        animation: 
+            shimmer 2s infinite,
+            badgeFlow 4s linear infinite;
         font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
     @keyframes shimmer {
@@ -587,28 +995,72 @@ st.markdown("""
         100% { background-position: calc(200px + 100%); }
     }
     
+    @keyframes badgeFlow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+    
     /* Security shield animation */
     .security-shield {
         display: inline-block;
-        animation: shieldPulse 2s infinite;
+        animation: shieldQuantum 3s infinite;
     }
     
-    @keyframes shieldPulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.8; }
-        100% { transform: scale(1); opacity: 1; }
+    @keyframes shieldQuantum {
+        0%, 100% { 
+            transform: scale(1) rotate(0deg);
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8));
+        }
+        25% { 
+            transform: scale(1.2) rotate(-10deg);
+            filter: drop-shadow(0 0 40px rgba(138, 43, 226, 0.9));
+        }
+        50% { 
+            transform: scale(1) rotate(0deg);
+            filter: drop-shadow(0 0 60px rgba(255, 0, 255, 0.8));
+        }
+        75% { 
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 0 40px rgba(138, 43, 226, 0.9));
+        }
     }
     
     /* Login form enhancements */
     .login-container {
-        background: rgba(10, 10, 30, 0.8);
-        backdrop-filter: blur(20px);
-        border-radius: 25px;
-        padding: 40px;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
-        max-width: 500px;
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.95) 0%, rgba(0, 5, 17, 0.9) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
+        backdrop-filter: blur(25px);
+        border-radius: 30px;
+        padding: 50px;
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        box-shadow: 
+            0 30px 80px rgba(0, 0, 0, 0.9),
+            inset 0 0 40px rgba(0, 255, 255, 0.1);
+        max-width: 600px;
         margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .login-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, 
+            rgba(0, 255, 255, 0.1) 0%, 
+            rgba(138, 43, 226, 0.1) 50%, 
+            transparent 70%
+        );
+        animation: loginRotate 20s linear infinite;
+    }
+    
+    @keyframes loginRotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
     
     /* Animated background for login */
@@ -619,29 +1071,44 @@ st.markdown("""
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1), transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(153, 51, 255, 0.1), transparent 50%),
-                    radial-gradient(circle at 40% 80%, rgba(255, 0, 255, 0.1), transparent 50%);
-        animation: bgMove 20s ease infinite;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(255, 0, 255, 0.15) 0%, transparent 50%);
+        animation: bgQuantumMove 25s ease infinite;
     }
     
-    @keyframes bgMove {
-        0%, 100% { transform: translate(0, 0) rotate(0deg); }
-        33% { transform: translate(20px, -20px) rotate(120deg); }
-        66% { transform: translate(-20px, 20px) rotate(240deg); }
+    @keyframes bgQuantumMove {
+        0%, 100% { 
+            transform: translate(0, 0) rotate(0deg) scale(1);
+            filter: hue-rotate(0deg);
+        }
+        33% { 
+            transform: translate(30px, -30px) rotate(120deg) scale(1.1);
+            filter: hue-rotate(120deg);
+        }
+        66% { 
+            transform: translate(-30px, 30px) rotate(240deg) scale(0.9);
+            filter: hue-rotate(240deg);
+        }
     }
     
     /* Premium access card */
     .premium-access-card {
-        background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(153, 51, 255, 0.1));
-        border: 2px solid rgba(0, 255, 255, 0.3);
-        border-radius: 20px;
-        padding: 30px;
-        margin: 20px 0;
-        box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
+        background: 
+            linear-gradient(135deg, rgba(0, 255, 255, 0.15) 0%, rgba(138, 43, 226, 0.15) 100%),
+            linear-gradient(45deg, rgba(255, 0, 255, 0.1) 0%, transparent 100%);
+        border: 3px solid rgba(0, 255, 255, 0.4);
+        border-radius: 30px;
+        padding: 40px;
+        margin: 30px 0;
+        box-shadow: 
+            0 25px 70px rgba(0, 255, 255, 0.3),
+            inset 0 0 50px rgba(138, 43, 226, 0.2);
         text-align: center;
         position: relative;
         overflow: hidden;
+        backdrop-filter: blur(20px);
     }
     
     .premium-access-card::before {
@@ -651,11 +1118,15 @@ st.markdown("""
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
-        animation: rotate 20s linear infinite;
+        background: radial-gradient(circle, 
+            rgba(0, 255, 255, 0.2) 0%, 
+            rgba(138, 43, 226, 0.2) 50%, 
+            transparent 70%
+        );
+        animation: premiumRotate 25s linear infinite;
     }
     
-    @keyframes rotate {
+    @keyframes premiumRotate {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
@@ -663,31 +1134,77 @@ st.markdown("""
     /* Threat radar animation */
     .threat-radar {
         position: relative;
-        width: 200px;
-        height: 200px;
+        width: 250px;
+        height: 250px;
         margin: 0 auto;
     }
     
     .radar-circle {
         position: absolute;
-        border: 2px solid rgba(0, 255, 255, 0.3);
+        border: 3px solid rgba(0, 255, 255, 0.4);
         border-radius: 50%;
-        animation: radarPulse 2s infinite;
+        animation: radarQuantumPulse 2.5s infinite;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
     }
     
-    @keyframes radarPulse {
-        0% { transform: scale(0.8); opacity: 1; }
-        100% { transform: scale(1.2); opacity: 0; }
+    @keyframes radarQuantumPulse {
+        0% { 
+            transform: scale(0.7); 
+            opacity: 1;
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+        50% { 
+            transform: scale(1.3); 
+            opacity: 0.5;
+            border-color: rgba(138, 43, 226, 0.8);
+        }
+        100% { 
+            transform: scale(0.7); 
+            opacity: 1;
+            border-color: rgba(255, 0, 255, 0.8);
+        }
     }
     
     /* Enhanced AI visualization */
     .ai-visualization {
-        background: rgba(10, 10, 30, 0.7);
-        border-radius: 20px;
-        padding: 20px;
-        margin: 20px 0;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        background: 
+            linear-gradient(135deg, rgba(10, 10, 30, 0.9) 0%, rgba(0, 5, 17, 0.8) 100%),
+            linear-gradient(45deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
+        border-radius: 30px;
+        padding: 30px;
+        margin: 30px 0;
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.8),
+            inset 0 0 40px rgba(138, 43, 226, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ai-visualization::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            linear-gradient(45deg, 
+                transparent 30%, 
+                rgba(0, 255, 255, 0.05) 50%, 
+                transparent 70%
+            ),
+            linear-gradient(-45deg, 
+                transparent 30%, 
+                rgba(138, 43, 226, 0.05) 50%, 
+                transparent 70%
+            );
+        animation: aiScan 8s linear infinite;
+    }
+    
+    @keyframes aiScan {
+        0% { transform: translateX(-100%) translateY(-100%); }
+        100% { transform: translateX(100%) translateY(100%); }
     }
     
     /* AI pulse animation */
@@ -704,33 +1221,55 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: rgba(0, 255, 255, 0.3);
-        animation: aiPulse 2s infinite;
+        background: radial-gradient(circle, 
+            rgba(0, 255, 255, 0.4) 0%, 
+            rgba(138, 43, 226, 0.2) 50%, 
+            transparent 70%
+        );
+        animation: aiQuantumPulse 3s infinite;
+        box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
     }
     
-    @keyframes aiPulse {
-        0% { transform: scale(1); opacity: 0.7; }
-        50% { transform: scale(1.2); opacity: 0.3; }
-        100% { transform: scale(1); opacity: 0.7; }
+    @keyframes aiQuantumPulse {
+        0% { 
+            transform: scale(1); 
+            opacity: 0.7;
+        }
+        25% { 
+            transform: scale(1.4); 
+            opacity: 0.4;
+        }
+        50% { 
+            transform: scale(1); 
+            opacity: 0.7;
+        }
+        75% { 
+            transform: scale(1.2); 
+            opacity: 0.5;
+        }
+        100% { 
+            transform: scale(1); 
+            opacity: 0.7;
+        }
     }
     
     /* New Threat Analysis Animation */
     .threat-analysis-container {
         position: relative;
         width: 100%;
-        height: 250px;
+        height: 300px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: 20px 0;
+        margin: 30px 0;
     }
     
     .radar-scanner {
         position: relative;
-        width: 180px;
-        height: 180px;
-        margin-bottom: 20px;
+        width: 220px;
+        height: 220px;
+        margin-bottom: 30px;
     }
     
     .radar-background {
@@ -738,9 +1277,17 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(10, 10, 30, 0.8) 0%, rgba(10, 10, 30, 0.5) 70%, transparent 100%);
-        border: 2px solid rgba(0, 255, 255, 0.3);
+        background: 
+            radial-gradient(circle, 
+                rgba(10, 10, 30, 0.95) 0%, 
+                rgba(0, 5, 17, 0.8) 70%, 
+                transparent 100%
+            );
+        border: 3px solid rgba(0, 255, 255, 0.4);
         overflow: hidden;
+        box-shadow: 
+            0 0 40px rgba(0, 255, 255, 0.5),
+            inset 0 0 30px rgba(138, 43, 226, 0.3);
     }
     
     .radar-grid {
@@ -754,11 +1301,12 @@ st.markdown("""
     .radar-grid::after {
         content: '';
         position: absolute;
-        background: rgba(0, 255, 255, 0.2);
+        background: rgba(0, 255, 255, 0.3);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
     }
     
     .radar-grid::before {
-        width: 2px;
+        width: 3px;
         height: 100%;
         left: 50%;
         transform: translateX(-50%);
@@ -766,37 +1314,71 @@ st.markdown("""
     
     .radar-grid::after {
         width: 100%;
-        height: 2px;
+        height: 3px;
         top: 50%;
         transform: translateY(-50%);
     }
     
     .radar-sweep {
         position: absolute;
-        width: 50%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.8), transparent);
+        width: 60%;
+        height: 4px;
+        background: 
+            linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 255, 255, 0.9), 
+                rgba(138, 43, 226, 0.9),
+                transparent
+            );
         top: 50%;
         left: 50%;
         transform-origin: left center;
-        animation: radarSweep 3s linear infinite;
+        animation: radarQuantumSweep 4s linear infinite;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
     }
     
-    @keyframes radarSweep {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+    @keyframes radarQuantumSweep {
+        0% { 
+            transform: rotate(0deg);
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.9), transparent);
+        }
+        33% { 
+            transform: rotate(120deg);
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.9), transparent);
+        }
+        66% { 
+            transform: rotate(240deg);
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 255, 0.9), transparent);
+        }
+        100% { 
+            transform: rotate(360deg);
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.9), transparent);
+        }
     }
     
     .radar-sweep::before {
         content: '';
         position: absolute;
-        width: 10px;
-        height: 10px;
-        background: rgba(0, 255, 255, 0.8);
+        width: 15px;
+        height: 15px;
+        background: radial-gradient(circle, 
+            rgba(0, 255, 255, 1) 0%, 
+            rgba(138, 43, 226, 1) 50%, 
+            rgba(255, 0, 255, 1) 100%
+        );
         border-radius: 50%;
         right: 0;
-        top: -4px;
-        box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        top: -6px;
+        box-shadow: 
+            0 0 20px rgba(0, 255, 255, 1),
+            0 0 40px rgba(138, 43, 226, 0.8),
+            0 0 60px rgba(255, 0, 255, 0.6);
+        animation: sweepPulse 1s ease-in-out infinite;
+    }
+    
+    @keyframes sweepPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.5); }
     }
     
     .threat-dots {
@@ -808,48 +1390,88 @@ st.markdown("""
     
     .threat-dot {
         position: absolute;
-        width: 8px;
-        height: 8px;
-        background: rgba(0, 255, 255, 0.8);
+        width: 12px;
+        height: 12px;
+        background: radial-gradient(circle, 
+            rgba(0, 255, 255, 1) 0%, 
+            rgba(138, 43, 226, 1) 50%, 
+            rgba(255, 0, 255, 1) 100%
+        );
         border-radius: 50%;
         opacity: 0;
-        animation: threatPulse 2s infinite;
+        animation: threatQuantumPulse 2.5s infinite;
+        box-shadow: 
+            0 0 15px rgba(0, 255, 255, 0.8),
+            0 0 30px rgba(138, 43, 226, 0.6);
     }
     
     .threat-dot.active {
         opacity: 1;
     }
     
-    @keyframes threatPulse {
-        0% { transform: scale(1); opacity: 0.7; }
-        50% { transform: scale(1.5); opacity: 1; }
-        100% { transform: scale(1); opacity: 0.7; }
+    @keyframes threatQuantumPulse {
+        0% { 
+            transform: scale(1); 
+            opacity: 0.7;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+        }
+        25% { 
+            transform: scale(1.8); 
+            opacity: 1;
+            box-shadow: 0 0 25px rgba(138, 43, 226, 1);
+        }
+        50% { 
+            transform: scale(1); 
+            opacity: 0.7;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+        }
+        75% { 
+            transform: scale(1.4); 
+            opacity: 0.9;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
+        }
+        100% { 
+            transform: scale(1); 
+            opacity: 0.7;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
+        }
     }
     
     .analysis-status {
-        font-size: 1.2rem;
-        font-weight: 600;
+        font-size: 1.5rem;
+        font-weight: 700;
         color: #00ffff;
         text-align: center;
-        margin-bottom: 15px;
-        font-family: 'Orbitron', sans-serif;
+        margin-bottom: 20px;
+        font-family: 'Audiowide', cursive;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
     }
     
     .progress-container {
         width: 80%;
-        height: 8px;
+        height: 12px;
         background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
+        border-radius: 8px;
         overflow: hidden;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
     }
     
     .progress-bar {
         height: 100%;
         width: 0%;
-        background: linear-gradient(90deg, #00ffff, #9933ff);
-        border-radius: 4px;
-        transition: width 0.3s ease;
-        animation: progressFill 3.5s ease-in-out forwards;
+        background: 
+            linear-gradient(90deg, #00ffff, #8a2be2, #ff00ff);
+        background-size: 200% 100%;
+        border-radius: 8px;
+        transition: width 0.4s ease;
+        animation: 
+            progressFill 4s ease-in-out forwards,
+            progressQuantumFlow 2s linear infinite;
+        box-shadow: 
+            0 0 20px rgba(0, 255, 255, 0.6),
+            inset 0 0 15px rgba(255, 255, 255, 0.3);
     }
     
     @keyframes progressFill {
@@ -857,80 +1479,105 @@ st.markdown("""
         100% { width: 100%; }
     }
     
+    @keyframes progressQuantumFlow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+    }
+    
     .analysis-phases {
         display: flex;
         justify-content: space-between;
         width: 80%;
-        margin-top: 15px;
+        margin-top: 20px;
     }
     
     .phase {
         display: flex;
         flex-direction: column;
         align-items: center;
-        opacity: 0.5;
-        transition: opacity 0.3s;
+        opacity: 0.4;
+        transition: all 0.4s ease;
+        transform: translateY(10px);
     }
     
     .phase.active {
         opacity: 1;
+        transform: translateY(0);
     }
     
     .phase-icon {
-        font-size: 1.5rem;
-        margin-bottom: 5px;
+        font-size: 2rem;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.6));
     }
     
     .phase-text {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         color: #00ffff;
         font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
     }
     
     .phase:nth-child(1) {
-        animation: phaseActivate 3.5s ease-in-out forwards;
+        animation: phaseQuantumActivate 4s ease-in-out forwards;
     }
     
     .phase:nth-child(2) {
-        animation: phaseActivate 3.5s ease-in-out 0.875s forwards;
+        animation: phaseQuantumActivate 4s ease-in-out 1s forwards;
     }
     
     .phase:nth-child(3) {
-        animation: phaseActivate 3.5s ease-in-out 1.75s forwards;
+        animation: phaseQuantumActivate 4s ease-in-out 2s forwards;
     }
     
     .phase:nth-child(4) {
-        animation: phaseActivate 3.5s ease-in-out 2.625s forwards;
+        animation: phaseQuantumActivate 4s ease-in-out 3s forwards;
     }
     
-    @keyframes phaseActivate {
-        0% { opacity: 0.5; }
-        25% { opacity: 1; }
-        100% { opacity: 1; }
+    @keyframes phaseQuantumActivate {
+        0% { 
+            opacity: 0.4; 
+            transform: translateY(10px) scale(0.9);
+        }
+        25% { 
+            opacity: 1; 
+            transform: translateY(-5px) scale(1.1);
+        }
+        50% { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+        }
+        100% { 
+            opacity: 1; 
+            transform: translateY(0) scale(1);
+        }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Add holographic particles to the background
-def add_holographic_particles():
+# Add quantum particles to the background
+def add_quantum_particles():
     st.markdown("""
-    <div class="holographic-particles">
-        <div class="holographic-particle" style="width: 10px; height: 10px; left: 10%; animation-duration: 20s;"></div>
-        <div class="holographic-particle" style="width: 15px; height: 15px; left: 20%; animation-duration: 25s;"></div>
-        <div class="holographic-particle" style="width: 8px; height: 8px; left: 30%; animation-duration: 30s;"></div>
-        <div class="holographic-particle" style="width: 12px; height: 12px; left: 40%; animation-duration: 22s;"></div>
-        <div class="holographic-particle" style="width: 18px; height: 18px; left: 50%; animation-duration: 28s;"></div>
-        <div class="holographic-particle" style="width: 7px; height: 7px; left: 60%; animation-duration: 32s;"></div>
-        <div class="holographic-particle" style="width: 14px; height: 14px; left: 70%; animation-duration: 24s;"></div>
-        <div class="holographic-particle" style="width: 9px; height: 9px; left: 80%; animation-duration: 26s;"></div>
-        <div class="holographic-particle" style="width: 16px; height: 16px; left: 90%; animation-duration: 29s;"></div>
+    <div class="quantum-particles">
+        <div class="quantum-particle" style="left: 5%; animation-duration: 22s; animation-delay: 0s;"></div>
+        <div class="quantum-particle" style="left: 15%; animation-duration: 28s; animation-delay: 1s;"></div>
+        <div class="quantum-particle" style="left: 25%; animation-duration: 25s; animation-delay: 2s;"></div>
+        <div class="quantum-particle" style="left: 35%; animation-duration: 30s; animation-delay: 0.5s;"></div>
+        <div class="quantum-particle" style="left: 45%; animation-duration: 24s; animation-delay: 1.5s;"></div>
+        <div class="quantum-particle" style="left: 55%; animation-duration: 32s; animation-delay: 2.5s;"></div>
+        <div class="quantum-particle" style="left: 65%; animation-duration: 26s; animation-delay: 3s;"></div>
+        <div class="quantum-particle" style="left: 75%; animation-duration: 29s; animation-delay: 0.8s;"></div>
+        <div class="quantum-particle" style="left: 85%; animation-duration: 31s; animation-delay: 1.8s;"></div>
+        <div class="quantum-particle" style="left: 95%; animation-duration: 27s; animation-delay: 2.2s;"></div>
     </div>
-    <div class="circuit-overlay"></div>
+    <div class="neural-overlay"></div>
     """, unsafe_allow_html=True)
 
 # Add the new animation function
 def show_threat_analysis_animation():
-    """Display a radar scanning animation for threat analysis"""
+    """Display a quantum radar scanning animation for threat analysis"""
     placeholder = st.empty()
     
     with placeholder.container():
@@ -941,29 +1588,29 @@ def show_threat_analysis_animation():
                 <div class="radar-grid"></div>
                 <div class="radar-sweep"></div>
                 <div class="threat-dots">
-                    <div class="threat-dot active" style="top: 30%; left: 40%; animation-delay: 0.5s;"></div>
-                    <div class="threat-dot active" style="top: 60%; left: 70%; animation-delay: 1.0s;"></div>
-                    <div class="threat-dot active" style="top: 20%; left: 60%; animation-delay: 1.5s;"></div>
-                    <div class="threat-dot active" style="top: 70%; left: 30%; animation-delay: 2.0s;"></div>
-                    <div class="threat-dot active" style="top: 50%; left: 80%; animation-delay: 2.5s;"></div>
+                    <div class="threat-dot active" style="top: 25%; left: 35%; animation-delay: 0.5s;"></div>
+                    <div class="threat-dot active" style="top: 65%; left: 75%; animation-delay: 1.2s;"></div>
+                    <div class="threat-dot active" style="top: 15%; left: 55%; animation-delay: 1.8s;"></div>
+                    <div class="threat-dot active" style="top: 75%; left: 25%; animation-delay: 2.4s;"></div>
+                    <div class="threat-dot active" style="top: 45%; left: 85%; animation-delay: 3.0s;"></div>
                 </div>
             </div>
-            <div class="analysis-status">Scanning for threats...</div>
+            <div class="analysis-status">Quantum Threat Scan</div>
             <div class="progress-container">
                 <div class="progress-bar"></div>
             </div>
             <div class="analysis-phases">
                 <div class="phase">
                     <div class="phase-icon">🔍</div>
-                    <div class="phase-text">Scanning</div>
+                    <div class="phase-text">Quantum Scan</div>
                 </div>
                 <div class="phase">
                     <div class="phase-icon">🧠</div>
-                    <div class="phase-text">Processing</div>
+                    <div class="phase-text">Neural Process</div>
                 </div>
                 <div class="phase">
                     <div class="phase-icon">📊</div>
-                    <div class="phase-text">Analyzing</div>
+                    <div class="phase-text">AI Analysis</div>
                 </div>
                 <div class="phase">
                     <div class="phase-icon">✅</div>
@@ -1760,12 +2407,12 @@ class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
             'primary': '#00ffff',
-            'secondary': '#9933ff',
+            'secondary': '#8a2be2',
             'success': '#10B981',
             'warning': '#F59E0B',
             'danger': '#EF4444',
             'info': '#3B82F6',
-            'dark': '#0a0a0a',
+            'dark': '#0a0a1a',
             'light': '#F3F4F6'
         }
     
@@ -2119,8 +2766,8 @@ def show_login_form():
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
         <div class="brandguardian-logo">🛡️</div>
-        <h1 style="font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #00ffff 0%, #9933ff 50%, #ff00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
-        <p style="font-size: 1.2rem; color: #00ffff;">Advanced Brand Protection & Threat Intelligence</p>
+        <h1 style="font-size: 4rem; font-weight: 800; background: linear-gradient(90deg, #00ffff 0%, #8a2be2 50%, #ff00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
+        <p style="font-size: 1.4rem; color: #00ffff; font-family: 'Share Tech Mono', monospace;">QUANTUM THREAT INTELLIGENCE SYSTEM</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -2130,9 +2777,9 @@ def show_login_form():
     with col1:
         st.markdown("""
         <div style='text-align: center;'>
-            <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🔒</div>
-            <h3 style="color: #00ffff;">Secure Login</h3>
-            <p style="color: #00ffff;">Access your brand protection dashboard</p>
+            <div style="font-size: 7rem; margin-bottom: 30px;" class="security-shield">🔒</div>
+            <h3 style="color: #00ffff; font-family: 'Audiowide', cursive;">QUANTUM SECURE LOGIN</h3>
+            <p style="color: #00ffff; font-family: 'Share Tech Mono', monospace;">ACCESS YOUR NEURAL DASHBOARD</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2144,7 +2791,7 @@ def show_login_form():
             # Remember me checkbox
             remember_me = st.checkbox("Remember me")
             
-            submit = st.form_submit_button("🚀 Login", use_container_width=True)
+            submit = st.form_submit_button("🚀 QUANTUM ACCESS", use_container_width=True)
             
             if submit:
                 success, message = auth_system.authenticate(username, password)
@@ -2156,26 +2803,27 @@ def show_login_form():
                     st.session_state.login_time = datetime.now().isoformat()
                     st.session_state.remember_me = remember_me
                     
-                    st.success("✅ Login successful!")
+                    st.success("✅ Quantum Authentication Successful!")
                     time.sleep(1)
                     st.rerun()
                 else:
                     st.error(f"❌ {message}")
     
     # Security information
-    with st.expander("🔒 Security Information"):
+    with st.expander("🔒 QUANTUM SECURITY PROTOCOLS"):
         st.markdown("""
-        - All credentials are encrypted using military-grade encryption
-        - Multi-factor authentication ready
-        - Session timeout after 30 minutes of inactivity
-        - All login attempts are logged and monitored
-        - Regular security audits conducted
+        - Military-grade quantum encryption
+        - Neural network authentication
+        - Real-time threat detection
+        - Biometric verification ready
+        - Zero-trust architecture
+        - Automated security audits
         """)
     
     # Forgot password link
     st.markdown("""
-    <div style='text-align: center; margin-top: 20px;'>
-        <a href='#' style='color: #00ffff; text-decoration: none;'>Forgot your password?</a>
+    <div style='text-align: center; margin-top: 30px;'>
+        <a href='#' style='color: #00ffff; text-decoration: none; font-family: 'Share Tech Mono', monospace;'>FORGOT QUANTUM KEY?</a>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2185,15 +2833,15 @@ def show_advanced_threat_analysis():
         show_access_required()
         return
     
-    st.header("🔍 Advanced Threat Analysis")
-    st.success("✅ Premium Access Granted - Advanced Features Unlocked")
+    st.header("🔍 QUANTUM THREAT ANALYSIS")
+    st.success("✅ QUANTUM ACCESS GRANTED - NEURAL FEATURES UNLOCKED")
     
     # Tab system for advanced analysis
     tab1, tab2, tab3, tab4 = st.tabs([
-        "📊 Threat Dashboard",
-        "🔍 Search Analysis",
-        "📈 Trend Analysis", 
-        "⚡ Quick Actions"
+        "📊 QUANTUM DASHBOARD",
+        "🔍 NEURAL SCAN",
+        "📈 PREDICTIVE ANALYTICS", 
+        "⚡ QUANTUM ACTIONS"
     ])
     
     with tab1:
@@ -2210,7 +2858,7 @@ def show_advanced_threat_analysis():
 
 def show_threat_dashboard():
     """Threat monitoring dashboard"""
-    st.subheader("🛡️ Real-time Threat Dashboard")
+    st.subheader("🛡️ QUANTUM THREAT MATRIX")
     
     # Create metrics with custom styling
     col1, col2, col3, col4 = st.columns(4)
@@ -2218,81 +2866,81 @@ def show_threat_dashboard():
     with col1:
         st.markdown("""
         <div class="metric-card">
-            <h3>Active Threats</h3>
-            <h1>18</h1>
-            <p style="color: #ff00ff;">+5 from yesterday</p>
+            <h3>QUANTUM THREATS</h3>
+            <h1>∞</h1>
+            <p style="color: #ff00ff;">NEURAL DETECTION ACTIVE</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
         <div class="metric-card">
-            <h3>Threat Level</h3>
-            <h1>High</h1>
-            <p style="color: #ff00ff;">Elevated risk</p>
+            <h3>THREAT LEVEL</h3>
+            <h1>QUANTUM</h1>
+            <p style="color: #ff00ff;">DIMENSIONAL ANALYSIS</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown("""
         <div class="metric-card">
-            <h3>Response Time</h3>
-            <h1>2.1s</h1>
-            <p style="color: #00ffff;">-0.4s improvement</p>
+            <h3>RESPONSE TIME</h3>
+            <h1>0.00s</h1>
+            <p style="color: #00ffff;">INSTANTANEOUS</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col4:
         st.markdown("""
         <div class="metric-card">
-            <h3>Protected Assets</h3>
-            <h1>24</h1>
-            <p style="color: #00ffff;">Fully secured</p>
+            <h3>PROTECTED ASSETS</h3>
+            <h1>∞</h1>
+            <p style="color: #00ffff;">QUANTUM ENCRYPTION</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Threat timeline with advanced visualization
-    st.subheader("📈 Threat Timeline (7 Days)")
+    st.subheader("📈 QUANTUM THREAT TIMELINE")
     
     # Generate sample data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=7)
     threats = [8, 12, 5, 18, 10, 7, 14]
     
     # Create an advanced chart
-    fig = viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
+    fig = viz.create_sentiment_timeline(dates, threats, "Quantum Threat Activity Over Time")
     st.plotly_chart(fig, use_container_width=True)
     
     # Threat distribution
-    st.subheader("🌡️ Threat Distribution")
+    st.subheader("🌡️ QUANTUM THREAT DISTRIBUTION")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         threat_data = {'High': 8, 'Medium': 5, 'Low': 5}
-        fig = viz.create_threat_distribution(threat_data, "Threat Severity Distribution")
+        fig = viz.create_threat_distribution(threat_data, "Quantum Threat Severity Distribution")
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>📊 Threat Insights</h4>
-            <p><span class="threat-high">High</span>: 8 threats detected</p>
-            <p><span class="threat-medium">Medium</span>: 5 threats detected</p>
-            <p><span class="threat-low">Low</span>: 5 threats detected</p>
-            <p>Most active platform: Twitter</p>
-            <p>Peak time: 14:00-16:00</p>
+            <h4>🧠 NEURAL INSIGHTS</h4>
+            <p><span class="threat-high">High</span>: 8 quantum threats</p>
+            <p><span class="threat-medium">Medium</span>: 5 dimensional threats</p>
+            <p><span class="threat-low">Low</span>: 5 temporal threats</p>
+            <p>Primary dimension: Twitter</p>
+            <p>Peak frequency: 14:00-16:00</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Recent threats table
-    st.subheader("🚨 Recent Threat Alerts")
+    st.subheader("🚨 QUANTUM THREAT ALERTS")
     
     threat_alerts = []
     for i in range(8):
         threat_alerts.append({
             'Time': (datetime.now() - timedelta(hours=i)).strftime("%H:%M"),
             'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram']),
-            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account', 'Copyright']),
+            'Type': random.choice(['Quantum Impersonation', 'Neural Negative', 'Holographic Fake', 'Dimensional Copyright']),
             'Severity': random.choice(['High', 'Medium', 'Low']),
             'Status': random.choice(['Active', 'Resolved', 'Monitoring'])
         })
@@ -2317,7 +2965,7 @@ def generate_similar_threats(results):
     for i in range(3):
         threats.append({
             'platform': random.choice(['Twitter', 'Reddit', 'Facebook', 'Instagram']),
-            'content': f"Similar {results['threat_level']} threat pattern detected",
+            'content': f"Similar quantum {results['threat_level']} threat pattern detected",
             'severity': results['threat_level'],
             'date': (datetime.now() - timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
         })
@@ -2325,28 +2973,28 @@ def generate_similar_threats(results):
 
 def show_search_analysis():
     """Search analysis functionality"""
-    st.subheader("🔍 Advanced Search Analysis")
+    st.subheader("🔍 QUANTUM NEURAL SEARCH")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         search_query = st.text_area(
-            "Enter search query or keywords to analyze:",
+            "Enter quantum search query or neural keywords:",
             height=100,
-            placeholder="Example: 'Your Brand scam complaints customer service issues'",
-            help="Enter keywords, phrases, or full sentences to analyze for brand threats"
+            placeholder="Example: 'Your Brand quantum scam neural complaints customer service dimensional issues'",
+            help="Enter quantum keywords, neural phrases, or full dimensional sentences to analyze for brand threats"
         )
         
         # Get the brand name from session state or use a default
         brand_name = st.session_state.get('brand_name', 'Your Brand')
         
-        if st.button("🚀 Analyze Threats", use_container_width=True):
+        if st.button("🚀 INITIATE QUANTUM SCAN", use_container_width=True):
             if search_query and brand_name:
                 # Show the enhanced animation
                 animation_placeholder = show_threat_analysis_animation()
                 
                 # Simulate analysis with the animation running
-                time.sleep(3.5)  # Allow time for animation to complete
+                time.sleep(4)  # Allow time for animation to complete
                 
                 # Clear the animation
                 animation_placeholder.empty()
@@ -2354,28 +3002,28 @@ def show_search_analysis():
                 # Perform the actual analysis
                 results = search_analyzer.analyze_search(search_query, brand_name)
                 st.session_state.search_results = results
-                st.success("Analysis complete!")
+                st.success("Quantum Analysis Complete!")
             else:
-                st.error("Please enter both search query and brand name")
+                st.error("Please enter both quantum query and brand name")
     
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>🎯 Search Analysis Tips</h4>
-            <p>• Use specific keywords</p>
-            <p>• Include brand names</p>
-            <p>• Add negative modifiers</p>
-            <p>• Use quotation marks for phrases</p>
-            <p>• Include platform names</p>
+            <h4>🎯 QUANTUM SCAN TIPS</h4>
+            <p>• Use neural-specific keywords</p>
+            <p>• Include quantum brand names</p>
+            <p>• Add dimensional modifiers</p>
+            <p>• Use neural quotation marks</p>
+            <p>• Include quantum platform names</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>📊 Threat Levels</h4>
-            <p><span class="threat-high">High</span> - Immediate action needed</p>
-            <p><span class="threat-medium">Medium</span> - Monitor closely</p>
-            <p><span class="threat-low">Low</span> - Standard monitoring</p>
+            <h4>📊 QUANTUM THREAT LEVELS</h4>
+            <p><span class="threat-high">High</span> - Quantum action needed</p>
+            <p><span class="threat-medium">Medium</span> - Neural monitoring</p>
+            <p><span class="threat-low">Low</span> - Temporal scanning</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2384,16 +3032,16 @@ def show_search_analysis():
         results = st.session_state.search_results
         
         st.markdown("---")
-        st.subheader("📋 Analysis Results")
+        st.subheader("📋 QUANTUM ANALYSIS RESULTS")
         
         # Threat level indicator
         threat_class = f"threat-{results['threat_level']}"
         st.markdown(f"""
         <div class="search-analysis-card">
-            <h4>Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
-            <p><strong>Query:</strong> {results['query']}</p>
-            <p><strong>Brand:</strong> {results['brand']}</p>
-            <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
+            <h4>Quantum Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
+            <p><strong>Quantum Query:</strong> {results['query']}</p>
+            <p><strong>Quantum Brand:</strong> {results['brand']}</p>
+            <p><strong>Neural Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -2403,7 +3051,7 @@ def show_search_analysis():
         with col1:
             st.markdown(f"""
             <div class="search-analysis-card">
-                <h4>📝 Analysis</h4>
+                <h4>🧠 QUANTUM ANALYSIS</h4>
                 <p>{results['analysis']}</p>
             </div>
             """, unsafe_allow_html=True)
@@ -2411,25 +3059,25 @@ def show_search_analysis():
         with col2:
             st.markdown(f"""
             <div class="search-analysis-card">
-                <h4>✅ Recommendations</h4>
+                <h4>✅ QUANTUM RECOMMENDATIONS</h4>
                 {''.join([f'<p>• {rec}</p>' for rec in results['recommendations']])}
             </div>
             """, unsafe_allow_html=True)
         
         # Similar threat examples
-        st.subheader("🔍 Similar Threat Patterns")
+        st.subheader("🔍 QUANTUM THREAT PATTERNS")
         similar_threats = generate_similar_threats(results)
         for threat in similar_threats:
             st.markdown(f"""
             <div class="search-result-card">
                 <p><strong>{threat['platform']}</strong> - {threat['content']}</p>
-                <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
+                <p>Quantum Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
             </div>
             """, unsafe_allow_html=True)
 
 def show_trend_analysis():
     """Trend analysis functionality"""
-    st.subheader("📈 Threat Trend Analysis")
+    st.subheader("📈 QUANTUM PREDICTIVE ANALYTICS")
     
     # Generate trend data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=30)
@@ -2451,7 +3099,7 @@ def show_trend_analysis():
         x=trend_data['Date'],
         y=trend_data['High Threats'],
         mode='lines+markers',
-        name='High Threats',
+        name='Quantum High Threats',
         line=dict(color='#ff00ff', width=3),
         marker=dict(size=6)
     ))
@@ -2460,7 +3108,7 @@ def show_trend_analysis():
         x=trend_data['Date'],
         y=trend_data['Medium Threats'],
         mode='lines+markers',
-        name='Medium Threats',
+        name='Neural Medium Threats',
         line=dict(color='#F59E0B', width=3),
         marker=dict(size=6)
     ))
@@ -2469,16 +3117,16 @@ def show_trend_analysis():
         x=trend_data['Date'],
         y=trend_data['Low Threats'],
         mode='lines+markers',
-        name='Low Threats',
+        name='Temporal Low Threats',
         line=dict(color='#10B981', width=3),
         marker=dict(size=6)
     ))
     
     fig.update_layout(
-        title="Threat Trends Over Time",
+        title="Quantum Threat Trends Over Time",
         title_x=0.5,
         xaxis_title='Date',
-        yaxis_title='Number of Threats',
+        yaxis_title='Number of Quantum Threats',
         font=dict(color='white'),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
@@ -2489,7 +3137,7 @@ def show_trend_analysis():
     st.plotly_chart(fig, use_container_width=True)
     
     # Platform distribution with radar chart
-    st.subheader("🌐 Threat Distribution by Platform")
+    st.subheader("🌐 QUANTUM DIMENSIONAL DISTRIBUTION")
     
     col1, col2 = st.columns([2, 1])
     
@@ -2501,24 +3149,24 @@ def show_trend_analysis():
         fig = viz.create_radar_chart(
             np.array(threat_counts),
             platforms,
-            "Threat Distribution Across Platforms"
+            "Quantum Threat Distribution Across Dimensions"
         )
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>📊 Platform Insights</h4>
-            <p>Twitter: 45 threats (42%)</p>
-            <p>Facebook: 32 threats (30%)</p>
-            <p>Reddit: 28 threats (26%)</p>
-            <p>Instagram: 19 threats (18%)</p>
-            <p>YouTube: 12 threats (11%)</p>
+            <h4>🧠 DIMENSIONAL INSIGHTS</h4>
+            <p>Twitter: 45 quantum threats (42%)</p>
+            <p>Facebook: 32 neural threats (30%)</p>
+            <p>Reddit: 28 dimensional threats (26%)</p>
+            <p>Instagram: 19 temporal threats (18%)</p>
+            <p>YouTube: 12 holographic threats (11%)</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Sentiment analysis over time
-    st.subheader("📊 Sentiment Analysis")
+    st.subheader("📊 QUANTUM SENTIMENT ANALYSIS")
     
     sentiment_dates = pd.date_range(end=datetime.now(), periods=14)
     sentiment_values = np.sin(np.linspace(0, 4*np.pi, 14)) * 0.5 + 0.5
@@ -2534,7 +3182,7 @@ def show_trend_analysis():
         x=sentiment_data['Date'],
         y=sentiment_data['Sentiment Score'],
         mode='lines+markers',
-        name='Sentiment',
+        name='Quantum Sentiment',
         line=dict(color='#00ffff', width=3),
         marker=dict(size=8),
         fill='tozeroy',
@@ -2542,10 +3190,10 @@ def show_trend_analysis():
     ))
     
     fig.update_layout(
-        title="Sentiment Analysis Over Time",
+        title="Quantum Sentiment Analysis Over Time",
         title_x=0.5,
         xaxis_title='Date',
-        yaxis_title='Sentiment Score',
+        yaxis_title='Quantum Sentiment Score',
         font=dict(color='white'),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
@@ -2557,52 +3205,52 @@ def show_trend_analysis():
 
 def show_quick_actions():
     """Quick action buttons"""
-    st.subheader("⚡ Quick Actions")
+    st.subheader("⚡ QUANTUM ACTION PROTOCOLS")
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("🔄 Scan All Platforms", use_container_width=True):
-            st.success("Platform scan initiated!")
+        if st.button("🔄 QUANTUM DIMENSIONAL SCAN", use_container_width=True):
+            st.success("Quantum Platform Scan Initiated!")
             time.sleep(1)
-            st.info("Scanning Twitter, Facebook, Instagram, Reddit...")
+            st.info("Scanning Quantum Twitter, Neural Facebook, Dimensional Instagram, Temporal Reddit...")
     
     with col2:
-        if st.button("📊 Generate Report", use_container_width=True):
-            st.success("Threat report generation started!")
+        if st.button("📊 GENERATE QUANTUM REPORT", use_container_width=True):
+            st.success("Quantum Threat Report Generation Started!")
             time.sleep(1)
-            st.info("Compiling data from last 7 days...")
+            st.info("Compiling Quantum Data from Last 7 Dimensions...")
     
     with col3:
-        if st.button("🚨 Crisis Protocol", use_container_width=True):
-            st.error("Crisis protocol activated!")
+        if st.button("🚨 QUANTUM CRISIS PROTOCOL", use_container_width=True):
+            st.error("Quantum Crisis Protocol Activated!")
             time.sleep(1)
-            st.warning("Alerting team members...")
+            st.warning("Alerting Quantum Team Members...")
 
 def show_access_required():
-    st.header("🔒 Advanced Threat Analysis")
-    st.warning("🚫 Premium Access Required")
+    st.header("🔒 QUANTUM THREAT ANALYSIS")
+    st.warning("🚫 QUANTUM ACCESS REQUIRED")
     
     st.write("""
-    ### Unlock Advanced Threat Analysis Features
+    ### Unlock Quantum Threat Analysis Features
     
-    To access our premium threat detection capabilities, please enter your access key below.
+    To access our quantum neural threat detection capabilities, please enter your quantum access key below.
     """)
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         access_key = st.text_input(
-            "Enter Access Key:",
+            "Enter Quantum Access Key:",
             type="password",
             placeholder="BG2024-PRO-ACCESS",
-            help="Enter your premium access key"
+            help="Enter your quantum premium access key"
         )
     
     with col2:
         st.write("")
         st.write("")
-        if st.button("🔓 Unlock Features", use_container_width=True):
+        if st.button("🔓 UNLOCK QUANTUM FEATURES", use_container_width=True):
             if access_key:
                 result = security_manager.validate_access_key(access_key)
                 if result["valid"]:
@@ -2614,46 +3262,46 @@ def show_access_required():
                 else:
                     st.error(result["message"])
             else:
-                st.error("Please enter an access key")
+                st.error("Please enter a quantum access key")
     
-    with st.expander("🆓 Demo Access"):
-        st.info("Use demo key: BG2024-PRO-ACCESS")
-        if st.button("Use Demo Key"):
+    with st.expander("🆓 QUANTUM DEMO ACCESS"):
+        st.info("Use quantum demo key: BG2024-PRO-ACCESS")
+        if st.button("Use Quantum Demo Key"):
             st.session_state.advanced_access = True
             st.session_state.access_level = "full"
-            st.success("Demo access granted!")
+            st.success("Quantum Demo Access Granted!")
             st.balloons()
             st.rerun()
     
     # Premium access card
     st.markdown("""
     <div class="premium-access-card">
-        <h3>🌟 Premium Access Features</h3>
-        <p>Unlock the full potential of BrandGuardian AI with our premium features:</p>
+        <h3>🌟 QUANTUM ACCESS FEATURES</h3>
+        <p>Unlock the full quantum potential of BrandGuardian AI with our quantum features:</p>
         <ul style="text-align: left; display: inline-block;">
-            <li>Advanced threat detection algorithms</li>
-            <li>Real-time monitoring across all platforms</li>
-            <li>AI-powered sentiment analysis</li>
-            <li>Customizable threat alerts</li>
-            <li>Detailed threat intelligence reports</li>
-            <li>Priority customer support</li>
+            <li>Quantum threat detection algorithms</li>
+            <li>Neural real-time monitoring across all dimensions</li>
+            <li>AI-powered quantum sentiment analysis</li>
+            <li>Quantum customizable threat alerts</li>
+            <li>Dimensional threat intelligence reports</li>
+            <li>Quantum priority customer support</li>
         </ul>
-        <p>Contact your administrator to get your premium access key.</p>
+        <p>Contact your quantum administrator to get your quantum access key.</p>
     </div>
     """, unsafe_allow_html=True)
 
 # API Management Tab
 def show_api_key_management():
-    st.header("🔑 API Key Management Center")
+    st.header("🔑 QUANTUM API MANAGEMENT CENTER")
     
     # Get current user's ID
     user_id = st.session_state.get('user_id')
     if not user_id:
-        st.error("User not authenticated")
+        st.error("Quantum User not authenticated")
         return
     
     # Display current connections
-    st.subheader("🌐 Connected Platforms")
+    st.subheader("🌐 QUANTUM CONNECTED DIMENSIONS")
     
     api_keys = api_manager.load_api_keys(user_id)
     if api_keys:
@@ -2664,25 +3312,25 @@ def show_api_key_management():
                 with cols[i % 3]:
                     st.markdown(f"""
                     <div class="search-analysis-card">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">{platform_info['icon']}</div>
+                        <div style="font-size: 2.5rem; margin-bottom: 15px;">{platform_info['icon']}</div>
                         <h4>{platform_info['name']}</h4>
-                        <p>Status: <span class="api-status-connected">✅ Connected</span></p>
-                        <p>Rate Limit: {platform_info['rate_limit']}</p>
+                        <p>Quantum Status: <span class="api-status-connected">✅ CONNECTED</span></p>
+                        <p>Quantum Rate Limit: {platform_info['rate_limit']}</p>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    if st.button(f"Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
+                    if st.button(f"Quantum Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
                         if api_manager.delete_api_key(user_id, platform):
-                            st.success(f"Disconnected from {platform_info['name']}")
+                            st.success(f"Quantum Disconnected from {platform_info['name']}")
                             st.rerun()
     else:
-        st.info("🌟 Connect your first platform to get started!")
+        st.info("🌟 Connect your first quantum dimension to get started!")
     
     # Add new connection
-    st.subheader("🚀 Connect New Platform")
+    st.subheader("🚀 CONNECT NEW QUANTUM DIMENSION")
     
     platforms = api_manager.supported_platforms
-    selected_platform = st.selectbox("Select Platform", list(platforms.keys()), 
+    selected_platform = st.selectbox("Select Quantum Dimension", list(platforms.keys()), 
                                    format_func=lambda x: f"{platforms[x]['icon']} {platforms[x]['name']}")
     
     platform_info = platforms[selected_platform]
@@ -2690,56 +3338,56 @@ def show_api_key_management():
     st.markdown(f"""
     <div class="search-analysis-card">
         <h4>{platform_info['icon']} {platform_info['name']}</h4>
-        <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
-        <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></p>
+        <p><strong>Quantum Rate Limit:</strong> {platform_info['rate_limit']}</p>
+        <p><strong>Quantum Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get Quantum API Key →</a></p>
     </div>
     """, unsafe_allow_html=True)
     
     api_key = st.text_input(
         f"{platform_info['field_name']}*",
         type="password",
-        placeholder=f"Paste your {platform_info['field_name']} here...",
+        placeholder=f"Paste your quantum {platform_info['field_name']} here...",
         help=platform_info['field_help']
     )
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("🧪 Test Connection", use_container_width=True):
+        if st.button("🧪 QUANTUM TEST CONNECTION", use_container_width=True):
             if api_key:
-                with st.spinner("Testing..."):
+                with st.spinner("Quantum Testing..."):
                     result = api_manager.test_connection(selected_platform, api_key)
                 if result["success"]:
                     st.success(result["message"])
-                    st.info(f"Rate Limit: {result['rate_limit']}")
+                    st.info(f"Quantum Rate Limit: {result['rate_limit']}")
                 else:
                     st.error(result["message"])
             else:
-                st.error("Please enter API key")
+                st.error("Please enter quantum API key")
     
     with col2:
-        if st.button("💾 Save Connection", use_container_width=True):
+        if st.button("💾 QUANTUM SAVE CONNECTION", use_container_width=True):
             if api_key:
                 if api_manager.save_api_key(user_id, selected_platform, api_key):
-                    st.success("✅ Connection saved!")
+                    st.success("✅ Quantum Connection Saved!")
                     st.balloons()
                 else:
-                    st.error("❌ Save failed")
+                    st.error("❌ Quantum Save Failed")
             else:
-                st.error("Please enter API key")
+                st.error("Please enter quantum API key")
     
     with col3:
-        if st.button("🔄 Clear", use_container_width=True):
+        if st.button("🔄 QUANTUM CLEAR", use_container_width=True):
             st.rerun()
     
     # Platform status
-    st.subheader("📊 Platform Status")
+    st.subheader("📊 QUANTUM DIMENSION STATUS")
     status_data = []
     for platform, info in api_manager.supported_platforms.items():
         status_data.append({
-            "Platform": f"{info['icon']} {info['name']}",
-            "Status": "✅ Connected" if platform in api_keys else "❌ Disconnected",
-            "Rate Limit": info['rate_limit']
+            "Quantum Platform": f"{info['icon']} {info['name']}",
+            "Status": "✅ QUANTUM CONNECTED" if platform in api_keys else "❌ QUANTUM DISCONNECTED",
+            "Quantum Rate Limit": info['rate_limit']
         })
     
     status_df = pd.DataFrame(status_data)
@@ -2747,7 +3395,7 @@ def show_api_key_management():
 
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
-    st.header("🤖 BrandGuardian AI Dashboard")
+    st.header("🤖 QUANTUM BRANDGUIAN AI DASHBOARD")
     
     # Get user's subscription
     username = st.session_state.get('username')
@@ -2756,7 +3404,7 @@ def show_user_ai_dashboard():
     
     # Welcome message with subscription info
     brand_name = st.session_state.get('brand_name', 'Your Brand')
-    st.success(f"Welcome to your brand protection dashboard, {brand_name}!")
+    st.success(f"Welcome to your quantum brand protection dashboard, {brand_name}!")
     st.markdown(f"""
     <div style="display: flex; align-items: center; margin-bottom: 20px;">
         <div style="background-color: {subscription_info['color']}20; 
@@ -2767,7 +3415,7 @@ def show_user_ai_dashboard():
             </span>
         </div>
         <div>
-            <a href="#upgrade" style="color: #00ffff; text-decoration: none;">Upgrade Plan →</a>
+            <a href="#upgrade" style="color: #00ffff; text-decoration: none; font-family: 'Share Tech Mono', monospace;">Upgrade Quantum Plan →</a>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -2778,39 +3426,39 @@ def show_user_ai_dashboard():
     with col1:
         st.markdown("""
         <div class="metric-card">
-            <h3>Brand Mentions</h3>
-            <h1>142</h1>
-            <p style="color: #00ffff;">+12 from last week</p>
+            <h3>QUANTUM MENTIONS</h3>
+            <h1>∞</h1>
+            <p style="color: #00ffff;">NEURAL GROWTH DETECTED</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
         <div class="metric-card">
-            <h3>Threat Level</h3>
-            <h1>Low</h1>
-            <p style="color: #00ffff;">Stable</p>
+            <h3>THREAT LEVEL</h3>
+            <h1>QUANTUM</h1>
+            <p style="color: #00ffff;">DIMENSIONAL STABILITY</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown("""
         <div class="metric-card">
-            <h3>Response Rate</h3>
-            <h1>92%</h1>
-            <p style="color: #00ffff;">Excellent</p>
+            <h3>RESPONSE RATE</h3>
+            <h1>100%</h1>
+            <p style="color: #00ffff;">QUANTUM EFFICIENCY</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Create tabs based on subscription
-    available_tabs = ["Search Analysis"]  # Available to all subscriptions
+    available_tabs = ["Quantum Search Analysis"]  # Available to all subscriptions
     
     if auth_system.check_subscription_feature(username, "advanced_analytics"):
-        available_tabs.append("Social Monitoring")
-        available_tabs.append("AI Insights")
+        available_tabs.append("Quantum Social Monitoring")
+        available_tabs.append("Quantum AI Insights")
     
     if auth_system.check_subscription_feature(username, "real_time_monitoring"):
-        available_tabs.append("Advanced Threat Analysis")
+        available_tabs.append("Quantum Advanced Threat Analysis")
     
     # Create the tab navigation
     tabs = st.tabs([f"🔍 {tab}" for tab in available_tabs])
@@ -2818,18 +3466,18 @@ def show_user_ai_dashboard():
     # Display tab content
     for i, tab_name in enumerate(available_tabs):
         with tabs[i]:
-            if tab_name == "Search Analysis":
+            if tab_name == "Quantum Search Analysis":
                 show_search_analysis()
-            elif tab_name == "Social Monitoring":
+            elif tab_name == "Quantum Social Monitoring":
                 show_social_monitoring()
-            elif tab_name == "AI Insights":
+            elif tab_name == "Quantum AI Insights":
                 show_ai_insights()
-            elif tab_name == "Advanced Threat Analysis":
+            elif tab_name == "Quantum Advanced Threat Analysis":
                 show_advanced_threat_analysis()
     
     # Subscription upgrade section
     st.markdown("---")
-    st.subheader("💳 Subscription Plans")
+    st.subheader("💳 QUANTUM SUBSCRIPTION PLANS")
     
     col1, col2, col3 = st.columns(3)
     
@@ -2853,23 +3501,23 @@ def show_user_ai_dashboard():
             """, unsafe_allow_html=True)
             
             if current_plan:
-                st.success("Current Plan")
+                st.success("Current Quantum Plan")
             else:
                 if st.button(f"Upgrade to {plan_info['name']}", key=f"upgrade_{plan}"):
-                    st.info(f"Redirecting to payment for {plan_info['name']} plan...")
+                    st.info(f"Redirecting to quantum payment for {plan_info['name']} plan...")
                     # In a real app, this would redirect to a payment processor
 
 # Add new functions for subscription-specific features
 def show_social_monitoring():
     """Social monitoring functionality - requires Advanced subscription"""
-    st.header("Social Monitoring")
+    st.header("QUANTUM SOCIAL MONITORING")
     
     # Get user's subscription
     username = st.session_state.get('username')
     
     if not auth_system.check_subscription_feature(username, "advanced_analytics"):
-        st.warning("⚠️ This feature requires an Advanced or Premium subscription")
-        st.info("Upgrade your plan to access social media monitoring features.")
+        st.warning("⚠️ This feature requires a Quantum Advanced or Premium subscription")
+        st.info("Upgrade your quantum plan to access social media monitoring features.")
         return
     
     brand_name = st.session_state.get('brand_name', 'Your Brand')
@@ -2882,24 +3530,24 @@ def show_social_monitoring():
         
         with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
             st.write(post['content'])
-            st.caption(f"Engagement: {post['engagement']}")
+            st.caption(f"Quantum Engagement: {post['engagement']}")
             st.markdown(f"""
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <span class="{threat_class}">Threat: {post['threat_level'].upper()}</span>
-                <span style="color: {sentiment_color}; font-weight: 600;">Sentiment: {post['sentiment'].upper()}</span>
+                <span class="{threat_class}">Quantum Threat: {post['threat_level'].upper()}</span>
+                <span style="color: {sentiment_color}; font-weight: 600;">Quantum Sentiment: {post['sentiment'].upper()}</span>
             </div>
             """, unsafe_allow_html=True)
 
 def show_ai_insights():
     """AI insights functionality - requires Advanced subscription"""
-    st.header("🧠 AI-Powered Insights")
+    st.header("🧠 QUANTUM AI-POWERED INSIGHTS")
     
     # Get user's subscription
     username = st.session_state.get('username')
     
     if not auth_system.check_subscription_feature(username, "advanced_analytics"):
-        st.warning("⚠️ This feature requires an Advanced or Premium subscription")
-        st.info("Upgrade your plan to access AI-powered insights.")
+        st.warning("⚠️ This feature requires a Quantum Advanced or Premium subscription")
+        st.info("Upgrade your quantum plan to access AI-powered insights.")
         return
     
     brand_name = st.session_state.get('brand_name', 'Your Brand')
@@ -2907,7 +3555,7 @@ def show_ai_insights():
     # Generate sample analyses
     analyses = []
     for i in range(10):
-        text = f"Sample text {i} about {brand_name} with {'high' if i < 3 else 'medium' if i < 6 else 'low'} threat level"
+        text = f"Quantum sample text {i} about {brand_name} with {'high' if i < 3 else 'medium' if i < 6 else 'low'} quantum threat level"
         analysis = ai_engine.detect_threats(text, brand_name)
         analyses.append(analysis)
     
@@ -2920,12 +3568,12 @@ def show_ai_insights():
     with col1:
         st.markdown("""
         <div class="ai-visualization">
-            <h4>📊 Threat Summary</h4>
-            <p>Total Analyses: {}</p>
-            <p>High Threats: {}</p>
-            <p>Medium Threats: {}</p>
-            <p>Low Threats: {}</p>
-            <p>Average Sentiment: {:.2f}</p>
+            <h4>🧠 QUANTUM THREAT SUMMARY</h4>
+            <p>Quantum Total Analyses: {}</p>
+            <p>Quantum High Threats: {}</p>
+            <p>Quantum Medium Threats: {}</p>
+            <p>Quantum Low Threats: {}</p>
+            <p>Quantum Average Sentiment: {:.2f}</p>
         </div>
         """.format(
             report['total_analyses'],
@@ -2938,7 +3586,7 @@ def show_ai_insights():
     with col2:
         st.markdown("""
         <div class="ai-visualization">
-            <h4>✅ AI Recommendations</h4>
+            <h4>✅ QUANTUM AI RECOMMENDATIONS</h4>
             {}
         </div>
         """.format(
@@ -2946,22 +3594,22 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
     
     # Keyword frequency analysis
-    st.subheader("🔤 Keyword Frequency Analysis")
+    st.subheader("🔤 QUANTUM KEYWORD FREQUENCY ANALYSIS")
     
     texts = [a['text'] for a in analyses]
     keyword_freq = ai_engine.create_keyword_frequency(texts)
     
     # Create bar chart
-    fig = viz.create_keyword_bar_chart(keyword_freq, "Top Keywords in Threat Analysis")
+    fig = viz.create_keyword_bar_chart(keyword_freq, "Quantum Top Keywords in Threat Analysis")
     st.plotly_chart(fig, use_container_width=True)
     
     # Threat patterns
-    st.subheader("🔍 Threat Pattern Analysis")
+    st.subheader("🔍 QUANTUM THREAT PATTERN ANALYSIS")
     
     patterns = ai_engine.create_threat_patterns(analyses)
     
     # Create heatmap
-    fig = viz.create_pattern_heatmap(patterns, "Threat Patterns by Platform and Level")
+    fig = viz.create_pattern_heatmap(patterns, "Quantum Threat Patterns by Platform and Level")
     st.plotly_chart(fig, use_container_width=True)
     
     # Pattern details
@@ -2970,7 +3618,7 @@ def show_ai_insights():
     with col1:
         st.markdown("""
         <div class="ai-visualization">
-            <h4>🎯 Top Threat Keywords</h4>
+            <h4>🎯 QUANTUM TOP THREAT KEYWORDS</h4>
             {}
         </div>
         """.format(
@@ -2980,7 +3628,7 @@ def show_ai_insights():
     with col2:
         st.markdown("""
         <div class="ai-visualization">
-            <h4>📱 Platform Distribution</h4>
+            <h4>📱 QUANTUM PLATFORM DISTRIBUTION</h4>
             {}
         </div>
         """.format(
@@ -2988,8 +3636,8 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
 
 def main():
-    # Add holographic particles background
-    add_holographic_particles()
+    # Add quantum particles background
+    add_quantum_particles()
     
     # Check authentication first
     if not st.session_state.get('authenticated', False):
@@ -3009,10 +3657,10 @@ def main():
     
     # Header with shield logo
     st.markdown("""
-    <div style="text-align: center; margin-bottom: 20px;">
+    <div style="text-align: center; margin-bottom: 30px;">
         <div class="brandguardian-logo">🛡️</div>
         <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
-        <div style="text-align: center; margin-top: 10px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
+        <div style="text-align: center; margin-top: 15px;" class="accent-text">Quantum Business Intelligence & Digital Risk Protection</div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -3021,14 +3669,14 @@ def main():
         # User info
         subscription_info = auth_system.subscription_plans[st.session_state.user_subscription]
         st.markdown(f"""
-        <div style="text-align: center; margin-bottom: 20px;">
-            <div style="font-size: 3rem;">👤</div>
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="font-size: 3.5rem;">👤</div>
             <h3>{st.session_state.username}</h3>
             <p>{st.session_state.get('user_access_level', 'user').title()} Access</p>
             <p>{auth_system.users[st.session_state.username]['company']}</p>
             <div style="background-color: {subscription_info['color']}20; 
                         border: 1px solid {subscription_info['color']}; 
-                        border-radius: 20px; padding: 8px 16px; margin-top: 10px; display: inline-block;">
+                        border-radius: 20px; padding: 8px 16px; margin-top: 12px; display: inline-block;">
                 <span style="color: {subscription_info['color']}; font-weight: bold;">
                     {subscription_info['name']} Subscription
                 </span>
@@ -3036,35 +3684,35 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         
-        st.header("Business Configuration")
-        brand_name = st.text_input("Brand Name", st.session_state.brand_name)
+        st.header("Quantum Business Configuration")
+        brand_name = st.text_input("Quantum Brand Name", st.session_state.brand_name)
         st.session_state.brand_name = brand_name
         
-        sector = st.selectbox("Business Sector", ["technology", "finance", "retail"])
+        sector = st.selectbox("Quantum Business Sector", ["technology", "finance", "retail"])
         st.session_state.sector = sector
         
         st.markdown("---")
-        st.subheader("🔐 Access Status")
+        st.subheader("🔐 QUANTUM ACCESS STATUS")
         if st.session_state.user_subscription == "premium":
-            st.success("✅ Premium Access")
-            st.markdown('<span class="premium-badge">PREMIUM</span>', unsafe_allow_html=True)
+            st.success("✅ QUANTUM PREMIUM ACCESS")
+            st.markdown('<span class="premium-badge">QUANTUM PREMIUM</span>', unsafe_allow_html=True)
         else:
-            st.warning(f"⚠️ {subscription_info['name']} Access")
+            st.warning(f"⚠️ {subscription_info['name']} ACCESS")
         
         st.markdown("---")
         user_id = st.session_state.get('user_id')
         api_keys = api_manager.load_api_keys(user_id) if user_id else {}
-        st.subheader("🔑 API Status")
-        st.info(f"{len(api_keys)} platform(s) connected")
+        st.subheader("🔑 QUANTUM API STATUS")
+        st.info(f"{len(api_keys)} quantum dimension(s) connected")
         
         # User management for admin only
         if st.session_state.get('user_access_level') == 'admin':
             st.markdown("---")
-            if st.button("👥 User Management", use_container_width=True):
+            if st.button("👥 QUANTUM USER MANAGEMENT", use_container_width=True):
                 st.session_state.show_user_management = True
         
         st.markdown("---")
-        if st.button("🚪 Logout", use_container_width=True):
+        if st.button("🚪 QUANTUM LOGOUT", use_container_width=True):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
@@ -3072,7 +3720,7 @@ def main():
     # Show user management if admin clicked the button
     if st.session_state.get('show_user_management', False):
         show_user_management()
-        if st.button("Back to Dashboard", use_container_width=True):
+        if st.button("Back to Quantum Dashboard", use_container_width=True):
             st.session_state.show_user_management = False
             st.rerun()
         return
@@ -3081,34 +3729,34 @@ def main():
     if st.session_state.get('user_access_level') == 'admin':
         # Admin navigation
         tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
-            "📊 Executive Dashboard", 
-            "🔍 Advanced Threat Analysis",
-            "📱 Social Monitoring",
-            "🥊 Competitive Intelligence",
-            "🌟 Influencer Network",
-            "🛡️ Crisis Prediction",
-            "❤️ Brand Health",
-            "🔑 API Management"
+            "📊 QUANTUM EXECUTIVE DASHBOARD", 
+            "🔍 QUANTUM THREAT ANALYSIS",
+            "📱 QUANTUM SOCIAL MONITORING",
+            "🥊 QUANTUM COMPETITIVE INTELLIGENCE",
+            "🌟 QUANTUM INFLUENCER NETWORK",
+            "🛡️ QUANTUM CRISIS PREDICTION",
+            "❤️ QUANTUM BRAND HEALTH",
+            "🔑 QUANTUM API MANAGEMENT"
         ])
         
         with tab1:
-            st.header("Executive Dashboard")
-            st.write("Overview dashboard content...")
+            st.header("Quantum Executive Dashboard")
+            st.write("Quantum overview dashboard content...")
         
         with tab2:
             show_advanced_threat_analysis()
         
         with tab3:
-            st.header("Social Monitoring")
+            st.header("Quantum Social Monitoring")
             posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector)
             for post in posts[:5]:
                 with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                     st.write(post['content'])
-                    st.caption(f"Engagement: {post['engagement']}")
+                    st.caption(f"Quantum Engagement: {post['engagement']}")
         
         # Other tabs
-        for tab, title in [(tab4, "Competitive Intelligence"), (tab5, "Influencer Network"), 
-                          (tab6, "Crisis Prediction"), (tab7, "Brand Health")]:
+        for tab, title in [(tab4, "Quantum Competitive Intelligence"), (tab5, "Quantum Influencer Network"), 
+                          (tab6, "Quantum Crisis Prediction"), (tab7, "Quantum Brand Health")]:
             with tab:
                 st.header(title)
                 st.write(f"{title} content...")
