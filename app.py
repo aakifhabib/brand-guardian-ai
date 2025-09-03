@@ -1974,11 +1974,11 @@ class AdvancedVisualizations:
             for platform in platforms:
                 # Simulate data based on actual distribution
                 if level == 'high':
-                    value = pattern_data['high_threat_keywords'].total() * 0.3
+                    value = sum(pattern_data['high_threat_keywords'].values()) * 0.3
                 elif level == 'medium':
-                    value = pattern_data['medium_threat_keywords'].total() * 0.5
+                    value = sum(pattern_data['medium_threat_keywords'].values()) * 0.5
                 else:
-                    value = pattern_data['low_threat_keywords'].total() * 0.2
+                    value = sum(pattern_data['low_threat_keywords'].values()) * 0.2
                 
                 # Adjust by platform distribution
                 platform_factor = pattern_data['platform_distribution'][platform] / sum(pattern_data['platform_distribution'].values())
@@ -2715,7 +2715,6 @@ def show_trend_analysis():
         yaxis_title='Sentiment Score',
         font=dict(color='white'),
         paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(gridcolor='rgba(255,255,255,0.1)'),
         yaxis=dict(gridcolor='rgba(255,255,255,0.1)')
     )
