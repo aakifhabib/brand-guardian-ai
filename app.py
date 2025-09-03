@@ -28,7 +28,6 @@ from typing import Dict, List, Tuple, Optional, Any
 import logging
 from functools import lru_cache
 import sqlite3
-import schedule
 import threading
 from streamlit.components.v1 import html
 
@@ -100,6 +99,835 @@ def init_db():
 # Initialize database on startup
 init_db()
 
+# Generate and display premium access key
+def generate_premium_key():
+    """Generate a secure premium access key"""
+    key = secrets.token_urlsafe(16)
+    premium_key = f"BG-PREMIUM-{key.upper()}"
+    return premium_key
+
+# Display the premium key in the console (for admin use)
+premium_access_key = generate_premium_key()
+print(f"PREMIUM ACCESS KEY: {premium_access_key}")
+
+# Advanced CSS with enhanced black and gold theme and animations
+st.markdown("""
+<style>
+    /* Base styles */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
+    
+    .main {
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        color: #FFFFFF;
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+    }
+    
+    .stApp {
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50% }
+        50% { background-position: 100% 50% }
+        100% { background-position: 0% 50% }
+    }
+    
+    /* Animated particles background */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+    
+    .particle {
+        position: absolute;
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(255, 215, 0, 0) 70%);
+        border-radius: 50%;
+        animation: float 20s infinite linear;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+    }
+    
+    /* Premium header styling */
+    .premium-header {
+        font-family: 'Playfair Display', serif;
+        font-size: 4rem;
+        font-weight: 900;
+        text-align: center;
+        margin: 20px 0;
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
+        animation: goldGlow 3s ease-in-out infinite alternate;
+        position: relative;
+    }
+    
+    @keyframes goldGlow {
+        from { 
+            text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
+            transform: scale(1);
+        }
+        to { 
+            text-shadow: 0px 2px 20px rgba(255, 215, 0, 0.6);
+            transform: scale(1.02);
+        }
+    }
+    
+    .floating {
+        animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .accent-text {
+        font-size: 1.2rem;
+        color: #FFD700;
+        text-align: center;
+        margin-bottom: 40px;
+        animation: fadeIn 2s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Enhanced card styling */
+    .metric-card {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(15px);
+        padding: 25px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        margin: 15px 0;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+    }
+    
+    .metric-card:hover::before {
+        transform: translateX(100%);
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(255, 215, 0, 0.3);
+        border: 1px solid rgba(255, 215, 0, 0.5);
+    }
+    
+    .search-analysis-card {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(15px);
+        padding: 25px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        margin: 20px 0;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s ease;
+    }
+    
+    .search-analysis-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.3);
+    }
+    
+    .search-result-card {
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px 0;
+        border-left: 5px solid #FFD700;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .search-result-card:hover {
+        background: rgba(0, 0, 0, 0.8);
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+    }
+    
+    /* Enhanced threat indicators */
+    .threat-indicator {
+        padding: 10px 16px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 8px;
+        display: inline-block;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .threat-indicator:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+    
+    .threat-high {
+        background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.1));
+        color: #FF0000;
+        border: 1px solid rgba(255, 0, 0, 0.5);
+    }
+    
+    .threat-medium {
+        background: linear-gradient(135deg, rgba(255, 165, 0, 0.3), rgba(255, 165, 0, 0.1));
+        color: #FFA500;
+        border: 1px solid rgba(255, 165, 0, 0.5);
+    }
+    
+    .threat-low {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 215, 0, 0.1));
+        color: #FFD700;
+        border: 1px solid rgba(255, 215, 0, 0.5);
+    }
+    
+    /* Status indicators */
+    .api-status-connected {
+        color: #FFD700;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .api-status-connected::before {
+        content: '●';
+        margin-right: 5px;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .api-status-disconnected {
+        color: #FF0000;
+        font-weight: 700;
+    }
+    
+    /* Enhanced button styling */
+    .stButton > button {
+        border-radius: 15px;
+        border: 1px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+        color: #FFD700;
+        font-weight: 700;
+        padding: 12px 24px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .stButton > button:hover::before {
+        left: 100%;
+    }
+    
+    .stButton > button:hover {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 1px solid rgba(255, 215, 0, 0.8);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+    }
+    
+    /* Enhanced tab styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 15px 15px 0 0;
+        padding: 14px 20px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        border-bottom: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+        border: 1px solid rgba(255, 215, 0, 0.5);
+        border-bottom: none;
+        box-shadow: 0 -4px 15px rgba(255, 215, 0, 0.2);
+    }
+    
+    /* Custom metric styling */
+    [data-testid="stMetricValue"] {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #FFD700;
+    }
+    
+    [data-testid="stMetricDelta"] {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    /* Enhanced input styling */
+    .stSelectbox [data-baseweb="select"], 
+    .stTextInput [data-baseweb="input"], 
+    .stTextArea [data-baseweb="textarea"],
+    .stNumberInput [data-baseweb="input"],
+    .stDateInput [data-baseweb="input"],
+    .stTimeInput [data-baseweb="input"] {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .stSelectbox [data-baseweb="select"]:hover, 
+    .stTextInput [data-baseweb="input"]:hover, 
+    .stTextArea [data-baseweb="textarea"]:hover,
+    .stNumberInput [data-baseweb="input"]:hover,
+    .stDateInput [data-baseweb="input"]:hover,
+    .stTimeInput [data-baseweb="input"]:hover {
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 215, 0, 0.5);
+    }
+    
+    /* Custom spinner */
+    .stSpinner > div {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid #FFD700;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Custom expander */
+    .streamlit-expanderHeader {
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 12px;
+        padding: 14px 18px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .streamlit-expanderHeader:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
+    
+    /* Custom dataframes */
+    .dataframe {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Custom success/error boxes */
+    .stAlert {
+        border-radius: 15px;
+        padding: 16px 20px;
+        font-weight: 600;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Custom sidebar */
+    .css-1d391kg {
+        background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+        border-right: 1px solid rgba(255, 215, 0, 0.2);
+    }
+    
+    /* Custom chart elements */
+    .stChart {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Custom progress bars */
+    .stProgress > div > div > div {
+        background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    }
+    
+    /* Custom radio buttons */
+    .stRadio [role="radiogroup"] {
+        background: rgba(0, 0, 0, 0.7);
+        padding: 18px;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    
+    /* Custom slider */
+    .stSlider [role="slider"] {
+        background: linear-gradient(90deg, #FFD700, #FFA500);
+        border-radius: 10px;
+        height: 8px;
+    }
+    
+    /* Custom checkbox */
+    .stCheckbox [data-baseweb="checkbox"] {
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    
+    /* Premium badge */
+    .premium-badge {
+        background: linear-gradient(135deg, #FFD700, #FFA500);
+        color: #000000;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-block;
+        margin-left: 10px;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: -200px; }
+        100% { background-position: calc(200px + 100%); }
+    }
+    
+    /* Security shield animation */
+    .security-shield {
+        display: inline-block;
+        animation: shieldPulse 2s infinite;
+    }
+    
+    @keyframes shieldPulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Login form enhancements */
+    .login-container {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 40px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    /* Animated background for login */
+    .login-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.1), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(255, 140, 0, 0.1), transparent 50%);
+        animation: bgMove 20s ease infinite;
+    }
+    
+    @keyframes bgMove {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(20px, -20px) rotate(120deg); }
+        66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+    
+    /* Premium access card */
+    .premium-access-card {
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 20px 0;
+        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .premium-access-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+    
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Threat radar animation */
+    .threat-radar {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+    }
+    
+    .radar-circle {
+        position: absolute;
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        border-radius: 50%;
+        animation: radarPulse 2s infinite;
+    }
+    
+    @keyframes radarPulse {
+        0% { transform: scale(0.8); opacity: 1; }
+        100% { transform: scale(1.2); opacity: 0; }
+    }
+    
+    /* Enhanced AI visualization */
+    .ai-visualization {
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 20px 0;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* AI pulse animation */
+    .ai-pulse {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .ai-pulse::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba(255, 215, 0, 0.3);
+        animation: aiPulse 2s infinite;
+    }
+    
+    @keyframes aiPulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.2); opacity: 0.3; }
+        100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    /* New Threat Analysis Animation */
+    .threat-analysis-container {
+        position: relative;
+        width: 100%;
+        height: 250px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+    }
+    
+    .radar-scanner {
+        position: relative;
+        width: 180px;
+        height: 180px;
+        margin-bottom: 20px;
+    }
+    
+    .radar-background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+        border: 2px solid rgba(255, 215, 0, 0.3);
+        overflow: hidden;
+    }
+    
+    .radar-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+    
+    .radar-grid::before,
+    .radar-grid::after {
+        content: '';
+        position: absolute;
+        background: rgba(255, 215, 0, 0.2);
+    }
+    
+    .radar-grid::before {
+        width: 2px;
+        height: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .radar-grid::after {
+        width: 100%;
+        height: 2px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .radar-sweep {
+        position: absolute;
+        width: 50%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent);
+        top: 50%;
+        left: 50%;
+        transform-origin: left center;
+        animation: radarSweep 3s linear infinite;
+    }
+    
+    @keyframes radarSweep {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .radar-sweep::before {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 215, 0, 0.8);
+        border-radius: 50%;
+        right: 0;
+        top: -4px;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+    
+    .threat-dots {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+    
+    .threat-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: rgba(255, 215, 0, 0.8);
+        border-radius: 50%;
+        opacity: 0;
+        animation: threatPulse 2s infinite;
+    }
+    
+    .threat-dot.active {
+        opacity: 1;
+    }
+    
+    @keyframes threatPulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.5); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    .analysis-status {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #FFD700;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .progress-container {
+        width: 80%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #FFD700, #FFA500);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+        animation: progressFill 3.5s ease-in-out forwards;
+    }
+    
+    @keyframes progressFill {
+        0% { width: 0%; }
+        100% { width: 100%; }
+    }
+    
+    .analysis-phases {
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        margin-top: 15px;
+    }
+    
+    .phase {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0.5;
+        transition: opacity 0.3s;
+    }
+    
+    .phase.active {
+        opacity: 1;
+    }
+    
+    .phase-icon {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+    }
+    
+    .phase-text {
+        font-size: 0.8rem;
+        color: #FFD700;
+    }
+    
+    .phase:nth-child(1) {
+        animation: phaseActivate 3.5s ease-in-out forwards;
+    }
+    
+    .phase:nth-child(2) {
+        animation: phaseActivate 3.5s ease-in-out 0.875s forwards;
+    }
+    
+    .phase:nth-child(3) {
+        animation: phaseActivate 3.5s ease-in-out 1.75s forwards;
+    }
+    
+    .phase:nth-child(4) {
+        animation: phaseActivate 3.5s ease-in-out 2.625s forwards;
+    }
+    
+    @keyframes phaseActivate {
+        0% { opacity: 0.5; }
+        25% { opacity: 1; }
+        100% { opacity: 1; }
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Add animated particles to the background
+def add_particles():
+    st.markdown("""
+    <div class="particles">
+        <div class="particle" style="width: 10px; height: 10px; left: 10%; animation-duration: 20s;"></div>
+        <div class="particle" style="width: 15px; height: 15px; left: 20%; animation-duration: 25s;"></div>
+        <div class="particle" style="width: 8px; height: 8px; left: 30%; animation-duration: 30s;"></div>
+        <div class="particle" style="width: 12px; height: 12px; left: 40%; animation-duration: 22s;"></div>
+        <div class="particle" style="width: 18px; height: 18px; left: 50%; animation-duration: 28s;"></div>
+        <div class="particle" style="width: 7px; height: 7px; left: 60%; animation-duration: 32s;"></div>
+        <div class="particle" style="width: 14px; height: 14px; left: 70%; animation-duration: 24s;"></div>
+        <div class="particle" style="width: 9px; height: 9px; left: 80%; animation-duration: 26s;"></div>
+        <div class="particle" style="width: 16px; height: 16px; left: 90%; animation-duration: 29s;"></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Add the new animation function
+def show_threat_analysis_animation():
+    """Display a radar scanning animation for threat analysis"""
+    placeholder = st.empty()
+    
+    with placeholder.container():
+        st.markdown("""
+        <div class="threat-analysis-container">
+            <div class="radar-scanner">
+                <div class="radar-background"></div>
+                <div class="radar-grid"></div>
+                <div class="radar-sweep"></div>
+                <div class="threat-dots">
+                    <div class="threat-dot active" style="top: 30%; left: 40%; animation-delay: 0.5s;"></div>
+                    <div class="threat-dot active" style="top: 60%; left: 70%; animation-delay: 1.0s;"></div>
+                    <div class="threat-dot active" style="top: 20%; left: 60%; animation-delay: 1.5s;"></div>
+                    <div class="threat-dot active" style="top: 70%; left: 30%; animation-delay: 2.0s;"></div>
+                    <div class="threat-dot active" style="top: 50%; left: 80%; animation-delay: 2.5s;"></div>
+                </div>
+            </div>
+            <div class="analysis-status">Scanning for threats...</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="analysis-phases">
+                <div class="phase">
+                    <div class="phase-icon">🔍</div>
+                    <div class="phase-text">Scanning</div>
+                </div>
+                <div class="phase">
+                    <div class="phase-icon">🧠</div>
+                    <div class="phase-text">Processing</div>
+                </div>
+                <div class="phase">
+                    <div class="phase-icon">📊</div>
+                    <div class="phase-text">Analyzing</div>
+                </div>
+                <div class="phase">
+                    <div class="phase-icon">✅</div>
+                    <div class="phase-text">Complete</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    return placeholder
+
 # Enhanced Security Manager with Premium Access
 class SecurityManager:
     def __init__(self):
@@ -107,7 +935,8 @@ class SecurityManager:
             "BG2024-PRO-ACCESS": "full",
             "BG-ADVANCED-ANALYSIS": "analysis",
             "BG-PREMIUM-2024": "premium",
-            "BRAND-GUARDIAN-PRO": "pro"
+            "BRAND-GUARDIAN-PRO": "pro",
+            premium_access_key: "premium"  # Add the generated key
         }
         self.failed_attempts = {}
         self.lockout_time = timedelta(minutes=15)
@@ -116,17 +945,17 @@ class SecurityManager:
         self.encryption_key = Fernet.generate_key()
         self.cipher_suite = Fernet(self.encryption_key)
         
-    def encrypt_data(self, data: str) -> bytes:
+    def encrypt_data(self, data):
         """Encrypt sensitive data"""
         if isinstance(data, str):
             data = data.encode()
         return self.cipher_suite.encrypt(data)
     
-    def decrypt_data(self, encrypted_data: bytes) -> str:
+    def decrypt_data(self, encrypted_data):
         """Decrypt sensitive data"""
         return self.cipher_suite.decrypt(encrypted_data).decode()
     
-    def validate_access_key(self, access_key: str) -> Dict[str, Any]:
+    def validate_access_key(self, access_key):
         """Validate the provided access key with enhanced security"""
         # Check if user is temporarily locked out
         user_ip = self.get_user_ip()
@@ -174,7 +1003,7 @@ class SecurityManager:
                 "message": f"❌ Invalid access key. {remaining_attempts} attempts remaining."
             }
     
-    def check_access(self) -> bool:
+    def check_access(self):
         """Check if user has access to advanced features"""
         if 'advanced_access' not in st.session_state:
             st.session_state.advanced_access = False
@@ -192,7 +1021,7 @@ class SecurityManager:
         
         return st.session_state.advanced_access
     
-    def get_user_ip(self) -> str:
+    def get_user_ip(self):
         """Get user IP address for security tracking"""
         try:
             # This is a simplified approach - in production, use proper IP detection
@@ -200,7 +1029,7 @@ class SecurityManager:
         except:
             return "unknown"
     
-    def generate_secure_token(self) -> str:
+    def generate_secure_token(self):
         """Generate a secure session token"""
         return secrets.token_urlsafe(32)
 
@@ -238,7 +1067,7 @@ class SecureEncryptor:
             # Fallback to basic encoding if encryption fails
             self.cipher_suite = None
     
-    def encrypt(self, text: str) -> str:
+    def encrypt(self, text):
         """Encrypt text using Fernet encryption"""
         if self.cipher_suite:
             try:
@@ -252,7 +1081,7 @@ class SecureEncryptor:
             # Fallback to basic encoding
             return f"enc_base64_{base64.b64encode(text.encode()).decode()}"
     
-    def decrypt(self, text: str) -> str:
+    def decrypt(self, text):
         """Decrypt text using Fernet encryption"""
         if text.startswith("enc_fernet_"):
             if self.cipher_suite:
@@ -277,6 +1106,7 @@ class SecureEncryptor:
 # Enhanced Authentication System with Multi-User Support
 class EnhancedAuthenticationSystem:
     def __init__(self):
+        self.users_file = "users.json"
         self.failed_attempts = {}
         self.lockout_time = timedelta(minutes=15)
         self.max_attempts = 5
@@ -324,74 +1154,44 @@ class EnhancedAuthenticationSystem:
         self.load_users()
         
     def load_users(self):
-        """Load users from database"""
         try:
-            conn = sqlite3.connect('brandguardian.db')
-            c = conn.cursor()
-            c.execute("SELECT * FROM users")
-            users_data = c.fetchall()
-            
-            self.users = {}
-            for user in users_data:
-                self.users[user[1]] = {
-                    "id": user[0],
-                    "password": user[2],
-                    "company": user[3],
-                    "email": user[4],
-                    "access_level": user[5],
-                    "subscription": user[6],
-                    "created_at": user[7],
-                    "last_login": user[8],
-                    "failed_attempts": user[9],
-                    "last_failed_attempt": user[10],
-                    "session_token": user[11],
-                    "mfa_enabled": bool(user[12])
+            if os.path.exists(self.users_file):
+                with open(self.users_file, 'r') as f:
+                    self.users = json.load(f)
+            else:
+                # Default admin user - should be changed after first login
+                self.users = {
+                    "admin": {
+                        "password": self.hash_password("brandguardian2024"),
+                        "access_level": "admin",
+                        "company": "Default Company",
+                        "email": "admin@example.com",
+                        "user_id": str(uuid.uuid4()),
+                        "created_at": datetime.now().isoformat(),
+                        "last_login": None,
+                        "failed_attempts": 0,
+                        "last_failed_attempt": None,
+                        "session_token": None,
+                        "mfa_enabled": False,
+                        "subscription": "premium"
+                    }
                 }
-            conn.close()
-        except Exception as e:
-            logger.error(f"Error loading users: {e}")
+                self.save_users()
+        except:
             self.users = {}
     
     def save_users(self):
-        """Save users to database"""
-        try:
-            conn = sqlite3.connect('brandguardian.db')
-            c = conn.cursor()
-            
-            for username, user_data in self.users.items():
-                c.execute("""
-                INSERT OR REPLACE INTO users 
-                (username, password_hash, company, email, access_level, subscription, 
-                created_at, last_login, failed_attempts, last_failed_attempt, session_token, mfa_enabled)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    username,
-                    user_data["password"],
-                    user_data.get("company", ""),
-                    user_data.get("email", ""),
-                    user_data.get("access_level", "client"),
-                    user_data.get("subscription", "basic"),
-                    user_data.get("created_at", datetime.now().isoformat()),
-                    user_data.get("last_login"),
-                    user_data.get("failed_attempts", 0),
-                    user_data.get("last_failed_attempt"),
-                    user_data.get("session_token"),
-                    1 if user_data.get("mfa_enabled", False) else 0
-                ))
-            
-            conn.commit()
-            conn.close()
-        except Exception as e:
-            logger.error(f"Error saving users: {e}")
+        with open(self.users_file, 'w') as f:
+            json.dump(self.users, f, indent=2)
     
-    def hash_password(self, password: str) -> str:
+    def hash_password(self, password):
         """Hash a password for storing."""
         salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
         pwdhash = hashlib.pbkdf2_hmac('sha512', password.encode('utf-8'), salt, 100000)
         pwdhash = binascii.hexlify(pwdhash)
         return (salt + pwdhash).decode('ascii')
     
-    def verify_password(self, stored_password: str, provided_password: str) -> bool:
+    def verify_password(self, stored_password, provided_password):
         """Verify a stored password against one provided by user"""
         salt = stored_password[:64]
         stored_password = stored_password[64:]
@@ -399,7 +1199,7 @@ class EnhancedAuthenticationSystem:
         pwdhash = binascii.hexlify(pwdhash).decode('ascii')
         return pwdhash == stored_password
     
-    def register_user(self, username: str, password: str, company: str, email: str, access_level: str = "client") -> Tuple[bool, str]:
+    def register_user(self, username, password, company, email, access_level="client"):
         """Register a new client user"""
         if username in self.users:
             return False, "Username already exists"
@@ -433,7 +1233,7 @@ class EnhancedAuthenticationSystem:
         self.save_users()
         return True, "User registered successfully"
     
-    def authenticate(self, username: str, password: str) -> Tuple[bool, str]:
+    def authenticate(self, username, password):
         """Authenticate a user with enhanced security"""
         if username not in self.users:
             return False, "User not found"
@@ -471,7 +1271,7 @@ class EnhancedAuthenticationSystem:
             else:
                 return False, f"Invalid password. {remaining_attempts} attempts remaining."
     
-    def update_user_subscription(self, username: str, subscription_plan: str) -> bool:
+    def update_user_subscription(self, username, subscription_plan):
         """Update a user's subscription plan"""
         if username in self.users and subscription_plan in self.subscription_plans:
             self.users[username]["subscription"] = subscription_plan
@@ -480,13 +1280,13 @@ class EnhancedAuthenticationSystem:
             return True
         return False
     
-    def get_user_subscription(self, username: str) -> str:
+    def get_user_subscription(self, username):
         """Get a user's subscription plan"""
         if username in self.users:
             return self.users[username].get("subscription", "basic")
         return "basic"
     
-    def check_subscription_feature(self, username: str, feature: str) -> bool:
+    def check_subscription_feature(self, username, feature):
         """Check if a user's subscription includes a specific feature"""
         subscription = self.get_user_subscription(username)
         
@@ -596,11 +1396,11 @@ class EnhancedAPIKeyManager:
             }
         }
         
-    def get_user_file(self, user_id: str) -> str:
+    def get_user_file(self, user_id):
         """Get the API key file for a specific user"""
         return os.path.join(self.api_keys_dir, f"{user_id}_keys.json")
     
-    def load_api_keys(self, user_id: str) -> Dict[str, str]:
+    def load_api_keys(self, user_id):
         """Load API keys for a specific user"""
         user_file = self.get_user_file(user_id)
         try:
@@ -609,27 +1409,23 @@ class EnhancedAPIKeyManager:
                     return json.load(f)
             else:
                 return {}
-        except Exception as e:
-            logger.error(f"Error loading API keys: {e}")
+        except:
             return {}
     
-    def save_api_keys(self, user_id: str, api_keys: Dict[str, str]) -> None:
+    def save_api_keys(self, user_id, api_keys):
         """Save API keys for a specific user"""
         user_file = self.get_user_file(user_id)
-        try:
-            with open(user_file, 'w') as f:
-                json.dump(api_keys, f, indent=2)
-        except Exception as e:
-            logger.error(f"Error saving API keys: {e}")
+        with open(user_file, 'w') as f:
+            json.dump(api_keys, f, indent=2)
     
-    def get_api_key(self, user_id: str, platform: str) -> Optional[str]:
+    def get_api_key(self, user_id, platform):
         """Get API key for a specific user and platform"""
         api_keys = self.load_api_keys(user_id)
         if platform in api_keys:
             return self.encryptor.decrypt(api_keys[platform])
         return None
     
-    def save_api_key(self, user_id: str, platform: str, api_key: str) -> bool:
+    def save_api_key(self, user_id, platform, api_key):
         """Save API key for a specific user and platform"""
         api_keys = self.load_api_keys(user_id)
         if api_key:
@@ -638,7 +1434,7 @@ class EnhancedAPIKeyManager:
             return True
         return False
     
-    def delete_api_key(self, user_id: str, platform: str) -> bool:
+    def delete_api_key(self, user_id, platform):
         """Delete API key for a specific user and platform"""
         api_keys = self.load_api_keys(user_id)
         if platform in api_keys:
@@ -647,8 +1443,7 @@ class EnhancedAPIKeyManager:
             return True
         return False
     
-    def test_connection(self, platform: str, api_key: str) -> Dict[str, Any]:
-        """Test API connection for a platform"""
+    def test_connection(self, platform, api_key):
         try:
             time.sleep(1)
             success_rate = 0.9
@@ -667,7 +1462,6 @@ class EnhancedAPIKeyManager:
                     "suggestion": "Please check your API key and try again."
                 }
         except Exception as e:
-            logger.error(f"Connection test error: {e}")
             return {
                 "success": False,
                 "message": f"❌ Connection error: {str(e)}"
@@ -685,7 +1479,7 @@ class AIAnalysisEngine:
             'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience', 'question', 'info']
         }
     
-    def analyze_sentiment(self, text: str) -> Tuple[str, float]:
+    def analyze_sentiment(self, text):
         """Analyze sentiment of text"""
         # Simulate sentiment analysis
         words = text.lower().split()
@@ -702,7 +1496,7 @@ class AIAnalysisEngine:
         else:
             return "neutral", 0.5
     
-    def detect_threats(self, text: str, brand_name: str) -> Dict[str, Any]:
+    def detect_threats(self, text, brand_name):
         """Detect threats in text"""
         text_lower = text.lower()
         brand_lower = brand_name.lower()
@@ -746,7 +1540,7 @@ class AIAnalysisEngine:
         
         return results
     
-    def generate_threat_report(self, analyses: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def generate_threat_report(self, analyses):
         """Generate comprehensive threat report"""
         # Count threat levels
         threat_counts = {
@@ -788,7 +1582,7 @@ class AIAnalysisEngine:
         
         return report
     
-    def create_keyword_frequency(self, texts: List[str]) -> Dict[str, int]:
+    def create_keyword_frequency(self, texts):
         """Create keyword frequency analysis"""
         # Combine all texts and count word frequencies
         all_text = ' '.join(texts).lower()
@@ -806,7 +1600,7 @@ class AIAnalysisEngine:
         sorted_words = sorted(word_counts.items(), key=lambda x: x[1], reverse=True)[:20]
         return dict(sorted_words)
     
-    def create_threat_patterns(self, analyses: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def create_threat_patterns(self, analyses):
         """Create threat pattern analysis"""
         patterns = {
             'high_threat_keywords': Counter(),
@@ -848,7 +1642,7 @@ class SearchAnalyzer:
             'low': ['review', 'feedback', 'comment', 'opinion', 'thought', 'experience']
         }
     
-    def analyze_search(self, query: str, brand_name: str) -> Dict[str, Any]:
+    def analyze_search(self, query, brand_name):
         """Analyze search query for threats"""
         query_lower = query.lower()
         brand_lower = brand_name.lower()
@@ -876,7 +1670,7 @@ class SearchAnalyzer:
         
         return results
     
-    def generate_analysis(self, threat_level: str, keywords: List[str]) -> str:
+    def generate_analysis(self, threat_level, found_keywords):
         """Generate analysis text based on threat level"""
         analyses = {
             'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
@@ -885,7 +1679,7 @@ class SearchAnalyzer:
         }
         return analyses.get(threat_level, "Analysis completed.")
     
-    def generate_recommendations(self, threat_level: str) -> List[str]:
+    def generate_recommendations(self, threat_level):
         """Generate recommendations based on threat level"""
         recommendations = {
             'high': [
@@ -928,7 +1722,7 @@ class AdvancedVisualizations:
             'light': '#F3F4F6'
         }
     
-    def create_radar_chart(self, data: List[float], labels: List[str], title: str) -> go.Figure:
+    def create_radar_chart(self, data, labels, title):
         """Create a radar chart using plotly"""
         fig = go.Figure()
         
@@ -957,7 +1751,7 @@ class AdvancedVisualizations:
         
         return fig
     
-    def create_sentiment_timeline(self, dates: List[datetime], values: List[float], title: str) -> go.Figure:
+    def create_sentiment_timeline(self, dates, values, title):
         """Create an advanced sentiment timeline"""
         fig = go.Figure()
         
@@ -984,7 +1778,7 @@ class AdvancedVisualizations:
         
         return fig
     
-    def create_threat_distribution(self, data: Dict[str, int], title: str) -> go.Figure:
+    def create_threat_distribution(self, data, title):
         """Create a donut chart for threat distribution"""
         labels = list(data.keys())
         values = list(data.values())
@@ -1009,7 +1803,7 @@ class AdvancedVisualizations:
         
         return fig
     
-    def create_keyword_bar_chart(self, keyword_data: Dict[str, int], title: str) -> go.Figure:
+    def create_keyword_bar_chart(self, keyword_data, title):
         """Create a bar chart for keyword frequency"""
         fig = go.Figure(data=[go.Bar(
             x=list(keyword_data.keys()),
@@ -1031,7 +1825,7 @@ class AdvancedVisualizations:
         
         return fig
     
-    def create_pattern_heatmap(self, pattern_data: Dict[str, Any], title: str) -> go.Figure:
+    def create_pattern_heatmap(self, pattern_data, title):
         """Create a heatmap for threat patterns"""
         # Convert pattern data to DataFrame format
         platforms = list(pattern_data['platform_distribution'].keys())
@@ -1072,52 +1866,6 @@ class AdvancedVisualizations:
         )
         
         return fig
-    
-    def create_world_map(self, threat_data: List[Dict[str, Any]], title: str) -> go.Figure:
-        """Create a world map showing threat locations"""
-        # Generate random threat locations for demo
-        lats = np.random.uniform(low=-90, high=90, size=len(threat_data))
-        lons = np.random.uniform(low=-180, high=180, size=len(threat_data))
-        threat_levels = [item['threat_level'] for item in threat_data]
-        
-        # Map threat levels to colors
-        colors = []
-        sizes = []
-        for level in threat_levels:
-            if level == 'high':
-                colors.append('red')
-                sizes.append(15)
-            elif level == 'medium':
-                colors.append('orange')
-                sizes.append(10)
-            else:
-                colors.append('yellow')
-                sizes.append(5)
-        
-        fig = go.Figure(data=go.Scattergeo(
-            lon=lons,
-            lat=lats,
-            text=[f"Threat Level: {level}" for level in threat_levels],
-            mode='markers',
-            marker=dict(
-                size=sizes,
-                color=colors,
-                symbol='circle',
-                line=dict(width=1, color='white')
-            )
-        ))
-        
-        fig.update_layout(
-            title=title,
-            geo=dict(
-                showframe=False,
-                showcoastlines=True,
-                projection_type='equirectangular'
-            ),
-            height=500
-        )
-        
-        return fig
 
 # Initialize visualizations
 viz = AdvancedVisualizations()
@@ -1128,8 +1876,7 @@ class EnhancedSocialMediaMonitor:
         self.api_manager = api_manager
         self.ai_engine = ai_engine
     
-    def simulate_monitoring_with_api(self, brand_name: str, sector: str) -> List[Dict[str, Any]]:
-        """Simulate monitoring with API connections"""
+    def simulate_monitoring_with_api(self, brand_name, sector):
         posts = []
         user_id = st.session_state.get('user_id')
         if not user_id:
@@ -1156,8 +1903,7 @@ class EnhancedSocialMediaMonitor:
                 posts.append(post)
         return posts
     
-    def generate_business_post(self, brand_name: str, sector: str) -> str:
-        """Generate a business post based on sector"""
+    def generate_business_post(self, brand_name, sector):
         templates = {
             'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
             'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
@@ -1168,77 +1914,8 @@ class EnhancedSocialMediaMonitor:
 # Initialize
 enhanced_monitor = EnhancedSocialMediaMonitor()
 
-# Notification System
-class NotificationSystem:
-    def __init__(self):
-        self.notifications = []
-    
-    def add_notification(self, message: str, level: str = "info") -> None:
-        """Add a new notification"""
-        notification = {
-            'id': len(self.notifications) + 1,
-            'message': message,
-            'level': level,
-            'timestamp': datetime.now().isoformat(),
-            'read': False
-        }
-        self.notifications.append(notification)
-    
-    def get_notifications(self, unread_only: bool = False) -> List[Dict[str, Any]]:
-        """Get notifications, optionally only unread ones"""
-        if unread_only:
-            return [n for n in self.notifications if not n['read']]
-        return self.notifications
-    
-    def mark_as_read(self, notification_id: int) -> None:
-        """Mark a notification as read"""
-        for notification in self.notifications:
-            if notification['id'] == notification_id:
-                notification['read'] = True
-                break
-    
-    def clear_all(self) -> None:
-        """Clear all notifications"""
-        self.notifications = []
-
-# Initialize notification system
-notification_system = NotificationSystem()
-
-# Report Scheduler
-class ReportScheduler:
-    def __init__(self):
-        self.scheduled_reports = []
-    
-    def schedule_report(self, report_type: str, frequency: str, email: str, user_id: str) -> None:
-        """Schedule a new report"""
-        report = {
-            'id': len(self.scheduled_reports) + 1,
-            'report_type': report_type,
-            'frequency': frequency,
-            'email': email,
-            'user_id': user_id,
-            'created_at': datetime.now().isoformat(),
-            'active': True
-        }
-        self.scheduled_reports.append(report)
-    
-    def get_scheduled_reports(self, user_id: str) -> List[Dict[str, Any]]:
-        """Get scheduled reports for a user"""
-        return [r for r in self.scheduled_reports if r['user_id'] == user_id and r['active']]
-    
-    def cancel_report(self, report_id: int) -> None:
-        """Cancel a scheduled report"""
-        for report in self.scheduled_reports:
-            if report['id'] == report_id:
-                report['active'] = False
-                break
-
-# Initialize report scheduler
-report_scheduler = ReportScheduler()
-
 # User registration and management functions
 def show_user_registration():
-    """Display user registration form"""
     st.subheader("👥 Client Registration")
     
     with st.form("register_form"):
@@ -1264,9 +1941,7 @@ def show_user_registration():
                     st.error(f"❌ {message}")
             else:
                 st.error("Please fill all fields")
-
 def show_user_management():
-    """Display user management interface"""
     st.subheader("👥 User Management")
     
     # Check if user is admin
@@ -1389,7 +2064,6 @@ def show_user_management():
                     st.rerun()
             elif user_to_manage == st.session_state.username:
                 st.error("You cannot delete your own account")
-
 def show_login_form():
     """Display login form with enhanced design"""
     st.markdown("""
@@ -1454,10 +2128,8 @@ def show_login_form():
         <a href='#' style='color: #FFD700; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
-
 # Advanced Threat Analysis Functionality
 def show_advanced_threat_analysis():
-    """Display advanced threat analysis interface"""
     if not security_manager.check_access():
         show_access_required()
         return
@@ -1484,9 +2156,8 @@ def show_advanced_threat_analysis():
     
     with tab4:
         show_quick_actions()
-
 def show_threat_dashboard():
-    """Display threat monitoring dashboard"""
+    """Threat monitoring dashboard"""
     st.subheader("🛡️ Real-time Threat Dashboard")
     
     # Create metrics with custom styling
@@ -1587,8 +2258,7 @@ def show_threat_dashboard():
             "Status": st.column_config.TextColumn("Status", width="small")
         }
     )
-
-def generate_similar_threats(results: Dict[str, Any]) -> List[Dict[str, Any]]:
+def generate_similar_threats(results):
     """Generate similar threat examples"""
     threats = []
     for i in range(3):
@@ -1599,9 +2269,8 @@ def generate_similar_threats(results: Dict[str, Any]) -> List[Dict[str, Any]]:
             'date': (datetime.now() - timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
         })
     return threats
-
 def show_search_analysis():
-    """Display search analysis functionality"""
+    """Search analysis functionality"""
     st.subheader("🔍 Advanced Search Analysis")
     
     col1, col2 = st.columns([2, 1])
@@ -1703,9 +2372,8 @@ def show_search_analysis():
                 <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
             </div>
             """, unsafe_allow_html=True)
-
 def show_trend_analysis():
-    """Display trend analysis functionality"""
+    """Trend analysis functionality"""
     st.subheader("📈 Threat Trend Analysis")
     
     # Generate trend data with valid dates
@@ -1831,9 +2499,8 @@ def show_trend_analysis():
     )
     
     st.plotly_chart(fig, use_container_width=True)
-
 def show_quick_actions():
-    """Display quick action buttons"""
+    """Quick action buttons"""
     st.subheader("⚡ Quick Actions")
     
     col1, col2, col3 = st.columns(3)
@@ -1855,9 +2522,7 @@ def show_quick_actions():
             st.error("Crisis protocol activated!")
             time.sleep(1)
             st.warning("Alerting team members...")
-
 def show_access_required():
-    """Display access required screen"""
     st.header("🔒 Advanced Threat Analysis")
     st.warning("🚫 Premium Access Required")
     
@@ -1919,10 +2584,8 @@ def show_access_required():
         <p>Contact your administrator to get your premium access key.</p>
     </div>
     """, unsafe_allow_html=True)
-
 # API Management Tab
 def show_api_key_management():
-    """Display API key management interface"""
     st.header("🔑 API Key Management Center")
     
     # Get current user's ID
@@ -2023,10 +2686,8 @@ def show_api_key_management():
     
     status_df = pd.DataFrame(status_data)
     st.dataframe(status_df, use_container_width=True, hide_index=True)
-
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
-    """Display user AI dashboard"""
     st.header("🤖 BrandGuardian AI Dashboard")
     
     # Get user's subscription
@@ -2138,10 +2799,9 @@ def show_user_ai_dashboard():
                 if st.button(f"Upgrade to {plan_info['name']}", key=f"upgrade_{plan}"):
                     st.info(f"Redirecting to payment for {plan_info['name']} plan...")
                     # In a real app, this would redirect to a payment processor
-
 # Add new functions for subscription-specific features
 def show_social_monitoring():
-    """Display social monitoring functionality"""
+    """Social monitoring functionality - requires Advanced subscription"""
     st.header("Social Monitoring")
     
     # Get user's subscription
@@ -2169,9 +2829,8 @@ def show_social_monitoring():
                 <span style="color: {sentiment_color}; font-weight: 600;">Sentiment: {post['sentiment'].upper()}</span>
             </div>
             """, unsafe_allow_html=True)
-
 def show_ai_insights():
-    """Display AI insights functionality"""
+    """AI insights functionality - requires Advanced subscription"""
     st.header("🧠 AI-Powered Insights")
     
     # Get user's subscription
@@ -2266,111 +2925,7 @@ def show_ai_insights():
         """.format(
             ''.join([f'<p>• {platform}: {count}</p>' for platform, count in patterns['platform_distribution'].most_common()])
         ), unsafe_allow_html=True)
-
-def show_threat_map():
-    """Display global threat map"""
-    st.header("🗺️ Global Threat Map")
-    
-    # Generate sample threat data
-    threat_data = []
-    for i in range(20):
-        threat_data.append({
-            'id': i,
-            'threat_level': random.choice(['high', 'medium', 'low']),
-            'platform': random.choice(['Twitter', 'Facebook', 'Instagram', 'Reddit', 'YouTube']),
-            'content': f"Threat example {i}"
-        })
-    
-    # Create world map
-    fig = viz.create_world_map(threat_data, "Global Threat Distribution")
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Threat details
-    st.subheader("📋 Threat Details")
-    
-    threat_df = pd.DataFrame(threat_data)
-    st.dataframe(threat_df, use_container_width=True, hide_index=True)
-
-def show_scheduled_reports():
-    """Display scheduled reports interface"""
-    st.header("📅 Scheduled Reports")
-    
-    user_id = st.session_state.get('user_id')
-    
-    with st.form("schedule_report"):
-        report_type = st.selectbox("Report Type", ["Threat Summary", "Social Media Analysis", "Competitor Analysis"])
-        frequency = st.selectbox("Frequency", ["Daily", "Weekly", "Monthly"])
-        email = st.text_input("Email to send report")
-        submit = st.form_submit_button("Schedule Report")
-        
-        if submit:
-            if email:
-                report_scheduler.schedule_report(report_type, frequency, email, user_id)
-                st.success(f"Report scheduled: {report_type} {frequency} to {email}")
-            else:
-                st.error("Please enter an email address")
-    
-    # Display scheduled reports
-    st.subheader("📋 Your Scheduled Reports")
-    
-    scheduled_reports = report_scheduler.get_scheduled_reports(user_id)
-    
-    if scheduled_reports:
-        reports_df = pd.DataFrame(scheduled_reports)
-        reports_df = reports_df[['report_type', 'frequency', 'email', 'created_at']]
-        reports_df.columns = ['Report Type', 'Frequency', 'Email', 'Created At']
-        st.dataframe(reports_df, use_container_width=True, hide_index=True)
-        
-        # Cancel report button
-        report_to_cancel = st.selectbox("Select Report to Cancel", [r['id'] for r in scheduled_reports], format_func=lambda x: f"Report {x}")
-        
-        if st.button("Cancel Report", use_container_width=True):
-            report_scheduler.cancel_report(report_to_cancel)
-            st.success(f"Report {report_to_cancel} cancelled")
-            st.rerun()
-    else:
-        st.info("No scheduled reports")
-
-def show_notifications():
-    """Display notifications"""
-    st.header("🔔 Notifications")
-    
-    # Get notifications
-    notifications = notification_system.get_notifications()
-    
-    if notifications:
-        for notification in notifications:
-            status = "Unread" if not notification['read'] else "Read"
-            level_class = f"threat-{notification['level']}" if notification['level'] in ['high', 'medium', 'low'] else ""
-            
-            st.markdown(f"""
-            <div class="search-result-card">
-                <div style="display: flex; justify-content: space-between;">
-                    <div>
-                        <span class="{level_class}">{notification['level'].upper()}</span>
-                        <span style="margin-left: 10px;">{notification['message']}</span>
-                    </div>
-                    <div>
-                        <span style="font-size: 0.8rem; color: #999;">{notification['timestamp'][:10]}</span>
-                        <span style="margin-left: 10px; font-size: 0.8rem;">{status}</span>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            if not notification['read']:
-                if st.button(f"Mark as Read", key=f"read_{notification['id']}", use_container_width=True):
-                    notification_system.mark_as_read(notification['id'])
-                    st.rerun()
-        
-        if st.button("Clear All Notifications", use_container_width=True):
-            notification_system.clear_all()
-            st.rerun()
-    else:
-        st.info("No notifications")
-
 def main():
-    """Main application function"""
     # Add animated particles
     add_particles()
     
@@ -2390,23 +2945,11 @@ def main():
     if username and "user_subscription" not in st.session_state:
         st.session_state.user_subscription = auth_system.get_user_subscription(username)
     
-    # Check for session timeout
-    if 'login_time' in st.session_state:
-        login_time = datetime.fromisoformat(st.session_state.login_time)
-        if datetime.now() - login_time > timedelta(minutes=30):
-            st.warning("Session expired. Please log in again.")
-            for key in list(st.session_state.keys()):
-                del st.session_state[key]
-            st.rerun()
-    
     # Header
     st.markdown("""
     <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
     <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
-    
-    # Notification bar
-    show_notifications()
     
     # Sidebar with user info and logout button
     with st.sidebar:
@@ -2472,7 +3015,7 @@ def main():
     # Different navigation based on user role
     if st.session_state.get('user_access_level') == 'admin':
         # Admin navigation
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
             "📊 Executive Dashboard", 
             "🔍 Advanced Threat Analysis",
             "📱 Social Monitoring",
@@ -2480,8 +3023,6 @@ def main():
             "🌟 Influencer Network",
             "🛡️ Crisis Prediction",
             "❤️ Brand Health",
-            "🗺️ Threat Map",
-            "📅 Scheduled Reports",
             "🔑 API Management"
         ])
         
@@ -2508,12 +3049,6 @@ def main():
                 st.write(f"{title} content...")
         
         with tab8:
-            show_threat_map()
-        
-        with tab9:
-            show_scheduled_reports()
-        
-        with tab10:
             show_api_key_management()
     else:
         # Regular user navigation
