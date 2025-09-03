@@ -114,25 +114,47 @@ print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 st.markdown("""
 <style>
     /* Base styles */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700;800&display=swap');
     
     .main {
-        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
         color: #FFFFFF;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Exo 2', sans-serif;
         overflow-x: hidden;
+        position: relative;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+        background: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #000000 100%);
         background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
+        animation: gradientBG 20s ease infinite;
     }
     
     @keyframes gradientBG {
         0% { background-position: 0% 50% }
         50% { background-position: 100% 50% }
         100% { background-position: 0% 50% }
+    }
+    
+    /* Circuit board background pattern */
+    .circuit-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background-image: 
+            linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.3;
+        animation: circuitMove 30s linear infinite;
+    }
+    
+    @keyframes circuitMove {
+        0% { background-position: 0 0; }
+        100% { background-position: 40px 40px; }
     }
     
     /* Animated particles background */
@@ -162,8 +184,8 @@ st.markdown("""
     
     /* Premium header styling */
     .premium-header {
-        font-family: 'Playfair Display', serif;
-        font-size: 4rem;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 4.5rem;
         font-weight: 900;
         text-align: center;
         margin: 20px 0;
@@ -173,6 +195,7 @@ st.markdown("""
         text-shadow: 0px 2px 10px rgba(255, 215, 0, 0.3);
         animation: goldGlow 3s ease-in-out infinite alternate;
         position: relative;
+        letter-spacing: 2px;
     }
     
     @keyframes goldGlow {
@@ -197,11 +220,13 @@ st.markdown("""
     }
     
     .accent-text {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         color: #FFD700;
         text-align: center;
         margin-bottom: 40px;
         animation: fadeIn 2s ease-in;
+        font-weight: 300;
+        letter-spacing: 1px;
     }
     
     @keyframes fadeIn {
@@ -211,13 +236,13 @@ st.markdown("""
     
     /* Enhanced card styling */
     .metric-card {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(15px);
-        padding: 25px;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        padding: 30px;
         border-radius: 20px;
         border: 1px solid rgba(255, 215, 0, 0.3);
         margin: 15px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
@@ -241,57 +266,58 @@ st.markdown("""
     
     .metric-card:hover {
         transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(255, 215, 0, 0.3);
-        border: 1px solid rgba(255, 215, 0, 0.5);
+        box-shadow: 0 15px 50px rgba(255, 215, 0, 0.4);
+        border: 1px solid rgba(255, 215, 0, 0.6);
     }
     
     .search-analysis-card {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(15px);
-        padding: 25px;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        padding: 30px;
         border-radius: 20px;
         border: 1px solid rgba(255, 215, 0, 0.3);
         margin: 20px 0;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
         transition: all 0.3s ease;
     }
     
     .search-analysis-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 15px 45px rgba(255, 215, 0, 0.4);
     }
     
     .search-result-card {
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.7);
         border-radius: 15px;
-        padding: 20px;
+        padding: 25px;
         margin: 15px 0;
         border-left: 5px solid #FFD700;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
     .search-result-card:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
         transform: translateX(10px);
-        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
     }
     
     /* Enhanced threat indicators */
     .threat-indicator {
-        padding: 10px 16px;
-        border-radius: 25px;
-        font-size: 13px;
+        padding: 12px 20px;
+        border-radius: 30px;
+        font-size: 14px;
         font-weight: 700;
         margin: 8px;
         display: inline-block;
         letter-spacing: 0.5px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         transition: all 0.3s ease;
+        text-transform: uppercase;
     }
     
     .threat-indicator:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
     }
     
     .threat-high {
@@ -339,16 +365,18 @@ st.markdown("""
     
     /* Enhanced button styling */
     .stButton > button {
-        border-radius: 15px;
+        border-radius: 20px;
         border: 1px solid rgba(255, 215, 0, 0.5);
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
         color: #FFD700;
         font-weight: 700;
-        padding: 12px 24px;
+        padding: 14px 28px;
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
     .stButton > button::before {
@@ -370,45 +398,48 @@ st.markdown("""
         background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
         border: 1px solid rgba(255, 215, 0, 0.8);
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
     }
     
     /* Enhanced tab styling */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 12px;
-        margin-bottom: 20px;
+        gap: 15px;
+        margin-bottom: 25px;
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 15px 15px 0 0;
-        padding: 14px 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 20px 20px 0 0;
+        padding: 16px 24px;
         border: 1px solid rgba(255, 215, 0, 0.3);
         border-bottom: none;
         font-weight: 600;
         transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
     }
     
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
         border: 1px solid rgba(255, 215, 0, 0.5);
         border-bottom: none;
-        box-shadow: 0 -4px 15px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 -4px 15px rgba(255, 215, 0, 0.3);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
         font-weight: 800;
         color: #FFD700;
+        font-family: 'Orbitron', sans-serif;
     }
     
     [data-testid="stMetricDelta"] {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: 600;
     }
     
@@ -419,9 +450,9 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"],
     .stDateInput [data-baseweb="input"],
     .stTimeInput [data-baseweb="input"] {
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
         border: 1px solid rgba(255, 215, 0, 0.3);
         color: white;
         transition: all 0.3s ease;
@@ -433,7 +464,7 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"]:hover,
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
         border: 1px solid rgba(255, 215, 0, 0.5);
     }
     
@@ -455,72 +486,72 @@ st.markdown("""
     
     /* Custom expander */
     .streamlit-expanderHeader {
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 12px;
-        padding: 14px 18px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 15px;
+        padding: 16px 20px;
         border: 1px solid rgba(255, 215, 0, 0.3);
         font-weight: 600;
         transition: all 0.3s ease;
     }
     
     .streamlit-expanderHeader:hover {
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
     }
     
     /* Custom dataframes */
     .dataframe {
-        border-radius: 15px;
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     }
     
     /* Custom success/error boxes */
     .stAlert {
-        border-radius: 15px;
-        padding: 16px 20px;
+        border-radius: 20px;
+        padding: 20px 24px;
         font-weight: 600;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     }
     
     /* Custom sidebar */
     .css-1d391kg {
-        background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+        background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
         border-right: 1px solid rgba(255, 215, 0, 0.2);
     }
     
     /* Custom chart elements */
     .stChart {
-        border-radius: 20px;
+        border-radius: 25px;
         overflow: hidden;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
         background: linear-gradient(90deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: rgba(0, 0, 0, 0.7);
-        padding: 18px;
-        border-radius: 15px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 20px;
         border: 1px solid rgba(255, 215, 0, 0.3);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
         background: linear-gradient(90deg, #FFD700, #FFA500);
-        border-radius: 10px;
-        height: 8px;
+        border-radius: 15px;
+        height: 10px;
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 10px;
         border: 1px solid rgba(255, 215, 0, 0.3);
     }
     
@@ -528,14 +559,16 @@ st.markdown("""
     .premium-badge {
         background: linear-gradient(135deg, #FFD700, #FFA500);
         color: #000000;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
+        padding: 6px 16px;
+        border-radius: 25px;
+        font-size: 14px;
         font-weight: 700;
         display: inline-block;
         margin-left: 10px;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
         animation: shimmer 2s infinite;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
     @keyframes shimmer {
@@ -557,12 +590,12 @@ st.markdown("""
     
     /* Login form enhancements */
     .login-container {
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(20px);
-        border-radius: 25px;
-        padding: 40px;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(25px);
+        border-radius: 30px;
+        padding: 50px;
         border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         max-width: 500px;
         margin: 0 auto;
     }
@@ -591,10 +624,10 @@ st.markdown("""
     .premium-access-card {
         background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
         border: 2px solid rgba(255, 215, 0, 0.3);
-        border-radius: 20px;
-        padding: 30px;
+        border-radius: 25px;
+        padding: 35px;
         margin: 20px 0;
-        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -619,8 +652,8 @@ st.markdown("""
     /* Threat radar animation */
     .threat-radar {
         position: relative;
-        width: 200px;
-        height: 200px;
+        width: 220px;
+        height: 220px;
         margin: 0 auto;
     }
     
@@ -638,12 +671,12 @@ st.markdown("""
     
     /* Enhanced AI visualization */
     .ai-visualization {
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 20px;
-        padding: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 25px;
+        padding: 25px;
         margin: 20px 0;
         border: 1px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     }
     
     /* AI pulse animation */
@@ -674,7 +707,7 @@ st.markdown("""
     .threat-analysis-container {
         position: relative;
         width: 100%;
-        height: 250px;
+        height: 280px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -684,9 +717,9 @@ st.markdown("""
     
     .radar-scanner {
         position: relative;
-        width: 180px;
-        height: 180px;
-        margin-bottom: 20px;
+        width: 200px;
+        height: 200px;
+        margin-bottom: 25px;
     }
     
     .radar-background {
@@ -694,7 +727,7 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.5) 70%, transparent 100%);
+        background: radial-gradient(circle, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 70%, transparent 100%);
         border: 2px solid rgba(255, 215, 0, 0.3);
         overflow: hidden;
     }
@@ -746,12 +779,12 @@ st.markdown("""
     .radar-sweep::before {
         content: '';
         position: absolute;
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
         background: rgba(255, 215, 0, 0.8);
         border-radius: 50%;
         right: 0;
-        top: -4px;
+        top: -5px;
         box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
     }
     
@@ -764,8 +797,8 @@ st.markdown("""
     
     .threat-dot {
         position: absolute;
-        width: 8px;
-        height: 8px;
+        width: 10px;
+        height: 10px;
         background: rgba(255, 215, 0, 0.8);
         border-radius: 50%;
         opacity: 0;
@@ -783,18 +816,20 @@ st.markdown("""
     }
     
     .analysis-status {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 600;
         color: #FFD700;
         text-align: center;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
     }
     
     .progress-container {
         width: 80%;
-        height: 8px;
+        height: 10px;
         background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
+        border-radius: 8px;
         overflow: hidden;
     }
     
@@ -802,7 +837,7 @@ st.markdown("""
         height: 100%;
         width: 0%;
         background: linear-gradient(90deg, #FFD700, #FFA500);
-        border-radius: 4px;
+        border-radius: 8px;
         transition: width 0.3s ease;
         animation: progressFill 3.5s ease-in-out forwards;
     }
@@ -816,7 +851,7 @@ st.markdown("""
         display: flex;
         justify-content: space-between;
         width: 80%;
-        margin-top: 15px;
+        margin-top: 20px;
     }
     
     .phase {
@@ -832,13 +867,16 @@ st.markdown("""
     }
     
     .phase-icon {
-        font-size: 1.5rem;
-        margin-bottom: 5px;
+        font-size: 1.8rem;
+        margin-bottom: 8px;
     }
     
     .phase-text {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         color: #FFD700;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
     
     .phase:nth-child(1) {
@@ -861,6 +899,97 @@ st.markdown("""
         0% { opacity: 0.5; }
         25% { opacity: 1; }
         100% { opacity: 1; }
+    }
+    
+    /* Futuristic UI elements */
+    .futuristic-border {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    
+    .futuristic-border::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+        animation: futuristicBorder 3s linear infinite;
+    }
+    
+    @keyframes futuristicBorder {
+        0% { transform: translateX(-100%) translateY(-100%); }
+        100% { transform: translateX(100%) translateY(100%); }
+    }
+    
+    /* Glowing text effect */
+    .glow-text {
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.5);
+        animation: glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+        from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.5); }
+        to { text-shadow: 0 0 15px rgba(255, 215, 0, 1), 0 0 30px rgba(255, 215, 0, 0.8); }
+    }
+    
+    /* Holographic effect */
+    .holographic {
+        position: relative;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    
+    .holographic::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+        animation: holographicMove 3s linear infinite;
+    }
+    
+    @keyframes holographicMove {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(50%, 50%) rotate(360deg); }
+    }
+    
+    /* Neural network animation */
+    .neural-network {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: -1;
+    }
+    
+    .neuron {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: rgba(255, 215, 0, 0.8);
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+    
+    .connection {
+        position: absolute;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5), transparent);
+        transform-origin: left center;
+        animation: connectionPulse 3s infinite;
+    }
+    
+    @keyframes connectionPulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -1941,6 +2070,7 @@ def show_user_registration():
                     st.error(f"❌ {message}")
             else:
                 st.error("Please fill all fields")
+
 def show_user_management():
     st.subheader("👥 User Management")
     
@@ -1990,7 +2120,7 @@ def show_user_management():
             st.markdown(f"""
             <div style="background-color: {auth_system.subscription_plans['basic']['color']}20; 
                         border: 1px solid {auth_system.subscription_plans['basic']['color']}; 
-                        border-radius: 10px; padding: 15px;">
+                        border-radius: 15px; padding: 20px;">
                 <h4>{auth_system.subscription_plans['basic']['name']}</h4>
                 <p>{auth_system.subscription_plans['basic']['price']}</p>
                 <ul>
@@ -2008,7 +2138,7 @@ def show_user_management():
             st.markdown(f"""
             <div style="background-color: {auth_system.subscription_plans['advanced']['color']}20; 
                         border: 1px solid {auth_system.subscription_plans['advanced']['color']}; 
-                        border-radius: 10px; padding: 15px;">
+                        border-radius: 15px; padding: 20px;">
                 <h4>{auth_system.subscription_plans['advanced']['name']}</h4>
                 <p>{auth_system.subscription_plans['advanced']['price']}</p>
                 <ul>
@@ -2026,7 +2156,7 @@ def show_user_management():
             st.markdown(f"""
             <div style="background-color: {auth_system.subscription_plans['premium']['color']}20; 
                         border: 1px solid {auth_system.subscription_plans['premium']['color']}; 
-                        border-radius: 10px; padding: 15px;">
+                        border-radius: 15px; padding: 20px;">
                 <h4>{auth_system.subscription_plans['premium']['name']}</h4>
                 <p>{auth_system.subscription_plans['premium']['price']}</p>
                 <ul>
@@ -2064,13 +2194,14 @@ def show_user_management():
                     st.rerun()
             elif user_to_manage == st.session_state.username:
                 st.error("You cannot delete your own account")
+
 def show_login_form():
     """Display login form with enhanced design"""
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔒 BrandGuardian AI</h1>
-        <p style="font-size: 1.2rem; color: #FFD700;">Advanced Brand Protection & Threat Intelligence Platform</p>
+        <h1 style="font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #FFA500 55%, #FFD700 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Orbitron', sans-serif; letter-spacing: 2px;">🔒 BrandGuardian AI</h1>
+        <p style="font-size: 1.4rem; color: #FFD700; font-family: 'Exo 2', sans-serif;">Advanced Brand Protection & Threat Intelligence Platform</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -2080,8 +2211,8 @@ def show_login_form():
     with col1:
         st.markdown("""
         <div style='text-align: center;'>
-            <div style="font-size: 6rem; margin-bottom: 20px;" class="security-shield">🛡️</div>
-            <h3 style="color: #FFD700;">Secure Login</h3>
+            <div style="font-size: 7rem; margin-bottom: 20px;" class="security-shield">🛡️</div>
+            <h3 style="color: #FFD700; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">Secure Login</h3>
             <p style="color: #FFD700;">Access your brand protection dashboard</p>
         </div>
         """, unsafe_allow_html=True)
@@ -2128,6 +2259,7 @@ def show_login_form():
         <a href='#' style='color: #FFD700; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
+
 # Advanced Threat Analysis Functionality
 def show_advanced_threat_analysis():
     if not security_manager.check_access():
@@ -2156,6 +2288,7 @@ def show_advanced_threat_analysis():
     
     with tab4:
         show_quick_actions()
+
 def show_threat_dashboard():
     """Threat monitoring dashboard"""
     st.subheader("🛡️ Real-time Threat Dashboard")
@@ -2258,6 +2391,7 @@ def show_threat_dashboard():
             "Status": st.column_config.TextColumn("Status", width="small")
         }
     )
+
 def generate_similar_threats(results):
     """Generate similar threat examples"""
     threats = []
@@ -2269,6 +2403,7 @@ def generate_similar_threats(results):
             'date': (datetime.now() - timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
         })
     return threats
+
 def show_search_analysis():
     """Search analysis functionality"""
     st.subheader("🔍 Advanced Search Analysis")
@@ -2372,6 +2507,7 @@ def show_search_analysis():
                 <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
             </div>
             """, unsafe_allow_html=True)
+
 def show_trend_analysis():
     """Trend analysis functionality"""
     st.subheader("📈 Threat Trend Analysis")
@@ -2499,6 +2635,7 @@ def show_trend_analysis():
     )
     
     st.plotly_chart(fig, use_container_width=True)
+
 def show_quick_actions():
     """Quick action buttons"""
     st.subheader("⚡ Quick Actions")
@@ -2522,6 +2659,7 @@ def show_quick_actions():
             st.error("Crisis protocol activated!")
             time.sleep(1)
             st.warning("Alerting team members...")
+
 def show_access_required():
     st.header("🔒 Advanced Threat Analysis")
     st.warning("🚫 Premium Access Required")
@@ -2584,6 +2722,7 @@ def show_access_required():
         <p>Contact your administrator to get your premium access key.</p>
     </div>
     """, unsafe_allow_html=True)
+
 # API Management Tab
 def show_api_key_management():
     st.header("🔑 API Key Management Center")
@@ -2606,7 +2745,7 @@ def show_api_key_management():
                 with cols[i % 3]:
                     st.markdown(f"""
                     <div class="search-analysis-card">
-                        <div style="font-size: 2rem; margin-bottom: 10px;">{platform_info['icon']}</div>
+                        <div style="font-size: 2.5rem; margin-bottom: 15px;">{platform_info['icon']}</div>
                         <h4>{platform_info['name']}</h4>
                         <p>Status: <span class="api-status-connected">✅ Connected</span></p>
                         <p>Rate Limit: {platform_info['rate_limit']}</p>
@@ -2686,6 +2825,7 @@ def show_api_key_management():
     
     status_df = pd.DataFrame(status_data)
     st.dataframe(status_df, use_container_width=True, hide_index=True)
+
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
     st.header("🤖 BrandGuardian AI Dashboard")
@@ -2699,16 +2839,16 @@ def show_user_ai_dashboard():
     brand_name = st.session_state.get('brand_name', 'Your Brand')
     st.success(f"Welcome to your brand protection dashboard, {brand_name}!")
     st.markdown(f"""
-    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+    <div style="display: flex; align-items: center; margin-bottom: 25px;">
         <div style="background-color: {subscription_info['color']}20; 
                     border: 1px solid {subscription_info['color']}; 
-                    border-radius: 20px; padding: 8px 16px; margin-right: 15px;">
-            <span style="color: {subscription_info['color']}; font-weight: bold;">
+                    border-radius: 25px; padding: 10px 20px; margin-right: 15px;">
+            <span style="color: {subscription_info['color']}; font-weight: bold; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">
                 {subscription_info['name']} Subscription
             </span>
         </div>
         <div>
-            <a href="#upgrade" style="color: #FFD700; text-decoration: none;">Upgrade Plan →</a>
+            <a href="#upgrade" style="color: #FFD700; text-decoration: none; font-weight: 600;">Upgrade Plan →</a>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -2784,9 +2924,9 @@ def show_user_ai_dashboard():
             st.markdown(f"""
             <div style="background-color: {plan_info['color']}20; 
                         border: 1px solid {plan_info['color']}; 
-                        border-radius: 15px; padding: 20px; height: 100%;">
-                <h3 style="text-align: center;">{plan_info['name']}</h3>
-                <h4 style="text-align: center;">{plan_info['price']}</h4>
+                        border-radius: 20px; padding: 25px; height: 100%;">
+                <h3 style="text-align: center; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">{plan_info['name']}</h3>
+                <h4 style="text-align: center; font-size: 1.5rem; font-weight: 700;">{plan_info['price']}</h4>
                 <ul>
                     {"".join([f"<li>{feature}</li>" for feature in plan_info['features']])}
                 </ul>
@@ -2799,6 +2939,7 @@ def show_user_ai_dashboard():
                 if st.button(f"Upgrade to {plan_info['name']}", key=f"upgrade_{plan}"):
                     st.info(f"Redirecting to payment for {plan_info['name']} plan...")
                     # In a real app, this would redirect to a payment processor
+
 # Add new functions for subscription-specific features
 def show_social_monitoring():
     """Social monitoring functionality - requires Advanced subscription"""
@@ -2824,11 +2965,12 @@ def show_social_monitoring():
             st.write(post['content'])
             st.caption(f"Engagement: {post['engagement']}")
             st.markdown(f"""
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <span class="{threat_class}">Threat: {post['threat_level'].upper()}</span>
                 <span style="color: {sentiment_color}; font-weight: 600;">Sentiment: {post['sentiment'].upper()}</span>
             </div>
             """, unsafe_allow_html=True)
+
 def show_ai_insights():
     """AI insights functionality - requires Advanced subscription"""
     st.header("🧠 AI-Powered Insights")
@@ -2925,9 +3067,11 @@ def show_ai_insights():
         """.format(
             ''.join([f'<p>• {platform}: {count}</p>' for platform, count in patterns['platform_distribution'].most_common()])
         ), unsafe_allow_html=True)
+
 def main():
-    # Add animated particles
+    # Add animated particles and circuit background
     add_particles()
+    st.markdown('<div class="circuit-bg"></div>', unsafe_allow_html=True)
     
     # Check authentication first
     if not st.session_state.get('authenticated', False):
@@ -2948,7 +3092,7 @@ def main():
     # Header
     st.markdown("""
     <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
-    <div style="text-align: center; margin-bottom: 20px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
+    <div style="text-align: center; margin-bottom: 25px;" class="accent-text">Advanced Business Intelligence & Digital Risk Protection</div>
     """, unsafe_allow_html=True)
     
     # Sidebar with user info and logout button
@@ -2956,15 +3100,15 @@ def main():
         # User info
         subscription_info = auth_system.subscription_plans[st.session_state.user_subscription]
         st.markdown(f"""
-        <div style="text-align: center; margin-bottom: 20px;">
-            <div style="font-size: 3rem;">👤</div>
-            <h3>{st.session_state.username}</h3>
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="font-size: 3.5rem;">👤</div>
+            <h3 style="font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">{st.session_state.username}</h3>
             <p>{st.session_state.get('user_access_level', 'user').title()} Access</p>
             <p>{auth_system.users[st.session_state.username]['company']}</p>
             <div style="background-color: {subscription_info['color']}20; 
                         border: 1px solid {subscription_info['color']}; 
-                        border-radius: 20px; padding: 8px 16px; margin-top: 10px; display: inline-block;">
-                <span style="color: {subscription_info['color']}; font-weight: bold;">
+                        border-radius: 25px; padding: 10px 20px; margin-top: 15px; display: inline-block;">
+                <span style="color: {subscription_info['color']}; font-weight: bold; font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">
                     {subscription_info['name']} Subscription
                 </span>
             </div>
