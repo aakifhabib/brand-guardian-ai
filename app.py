@@ -110,41 +110,35 @@ def generate_premium_key():
 premium_access_key = generate_premium_key()
 print(f"PREMIUM ACCESS KEY: {premium_access_key}")
 
-# Black and Gold UI Theme
+# Next-Generation CSS with Futuristic Theme and Animations
 st.markdown("""
 <style>
-    /* Import elegant fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Raleway:wght@200;300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&family=Cinzel:wght@400;500;600;700;800;900&display=swap');
+    /* Import futuristic fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700;800&family=Rajdhani:wght@300;400;500;600;700&display=swap');
     
-    /* Base styles with elegant black background */
+    /* Base styles */
     .main {
-        background: 
-            radial-gradient(ellipse at top, #0a0a0a 0%, #000000 50%, #000000 100%),
-            linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #000000 50%, #0a0a0a 75%, #000000 100%);
-        background-size: 400% 400%, 100% 100%;
-        animation: subtleShift 30s ease infinite;
-        color: #FFFFFF;
-        font-family: 'Montserrat', sans-serif;
+        background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0d1117 100%);
+        color: #e0e6ed;
+        font-family: 'Exo 2', sans-serif;
         overflow-x: hidden;
         position: relative;
     }
     
-    @keyframes subtleShift {
-        0% { background-position: 0% 50%, 0% 50%; }
-        50% { background-position: 100% 50%, 100% 50%; }
-        100% { background-position: 0% 50%, 0% 50%; }
-    }
-    
     .stApp {
-        background: 
-            radial-gradient(ellipse at top, #0a0a0a 0%, #000000 50%, #000000 100%),
-            linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #000000 50%, #0a0a0a 75%, #000000 100%);
-        background-size: 400% 400%, 100% 100%;
-        animation: subtleShift 30s ease infinite;
+        background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0d1117 100%);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
     }
     
-    /* Gold particles for elegance */
-    .gold-particles {
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    /* Holographic background particles */
+    .holographic-particles {
         position: fixed;
         top: 0;
         left: 0;
@@ -152,504 +146,309 @@ st.markdown("""
         height: 100%;
         z-index: -1;
         overflow: hidden;
-        pointer-events: none;
     }
     
-    .gold-particle {
+    .particle {
         position: absolute;
-        width: 3px;
-        height: 3px;
-        background: radial-gradient(circle, rgba(255, 215, 0, 0.9) 0%, rgba(212, 175, 55, 0.7) 50%, transparent 100%);
+        background: radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, rgba(0, 255, 255, 0) 70%);
         border-radius: 50%;
-        box-shadow: 
-            0 0 10px rgba(255, 215, 0, 0.8),
-            0 0 20px rgba(212, 175, 55, 0.6);
-        animation: goldFloat 25s infinite linear;
+        pointer-events: none;
+        animation: floatParticle 20s infinite linear;
     }
     
-    @keyframes goldFloat {
-        0% { 
+    @keyframes floatParticle {
+        0% {
             transform: translateY(100vh) translateX(0) scale(0);
             opacity: 0;
         }
         10% {
             opacity: 1;
-            transform: translateY(90vh) translateX(10px) scale(1);
         }
         90% {
             opacity: 1;
-            transform: translateY(10vh) translateX(-10px) scale(1);
         }
-        100% { 
-            transform: translateY(0) translateX(0) scale(0);
+        100% {
+            transform: translateY(-100vh) translateX(100px) scale(1.5);
             opacity: 0;
         }
     }
     
-    /* Elegant gold pattern overlay */
-    .gold-pattern {
+    /* Circuit board background */
+    .circuit-board {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-image: 
-            linear-gradient(90deg, transparent 98%, rgba(255, 215, 0, 0.1) 100%),
-            linear-gradient(0deg, transparent 98%, rgba(212, 175, 55, 0.1) 100%);
-        background-size: 50px 50px;
-        z-index: -1;
-        opacity: 0.4;
-        animation: patternPulse 15s ease-in-out infinite;
-    }
-    
-    @keyframes patternPulse {
-        0%, 100% { opacity: 0.2; }
-        50% { opacity: 0.5; }
-    }
-    
-    /* Enhanced BrandGuardian logo - Gold Shield */
-    .brandguardian-logo {
-        display: inline-block;
-        position: relative;
-        font-size: 8rem;
-        animation: goldShield 4s infinite ease-in-out;
-        filter: 
-            drop-shadow(0 0 30px rgba(255, 215, 0, 0.8))
-            drop-shadow(0 0 60px rgba(212, 175, 55, 0.6));
-    }
-    
-    .brandguardian-logo::before {
-        content: '';
-        position: absolute;
-        top: -20%;
-        left: -20%;
-        width: 140%;
-        height: 140%;
-        background: conic-gradient(
-            from 0deg,
-            transparent,
-            rgba(255, 215, 0, 0.3),
-            rgba(212, 175, 55, 0.3),
-            transparent
-        );
-        border-radius: 50%;
-        animation: goldRotation 8s linear infinite;
-        z-index: -1;
-    }
-    
-    .brandguardian-logo::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 120%;
-        height: 120%;
-        background: radial-gradient(
-            circle,
-            rgba(255, 215, 0, 0.4) 0%,
-            rgba(212, 175, 55, 0.2) 40%,
-            transparent 70%
-        );
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        animation: goldPulse 3s ease-in-out infinite;
         z-index: -2;
+        background-image: 
+            linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(0deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+            radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 25%),
+            radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.1) 0%, transparent 25%);
+        background-size: 50px 50px, 50px 50px, 300px 300px, 300px 300px;
+        animation: circuitPulse 20s linear infinite;
     }
     
-    @keyframes goldShield {
-        0%, 100% { 
-            transform: scale(1) rotate(0deg) translateY(0);
-            filter: 
-                drop-shadow(0 0 30px rgba(255, 215, 0, 0.8))
-                drop-shadow(0 0 60px rgba(212, 175, 55, 0.6));
-        }
-        25% { 
-            transform: scale(1.1) rotate(-5deg) translateY(-10px);
-            filter: 
-                drop-shadow(0 0 40px rgba(255, 215, 0, 0.9))
-                drop-shadow(0 0 80px rgba(212, 175, 55, 0.7));
-        }
-        50% { 
-            transform: scale(1) rotate(0deg) translateY(0);
-            filter: 
-                drop-shadow(0 0 50px rgba(212, 175, 55, 0.8))
-                drop-shadow(0 0 100px rgba(255, 215, 0, 0.6));
-        }
-        75% { 
-            transform: scale(1.1) rotate(5deg) translateY(-10px);
-            filter: 
-                drop-shadow(0 0 40px rgba(255, 215, 0, 0.9))
-                drop-shadow(0 0 80px rgba(212, 175, 55, 0.7));
-        }
+    @keyframes circuitPulse {
+        0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+        100% { background-position: 50px 50px, 50px 50px, 300px 300px, 300px 300px; }
     }
     
-    @keyframes goldRotation {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    @keyframes goldPulse {
-        0%, 100% { 
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 0.6;
-        }
-        50% { 
-            transform: translate(-50%, -50%) scale(1.3);
-            opacity: 0.9;
-        }
-    }
-    
-    /* Premium header with gold effects */
-    .premium-header {
-        font-family: 'Cinzel', serif;
-        font-size: 5rem;
+    /* Futuristic header styling */
+    .futuristic-header {
+        font-family: 'Orbitron', monospace;
+        font-size: 4.5rem;
         font-weight: 900;
         text-align: center;
         margin: 20px 0;
-        background: 
-            linear-gradient(90deg, #D4AF37 0%, #FFD700 25%, #D4AF37 50%, #FFD700 75%, #D4AF37 100%);
-        background-size: 200% 100%;
+        background: linear-gradient(90deg, #00ffff 0%, #ff00ff 25%, #ffff00 50%, #00ffff 75%, #ff00ff 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 
-            0px 0px 30px rgba(255, 215, 0, 0.5),
-            0px 0px 60px rgba(212, 175, 55, 0.3);
-        animation: 
-            goldGlow 3s ease-in-out infinite alternate,
-            gradientShift 4s linear infinite;
+        text-shadow: 0px 0px 30px rgba(0, 255, 255, 0.5);
+        animation: holographicGlow 4s ease-in-out infinite alternate;
         position: relative;
-        letter-spacing: 3px;
-        text-transform: uppercase;
+        letter-spacing: 2px;
     }
     
-    @keyframes goldGlow {
+    @keyframes holographicGlow {
         from { 
-            text-shadow: 
-                0px 0px 30px rgba(255, 215, 0, 0.5),
-                0px 0px 60px rgba(212, 175, 55, 0.3);
+            text-shadow: 0px 0px 30px rgba(0, 255, 255, 0.5);
             transform: scale(1);
         }
         to { 
-            text-shadow: 
-                0px 0px 50px rgba(212, 175, 55, 0.8),
-                0px 0px 100px rgba(255, 215, 0, 0.5);
+            text-shadow: 0px 0px 40px rgba(255, 0, 255, 0.8);
             transform: scale(1.02);
         }
     }
     
-    @keyframes gradientShift {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 200% 50%; }
+    /* Enhanced AI logo */
+    .ai-logo-container {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .ai-logo {
+        display: inline-block;
+        font-size: 6rem;
+        position: relative;
+        z-index: 2;
+        animation: logoPulse 3s infinite;
+        filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7));
+    }
+    
+    @keyframes logoPulse {
+        0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7)); }
+        25% { transform: scale(1.1) rotate(-5deg); filter: drop-shadow(0 0 25px rgba(255, 0, 255, 0.8)); }
+        50% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 30px rgba(255, 255, 0, 0.6)); }
+        75% { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 0 25px rgba(255, 0, 255, 0.8)); }
+        100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.7)); }
+    }
+    
+    .logo-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120px;
+        height: 120px;
+        border: 3px solid rgba(0, 255, 255, 0.3);
+        border-radius: 50%;
+        animation: ringRotate 8s linear infinite;
+        z-index: 1;
+    }
+    
+    .logo-ring::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border: 2px solid rgba(255, 0, 255, 0.2);
+        border-radius: 50%;
+        animation: ringRotate 12s linear infinite reverse;
+    }
+    
+    @keyframes ringRotate {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
     
     .floating {
-        animation: goldFloat 6s ease-in-out infinite;
+        animation: float 6s ease-in-out infinite;
     }
     
-    @keyframes goldFloat {
-        0% { transform: translateY(0px) rotateX(0deg); }
-        25% { transform: translateY(-15px) rotateX(5deg); }
-        50% { transform: translateY(-10px) rotateX(0deg); }
-        75% { transform: translateY(-15px) rotateX(-5deg); }
-        100% { transform: translateY(0px) rotateX(0deg); }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
     }
     
     .accent-text {
-        font-size: 1.6rem;
-        color: #FFD700;
+        font-size: 1.4rem;
+        color: #00ffff;
         text-align: center;
         margin-bottom: 40px;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 500;
+        letter-spacing: 1px;
         animation: fadeIn 2s ease-in;
-        font-family: 'Raleway', sans-serif;
-        font-weight: 400;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        position: relative;
-    }
-    
-    .accent-text::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #FFD700, transparent);
-        animation: scanLine 3s linear infinite;
-    }
-    
-    @keyframes scanLine {
-        0% { transform: translateX(-100%) translateX(-50%); }
-        100% { transform: translateX(100%) translateX(-50%); }
     }
     
     @keyframes fadeIn {
-        from { 
-            opacity: 0; 
-            transform: translateY(30px) scale(0.9);
-            filter: blur(10px);
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0) scale(1);
-            filter: blur(0);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     
-    /* Elegant card styling with gold effects */
+    /* Enhanced card styling with glassmorphism */
     .metric-card {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
+        background: rgba(20, 25, 40, 0.7);
         backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         padding: 30px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        margin: 20px 0;
-        box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.8),
-            inset 0 0 30px rgba(255, 215, 0, 0.1);
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border-radius: 20px;
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        margin: 15px 0;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
-        transform-style: preserve-3d;
-        perspective: 1000px;
     }
     
     .metric-card::before {
         content: '';
         position: absolute;
         top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, 
-            transparent, 
-            rgba(255, 215, 0, 0.2), 
-            rgba(212, 175, 55, 0.2),
-            transparent
-        );
-        transform: skewX(-25deg);
-        transition: left 0.75s;
-    }
-    
-    .metric-card:hover::before {
-        left: 100%;
-    }
-    
-    .metric-card:hover {
-        transform: translateY(-12px) rotateX(5deg);
-        box-shadow: 
-            0 30px 80px rgba(255, 215, 0, 0.3),
-            inset 0 0 40px rgba(212, 175, 55, 0.2);
-        border: 1px solid rgba(212, 175, 55, 0.5);
-    }
-    
-    .metric-card h3 {
-        font-family: 'Playfair Display', serif;
-        font-weight: 700;
-        color: #FFD700;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    .metric-card h1 {
-        font-family: 'Cinzel', serif;
-        font-size: 3rem;
-        margin: 10px 0;
-        background: linear-gradient(90deg, #FFD700, #D4AF37);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    .search-analysis-card {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
-        backdrop-filter: blur(20px);
-        padding: 30px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        margin: 25px 0;
-        box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.8),
-            inset 0 0 30px rgba(255, 215, 0, 0.1);
-        transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .search-analysis-card:hover {
-        transform: translateY(-8px) rotateX(3deg);
-        box-shadow: 
-            0 25px 70px rgba(212, 175, 55, 0.4),
-            inset 0 0 40px rgba(255, 215, 0, 0.2);
-    }
-    
-    .search-result-card {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.7) 100%);
-        border-radius: 20px;
-        padding: 25px;
-        margin: 20px 0;
-        border-left: 5px solid #FFD700;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .search-result-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, 
-            transparent 30%, 
-            rgba(255, 215, 0, 0.1) 50%, 
-            transparent 70%
-        );
+        background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
         transform: translateX(-100%);
         transition: transform 0.6s;
     }
     
-    .search-result-card:hover::before {
+    .metric-card:hover::before {
         transform: translateX(100%);
     }
     
-    .search-result-card:hover {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(10, 10, 10, 0.9) 100%);
-        transform: translateX(15px) rotateY(5deg);
-        box-shadow: 
-            0 15px 40px rgba(255, 215, 0, 0.4),
-            inset 0 0 30px rgba(212, 175, 55, 0.2);
+    .metric-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(0, 255, 255, 0.4);
     }
     
-    /* Elegant threat indicators with gold effects */
+    .search-analysis-card {
+        background: rgba(20, 25, 40, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 25px;
+        border-radius: 20px;
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        margin: 20px 0;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .search-analysis-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    .search-result-card {
+        background: rgba(15, 20, 35, 0.6);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 15px;
+        padding: 20px;
+        margin: 15px 0;
+        border-left: 5px solid #00ffff;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .search-result-card:hover {
+        background: rgba(20, 25, 40, 0.8);
+        transform: translateX(15px);
+        box-shadow: 0 15px 30px rgba(0, 255, 255, 0.2);
+    }
+    
+    /* Enhanced threat indicators */
     .threat-indicator {
         padding: 12px 20px;
         border-radius: 30px;
         font-size: 14px;
         font-weight: 700;
-        margin: 10px;
+        margin: 8px;
         display: inline-block;
         letter-spacing: 1px;
-        box-shadow: 
-            0 8px 25px rgba(0, 0, 0, 0.6),
-            inset 0 0 15px rgba(255, 255, 255, 0.1);
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .threat-indicator::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
-    
-    .threat-indicator:hover::before {
-        left: 100%;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+        font-family: 'Orbitron', monospace;
     }
     
     .threat-indicator:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 
-            0 12px 35px rgba(0, 0, 0, 0.8),
-            inset 0 0 25px rgba(255, 255, 255, 0.2);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
     }
     
     .threat-high {
-        background: 
-            linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, rgba(255, 215, 0, 0.1) 100%),
-            linear-gradient(45deg, rgba(212, 175, 55, 0.2) 0%, transparent 100%);
-        color: #FFD700;
-        border: 2px solid rgba(212, 175, 55, 0.5);
-        animation: threatPulse 2s ease-in-out infinite;
+        background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.1));
+        color: #ff4d4d;
+        border: 1px solid rgba(255, 0, 0, 0.5);
     }
     
     .threat-medium {
-        background: 
-            linear-gradient(135deg, rgba(184, 134, 11, 0.3) 0%, rgba(218, 165, 32, 0.1) 100%),
-            linear-gradient(45deg, rgba(184, 134, 11, 0.2) 0%, transparent 100%);
-        color: #D4AF37;
-        border: 2px solid rgba(184, 134, 11, 0.5);
+        background: linear-gradient(135deg, rgba(255, 165, 0, 0.3), rgba(255, 165, 0, 0.1));
+        color: #ffcc00;
+        border: 1px solid rgba(255, 165, 0, 0.5);
     }
     
     .threat-low {
-        background: 
-            linear-gradient(135deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 223, 0, 0.1) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.2) 0%, transparent 100%);
-        color: #FFD700;
-        border: 2px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 255, 255, 0.1));
+        color: #00ffff;
+        border: 1px solid rgba(0, 255, 255, 0.5);
     }
     
-    @keyframes threatPulse {
-        0%, 100% { 
-            box-shadow: 
-                0 8px 25px rgba(0, 0, 0, 0.6),
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-        50% { 
-            box-shadow: 
-                0 8px 25px rgba(212, 175, 55, 0.6),
-                inset 0 0 25px rgba(255, 215, 0, 0.3);
-        }
-    }
-    
-    /* Status indicators with gold effects */
+    /* Status indicators */
     .api-status-connected {
-        color: #FFD700;
+        color: #00ffff;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
-        font-family: 'Raleway', sans-serif;
+        font-family: 'Orbitron', monospace;
     }
     
     .api-status-connected::before {
         content: '●';
         margin-right: 8px;
-        animation: goldPulse 2s ease-in-out infinite;
-        font-size: 1.2em;
+        animation: pulse 2s infinite;
     }
     
     .api-status-disconnected {
-        color: #D4AF37;
+        color: #ff4d4d;
         font-weight: 700;
-        font-family: 'Raleway', sans-serif;
     }
     
-    /* Enhanced button styling with gold effects */
+    /* Enhanced button styling */
     .stButton > button {
         border-radius: 20px;
-        border: 2px solid rgba(255, 215, 0, 0.5);
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.1) 0%, transparent 100%);
-        color: #FFD700;
+        border: 1px solid rgba(0, 255, 255, 0.5);
+        background: linear-gradient(135deg, rgba(15, 20, 35, 0.8), rgba(25, 30, 45, 0.6));
+        color: #00ffff;
         font-weight: 700;
-        padding: 15px 30px;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        padding: 14px 28px;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         overflow: hidden;
-        box-shadow: 
-            0 8px 25px rgba(0, 0, 0, 0.7),
-            inset 0 0 20px rgba(255, 215, 0, 0.1);
-        font-family: 'Montserrat', sans-serif;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        font-family: 'Orbitron', monospace;
         letter-spacing: 1px;
-        text-transform: uppercase;
-        transform-style: preserve-3d;
     }
     
     .stButton > button::before {
@@ -659,13 +458,8 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, 
-            transparent, 
-            rgba(255, 215, 0, 0.3), 
-            rgba(212, 175, 55, 0.3),
-            transparent
-        );
-        transition: left 0.6s;
+        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
     }
     
     .stButton > button:hover::before {
@@ -673,113 +467,72 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background: 
-            linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%),
-            linear-gradient(45deg, rgba(212, 175, 55, 0.2) 0%, transparent 100%);
-        border: 2px solid rgba(212, 175, 55, 0.8);
-        transform: translateY(-5px) rotateX(5deg);
-        box-shadow: 
-            0 15px 40px rgba(255, 215, 0, 0.5),
-            inset 0 0 30px rgba(212, 175, 55, 0.2);
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.1));
+        border: 1px solid rgba(0, 255, 255, 0.8);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 255, 255, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        color: #ffffff;
     }
     
-    /* Enhanced tab styling with gold effects */
+    /* Enhanced tab styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 15px;
         margin-bottom: 25px;
-        background: rgba(20, 20, 20, 0.3);
-        padding: 10px;
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
     }
     
     .stTabs [data-baseweb="tab"] {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.7) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
-        border-radius: 15px 15px 0 0;
-        padding: 18px 25px;
-        border: 2px solid rgba(255, 215, 0, 0.3);
+        background: rgba(20, 25, 40, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 20px 20px 0 0;
+        padding: 16px 24px;
+        border: 1px solid rgba(0, 255, 255, 0.2);
         border-bottom: none;
-        font-weight: 700;
-        transition: all 0.4s ease;
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-family: 'Rajdhani', sans-serif;
         letter-spacing: 1px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .stTabs [data-baseweb="tab"]::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, 
-            transparent 30%, 
-            rgba(255, 215, 0, 0.1) 50%, 
-            transparent 70%
-        );
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    
-    .stTabs [data-baseweb="tab"]:hover::before {
-        opacity: 1;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.1) 0%, transparent 100%);
-        transform: translateY(-3px);
+        background: rgba(25, 30, 45, 0.8);
     }
     
     .stTabs [aria-selected="true"] {
-        background: 
-            linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%),
-            linear-gradient(45deg, rgba(212, 175, 55, 0.2) 0%, transparent 100%);
-        border: 2px solid rgba(255, 215, 0, 0.5);
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.1));
+        border: 1px solid rgba(0, 255, 255, 0.5);
         border-bottom: none;
-        box-shadow: 
-            0 -8px 25px rgba(255, 215, 0, 0.4),
-            inset 0 0 20px rgba(212, 175, 55, 0.2);
-        transform: translateY(-5px);
+        box-shadow: 0 -8px 25px rgba(0, 255, 255, 0.2);
     }
     
     /* Custom metric styling */
     [data-testid="stMetricValue"] {
         font-size: 2.5rem;
         font-weight: 800;
-        color: #FFD700;
-        font-family: 'Cinzel', serif;
+        color: #00ffff;
+        font-family: 'Orbitron', monospace;
     }
     
     [data-testid="stMetricDelta"] {
         font-size: 1.2rem;
         font-weight: 600;
-        font-family: 'Raleway', sans-serif;
     }
     
-    /* Enhanced input styling with gold effects */
+    /* Enhanced input styling */
     .stSelectbox [data-baseweb="select"], 
     .stTextInput [data-baseweb="input"], 
     .stTextArea [data-baseweb="textarea"],
     .stNumberInput [data-baseweb="input"],
     .stDateInput [data-baseweb="input"],
     .stTimeInput [data-baseweb="input"] {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.7) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
+        background: rgba(20, 25, 40, 0.7);
         backdrop-filter: blur(15px);
-        border-radius: 20px;
-        border: 2px solid rgba(255, 215, 0, 0.3);
-        color: white;
-        transition: all 0.4s ease;
-        font-family: 'Raleway', sans-serif;
-        padding: 12px 20px;
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 15px;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        color: #e0e6ed;
+        transition: all 0.3s ease;
     }
     
     .stSelectbox [data-baseweb="select"]:hover, 
@@ -788,192 +541,127 @@ st.markdown("""
     .stNumberInput [data-baseweb="input"]:hover,
     .stDateInput [data-baseweb="input"]:hover,
     .stTimeInput [data-baseweb="input"]:hover {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%),
-            linear-gradient(45deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
-        border: 2px solid rgba(212, 175, 55, 0.5);
-        transform: translateY(-2px);
+        background: rgba(25, 30, 45, 0.8);
+        border: 1px solid rgba(0, 255, 255, 0.5);
     }
     
-    /* Custom spinner with gold effect */
+    /* Custom spinner */
     .stSpinner > div {
         border: 4px solid rgba(0, 0, 0, 0.1);
         border-radius: 50%;
-        border-top: 4px solid #FFD700;
+        border-top: 4px solid #00ffff;
         width: 50px;
         height: 50px;
-        animation: goldSpin 1s linear infinite;
+        animation: spin 1s linear infinite;
         margin: 0 auto;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
     
-    @keyframes goldSpin {
+    @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
     
-    /* Custom expander with gold effects */
+    /* Custom expander */
     .streamlit-expanderHeader {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.7) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
-        border-radius: 20px;
-        padding: 20px 25px;
-        border: 2px solid rgba(255, 215, 0, 0.3);
-        font-weight: 700;
-        transition: all 0.4s ease;
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .streamlit-expanderHeader::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(45deg, 
-            transparent 30%, 
-            rgba(255, 215, 0, 0.1) 50%, 
-            transparent 70%
-        );
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    
-    .streamlit-expanderHeader:hover::before {
-        opacity: 1;
+        background: rgba(20, 25, 40, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 15px;
+        padding: 16px 20px;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
     
     .streamlit-expanderHeader:hover {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.1) 0%, transparent 100%);
-        transform: translateY(-3px);
-        border: 2px solid rgba(212, 175, 55, 0.5);
+        background: rgba(25, 30, 45, 0.8);
     }
     
     /* Custom dataframes */
     .dataframe {
-        border-radius: 25px;
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.8),
-            inset 0 0 30px rgba(255, 215, 0, 0.1);
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        background: rgba(20, 25, 40, 0.5);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
     
     /* Custom success/error boxes */
     .stAlert {
-        border-radius: 25px;
+        border-radius: 20px;
         padding: 20px 25px;
-        font-weight: 700;
-        box-shadow: 
-            0 15px 45px rgba(0, 0, 0, 0.7),
-            inset 0 0 25px rgba(255, 255, 255, 0.1);
-        font-family: 'Raleway', sans-serif;
-        letter-spacing: 1px;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
     
     /* Custom sidebar */
     .css-1d391kg {
-        background: 
-            linear-gradient(180deg, #0a0a0a 0%, #000000 100%),
-            linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
-        border-right: 2px solid rgba(255, 215, 0, 0.2);
+        background: linear-gradient(180deg, #0a0e27 0%, #1a1f3a 100%);
+        border-right: 1px solid rgba(0, 255, 255, 0.2);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
     
     /* Custom chart elements */
     .stChart {
         border-radius: 25px;
         overflow: hidden;
-        box-shadow: 
-            0 25px 70px rgba(0, 0, 0, 0.8),
-            inset 0 0 40px rgba(255, 215, 0, 0.1);
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        background: rgba(20, 25, 40, 0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 255, 0.2);
     }
     
     /* Custom progress bars */
     .stProgress > div > div > div {
-        background: 
-            linear-gradient(90deg, #FFD700, #D4AF37, #B8860B);
-        background-size: 200% 100%;
+        background: linear-gradient(90deg, #00ffff, #ff00ff);
         border-radius: 15px;
-        box-shadow: 
-            0 8px 25px rgba(255, 215, 0, 0.6),
-            inset 0 0 20px rgba(255, 255, 255, 0.2);
-        animation: progressFlow 3s linear infinite;
-    }
-    
-    @keyframes progressFlow {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 200% 50%; }
+        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
     }
     
     /* Custom radio buttons */
     .stRadio [role="radiogroup"] {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.7) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
-        padding: 25px;
+        background: rgba(20, 25, 40, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        padding: 20px;
         border-radius: 20px;
-        border: 2px solid rgba(255, 215, 0, 0.3);
-        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 255, 255, 0.3);
     }
     
     /* Custom slider */
     .stSlider [role="slider"] {
-        background: 
-            linear-gradient(90deg, #FFD700, #D4AF37, #B8860B);
-        background-size: 200% 100%;
+        background: linear-gradient(90deg, #00ffff, #ff00ff);
         border-radius: 15px;
-        height: 12px;
-        animation: sliderFlow 4s linear infinite;
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-    }
-    
-    @keyframes sliderFlow {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 200% 50%; }
+        height: 10px;
     }
     
     /* Custom checkbox */
     .stCheckbox [data-baseweb="checkbox"] {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(10, 10, 10, 0.7) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.05) 0%, transparent 100%);
-        border-radius: 15px;
-        border: 2px solid rgba(255, 215, 0, 0.3);
-        padding: 15px;
+        background: rgba(20, 25, 40, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 10px;
+        border: 1px solid rgba(0, 255, 255, 0.3);
     }
     
-    /* Premium badge with gold effects */
+    /* Premium badge */
     .premium-badge {
-        background: 
-            linear-gradient(135deg, #FFD700, #D4AF37, #B8860B);
-        background-size: 200% 100%;
-        color: #000000;
+        background: linear-gradient(135deg, #00ffff, #ff00ff);
+        color: #0a0e27;
         padding: 6px 16px;
         border-radius: 25px;
-        font-size: 13px;
-        font-weight: 800;
+        font-size: 14px;
+        font-weight: 700;
         display: inline-block;
-        margin-left: 15px;
-        box-shadow: 
-            0 8px 25px rgba(255, 215, 0, 0.6),
-            inset 0 0 20px rgba(255, 255, 255, 0.3);
-        animation: 
-            shimmer 2s infinite,
-            badgeFlow 4s linear infinite;
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
+        margin-left: 12px;
+        box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+        animation: shimmer 2s infinite;
+        font-family: 'Orbitron', monospace;
         letter-spacing: 1px;
     }
     
@@ -982,72 +670,30 @@ st.markdown("""
         100% { background-position: calc(200px + 100%); }
     }
     
-    @keyframes badgeFlow {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 200% 50%; }
-    }
-    
     /* Security shield animation */
     .security-shield {
         display: inline-block;
-        animation: shieldGold 3s infinite;
+        animation: shieldPulse 2s infinite;
     }
     
-    @keyframes shieldGold {
-        0%, 100% { 
-            transform: scale(1) rotate(0deg);
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
-        }
-        25% { 
-            transform: scale(1.2) rotate(-10deg);
-            filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.9));
-        }
-        50% { 
-            transform: scale(1) rotate(0deg);
-            filter: drop-shadow(0 0 60px rgba(255, 215, 0, 0.8));
-        }
-        75% { 
-            transform: scale(1.2) rotate(10deg);
-            filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.9));
-        }
+    @keyframes shieldPulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
     }
     
     /* Login form enhancements */
     .login-container {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(10, 10, 10, 0.9) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.1) 0%, transparent 100%);
+        background: rgba(15, 20, 35, 0.8);
         backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
         border-radius: 30px;
         padding: 50px;
-        border: 2px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 
-            0 30px 80px rgba(0, 0, 0, 0.9),
-            inset 0 0 40px rgba(255, 215, 0, 0.1);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
         max-width: 600px;
         margin: 0 auto;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .login-container::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, 
-            rgba(255, 215, 0, 0.1) 0%, 
-            rgba(212, 175, 55, 0.1) 50%, 
-            transparent 70%
-        );
-        animation: loginRotate 20s linear infinite;
-    }
-    
-    @keyframes loginRotate {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
     }
     
     /* Animated background for login */
@@ -1058,44 +704,30 @@ st.markdown("""
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: 
-            radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 40% 80%, rgba(184, 134, 11, 0.15) 0%, transparent 50%);
-        animation: bgGoldMove 25s ease infinite;
+        background: radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1), transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1), transparent 50%),
+                    radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.1), transparent 50%);
+        animation: bgMove 20s ease infinite;
     }
     
-    @keyframes bgGoldMove {
-        0%, 100% { 
-            transform: translate(0, 0) rotate(0deg) scale(1);
-            filter: hue-rotate(0deg);
-        }
-        33% { 
-            transform: translate(30px, -30px) rotate(120deg) scale(1.1);
-            filter: hue-rotate(30deg);
-        }
-        66% { 
-            transform: translate(-30px, 30px) rotate(240deg) scale(0.9);
-            filter: hue-rotate(60deg);
-        }
+    @keyframes bgMove {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(20px, -20px) rotate(120deg); }
+        66% { transform: translate(-20px, 20px) rotate(240deg); }
     }
     
     /* Premium access card */
     .premium-access-card {
-        background: 
-            linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(212, 175, 55, 0.15) 100%),
-            linear-gradient(45deg, rgba(184, 134, 11, 0.1) 0%, transparent 100%);
-        border: 3px solid rgba(255, 215, 0, 0.4);
-        border-radius: 30px;
+        background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+        border: 2px solid rgba(0, 255, 255, 0.3);
+        border-radius: 25px;
         padding: 40px;
-        margin: 30px 0;
-        box-shadow: 
-            0 25px 70px rgba(255, 215, 0, 0.3),
-            inset 0 0 50px rgba(212, 175, 55, 0.2);
+        margin: 25px 0;
+        box-shadow: 0 20px 50px rgba(0, 255, 255, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
         text-align: center;
         position: relative;
         overflow: hidden;
-        backdrop-filter: blur(20px);
     }
     
     .premium-access-card::before {
@@ -1105,15 +737,11 @@ st.markdown("""
         left: -50%;
         width: 200%;
         height: 200%;
-        background: radial-gradient(circle, 
-            rgba(255, 215, 0, 0.2) 0%, 
-            rgba(212, 175, 55, 0.2) 50%, 
-            transparent 70%
-        );
-        animation: premiumRotate 25s linear infinite;
+        background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
     }
     
-    @keyframes premiumRotate {
+    @keyframes rotate {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
@@ -1128,70 +756,27 @@ st.markdown("""
     
     .radar-circle {
         position: absolute;
-        border: 3px solid rgba(255, 215, 0, 0.4);
+        border: 2px solid rgba(0, 255, 255, 0.3);
         border-radius: 50%;
-        animation: radarGoldPulse 2.5s infinite;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        animation: radarPulse 2s infinite;
     }
     
-    @keyframes radarGoldPulse {
-        0% { 
-            transform: scale(0.7); 
-            opacity: 1;
-            border-color: rgba(255, 215, 0, 0.8);
-        }
-        50% { 
-            transform: scale(1.3); 
-            opacity: 0.5;
-            border-color: rgba(212, 175, 55, 0.8);
-        }
-        100% { 
-            transform: scale(0.7); 
-            opacity: 1;
-            border-color: rgba(184, 134, 11, 0.8);
-        }
+    @keyframes radarPulse {
+        0% { transform: scale(0.8); opacity: 1; }
+        100% { transform: scale(1.2); opacity: 0; }
     }
     
     /* Enhanced AI visualization */
     .ai-visualization {
-        background: 
-            linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.8) 100%),
-            linear-gradient(45deg, rgba(255, 215, 0, 0.1) 0%, transparent 100%);
-        border-radius: 30px;
-        padding: 30px;
-        margin: 30px 0;
-        border: 2px solid rgba(255, 215, 0, 0.3);
-        box-shadow: 
-            0 20px 60px rgba(0, 0, 0, 0.8),
-            inset 0 0 40px rgba(212, 175, 55, 0.2);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .ai-visualization::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: 
-            linear-gradient(45deg, 
-                transparent 30%, 
-                rgba(255, 215, 0, 0.05) 50%, 
-                transparent 70%
-            ),
-            linear-gradient(-45deg, 
-                transparent 30%, 
-                rgba(212, 175, 55, 0.05) 50%, 
-                transparent 70%
-            );
-        animation: aiScan 8s linear infinite;
-    }
-    
-    @keyframes aiScan {
-        0% { transform: translateX(-100%) translateY(-100%); }
-        100% { transform: translateX(100%) translateY(100%); }
+        background: rgba(20, 25, 40, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 25px;
+        margin: 25px 0;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
     
     /* AI pulse animation */
@@ -1208,36 +793,78 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: radial-gradient(circle, 
-            rgba(255, 215, 0, 0.4) 0%, 
-            rgba(212, 175, 55, 0.2) 50%, 
-            transparent 70%
-        );
-        animation: aiGoldPulse 3s infinite;
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        background: rgba(0, 255, 255, 0.3);
+        animation: aiPulse 2s infinite;
     }
     
-    @keyframes aiGoldPulse {
-        0% { 
-            transform: scale(1); 
-            opacity: 0.7;
-        }
-        25% { 
-            transform: scale(1.4); 
-            opacity: 0.4;
-        }
-        50% { 
-            transform: scale(1); 
-            opacity: 0.7;
-        }
-        75% { 
-            transform: scale(1.2); 
-            opacity: 0.5;
-        }
-        100% { 
-            transform: scale(1); 
-            opacity: 0.7;
-        }
+    @keyframes aiPulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.2); opacity: 0.3; }
+        100% { transform: scale(1); opacity: 0.7; }
+    }
+    
+    /* AI visualization card */
+    .ai-visualization-card {
+        background: rgba(20, 25, 40, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 30px;
+        border-radius: 25px;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        margin: 25px 0;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ai-visualization-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+    }
+    
+    .ai-visualization-card:hover::before {
+        transform: translateX(100%);
+    }
+    
+    /* AI processing animation */
+    .ai-processing {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 25px 0;
+    }
+    
+    .ai-node {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #00ffff;
+        margin: 0 8px;
+        animation: nodePulse 1.5s infinite;
+    }
+    
+    .ai-node:nth-child(2) {
+        animation-delay: 0.2s;
+        background: #ff00ff;
+    }
+    
+    .ai-node:nth-child(3) {
+        animation-delay: 0.4s;
+        background: #ffff00;
+    }
+    
+    @keyframes nodePulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.5); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.7; }
     }
     
     /* New Threat Analysis Animation */
@@ -1249,14 +876,14 @@ st.markdown("""
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin: 30px 0;
+        margin: 25px 0;
     }
     
     .radar-scanner {
         position: relative;
         width: 220px;
         height: 220px;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
     }
     
     .radar-background {
@@ -1264,17 +891,9 @@ st.markdown("""
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        background: 
-            radial-gradient(circle, 
-                rgba(20, 20, 20, 0.95) 0%, 
-                rgba(10, 10, 10, 0.8) 70%, 
-                transparent 100%
-            );
-        border: 3px solid rgba(255, 215, 0, 0.4);
+        background: radial-gradient(circle, rgba(15, 20, 35, 0.9) 0%, rgba(15, 20, 35, 0.6) 70%, transparent 100%);
+        border: 2px solid rgba(0, 255, 255, 0.3);
         overflow: hidden;
-        box-shadow: 
-            0 0 40px rgba(255, 215, 0, 0.5),
-            inset 0 0 30px rgba(212, 175, 55, 0.3);
     }
     
     .radar-grid {
@@ -1288,12 +907,11 @@ st.markdown("""
     .radar-grid::after {
         content: '';
         position: absolute;
-        background: rgba(255, 215, 0, 0.3);
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+        background: rgba(0, 255, 255, 0.2);
     }
     
     .radar-grid::before {
-        width: 3px;
+        width: 2px;
         height: 100%;
         left: 50%;
         transform: translateX(-50%);
@@ -1301,71 +919,37 @@ st.markdown("""
     
     .radar-grid::after {
         width: 100%;
-        height: 3px;
+        height: 2px;
         top: 50%;
         transform: translateY(-50%);
     }
     
     .radar-sweep {
         position: absolute;
-        width: 60%;
-        height: 4px;
-        background: 
-            linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 215, 0, 0.9), 
-                rgba(212, 175, 55, 0.9),
-                transparent
-            );
+        width: 50%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.8), transparent);
         top: 50%;
         left: 50%;
         transform-origin: left center;
-        animation: radarGoldSweep 4s linear infinite;
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        animation: radarSweep 3s linear infinite;
     }
     
-    @keyframes radarGoldSweep {
-        0% { 
-            transform: rotate(0deg);
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.9), transparent);
-        }
-        33% { 
-            transform: rotate(120deg);
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.9), transparent);
-        }
-        66% { 
-            transform: rotate(240deg);
-            background: linear-gradient(90deg, transparent, rgba(184, 134, 11, 0.9), transparent);
-        }
-        100% { 
-            transform: rotate(360deg);
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.9), transparent);
-        }
+    @keyframes radarSweep {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
     
     .radar-sweep::before {
         content: '';
         position: absolute;
-        width: 15px;
-        height: 15px;
-        background: radial-gradient(circle, 
-            rgba(255, 215, 0, 1) 0%, 
-            rgba(212, 175, 55, 1) 50%, 
-            rgba(184, 134, 11, 1) 100%
-        );
+        width: 12px;
+        height: 12px;
+        background: rgba(0, 255, 255, 0.8);
         border-radius: 50%;
         right: 0;
-        top: -6px;
-        box-shadow: 
-            0 0 20px rgba(255, 215, 0, 1),
-            0 0 40px rgba(212, 175, 55, 0.8),
-            0 0 60px rgba(184, 134, 11, 0.6);
-        animation: sweepPulse 1s ease-in-out infinite;
-    }
-    
-    @keyframes sweepPulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.5); }
+        top: -5px;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
     }
     
     .threat-dots {
@@ -1377,98 +961,53 @@ st.markdown("""
     
     .threat-dot {
         position: absolute;
-        width: 12px;
-        height: 12px;
-        background: radial-gradient(circle, 
-            rgba(255, 215, 0, 1) 0%, 
-            rgba(212, 175, 55, 1) 50%, 
-            rgba(184, 134, 11, 1) 100%
-        );
+        width: 10px;
+        height: 10px;
+        background: rgba(0, 255, 255, 0.8);
         border-radius: 50%;
         opacity: 0;
-        animation: threatGoldPulse 2.5s infinite;
-        box-shadow: 
-            0 0 15px rgba(255, 215, 0, 0.8),
-            0 0 30px rgba(212, 175, 55, 0.6);
+        animation: threatPulse 2s infinite;
     }
     
     .threat-dot.active {
         opacity: 1;
     }
     
-    @keyframes threatGoldPulse {
-        0% { 
-            transform: scale(1); 
-            opacity: 0.7;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-        }
-        25% { 
-            transform: scale(1.8); 
-            opacity: 1;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 1);
-        }
-        50% { 
-            transform: scale(1); 
-            opacity: 0.7;
-            box-shadow: 0 0 15px rgba(184, 134, 11, 0.8);
-        }
-        75% { 
-            transform: scale(1.4); 
-            opacity: 0.9;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
-        }
-        100% { 
-            transform: scale(1); 
-            opacity: 0.7;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
-        }
+    @keyframes threatPulse {
+        0% { transform: scale(1); opacity: 0.7; }
+        50% { transform: scale(1.5); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.7; }
     }
     
     .analysis-status {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #FFD700;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #00ffff;
         text-align: center;
         margin-bottom: 20px;
-        font-family: 'Cinzel', serif;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        font-family: 'Orbitron', monospace;
     }
     
     .progress-container {
         width: 80%;
-        height: 12px;
+        height: 10px;
         background: rgba(255, 255, 255, 0.1);
         border-radius: 8px;
         overflow: hidden;
-        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
     }
     
     .progress-bar {
         height: 100%;
         width: 0%;
-        background: 
-            linear-gradient(90deg, #FFD700, #D4AF37, #B8860B);
-        background-size: 200% 100%;
+        background: linear-gradient(90deg, #00ffff, #ff00ff);
         border-radius: 8px;
-        transition: width 0.4s ease;
-        animation: 
-            progressFill 4s ease-in-out forwards,
-            progressGoldFlow 2s linear infinite;
-        box-shadow: 
-            0 0 20px rgba(255, 215, 0, 0.6),
-            inset 0 0 15px rgba(255, 255, 255, 0.3);
+        transition: width 0.3s ease;
+        animation: progressFill 3.5s ease-in-out forwards;
     }
     
     @keyframes progressFill {
         0% { width: 0%; }
         100% { width: 100%; }
-    }
-    
-    @keyframes progressGoldFlow {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 200% 50%; }
     }
     
     .analysis-phases {
@@ -1482,89 +1021,90 @@ st.markdown("""
         display: flex;
         flex-direction: column;
         align-items: center;
-        opacity: 0.4;
-        transition: all 0.4s ease;
-        transform: translateY(10px);
+        opacity: 0.5;
+        transition: opacity 0.3s;
     }
     
     .phase.active {
         opacity: 1;
-        transform: translateY(0);
     }
     
     .phase-icon {
-        font-size: 2rem;
-        margin-bottom: 10px;
-        filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+        font-size: 1.8rem;
+        margin-bottom: 8px;
     }
     
     .phase-text {
         font-size: 0.9rem;
-        color: #FFD700;
-        font-family: 'Montserrat', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        text-align: center;
+        color: #00ffff;
+        font-family: 'Rajdhani', sans-serif;
     }
     
     .phase:nth-child(1) {
-        animation: phaseGoldActivate 4s ease-in-out forwards;
+        animation: phaseActivate 3.5s ease-in-out forwards;
     }
     
     .phase:nth-child(2) {
-        animation: phaseGoldActivate 4s ease-in-out 1s forwards;
+        animation: phaseActivate 3.5s ease-in-out 0.875s forwards;
     }
     
     .phase:nth-child(3) {
-        animation: phaseGoldActivate 4s ease-in-out 2s forwards;
+        animation: phaseActivate 3.5s ease-in-out 1.75s forwards;
     }
     
     .phase:nth-child(4) {
-        animation: phaseGoldActivate 4s ease-in-out 3s forwards;
+        animation: phaseActivate 3.5s ease-in-out 2.625s forwards;
     }
     
-    @keyframes phaseGoldActivate {
-        0% { 
-            opacity: 0.4; 
-            transform: translateY(10px) scale(0.9);
-        }
-        25% { 
-            opacity: 1; 
-            transform: translateY(-5px) scale(1.1);
-        }
-        50% { 
-            opacity: 1; 
-            transform: translateY(0) scale(1);
-        }
-        100% { 
-            opacity: 1; 
-            transform: translateY(0) scale(1);
-        }
+    @keyframes phaseActivate {
+        0% { opacity: 0.5; }
+        25% { opacity: 1; }
+        100% { opacity: 1; }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Add gold particles to the background
-def add_gold_particles():
+# Add holographic particles background
+def add_holographic_particles():
     st.markdown("""
-    <div class="gold-particles">
-        <div class="gold-particle" style="left: 5%; animation-duration: 22s; animation-delay: 0s;"></div>
-        <div class="gold-particle" style="left: 15%; animation-duration: 28s; animation-delay: 1s;"></div>
-        <div class="gold-particle" style="left: 25%; animation-duration: 25s; animation-delay: 2s;"></div>
-        <div class="gold-particle" style="left: 35%; animation-duration: 30s; animation-delay: 0.5s;"></div>
-        <div class="gold-particle" style="left: 45%; animation-duration: 24s; animation-delay: 1.5s;"></div>
-        <div class="gold-particle" style="left: 55%; animation-duration: 32s; animation-delay: 2.5s;"></div>
-        <div class="gold-particle" style="left: 65%; animation-duration: 26s; animation-delay: 3s;"></div>
-        <div class="gold-particle" style="left: 75%; animation-duration: 29s; animation-delay: 0.8s;"></div>
-        <div class="gold-particle" style="left: 85%; animation-duration: 31s; animation-delay: 1.8s;"></div>
-        <div class="gold-particle" style="left: 95%; animation-duration: 27s; animation-delay: 2.2s;"></div>
+    <div class="holographic-particles">
+        <!-- Generate particles dynamically with JavaScript -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const container = document.querySelector('.holographic-particles');
+                const particleCount = 30;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    // Random size
+                    const size = Math.random() * 10 + 5;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    // Random position
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    
+                    // Random animation duration
+                    const duration = Math.random() * 20 + 10;
+                    particle.style.animationDuration = `${duration}s`;
+                    
+                    // Random delay
+                    particle.style.animationDelay = `${Math.random() * 5}s`;
+                    
+                    container.appendChild(particle);
+                }
+            });
+        </script>
     </div>
-    <div class="gold-pattern"></div>
+    <div class="circuit-board"></div>
     """, unsafe_allow_html=True)
 
 # Add the new animation function
 def show_threat_analysis_animation():
-    """Display a gold radar scanning animation for threat analysis"""
+    """Display a radar scanning animation for threat analysis"""
     placeholder = st.empty()
     
     with placeholder.container():
@@ -1575,29 +1115,29 @@ def show_threat_analysis_animation():
                 <div class="radar-grid"></div>
                 <div class="radar-sweep"></div>
                 <div class="threat-dots">
-                    <div class="threat-dot active" style="top: 25%; left: 35%; animation-delay: 0.5s;"></div>
-                    <div class="threat-dot active" style="top: 65%; left: 75%; animation-delay: 1.2s;"></div>
-                    <div class="threat-dot active" style="top: 15%; left: 55%; animation-delay: 1.8s;"></div>
-                    <div class="threat-dot active" style="top: 75%; left: 25%; animation-delay: 2.4s;"></div>
-                    <div class="threat-dot active" style="top: 45%; left: 85%; animation-delay: 3.0s;"></div>
+                    <div class="threat-dot active" style="top: 30%; left: 40%; animation-delay: 0.5s;"></div>
+                    <div class="threat-dot active" style="top: 60%; left: 70%; animation-delay: 1.0s;"></div>
+                    <div class="threat-dot active" style="top: 20%; left: 60%; animation-delay: 1.5s;"></div>
+                    <div class="threat-dot active" style="top: 70%; left: 30%; animation-delay: 2.0s;"></div>
+                    <div class="threat-dot active" style="top: 50%; left: 80%; animation-delay: 2.5s;"></div>
                 </div>
             </div>
-            <div class="analysis-status">Gold Threat Scan</div>
+            <div class="analysis-status">Scanning for threats...</div>
             <div class="progress-container">
                 <div class="progress-bar"></div>
             </div>
             <div class="analysis-phases">
                 <div class="phase">
                     <div class="phase-icon">🔍</div>
-                    <div class="phase-text">Gold Scan</div>
+                    <div class="phase-text">Scanning</div>
                 </div>
                 <div class="phase">
                     <div class="phase-icon">🧠</div>
-                    <div class="phase-text">Neural Process</div>
+                    <div class="phase-text">Processing</div>
                 </div>
                 <div class="phase">
                     <div class="phase-icon">📊</div>
-                    <div class="phase-text">AI Analysis</div>
+                    <div class="phase-text">Analyzing</div>
                 </div>
                 <div class="phase">
                     <div class="phase-icon">✅</div>
@@ -1803,7 +1343,7 @@ class EnhancedAuthenticationSystem:
                     "Standard reports",
                     "Email support"
                 ],
-                "color": "#D4AF37"
+                "color": "#3B82F6"
             },
             "advanced": {
                 "name": "Advanced",
@@ -1816,7 +1356,7 @@ class EnhancedAuthenticationSystem:
                     "Priority support",
                     "Custom alerts"
                 ],
-                "color": "#FFD700"
+                "color": "#8B5CF6"
             },
             "premium": {
                 "name": "Premium",
@@ -1829,7 +1369,7 @@ class EnhancedAuthenticationSystem:
                     "Dedicated account manager",
                     "Custom integrations"
                 ],
-                "color": "#B8860B"
+                "color": "#00ffff"
             }
         }
         self.load_users()
@@ -2393,13 +1933,13 @@ search_analyzer = SearchAnalyzer()
 class AdvancedVisualizations:
     def __init__(self):
         self.colors = {
-            'primary': '#FFD700',
-            'secondary': '#D4AF37',
-            'success': '#B8860B',
-            'warning': '#FFD700',
-            'danger': '#D4AF37',
-            'info': '#B8860B',
-            'dark': '#0a0a0a',
+            'primary': '#00ffff',
+            'secondary': '#ff00ff',
+            'success': '#10B981',
+            'warning': '#F59E0B',
+            'danger': '#EF4444',
+            'info': '#3B82F6',
+            'dark': '#0a0e27',
             'light': '#F3F4F6'
         }
     
@@ -2413,7 +1953,7 @@ class AdvancedVisualizations:
             fill='toself',
             name='Threat Level',
             line_color=self.colors['primary'],
-            fillcolor=f'rgba(255, 215, 0, 0.3)'
+            fillcolor=f'rgba(0, 255, 255, 0.3)'
         ))
         
         fig.update_layout(
@@ -2534,7 +2074,7 @@ class AdvancedVisualizations:
             z=z_data,
             x=platforms,
             y=threat_levels,
-            colorscale='YlOrRd',
+            colorscale='Viridis',
             showscale=True
         ))
         
@@ -2748,13 +2288,16 @@ def show_user_management():
                 st.error("You cannot delete your own account")
 
 def show_login_form():
-    """Display login form with enhanced design"""
+    """Display login form with enhanced futuristic design"""
     st.markdown("""
     <div class="login-bg"></div>
     <div style='text-align: center; margin-bottom: 30px;'>
-        <div class="brandguardian-logo">🛡️</div>
-        <h1 style="font-size: 4rem; font-weight: 800; background: linear-gradient(90deg, #FFD700 0%, #D4AF37 50%, #B8860B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">BrandGuardian AI</h1>
-        <p style="font-size: 1.4rem; color: #FFD700; font-family: 'Raleway', sans-serif;">GOLD STANDARD THREAT INTELLIGENCE</p>
+        <div class="ai-logo-container">
+            <div class="logo-ring"></div>
+            <div class="ai-logo">🛡️</div>
+        </div>
+        <h1 style="font-size: 3.5rem; font-weight: 800; background: linear-gradient(90deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Orbitron', monospace; letter-spacing: 2px;">BrandGuardian AI</h1>
+        <p style="font-size: 1.4rem; color: #00ffff; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px;">Neural Intelligence for Brand Protection</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -2764,9 +2307,9 @@ def show_login_form():
     with col1:
         st.markdown("""
         <div style='text-align: center;'>
-            <div style="font-size: 7rem; margin-bottom: 30px;" class="security-shield">🔒</div>
-            <h3 style="color: #FFD700; font-family: 'Cinzel', serif;">GOLD SECURE LOGIN</h3>
-            <p style="color: #FFD700; font-family: 'Raleway', sans-serif;">ACCESS YOUR PREMIUM DASHBOARD</p>
+            <div style="font-size: 8rem; margin-bottom: 20px;" class="ai-logo">🤖</div>
+            <h3 style="color: #00ffff; font-family: 'Orbitron', monospace;">AI-Powered Security</h3>
+            <p style="color: #ff00ff; font-family: 'Rajdhani', sans-serif;">Neural authentication system</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -2778,7 +2321,7 @@ def show_login_form():
             # Remember me checkbox
             remember_me = st.checkbox("Remember me")
             
-            submit = st.form_submit_button("🚀 GOLD ACCESS", use_container_width=True)
+            submit = st.form_submit_button("🚀 Login", use_container_width=True)
             
             if submit:
                 success, message = auth_system.authenticate(username, password)
@@ -2790,27 +2333,29 @@ def show_login_form():
                     st.session_state.login_time = datetime.now().isoformat()
                     st.session_state.remember_me = remember_me
                     
-                    st.success("✅ Gold Authentication Successful!")
+                    st.success("✅ Login successful!")
                     time.sleep(1)
                     st.rerun()
                 else:
                     st.error(f"❌ {message}")
     
-    # Security information
-    with st.expander("🔒 GOLD SECURITY PROTOCOLS"):
+    # AI Security information
+    with st.expander("🔐 AI Security Features"):
         st.markdown("""
-        - Military-grade gold encryption
-        - Premium network authentication
+        - Neural network authentication
+        - Biometric security integration
+        - Behavioral pattern analysis
+        - Multi-factor authentication ready
+        - Session timeout after 30 minutes of inactivity
+        - All login attempts analyzed by AI
         - Real-time threat detection
-        - Biometric verification ready
-        - Zero-trust architecture
-        - Automated security audits
+        - Advanced encryption protocols
         """)
     
     # Forgot password link
     st.markdown("""
-    <div style='text-align: center; margin-top: 30px;'>
-        <a href='#' style='color: #FFD700; text-decoration: none; font-family: 'Raleway', sans-serif;'>FORGOT GOLD KEY?</a>
+    <div style='text-align: center; margin-top: 20px;'>
+        <a href='#' style='color: #00ffff; text-decoration: none; font-family: 'Rajdhani', sans-serif;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
 
@@ -2820,15 +2365,15 @@ def show_advanced_threat_analysis():
         show_access_required()
         return
     
-    st.header("🔍 GOLD THREAT ANALYSIS")
-    st.success("✅ GOLD ACCESS GRANTED - PREMIUM FEATURES UNLOCKED")
+    st.header("🔍 Advanced Threat Analysis")
+    st.success("✅ Premium Access Granted - Advanced Features Unlocked")
     
     # Tab system for advanced analysis
     tab1, tab2, tab3, tab4 = st.tabs([
-        "📊 GOLD DASHBOARD",
-        "🔍 PREMIUM SCAN",
-        "📈 PREDICTIVE ANALYTICS", 
-        "⚡ GOLD ACTIONS"
+        "📊 Threat Dashboard",
+        "🔍 Search Analysis",
+        "📈 Trend Analysis", 
+        "⚡ Quick Actions"
     ])
     
     with tab1:
@@ -2845,7 +2390,7 @@ def show_advanced_threat_analysis():
 
 def show_threat_dashboard():
     """Threat monitoring dashboard"""
-    st.subheader("🛡️ GOLD THREAT MATRIX")
+    st.subheader("🛡️ Real-time Threat Dashboard")
     
     # Create metrics with custom styling
     col1, col2, col3, col4 = st.columns(4)
@@ -2853,81 +2398,81 @@ def show_threat_dashboard():
     with col1:
         st.markdown("""
         <div class="metric-card">
-            <h3>GOLD THREATS</h3>
-            <h1>∞</h1>
-            <p style="color: #FFD700;">PREMIUM DETECTION ACTIVE</p>
+            <h3>Active Threats</h3>
+            <h1>18</h1>
+            <p style="color: #ff4d4d;">+5 from yesterday</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
         <div class="metric-card">
-            <h3>THREAT LEVEL</h3>
-            <h1>GOLD</h1>
-            <p style="color: #FFD700;">PREMIUM ANALYSIS</p>
+            <h3>Threat Level</h3>
+            <h1>High</h1>
+            <p style="color: #ff4d4d;">Elevated risk</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown("""
         <div class="metric-card">
-            <h3>RESPONSE TIME</h3>
-            <h1>0.00s</h1>
-            <p style="color: #FFD700;">INSTANTANEOUS</p>
+            <h3>Response Time</h3>
+            <h1>2.1s</h1>
+            <p style="color: #00ffff;">-0.4s improvement</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col4:
         st.markdown("""
         <div class="metric-card">
-            <h3>PROTECTED ASSETS</h3>
-            <h1>∞</h1>
-            <p style="color: #FFD700;">GOLD ENCRYPTION</p>
+            <h3>Protected Assets</h3>
+            <h1>24</h1>
+            <p style="color: #00ffff;">Fully secured</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Threat timeline with advanced visualization
-    st.subheader("📈 GOLD THREAT TIMELINE")
+    st.subheader("📈 Threat Timeline (7 Days)")
     
     # Generate sample data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=7)
     threats = [8, 12, 5, 18, 10, 7, 14]
     
     # Create an advanced chart
-    fig = viz.create_sentiment_timeline(dates, threats, "Gold Threat Activity Over Time")
+    fig = viz.create_sentiment_timeline(dates, threats, "Threat Activity Over Time")
     st.plotly_chart(fig, use_container_width=True)
     
     # Threat distribution
-    st.subheader("🌡️ GOLD THREAT DISTRIBUTION")
+    st.subheader("🌡️ Threat Distribution")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         threat_data = {'High': 8, 'Medium': 5, 'Low': 5}
-        fig = viz.create_threat_distribution(threat_data, "Gold Threat Severity Distribution")
+        fig = viz.create_threat_distribution(threat_data, "Threat Severity Distribution")
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>🧠 PREMIUM INSIGHTS</h4>
-            <p><span class="threat-high">High</span>: 8 gold threats</p>
-            <p><span class="threat-medium">Medium</span>: 5 premium threats</p>
-            <p><span class="threat-low">Low</span>: 5 standard threats</p>
-            <p>Primary platform: Twitter</p>
-            <p>Peak frequency: 14:00-16:00</p>
+            <h4>📊 Threat Insights</h4>
+            <p><span class="threat-high">High</span>: 8 threats detected</p>
+            <p><span class="threat-medium">Medium</span>: 5 threats detected</p>
+            <p><span class="threat-low">Low</span>: 5 threats detected</p>
+            <p>Most active platform: Twitter</p>
+            <p>Peak time: 14:00-16:00</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Recent threats table
-    st.subheader("🚨 GOLD THREAT ALERTS")
+    st.subheader("🚨 Recent Threat Alerts")
     
     threat_alerts = []
     for i in range(8):
         threat_alerts.append({
             'Time': (datetime.now() - timedelta(hours=i)).strftime("%H:%M"),
             'Platform': random.choice(['Twitter', 'Facebook', 'Reddit', 'Instagram']),
-            'Type': random.choice(['Gold Impersonation', 'Premium Negative', 'Luxury Fake', 'Exclusive Copyright']),
+            'Type': random.choice(['Impersonation', 'Negative Review', 'Fake Account', 'Copyright']),
             'Severity': random.choice(['High', 'Medium', 'Low']),
             'Status': random.choice(['Active', 'Resolved', 'Monitoring'])
         })
@@ -2952,7 +2497,7 @@ def generate_similar_threats(results):
     for i in range(3):
         threats.append({
             'platform': random.choice(['Twitter', 'Reddit', 'Facebook', 'Instagram']),
-            'content': f"Similar gold {results['threat_level']} threat pattern detected",
+            'content': f"Similar {results['threat_level']} threat pattern detected",
             'severity': results['threat_level'],
             'date': (datetime.now() - timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
         })
@@ -2960,28 +2505,28 @@ def generate_similar_threats(results):
 
 def show_search_analysis():
     """Search analysis functionality"""
-    st.subheader("🔍 PREMIUM NEURAL SEARCH")
+    st.subheader("🔍 Advanced Search Analysis")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         search_query = st.text_area(
-            "Enter premium search query or neural keywords:",
+            "Enter search query or keywords to analyze:",
             height=100,
-            placeholder="Example: 'Your Brand gold scam neural complaints customer service luxury issues'",
-            help="Enter gold keywords, neural phrases, or full premium sentences to analyze for brand threats"
+            placeholder="Example: 'Your Brand scam complaints customer service issues'",
+            help="Enter keywords, phrases, or full sentences to analyze for brand threats"
         )
         
         # Get the brand name from session state or use a default
         brand_name = st.session_state.get('brand_name', 'Your Brand')
         
-        if st.button("🚀 INITIATE GOLD SCAN", use_container_width=True):
+        if st.button("🚀 Analyze Threats", use_container_width=True):
             if search_query and brand_name:
                 # Show the enhanced animation
                 animation_placeholder = show_threat_analysis_animation()
                 
                 # Simulate analysis with the animation running
-                time.sleep(4)  # Allow time for animation to complete
+                time.sleep(3.5)  # Allow time for animation to complete
                 
                 # Clear the animation
                 animation_placeholder.empty()
@@ -2989,28 +2534,28 @@ def show_search_analysis():
                 # Perform the actual analysis
                 results = search_analyzer.analyze_search(search_query, brand_name)
                 st.session_state.search_results = results
-                st.success("Gold Analysis Complete!")
+                st.success("Analysis complete!")
             else:
-                st.error("Please enter both gold query and brand name")
+                st.error("Please enter both search query and brand name")
     
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>🎯 PREMIUM SCAN TIPS</h4>
-            <p>• Use gold-specific keywords</p>
-            <p>• Include premium brand names</p>
-            <p>• Add luxury modifiers</p>
-            <p>• Use premium quotation marks</p>
-            <p>• Include gold platform names</p>
+            <h4>🎯 Search Analysis Tips</h4>
+            <p>• Use specific keywords</p>
+            <p>• Include brand names</p>
+            <p>• Add negative modifiers</p>
+            <p>• Use quotation marks for phrases</p>
+            <p>• Include platform names</p>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>📊 GOLD THREAT LEVELS</h4>
-            <p><span class="threat-high">High</span> - Gold action needed</p>
-            <p><span class="threat-medium">Medium</span> - Premium monitoring</p>
-            <p><span class="threat-low">Low</span> - Standard scanning</p>
+            <h4>📊 Threat Levels</h4>
+            <p><span class="threat-high">High</span> - Immediate action needed</p>
+            <p><span class="threat-medium">Medium</span> - Monitor closely</p>
+            <p><span class="threat-low">Low</span> - Standard monitoring</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -3019,16 +2564,16 @@ def show_search_analysis():
         results = st.session_state.search_results
         
         st.markdown("---")
-        st.subheader("📋 GOLD ANALYSIS RESULTS")
+        st.subheader("📋 Analysis Results")
         
         # Threat level indicator
         threat_class = f"threat-{results['threat_level']}"
         st.markdown(f"""
         <div class="search-analysis-card">
-            <h4>Gold Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
-            <p><strong>Gold Query:</strong> {results['query']}</p>
-            <p><strong>Premium Brand:</strong> {results['brand']}</p>
-            <p><strong>Luxury Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
+            <h4>Threat Level: <span class="{threat_class}">{results['threat_level'].upper()}</span></h4>
+            <p><strong>Query:</strong> {results['query']}</p>
+            <p><strong>Brand:</strong> {results['brand']}</p>
+            <p><strong>Keywords Found:</strong> {', '.join(results['keywords_found']) or 'None'}</p>
         </div>
         """, unsafe_allow_html=True)
         
@@ -3038,7 +2583,7 @@ def show_search_analysis():
         with col1:
             st.markdown(f"""
             <div class="search-analysis-card">
-                <h4>🧠 GOLD ANALYSIS</h4>
+                <h4>📝 Analysis</h4>
                 <p>{results['analysis']}</p>
             </div>
             """, unsafe_allow_html=True)
@@ -3046,25 +2591,25 @@ def show_search_analysis():
         with col2:
             st.markdown(f"""
             <div class="search-analysis-card">
-                <h4>✅ GOLD RECOMMENDATIONS</h4>
+                <h4>✅ Recommendations</h4>
                 {''.join([f'<p>• {rec}</p>' for rec in results['recommendations']])}
             </div>
             """, unsafe_allow_html=True)
         
         # Similar threat examples
-        st.subheader("🔍 GOLD THREAT PATTERNS")
+        st.subheader("🔍 Similar Threat Patterns")
         similar_threats = generate_similar_threats(results)
         for threat in similar_threats:
             st.markdown(f"""
             <div class="search-result-card">
                 <p><strong>{threat['platform']}</strong> - {threat['content']}</p>
-                <p>Gold Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
+                <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
             </div>
             """, unsafe_allow_html=True)
 
 def show_trend_analysis():
     """Trend analysis functionality"""
-    st.subheader("📈 PREMIUM PREDICTIVE ANALYTICS")
+    st.subheader("📈 Threat Trend Analysis")
     
     # Generate trend data with valid dates
     dates = pd.date_range(end=datetime.now(), periods=30)
@@ -3086,8 +2631,8 @@ def show_trend_analysis():
         x=trend_data['Date'],
         y=trend_data['High Threats'],
         mode='lines+markers',
-        name='Gold High Threats',
-        line=dict(color='#D4AF37', width=3),
+        name='High Threats',
+        line=dict(color='#EF4444', width=3),
         marker=dict(size=6)
     ))
     
@@ -3095,8 +2640,8 @@ def show_trend_analysis():
         x=trend_data['Date'],
         y=trend_data['Medium Threats'],
         mode='lines+markers',
-        name='Premium Medium Threats',
-        line=dict(color='#FFD700', width=3),
+        name='Medium Threats',
+        line=dict(color='#F59E0B', width=3),
         marker=dict(size=6)
     ))
     
@@ -3104,16 +2649,16 @@ def show_trend_analysis():
         x=trend_data['Date'],
         y=trend_data['Low Threats'],
         mode='lines+markers',
-        name='Standard Low Threats',
-        line=dict(color='#B8860B', width=3),
+        name='Low Threats',
+        line=dict(color='#10B981', width=3),
         marker=dict(size=6)
     ))
     
     fig.update_layout(
-        title="Gold Threat Trends Over Time",
+        title="Threat Trends Over Time",
         title_x=0.5,
         xaxis_title='Date',
-        yaxis_title='Number of Gold Threats',
+        yaxis_title='Number of Threats',
         font=dict(color='white'),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
@@ -3124,7 +2669,7 @@ def show_trend_analysis():
     st.plotly_chart(fig, use_container_width=True)
     
     # Platform distribution with radar chart
-    st.subheader("🌐 PREMIUM DISTRIBUTION")
+    st.subheader("🌐 Threat Distribution by Platform")
     
     col1, col2 = st.columns([2, 1])
     
@@ -3136,24 +2681,24 @@ def show_trend_analysis():
         fig = viz.create_radar_chart(
             np.array(threat_counts),
             platforms,
-            "Gold Threat Distribution Across Premium Platforms"
+            "Threat Distribution Across Platforms"
         )
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
         st.markdown("""
         <div class="search-analysis-card">
-            <h4>🧠 LUXURY INSIGHTS</h4>
-            <p>Twitter: 45 gold threats (42%)</p>
-            <p>Facebook: 32 premium threats (30%)</p>
-            <p>Reddit: 28 luxury threats (26%)</p>
-            <p>Instagram: 19 standard threats (18%)</p>
-            <p>YouTube: 12 basic threats (11%)</p>
+            <h4>📊 Platform Insights</h4>
+            <p>Twitter: 45 threats (42%)</p>
+            <p>Facebook: 32 threats (30%)</p>
+            <p>Reddit: 28 threats (26%)</p>
+            <p>Instagram: 19 threats (18%)</p>
+            <p>YouTube: 12 threats (11%)</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Sentiment analysis over time
-    st.subheader("📊 GOLD SENTIMENT ANALYSIS")
+    st.subheader("📊 Sentiment Analysis")
     
     sentiment_dates = pd.date_range(end=datetime.now(), periods=14)
     sentiment_values = np.sin(np.linspace(0, 4*np.pi, 14)) * 0.5 + 0.5
@@ -3169,18 +2714,18 @@ def show_trend_analysis():
         x=sentiment_data['Date'],
         y=sentiment_data['Sentiment Score'],
         mode='lines+markers',
-        name='Gold Sentiment',
-        line=dict(color='#FFD700', width=3),
+        name='Sentiment',
+        line=dict(color='#00ffff', width=3),
         marker=dict(size=8),
         fill='tozeroy',
-        fillcolor='rgba(255, 215, 0, 0.2)'
+        fillcolor='rgba(0, 255, 255, 0.2)'
     ))
     
     fig.update_layout(
-        title="Gold Sentiment Analysis Over Time",
+        title="Sentiment Analysis Over Time",
         title_x=0.5,
         xaxis_title='Date',
-        yaxis_title='Gold Sentiment Score',
+        yaxis_title='Sentiment Score',
         font=dict(color='white'),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
@@ -3192,52 +2737,52 @@ def show_trend_analysis():
 
 def show_quick_actions():
     """Quick action buttons"""
-    st.subheader("⚡ GOLD ACTION PROTOCOLS")
+    st.subheader("⚡ Quick Actions")
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("🔄 PREMIUM SCAN", use_container_width=True):
-            st.success("Gold Platform Scan Initiated!")
+        if st.button("🔄 Scan All Platforms", use_container_width=True):
+            st.success("Platform scan initiated!")
             time.sleep(1)
-            st.info("Scanning Gold Twitter, Premium Facebook, Luxury Instagram, Standard Reddit...")
+            st.info("Scanning Twitter, Facebook, Instagram, Reddit...")
     
     with col2:
-        if st.button("📊 GENERATE GOLD REPORT", use_container_width=True):
-            st.success("Gold Threat Report Generation Started!")
+        if st.button("📊 Generate Report", use_container_width=True):
+            st.success("Threat report generation started!")
             time.sleep(1)
-            st.info("Compiling Gold Data from Last 7 Premium Periods...")
+            st.info("Compiling data from last 7 days...")
     
     with col3:
-        if st.button("🚨 GOLD CRISIS PROTOCOL", use_container_width=True):
-            st.error("Gold Crisis Protocol Activated!")
+        if st.button("🚨 Crisis Protocol", use_container_width=True):
+            st.error("Crisis protocol activated!")
             time.sleep(1)
-            st.warning("Alerting Premium Team Members...")
+            st.warning("Alerting team members...")
 
 def show_access_required():
-    st.header("🔒 GOLD THREAT ANALYSIS")
-    st.warning("🚫 GOLD ACCESS REQUIRED")
+    st.header("🔒 Advanced Threat Analysis")
+    st.warning("🚫 Premium Access Required")
     
     st.write("""
-    ### Unlock Gold Threat Analysis Features
+    ### Unlock Advanced Threat Analysis Features
     
-    To access our gold neural threat detection capabilities, please enter your gold access key below.
+    To access our premium threat detection capabilities, please enter your access key below.
     """)
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         access_key = st.text_input(
-            "Enter Gold Access Key:",
+            "Enter Access Key:",
             type="password",
             placeholder="BG2024-PRO-ACCESS",
-            help="Enter your gold premium access key"
+            help="Enter your premium access key"
         )
     
     with col2:
         st.write("")
         st.write("")
-        if st.button("🔓 UNLOCK GOLD FEATURES", use_container_width=True):
+        if st.button("🔓 Unlock Features", use_container_width=True):
             if access_key:
                 result = security_manager.validate_access_key(access_key)
                 if result["valid"]:
@@ -3249,46 +2794,46 @@ def show_access_required():
                 else:
                     st.error(result["message"])
             else:
-                st.error("Please enter a gold access key")
+                st.error("Please enter an access key")
     
-    with st.expander("🆓 GOLD DEMO ACCESS"):
-        st.info("Use gold demo key: BG2024-PRO-ACCESS")
-        if st.button("Use Gold Demo Key"):
+    with st.expander("🆓 Demo Access"):
+        st.info("Use demo key: BG2024-PRO-ACCESS")
+        if st.button("Use Demo Key"):
             st.session_state.advanced_access = True
             st.session_state.access_level = "full"
-            st.success("Gold Demo Access Granted!")
+            st.success("Demo access granted!")
             st.balloons()
             st.rerun()
     
     # Premium access card
     st.markdown("""
     <div class="premium-access-card">
-        <h3>🌟 GOLD ACCESS FEATURES</h3>
-        <p>Unlock the full gold potential of BrandGuardian AI with our premium features:</p>
+        <h3>🌟 Premium Access Features</h3>
+        <p>Unlock the full potential of BrandGuardian AI with our premium features:</p>
         <ul style="text-align: left; display: inline-block;">
-            <li>Gold threat detection algorithms</li>
-            <li>Premium real-time monitoring across all platforms</li>
-            <li>AI-powered gold sentiment analysis</li>
-            <li>Gold customizable threat alerts</li>
-            <li>Luxury threat intelligence reports</li>
-            <li>Premium priority customer support</li>
+            <li>Advanced threat detection algorithms</li>
+            <li>Real-time monitoring across all platforms</li>
+            <li>AI-powered sentiment analysis</li>
+            <li>Customizable threat alerts</li>
+            <li>Detailed threat intelligence reports</li>
+            <li>Priority customer support</li>
         </ul>
-        <p>Contact your gold administrator to get your premium access key.</p>
+        <p>Contact your administrator to get your premium access key.</p>
     </div>
     """, unsafe_allow_html=True)
 
 # API Management Tab
 def show_api_key_management():
-    st.header("🔑 GOLD API MANAGEMENT CENTER")
+    st.header("🔑 API Key Management Center")
     
     # Get current user's ID
     user_id = st.session_state.get('user_id')
     if not user_id:
-        st.error("Gold User not authenticated")
+        st.error("User not authenticated")
         return
     
     # Display current connections
-    st.subheader("🌐 PREMIUM CONNECTED PLATFORMS")
+    st.subheader("🌐 Connected Platforms")
     
     api_keys = api_manager.load_api_keys(user_id)
     if api_keys:
@@ -3299,25 +2844,25 @@ def show_api_key_management():
                 with cols[i % 3]:
                     st.markdown(f"""
                     <div class="search-analysis-card">
-                        <div style="font-size: 2.5rem; margin-bottom: 15px;">{platform_info['icon']}</div>
+                        <div style="font-size: 2rem; margin-bottom: 10px;">{platform_info['icon']}</div>
                         <h4>{platform_info['name']}</h4>
-                        <p>Gold Status: <span class="api-status-connected">✅ CONNECTED</span></p>
-                        <p>Premium Rate Limit: {platform_info['rate_limit']}</p>
+                        <p>Status: <span class="api-status-connected">✅ Connected</span></p>
+                        <p>Rate Limit: {platform_info['rate_limit']}</p>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                    if st.button(f"Gold Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
+                    if st.button(f"Disconnect {platform}", key=f"disconnect_{platform}", use_container_width=True):
                         if api_manager.delete_api_key(user_id, platform):
-                            st.success(f"Gold Disconnected from {platform_info['name']}")
+                            st.success(f"Disconnected from {platform_info['name']}")
                             st.rerun()
     else:
-        st.info("🌟 Connect your first gold platform to get started!")
+        st.info("🌟 Connect your first platform to get started!")
     
     # Add new connection
-    st.subheader("🚀 CONNECT NEW GOLD PLATFORM")
+    st.subheader("🚀 Connect New Platform")
     
     platforms = api_manager.supported_platforms
-    selected_platform = st.selectbox("Select Gold Platform", list(platforms.keys()), 
+    selected_platform = st.selectbox("Select Platform", list(platforms.keys()), 
                                    format_func=lambda x: f"{platforms[x]['icon']} {platforms[x]['name']}")
     
     platform_info = platforms[selected_platform]
@@ -3325,56 +2870,56 @@ def show_api_key_management():
     st.markdown(f"""
     <div class="search-analysis-card">
         <h4>{platform_info['icon']} {platform_info['name']}</h4>
-        <p><strong>Gold Rate Limit:</strong> {platform_info['rate_limit']}</p>
-        <p><strong>Premium Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get Gold API Key →</a></p>
+        <p><strong>Rate Limit:</strong> {platform_info['rate_limit']}</p>
+        <p><strong>Documentation:</strong> <a href="{platform_info['help_url']}" target="_blank">Get API Key →</a></p>
     </div>
     """, unsafe_allow_html=True)
     
     api_key = st.text_input(
         f"{platform_info['field_name']}*",
         type="password",
-        placeholder=f"Paste your gold {platform_info['field_name']} here...",
+        placeholder=f"Paste your {platform_info['field_name']} here...",
         help=platform_info['field_help']
     )
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("🧠 GOLD TEST CONNECTION", use_container_width=True):
+        if st.button("🧪 Test Connection", use_container_width=True):
             if api_key:
-                with st.spinner("Gold Testing..."):
+                with st.spinner("Testing..."):
                     result = api_manager.test_connection(selected_platform, api_key)
                 if result["success"]:
                     st.success(result["message"])
-                    st.info(f"Gold Rate Limit: {result['rate_limit']}")
+                    st.info(f"Rate Limit: {result['rate_limit']}")
                 else:
                     st.error(result["message"])
             else:
-                st.error("Please enter gold API key")
+                st.error("Please enter API key")
     
     with col2:
-        if st.button("💾 GOLD SAVE CONNECTION", use_container_width=True):
+        if st.button("💾 Save Connection", use_container_width=True):
             if api_key:
                 if api_manager.save_api_key(user_id, selected_platform, api_key):
-                    st.success("✅ Gold Connection Saved!")
+                    st.success("✅ Connection saved!")
                     st.balloons()
                 else:
-                    st.error("❌ Gold Save Failed")
+                    st.error("❌ Save failed")
             else:
-                st.error("Please enter gold API key")
+                st.error("Please enter API key")
     
     with col3:
-        if st.button("🔄 GOLD CLEAR", use_container_width=True):
+        if st.button("🔄 Clear", use_container_width=True):
             st.rerun()
     
     # Platform status
-    st.subheader("📊 GOLD PLATFORM STATUS")
+    st.subheader("📊 Platform Status")
     status_data = []
     for platform, info in api_manager.supported_platforms.items():
         status_data.append({
-            "Gold Platform": f"{info['icon']} {info['name']}",
-            "Status": "✅ GOLD CONNECTED" if platform in api_keys else "❌ GOLD DISCONNECTED",
-            "Premium Rate Limit": info['rate_limit']
+            "Platform": f"{info['icon']} {info['name']}",
+            "Status": "✅ Connected" if platform in api_keys else "❌ Disconnected",
+            "Rate Limit": info['rate_limit']
         })
     
     status_df = pd.DataFrame(status_data)
@@ -3382,7 +2927,7 @@ def show_api_key_management():
 
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
-    st.header("🤖 PREMIUM BRANDGUIAN AI DASHBOARD")
+    st.header("🤖 BrandGuardian AI Dashboard")
     
     # Get user's subscription
     username = st.session_state.get('username')
@@ -3391,18 +2936,18 @@ def show_user_ai_dashboard():
     
     # Welcome message with subscription info
     brand_name = st.session_state.get('brand_name', 'Your Brand')
-    st.success(f"Welcome to your gold brand protection dashboard, {brand_name}!")
+    st.success(f"Welcome to your brand protection dashboard, {brand_name}!")
     st.markdown(f"""
     <div style="display: flex; align-items: center; margin-bottom: 20px;">
         <div style="background-color: {subscription_info['color']}20; 
                     border: 1px solid {subscription_info['color']}; 
                     border-radius: 20px; padding: 8px 16px; margin-right: 15px;">
-            <span style="color: {subscription_info['color']}; font-weight: bold;">
+            <span style="color: {subscription_info['color']}; font-weight: bold; font-family: 'Orbitron', monospace;">
                 {subscription_info['name']} Subscription
             </span>
         </div>
         <div>
-            <a href="#upgrade" style="color: #FFD700; text-decoration: none; font-family: 'Raleway', sans-serif;">Upgrade Gold Plan →</a>
+            <a href="#upgrade" style="color: #00ffff; text-decoration: none; font-family: 'Rajdhani', sans-serif;">Upgrade Plan →</a>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -3413,39 +2958,39 @@ def show_user_ai_dashboard():
     with col1:
         st.markdown("""
         <div class="metric-card">
-            <h3>PREMIUM MENTIONS</h3>
-            <h1>∞</h1>
-            <p style="color: #FFD700;">LUXURY GROWTH DETECTED</p>
+            <h3>Brand Mentions</h3>
+            <h1>142</h1>
+            <p style="color: #00ffff;">+12 from last week</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
         <div class="metric-card">
-            <h3>THREAT LEVEL</h3>
-            <h1>GOLD</h1>
-            <p style="color: #FFD700;">PREMIUM STABILITY</p>
+            <h3>Threat Level</h3>
+            <h1>Low</h1>
+            <p style="color: #00ffff;">Stable</p>
         </div>
         """, unsafe_allow_html=True)
     
     with col3:
         st.markdown("""
         <div class="metric-card">
-            <h3>RESPONSE RATE</h3>
-            <h1>100%</h1>
-            <p style="color: #FFD700;">GOLD EFFICIENCY</p>
+            <h3>Response Rate</h3>
+            <h1>92%</h1>
+            <p style="color: #00ffff;">Excellent</p>
         </div>
         """, unsafe_allow_html=True)
     
     # Create tabs based on subscription
-    available_tabs = ["Premium Search Analysis"]  # Available to all subscriptions
+    available_tabs = ["Search Analysis"]  # Available to all subscriptions
     
     if auth_system.check_subscription_feature(username, "advanced_analytics"):
-        available_tabs.append("Gold Social Monitoring")
-        available_tabs.append("Premium AI Insights")
+        available_tabs.append("Social Monitoring")
+        available_tabs.append("AI Insights")
     
     if auth_system.check_subscription_feature(username, "real_time_monitoring"):
-        available_tabs.append("Gold Advanced Threat Analysis")
+        available_tabs.append("Advanced Threat Analysis")
     
     # Create the tab navigation
     tabs = st.tabs([f"🔍 {tab}" for tab in available_tabs])
@@ -3453,18 +2998,18 @@ def show_user_ai_dashboard():
     # Display tab content
     for i, tab_name in enumerate(available_tabs):
         with tabs[i]:
-            if tab_name == "Premium Search Analysis":
+            if tab_name == "Search Analysis":
                 show_search_analysis()
-            elif tab_name == "Gold Social Monitoring":
+            elif tab_name == "Social Monitoring":
                 show_social_monitoring()
-            elif tab_name == "Premium AI Insights":
+            elif tab_name == "AI Insights":
                 show_ai_insights()
-            elif tab_name == "Gold Advanced Threat Analysis":
+            elif tab_name == "Advanced Threat Analysis":
                 show_advanced_threat_analysis()
     
     # Subscription upgrade section
     st.markdown("---")
-    st.subheader("💳 GOLD SUBSCRIPTION PLANS")
+    st.subheader("💳 Subscription Plans")
     
     col1, col2, col3 = st.columns(3)
     
@@ -3479,8 +3024,8 @@ def show_user_ai_dashboard():
             <div style="background-color: {plan_info['color']}20; 
                         border: 1px solid {plan_info['color']}; 
                         border-radius: 15px; padding: 20px; height: 100%;">
-                <h3 style="text-align: center;">{plan_info['name']}</h3>
-                <h4 style="text-align: center;">{plan_info['price']}</h4>
+                <h3 style="text-align: center; font-family: 'Orbitron', monospace;">{plan_info['name']}</h3>
+                <h4 style="text-align: center; font-family: 'Rajdhani', sans-serif;">{plan_info['price']}</h4>
                 <ul>
                     {"".join([f"<li>{feature}</li>" for feature in plan_info['features']])}
                 </ul>
@@ -3488,23 +3033,23 @@ def show_user_ai_dashboard():
             """, unsafe_allow_html=True)
             
             if current_plan:
-                st.success("Current Gold Plan")
+                st.success("Current Plan")
             else:
                 if st.button(f"Upgrade to {plan_info['name']}", key=f"upgrade_{plan}"):
-                    st.info(f"Redirecting to gold payment for {plan_info['name']} plan...")
+                    st.info(f"Redirecting to payment for {plan_info['name']} plan...")
                     # In a real app, this would redirect to a payment processor
 
 # Add new functions for subscription-specific features
 def show_social_monitoring():
     """Social monitoring functionality - requires Advanced subscription"""
-    st.header("PREMIUM SOCIAL MONITORING")
+    st.header("Social Monitoring")
     
     # Get user's subscription
     username = st.session_state.get('username')
     
     if not auth_system.check_subscription_feature(username, "advanced_analytics"):
-        st.warning("⚠️ This feature requires a Gold Advanced or Premium subscription")
-        st.info("Upgrade your gold plan to access social media monitoring features.")
+        st.warning("⚠️ This feature requires an Advanced or Premium subscription")
+        st.info("Upgrade your plan to access social media monitoring features.")
         return
     
     brand_name = st.session_state.get('brand_name', 'Your Brand')
@@ -3513,54 +3058,63 @@ def show_social_monitoring():
     # Display posts with AI analysis
     for post in posts[:5]:
         threat_class = f"threat-{post['threat_level']}"
-        sentiment_color = "#D4AF37" if post['sentiment'] == 'negative' else "#FFD700" if post['sentiment'] == 'positive' else "#FFFFFF"
+        sentiment_color = "#ff4d4d" if post['sentiment'] == 'negative' else "#00ffff" if post['sentiment'] == 'positive' else "#FFFFFF"
         
         with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
             st.write(post['content'])
-            st.caption(f"Premium Engagement: {post['engagement']}")
+            st.caption(f"Engagement: {post['engagement']}")
             st.markdown(f"""
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <span class="{threat_class}">Gold Threat: {post['threat_level'].upper()}</span>
-                <span style="color: {sentiment_color}; font-weight: 600;">Premium Sentiment: {post['sentiment'].upper()}</span>
+                <span class="{threat_class}">Threat: {post['threat_level'].upper()}</span>
+                <span style="color: {sentiment_color}; font-weight: 600; font-family: 'Orbitron', monospace;">Sentiment: {post['sentiment'].upper()}</span>
             </div>
             """, unsafe_allow_html=True)
 
 def show_ai_insights():
-    """AI insights functionality - requires Advanced subscription"""
-    st.header("🧠 PREMIUM AI-POWERED INSIGHTS")
+    """AI insights functionality with enhanced visualization"""
+    st.header("🧠 Neural Intelligence Insights")
     
     # Get user's subscription
     username = st.session_state.get('username')
     
     if not auth_system.check_subscription_feature(username, "advanced_analytics"):
-        st.warning("⚠️ This feature requires a Gold Advanced or Premium subscription")
-        st.info("Upgrade your gold plan to access AI-powered insights.")
+        st.warning("⚠️ This feature requires an Advanced or Premium subscription")
+        st.info("Upgrade your plan to access AI-powered insights.")
         return
     
     brand_name = st.session_state.get('brand_name', 'Your Brand')
     
+    # AI Processing Animation
+    st.markdown("""
+    <div class="ai-processing">
+        <div class="ai-node"></div>
+        <div class="ai-node"></div>
+        <div class="ai-node"></div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     # Generate sample analyses
     analyses = []
     for i in range(10):
-        text = f"Gold sample text {i} about {brand_name} with {'high' if i < 3 else 'medium' if i < 6 else 'low'} gold threat level"
+        text = f"Sample text {i} about {brand_name} with {'high' if i < 3 else 'medium' if i < 6 else 'low'} threat level"
         analysis = ai_engine.detect_threats(text, brand_name)
         analyses.append(analysis)
     
     # Generate report
     report = ai_engine.generate_threat_report(analyses)
     
-    # Display report
+    # Display report in AI-themed cards
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown("""
-        <div class="ai-visualization">
-            <h4>🧠 GOLD THREAT SUMMARY</h4>
-            <p>Premium Total Analyses: {}</p>
-            <p>Gold High Threats: {}</p>
-            <p>Premium Medium Threats: {}</p>
-            <p>Standard Low Threats: {}</p>
-            <p>Gold Average Sentiment: {:.2f}</p>
+        <div class="ai-visualization-card">
+            <h4>📊 Neural Threat Analysis</h4>
+            <p>Total Analyses: {}</p>
+            <p>High Threats: {}</p>
+            <p>Medium Threats: {}</p>
+            <p>Low Threats: {}</p>
+            <p>Average Sentiment: {:.2f}</p>
         </div>
         """.format(
             report['total_analyses'],
@@ -3572,8 +3126,8 @@ def show_ai_insights():
     
     with col2:
         st.markdown("""
-        <div class="ai-visualization">
-            <h4>✅ PREMIUM AI RECOMMENDATIONS</h4>
+        <div class="ai-visualization-card">
+            <h4>✅ AI Recommendations</h4>
             {}
         </div>
         """.format(
@@ -3581,22 +3135,22 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
     
     # Keyword frequency analysis
-    st.subheader("🔤 GOLD KEYWORD FREQUENCY ANALYSIS")
+    st.subheader("🔤 Neural Keyword Analysis")
     
     texts = [a['text'] for a in analyses]
     keyword_freq = ai_engine.create_keyword_frequency(texts)
     
-    # Create bar chart
-    fig = viz.create_keyword_bar_chart(keyword_freq, "Gold Top Keywords in Threat Analysis")
+    # Create bar chart with AI theme
+    fig = viz.create_keyword_bar_chart(keyword_freq, "Neural Keyword Frequency Analysis")
     st.plotly_chart(fig, use_container_width=True)
     
     # Threat patterns
-    st.subheader("🔍 GOLD THREAT PATTERN ANALYSIS")
+    st.subheader("🔍 Neural Pattern Recognition")
     
     patterns = ai_engine.create_threat_patterns(analyses)
     
-    # Create heatmap
-    fig = viz.create_pattern_heatmap(patterns, "Gold Threat Patterns by Platform and Level")
+    # Create heatmap with AI theme
+    fig = viz.create_pattern_heatmap(patterns, "Neural Threat Pattern Analysis")
     st.plotly_chart(fig, use_container_width=True)
     
     # Pattern details
@@ -3604,8 +3158,8 @@ def show_ai_insights():
     
     with col1:
         st.markdown("""
-        <div class="ai-visualization">
-            <h4>🎯 PREMIUM TOP THREAT KEYWORDS</h4>
+        <div class="ai-visualization-card">
+            <h4>🎯 Top Threat Keywords</h4>
             {}
         </div>
         """.format(
@@ -3614,8 +3168,8 @@ def show_ai_insights():
     
     with col2:
         st.markdown("""
-        <div class="ai-visualization">
-            <h4>📱 GOLD PLATFORM DISTRIBUTION</h4>
+        <div class="ai-visualization-card">
+            <h4>📱 Platform Distribution</h4>
             {}
         </div>
         """.format(
@@ -3623,8 +3177,8 @@ def show_ai_insights():
         ), unsafe_allow_html=True)
 
 def main():
-    # Add gold particles background
-    add_gold_particles()
+    # Add holographic particles background
+    add_holographic_particles()
     
     # Check authentication first
     if not st.session_state.get('authenticated', False):
@@ -3642,12 +3196,15 @@ def main():
     if username and "user_subscription" not in st.session_state:
         st.session_state.user_subscription = auth_system.get_user_subscription(username)
     
-    # Header with shield logo
+    # Header with futuristic theme
     st.markdown("""
     <div style="text-align: center; margin-bottom: 30px;">
-        <div class="brandguardian-logo">🛡️</div>
-        <h1 class="premium-header floating">BrandGuardian AI Pro</h1>
-        <div style="text-align: center; margin-top: 15px;" class="accent-text">Premium Business Intelligence & Digital Risk Protection</div>
+        <div class="ai-logo-container">
+            <div class="logo-ring"></div>
+            <div class="ai-logo">🛡️</div>
+        </div>
+        <h1 class="futuristic-header">BrandGuardian AI Pro</h1>
+        <div style="text-align: center; margin-top: 15px;" class="accent-text">Advanced Neural Intelligence for Brand Protection</div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -3658,48 +3215,48 @@ def main():
         st.markdown(f"""
         <div style="text-align: center; margin-bottom: 25px;">
             <div style="font-size: 3.5rem;">👤</div>
-            <h3>{st.session_state.username}</h3>
-            <p>{st.session_state.get('user_access_level', 'user').title()} Access</p>
-            <p>{auth_system.users[st.session_state.username]['company']}</p>
+            <h3 style="font-family: 'Orbitron', monospace;">{st.session_state.username}</h3>
+            <p style="font-family: 'Rajdhani', sans-serif;">{st.session_state.get('user_access_level', 'user').title()} Access</p>
+            <p style="font-family: 'Rajdhani', sans-serif;">{auth_system.users[st.session_state.username]['company']}</p>
             <div style="background-color: {subscription_info['color']}20; 
                         border: 1px solid {subscription_info['color']}; 
-                        border-radius: 20px; padding: 8px 16px; margin-top: 12px; display: inline-block;">
-                <span style="color: {subscription_info['color']}; font-weight: bold;">
+                        border-radius: 20px; padding: 8px 16px; margin-top: 15px; display: inline-block;">
+                <span style="color: {subscription_info['color']}; font-weight: bold; font-family: 'Orbitron', monospace;">
                     {subscription_info['name']} Subscription
                 </span>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        st.header("Gold Business Configuration")
-        brand_name = st.text_input("Gold Brand Name", st.session_state.brand_name)
+        st.header("Business Configuration", font_family='Orbitron')
+        brand_name = st.text_input("Brand Name", st.session_state.brand_name)
         st.session_state.brand_name = brand_name
         
-        sector = st.selectbox("Gold Business Sector", ["technology", "finance", "retail"])
+        sector = st.selectbox("Business Sector", ["technology", "finance", "retail"])
         st.session_state.sector = sector
         
         st.markdown("---")
-        st.subheader("🔐 GOLD ACCESS STATUS")
+        st.subheader("🔐 Access Status", font_family='Orbitron')
         if st.session_state.user_subscription == "premium":
-            st.success("✅ GOLD PREMIUM ACCESS")
-            st.markdown('<span class="premium-badge">GOLD PREMIUM</span>', unsafe_allow_html=True)
+            st.success("✅ Premium Access")
+            st.markdown('<span class="premium-badge">PREMIUM</span>', unsafe_allow_html=True)
         else:
-            st.warning(f"⚠️ {subscription_info['name']} ACCESS")
+            st.warning(f"⚠️ {subscription_info['name']} Access")
         
         st.markdown("---")
         user_id = st.session_state.get('user_id')
         api_keys = api_manager.load_api_keys(user_id) if user_id else {}
-        st.subheader("🔑 GOLD API STATUS")
-        st.info(f"{len(api_keys)} gold platform(s) connected")
+        st.subheader("🔑 API Status", font_family='Orbitron')
+        st.info(f"{len(api_keys)} platform(s) connected")
         
         # User management for admin only
         if st.session_state.get('user_access_level') == 'admin':
             st.markdown("---")
-            if st.button("👥 GOLD USER MANAGEMENT", use_container_width=True):
+            if st.button("👥 User Management", use_container_width=True):
                 st.session_state.show_user_management = True
         
         st.markdown("---")
-        if st.button("🚪 GOLD LOGOUT", use_container_width=True):
+        if st.button("🚪 Logout", use_container_width=True):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
@@ -3707,7 +3264,7 @@ def main():
     # Show user management if admin clicked the button
     if st.session_state.get('show_user_management', False):
         show_user_management()
-        if st.button("Back to Gold Dashboard", use_container_width=True):
+        if st.button("Back to Dashboard", use_container_width=True):
             st.session_state.show_user_management = False
             st.rerun()
         return
@@ -3716,34 +3273,34 @@ def main():
     if st.session_state.get('user_access_level') == 'admin':
         # Admin navigation
         tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
-            "📊 PREMIUM EXECUTIVE DASHBOARD", 
-            "🔍 GOLD THREAT ANALYSIS",
-            "📱 PREMIUM SOCIAL MONITORING",
-            "🥊 GOLD COMPETITIVE INTELLIGENCE",
-            "🌟 LUXURY INFLUENCER NETWORK",
-            "🛡️ GOLD CRISIS PREDICTION",
-            "❤️ PREMIUM BRAND HEALTH",
-            "🔑 GOLD API MANAGEMENT"
+            "📊 Executive Dashboard", 
+            "🔍 Advanced Threat Analysis",
+            "📱 Social Monitoring",
+            "🥊 Competitive Intelligence",
+            "🌟 Influencer Network",
+            "🛡️ Crisis Prediction",
+            "❤️ Brand Health",
+            "🔑 API Management"
         ])
         
         with tab1:
-            st.header("Gold Executive Dashboard")
-            st.write("Gold overview dashboard content...")
+            st.header("Executive Dashboard")
+            st.write("Overview dashboard content...")
         
         with tab2:
             show_advanced_threat_analysis()
         
         with tab3:
-            st.header("Gold Social Monitoring")
+            st.header("Social Monitoring")
             posts = enhanced_monitor.simulate_monitoring_with_api(brand_name, st.session_state.sector)
             for post in posts[:5]:
                 with st.expander(f"{post['platform']} - {post['content'][:50]}..."):
                     st.write(post['content'])
-                    st.caption(f"Premium Engagement: {post['engagement']}")
+                    st.caption(f"Engagement: {post['engagement']}")
         
         # Other tabs
-        for tab, title in [(tab4, "Gold Competitive Intelligence"), (tab5, "Luxury Influencer Network"), 
-                          (tab6, "Gold Crisis Prediction"), (tab7, "Premium Brand Health")]:
+        for tab, title in [(tab4, "Competitive Intelligence"), (tab5, "Influencer Network"), 
+                          (tab6, "Crisis Prediction"), (tab7, "Brand Health")]:
             with tab:
                 st.header(title)
                 st.write(f"{title} content...")
