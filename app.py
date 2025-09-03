@@ -24,6 +24,16 @@ from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
+from typing import Dict, List, Tuple, Optional, Any
+import logging
+from functools import lru_cache
+import sqlite3
+import threading
+from streamlit.components.v1 import html
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Set page config first
 st.set_page_config(
@@ -32,6 +42,62 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Database setup
+def init_db():
+    """Initialize the SQLite database for storing user data and settings"""
+    conn = sqlite3.connect('brandguardian.db')
+    c = conn.cursor()
+    
+    # Create tables if they don't exist
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        company TEXT,
+        email TEXT,
+        access_level TEXT DEFAULT 'client',
+        subscription TEXT DEFAULT 'basic',
+        created_at TEXT,
+        last_login TEXT,
+        failed_attempts INTEGER DEFAULT 0,
+        last_failed_attempt TEXT,
+        session_token TEXT,
+        mfa_enabled INTEGER DEFAULT 0
+    )
+    ''')
+    
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS api_keys (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        platform TEXT NOT NULL,
+        encrypted_key TEXT NOT NULL,
+        created_at TEXT,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    )
+    ''')
+    
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS threat_reports (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        brand_name TEXT,
+        threat_level TEXT,
+        platform TEXT,
+        content TEXT,
+        sentiment TEXT,
+        timestamp TEXT,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    )
+    ''')
+    
+    conn.commit()
+    conn.close()
+
+# Initialize database on startup
+init_db()
 
 # Generate and display premium access key
 def generate_premium_key():
@@ -878,7 +944,7 @@ class SecurityManager:
         self.session_timeout = timedelta(minutes=30)
         self.encryption_key = Fernet.generate_key()
         self.cipher_suite = Fernet(self.encryption_key)
-    
+        
     def encrypt_data(self, data):
         """Encrypt sensitive data"""
         if isinstance(data, str):
@@ -1604,7 +1670,7 @@ class SearchAnalyzer:
         
         return results
     
-    def generate_analysis(self, threat_level, keywords):
+    def generate_analysis(self, threat_level, found_keywords):
         """Generate analysis text based on threat level"""
         analyses = {
             'high': "🚨 High threat potential detected. Immediate attention required. Multiple negative keywords found indicating serious brand reputation risks.",
@@ -1804,6 +1870,50 @@ class AdvancedVisualizations:
 # Initialize visualizations
 viz = AdvancedVisualizations()
 
+# Enhanced monitoring class
+class EnhancedSocialMediaMonitor:
+    def __init__(self):
+        self.api_manager = api_manager
+        self.ai_engine = ai_engine
+    
+    def simulate_monitoring_with_api(self, brand_name, sector):
+        posts = []
+        user_id = st.session_state.get('user_id')
+        if not user_id:
+            return posts
+            
+        connected_platforms = list(api_manager.load_api_keys(user_id).keys()) or ['twitter', 'facebook', 'instagram']
+        
+        for platform in connected_platforms:
+            for _ in range(random.randint(3, 8)):
+                content = self.generate_business_post(brand_name, sector)
+                post = {
+                    'platform': platform.capitalize(),
+                    'content': content,
+                    'author': f"user_{random.randint(1000, 9999)}",
+                    'engagement': random.randint(50, 5000),
+                    'api_connected': platform in api_manager.load_api_keys(user_id)
+                }
+                
+                # Add AI analysis
+                analysis = self.ai_engine.detect_threats(content, brand_name)
+                post['threat_level'] = analysis['threat_level']
+                post['sentiment'] = analysis['sentiment'][0]
+                
+                posts.append(post)
+        return posts
+    
+    def generate_business_post(self, brand_name, sector):
+        templates = {
+            'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
+            'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
+            'retail': [f"{brand_name} product quality", f"{brand_name} store experience"]
+        }
+        return random.choice(templates.get(sector, templates['technology']))
+
+# Initialize
+enhanced_monitor = EnhancedSocialMediaMonitor()
+
 # User registration and management functions
 def show_user_registration():
     st.subheader("👥 Client Registration")
@@ -1831,7 +1941,6 @@ def show_user_registration():
                     st.error(f"❌ {message}")
             else:
                 st.error("Please fill all fields")
-
 def show_user_management():
     st.subheader("👥 User Management")
     
@@ -1955,7 +2064,6 @@ def show_user_management():
                     st.rerun()
             elif user_to_manage == st.session_state.username:
                 st.error("You cannot delete your own account")
-
 def show_login_form():
     """Display login form with enhanced design"""
     st.markdown("""
@@ -2020,7 +2128,6 @@ def show_login_form():
         <a href='#' style='color: #FFD700; text-decoration: none;'>Forgot your password?</a>
     </div>
     """, unsafe_allow_html=True)
-
 # Advanced Threat Analysis Functionality
 def show_advanced_threat_analysis():
     if not security_manager.check_access():
@@ -2049,7 +2156,6 @@ def show_advanced_threat_analysis():
     
     with tab4:
         show_quick_actions()
-
 def show_threat_dashboard():
     """Threat monitoring dashboard"""
     st.subheader("🛡️ Real-time Threat Dashboard")
@@ -2152,7 +2258,6 @@ def show_threat_dashboard():
             "Status": st.column_config.TextColumn("Status", width="small")
         }
     )
-
 def generate_similar_threats(results):
     """Generate similar threat examples"""
     threats = []
@@ -2164,7 +2269,6 @@ def generate_similar_threats(results):
             'date': (datetime.now() - timedelta(days=random.randint(1, 30))).strftime("%Y-%m-%d")
         })
     return threats
-
 def show_search_analysis():
     """Search analysis functionality"""
     st.subheader("🔍 Advanced Search Analysis")
@@ -2268,7 +2372,6 @@ def show_search_analysis():
                 <p>Severity: <span class="threat-{threat['severity']}">{threat['severity']}</span></p>
             </div>
             """, unsafe_allow_html=True)
-
 def show_trend_analysis():
     """Trend analysis functionality"""
     st.subheader("📈 Threat Trend Analysis")
@@ -2396,7 +2499,6 @@ def show_trend_analysis():
     )
     
     st.plotly_chart(fig, use_container_width=True)
-
 def show_quick_actions():
     """Quick action buttons"""
     st.subheader("⚡ Quick Actions")
@@ -2420,7 +2522,6 @@ def show_quick_actions():
             st.error("Crisis protocol activated!")
             time.sleep(1)
             st.warning("Alerting team members...")
-
 def show_access_required():
     st.header("🔒 Advanced Threat Analysis")
     st.warning("🚫 Premium Access Required")
@@ -2483,7 +2584,6 @@ def show_access_required():
         <p>Contact your administrator to get your premium access key.</p>
     </div>
     """, unsafe_allow_html=True)
-
 # API Management Tab
 def show_api_key_management():
     st.header("🔑 API Key Management Center")
@@ -2586,51 +2686,6 @@ def show_api_key_management():
     
     status_df = pd.DataFrame(status_data)
     st.dataframe(status_df, use_container_width=True, hide_index=True)
-
-# Enhanced monitoring class
-class EnhancedSocialMediaMonitor:
-    def __init__(self):
-        self.api_manager = api_manager
-        self.ai_engine = ai_engine
-    
-    def simulate_monitoring_with_api(self, brand_name, sector):
-        posts = []
-        user_id = st.session_state.get('user_id')
-        if not user_id:
-            return posts
-            
-        connected_platforms = list(api_manager.load_api_keys(user_id).keys()) or ['twitter', 'facebook', 'instagram']
-        
-        for platform in connected_platforms:
-            for _ in range(random.randint(3, 8)):
-                content = self.generate_business_post(brand_name, sector)
-                post = {
-                    'platform': platform.capitalize(),
-                    'content': content,
-                    'author': f"user_{random.randint(1000, 9999)}",
-                    'engagement': random.randint(50, 5000),
-                    'api_connected': platform in api_manager.load_api_keys(user_id)
-                }
-                
-                # Add AI analysis
-                analysis = self.ai_engine.detect_threats(content, brand_name)
-                post['threat_level'] = analysis['threat_level']
-                post['sentiment'] = analysis['sentiment'][0]
-                
-                posts.append(post)
-        return posts
-    
-    def generate_business_post(self, brand_name, sector):
-        templates = {
-            'technology': [f"{brand_name} new feature launch", f"{brand_name} customer support issues"],
-            'finance': [f"{brand_name} stock performance", f"{brand_name} financial results"],
-            'retail': [f"{brand_name} product quality", f"{brand_name} store experience"]
-        }
-        return random.choice(templates.get(sector, templates['technology']))
-
-# Initialize
-enhanced_monitor = EnhancedSocialMediaMonitor()
-
 # User AI Dashboard (for regular users)
 def show_user_ai_dashboard():
     st.header("🤖 BrandGuardian AI Dashboard")
@@ -2744,7 +2799,6 @@ def show_user_ai_dashboard():
                 if st.button(f"Upgrade to {plan_info['name']}", key=f"upgrade_{plan}"):
                     st.info(f"Redirecting to payment for {plan_info['name']} plan...")
                     # In a real app, this would redirect to a payment processor
-
 # Add new functions for subscription-specific features
 def show_social_monitoring():
     """Social monitoring functionality - requires Advanced subscription"""
@@ -2775,7 +2829,6 @@ def show_social_monitoring():
                 <span style="color: {sentiment_color}; font-weight: 600;">Sentiment: {post['sentiment'].upper()}</span>
             </div>
             """, unsafe_allow_html=True)
-
 def show_ai_insights():
     """AI insights functionality - requires Advanced subscription"""
     st.header("🧠 AI-Powered Insights")
@@ -2872,7 +2925,6 @@ def show_ai_insights():
         """.format(
             ''.join([f'<p>• {platform}: {count}</p>' for platform, count in patterns['platform_distribution'].most_common()])
         ), unsafe_allow_html=True)
-
 def main():
     # Add animated particles
     add_particles()
